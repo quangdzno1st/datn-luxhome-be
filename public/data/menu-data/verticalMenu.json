@@ -1,0 +1,95 @@
+{
+    "menu": [
+        {
+            "url": "admin/dashboard",
+            "name": "Dashboards",
+            "icon": "trending-up",
+            "slug": ["admin.dashboard"]
+        },
+        {
+            "navheader": "Chức năng",
+            "slug": []
+        },
+        {
+            "url": "admin/document",
+            "name": "Quản lý tài liệu",
+            "icon": "folder",
+            "slug": [],
+            "submenu": [
+                {
+                    "url": "admin/document",
+                    "name": "Môn học",
+                    "icon": "circle",
+                    "slug": ["admin.document.index", "admin.document.create", "admin.document.edit"]
+                },
+                {
+                    "url": "admin/lesson",
+                    "name": "Bài học",
+                    "icon": "circle",
+                    "slug": ["admin.lesson.index", "admin.lesson.create", "admin.lesson.edit"]
+                }
+            ]
+
+        },
+        {
+            "name": "Quản lý thành viên",
+            "icon": "user",
+            "slug": [],
+            "submenu": [
+                {
+                    "url": "admin/user",
+                    "name": "Người dùng",
+                    "icon": "circle",
+                    "slug": ["admin.user.index", "admin.user.create", "admin.user.edit"]
+                },
+                {
+                    "url": "admin/package",
+                    "name": "Quản lý gói",
+                    "icon": "circle",
+                    "slug": ["admin.package.index", "admin.package.create", "admin.package.edit"]
+                }
+            ]
+        },
+        {
+            "url": "admin/page",
+            "name": "Quản lý nội dung",
+            "icon": "file",
+            "slug": ["admin.page.index", "admin.page.create", "admin.page.edit"]
+        },
+        {
+            "url": "admin/notification",
+            "name": "Quản lý thông báo",
+            "icon": "bell",
+            "slug": ["admin.notification.index", "admin.notification.create", "admin.notification.edit"]
+        },
+        {
+            "navheader": "Quản trị",
+            "slug": []
+        },
+        {
+            "url": "admin/admin",
+            "name": "Tài khoản",
+            "icon": "user-check",
+            "slug": ["admin.admin.index", "admin.admin.create", "admin.admin.edit"]
+        },
+        {
+            "name": "Phân quyền",
+            "icon": "shield",
+            "slug": [],
+            "submenu": [
+                {
+                    "url": "admin/role",
+                    "name": "Nhóm quyền",
+                    "icon": "circle",
+                    "slug": ["admin.role.index", "admin.role.create", "admin.role.edit"]
+                },
+                {
+                    "url": "admin/permission",
+                    "name": "Quyền",
+                    "icon": "circle",
+                    "slug": ["admin.permission.index", "admin.permission.create", "admin.permission.edit"]
+                }
+            ]
+        }
+    ]
+}
