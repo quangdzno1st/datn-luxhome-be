@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -19,30 +20,24 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $keyType = 'string';
     protected $fillable = [
         'name',
+        'id',
         'phone',
         'email',
         'address',
+        'org_id',
         'password',
-        'status',
-        'gender',
-        'avatar',
-        'birthday',
-        'admin_id',
-        'year_old',
-        'secon_phone',
-        'region',
-        'other_info',
-        'note',
-        'province_id',
-        'district_id',
-        'ward_id',
-        'heith_weight',
-        'admin_id',
-        'customer_group_id',
+        'cccd',
+        'is_active',
+        'rank_id',
+        'type',
     ];
 
+    const CUSTOMER = 1;
+    const ACTIVE = 1;
+    const INACTIVE = 2;
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -72,11 +67,13 @@ class User extends Authenticatable
     ];
 
 
-    function admin(){
-        return $this->belongsTo(Admin::class,'admin_id');
+    function admin()
+    {
+        return $this->belongsTo(Admin::class, 'admin_id');
     }
 
-    function operation(){
-        return $this->hasOne(SaleOperation::class,'user_id');
+    function operation()
+    {
+        return $this->hasOne(SaleOperation::class, 'user_id');
     }
 }
