@@ -31,7 +31,7 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('notifications/{id}', 'NotificationDetail');
         Route::get('time-out', 'timeOut');
         Route::middleware('auth:sanctum')->group(function () {
-            Route::get('logout', 'logout');
+            Route::post('logout', 'logout');
             Route::get('user', 'user');
             Route::post('user/update', 'update');
             //Route::post('user/destroy', 'destroy');

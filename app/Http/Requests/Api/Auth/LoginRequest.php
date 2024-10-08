@@ -43,11 +43,14 @@ class LoginRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
+        $errors = $validator->errors()->toArray(); // Lấy tất cả lỗi dưới dạng mảng key-value
         $json = [
             'result' => false,
-            'message' => $validator->errors()->first()
+            'errors' => $errors, // Trả về các lỗi theo dạng key-value
         ];
-        $response = response( $json, 200 );
-        throw (new ValidationException($validator, $response))->status(200);
+
+        $response = response($json, 422); // Trả về mã trạng thái HTTP 422 cho lỗi xác thực
+        throw (new ValidationException($validator, $response))->status(422);
     }
+
 }

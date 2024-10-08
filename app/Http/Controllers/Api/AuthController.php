@@ -2,35 +2,27 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Constant\Enum\RoleEnum;
 use App\Http\Requests\Api\Auth\ChangePasswordRequest;
 use App\Http\Requests\Api\Auth\LoginRequest;
-use App\Repositories\FirebaseNotification\FirebaseNotificationRepository;
-use App\Repositories\Log\LogUserRepository;
-use App\Repositories\Setting\SettingRepository;
-use App\Repositories\User\UserRepository;
+use App\Http\Requests\Api\Auth\SignupRequest;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 
 class AuthController extends Controller
 {
 
-    public $userRepository;
-    public $notification;
-    public $settingRepository;
-    public $logUserRepository;
-
+    public $user;
     public function __construct(
-        UserRepository                 $userRepository,
-        FirebaseNotificationRepository $notification,
-        SettingRepository              $settingRepository,
+      User $user
     )
     {
-        $this->userRepository = $userRepository;
-        $this->notification = $notification;
-        $this->settingRepository = $settingRepository;
+        $this->user = $user;
     }
 
 
@@ -56,70 +48,41 @@ class AuthController extends Controller
         return $this->sendSuccess([]);
     }
 
-    public function signup(Request $request)
+    public function signup(SignupRequest $request)
     {
-//        print_r('<pre>');
-//        print_r($request->all());
-//        die;
+        try {
+            $data = $request->all();
+            User::query()->create([
+                'id' => (string) Str::uuid(),
+                'name' => $data['name'],
+                'phone' => $data['phone'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'rank_id' => "fgfdgfdgfdg",
+                'type' => User::CUSTOMER,
+                'is_active' => User::ACTIVE,
+                'address' => $data['address'],
+            ]);
 
-        $validate = Validator::make($request->all(), [
-            'name' => 'required',
-            'phone' => 'required|numeric|unique:users,phone',
-            'password' => 'required|min:6'
-        ],
-            [
-                'name.required' => 'Vui lòng nhập tên',
-                'phone.required' => 'Vui lòng nhập số điện thoại',
-                'phone.numeric' => 'Số điện thoại ko đúng định dạng',
-                'phone.unique' => 'Số điện thoại đã được đăng ký',
-                'password.required' => 'Vui lòng nhập mật khẩu',
-                'password.min' => 'Mật khẩu tối thiểu 6 ký tự trở lên',
-            ],
-        );
+            return response()->json([
+                'result' => true,
+                'message' => 'Đăng ký tài khoản thành công',
+            ]);
 
-        if ($validate->fails()) {
-            return $this->sendError($validate->errors()->first(),200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'result' => false,
+                'message' => 'Có lỗi xảy ra, vui lòng thử lại sau',
+                'error_detail' => $e->getMessage()
+            ], 500);
         }
-
-//        $user = $this->userRepository->first(['phone' => $request->phone]);
-//        if ($user) {
-//            return $this->sendError('Số điện thoại đã được đăng ký');
-//        }
-
-        $data = $request->all();
-        $data['birthday'] = !empty($request->birthday) ? saveConvertTime($request->birthday) : null;
-        $data['password'] = Hash::make($request->password);
-
-        $this->userRepository->create($data);
-        return response()->json([
-            'result' => true,
-            'message' => 'Đăng ký tài khoản thành công',
-        ]);
-
     }
 
     public function login(LoginRequest $request)
     {
-        $user = $this->userRepository->first(['phone' => $request->phone]);
+        $user = User::query()->where(['phone' => $request->phone])->first();
         if ($user) {
-//            $user->load(['package', 'user_address']);
             if (Hash::check($request->password, $user->password)) {
-                if ($user->status == 0) {
-                    return $this->sendError('Tài khoản của bạn đã bị khóa');
-                }
-                if ($request->device_token) {
-                    $user->device_token = $request->device_token;
-                    $user->save();
-                }
-
-                $data = [
-                    'user_id' => $user->id,
-                    'ip_address' => $request->ip(),
-                    'device_name' =>  $request->device_name??$request->header('User-Agent'),
-                    'type' => 'start'
-                ];
-                $this->saveLogUser($data);
-
                 return $this->loginSuccess($user);
             } else {
                 return response()->json([
@@ -229,8 +192,6 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-         $data=['device_name'=>$request->device_name??$request->header('User-Agent'),'type'=>'end'];
-        $this->saveLogUser($data);
         $request->user()->currentAccessToken()->delete();
         return response()->json([
             'result' => true,
@@ -261,16 +222,7 @@ class AuthController extends Controller
                 'access_token' => $token,
                 'token_type' => 'Bearer',
                 'expires_at' => null,
-                'user' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'phone' => $user->phone,
-                    'email' => $user->email,
-                    'avatar' => $user->avatar ? asset_url($user->avatar) : null,
-                    'birthday' =>  $user->birthday?date('d/m/Y', $user->birthday):null,
-                    'gender' => ARR_TEXT_GENDER[$user->gender],
-                    'address' => $user->address,
-                ]
+                'user' => $user
             ]
         ]);
     }
