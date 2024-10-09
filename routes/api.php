@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Api\NewController;
 use App\Http\Controllers\Api\PageController;
 use App\Http\Controllers\Api\RoomController;
+use App\Http\Controllers\Api\ServiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -39,6 +40,17 @@ Route::group(['prefix' => 'auth'], function () {
 //            Route::post('password/reset', 'resetPassword');
             Route::post('check-distance', 'calculateDistance');
             Route::get('count-notification', 'countNotification');
+
+            //Api Service
+            Route::prefix('services')
+                ->controller(ServiceController::class)
+                ->group(function () {
+                    Route::get('/', 'index');
+                    Route::get('/{id}', 'show');
+                    Route::post('/', 'store');
+                    Route::put('/{id}', 'update');
+                    Route::delete('/{id}', 'destroy');
+            });
         });
     });
 });
@@ -49,4 +61,3 @@ Route::fallback(function () {
         'message' => 'Invalid Route'
     ]);
 });
-
