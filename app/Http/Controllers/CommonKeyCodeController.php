@@ -6,7 +6,7 @@ use App\Models\CommonKeyCode;
 
 class CommonKeyCodeController extends Controller
 {
-    protected function genNewKeyCode(string $type, string $lengthFormat, string $orgId): string
+    private function genNewKeyCode(string $type, string $lengthFormat, string $orgId): string
     {
         $currentIndex = $this->getCurrentIndexBy($type, $orgId);
         return sprintf($lengthFormat, $currentIndex);
