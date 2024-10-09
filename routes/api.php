@@ -50,3 +50,4 @@ Route::fallback(function () {
     ]);
 });
 
+Route::resource('voucher',\App\Http\Controllers\Api\VoucherController::class);
