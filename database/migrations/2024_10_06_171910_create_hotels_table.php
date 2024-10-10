@@ -15,13 +15,18 @@ return new class extends Migration {
         Schema::create('hotels', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name', 255);
+            $table->string('slug', 255);
             $table->string('location', 255);
             $table->integer('quantity_of_room');
             $table->tinyInteger('star');
             $table->uuid('city_id');
             $table->string('phone', 255);
             $table->string('email', 255);
-            $table->tinyInteger('status');
+            $table->enum('status',
+                [
+                    \App\Models\Hotel::class::OPEN,
+                    \App\Models\Hotel::class::CLOSE
+                ])->default(\App\Models\Hotel::class::OPEN);
             $table->integer('quantity_floor');
             $table->timestamps();
             $table->softDeletes(); // Soft delete
