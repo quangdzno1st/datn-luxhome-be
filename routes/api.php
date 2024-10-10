@@ -50,3 +50,14 @@ Route::fallback(function () {
     ]);
 });
 
+Route::prefix('hotels')
+->group(function(){
+    Route::get('/', [\App\Http\Controllers\Admin\HotelController::class, 'index']);
+    Route::post('/', [\App\Http\Controllers\Admin\HotelController::class, 'store']);
+    Route::get('/trash', [\App\Http\Controllers\Admin\HotelController::class, 'trash']);
+    Route::get('/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'show']);
+    Route::put('/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'update']);
+    Route::delete('/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'destroy']);
+    Route::get('/restore/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'restore']);
+    Route::get('/force-delete/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'forceDelete']);
+});
