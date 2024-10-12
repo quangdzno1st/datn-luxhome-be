@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Api\CatalogueRoomController;
 use App\Http\Controllers\Api\NewController;
 use App\Http\Controllers\Api\PageController;
 use App\Http\Controllers\Api\RoomController;
@@ -36,13 +37,14 @@ Route::group(['prefix' => 'auth'], function () {
             Route::post('user/update', 'update');
             //Route::post('user/destroy', 'destroy');
             Route::post('password/change', 'changePassword');
-//            Route::post('password/reset', 'resetPassword');
+            //            Route::post('password/reset', 'resetPassword');
             Route::post('check-distance', 'calculateDistance');
             Route::get('count-notification', 'countNotification');
         });
     });
 });
 
+Route::resource('/catalogue-rooms', CatalogueRoomController::class);
 Route::fallback(function () {
     return response()->json([
         'status' => 404,

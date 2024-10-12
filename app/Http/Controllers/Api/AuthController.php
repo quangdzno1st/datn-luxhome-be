@@ -62,6 +62,7 @@ class AuthController extends Controller
                 'type' => User::CUSTOMER,
                 'is_active' => User::ACTIVE,
                 'address' => $data['address'],
+                'org_id' => $data['org_id'],
             ]);
 
             return response()->json([
