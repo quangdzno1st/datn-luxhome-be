@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Services\impl;
 
 use App\Models\CommonKeyCode;
+use App\Services\CommonKeyCodeService;
 
-class CommonKeyCodeController extends Controller
+class CommonKeyCodeServiceImpl implements CommonKeyCodeService
 {
-    protected function genNewKeyCode(string $type, string $lengthFormat, string $orgId): string
+
+    public function genNewKeyCode(string $type, string $lengthFormat, string $orgId): string
     {
         $currentIndex = $this->getCurrentIndexBy($type, $orgId);
-        return sprintf($lengthFormat, $currentIndex);
+        return $type . sprintf($lengthFormat, $currentIndex); 
     }
 
     protected function getCurrentIndexBy(string $type, string $orgId): int

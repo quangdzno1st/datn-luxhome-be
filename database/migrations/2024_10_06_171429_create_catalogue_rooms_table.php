@@ -18,10 +18,9 @@ return new class extends Migration
             $table->uuid('hotel_id');
             $table->string('name', 255);
             $table->double('price');
-            $table->string('description', 255);
-            $table->string('image', 255);
-            $table->bigInteger('view');
-            $table->integer('like');
+            $table->string('description', 255)->nullable();
+            $table->bigInteger('view')->default(0);
+            $table->integer('like')->default(0);
             $table->tinyInteger('status');
             $table->uuid('org_id');
             $table->timestamps();

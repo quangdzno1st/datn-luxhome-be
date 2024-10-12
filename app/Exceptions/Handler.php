@@ -59,23 +59,27 @@ class Handler extends ExceptionHandler
         }
 
         if ($request->is('api/*')) {
-            if($e instanceof AuthenticationException){
+            if ($e instanceof AuthenticationException) {
                 return response()->json([
                     'message' => 'Bạn chưa đăng nhập',
                     'result' => false
                 ], 401);
             }
 
-            if($e instanceof ModelNotFoundException){
+            if ($e instanceof ModelNotFoundException) {
                 return response()->json([
                     'message' => 'Không tìm thấy dữ liệu',
                     'result' => false
-                ],404);
+                ], 404);
             }
 
-            if($e instanceof NotFoundHttpException || $e instanceof AuthenticationException){
+            if ($e instanceof RespException) {
+                return $e->render();
+            }
 
-            }else{
+            if ($e instanceof NotFoundHttpException || $e instanceof AuthenticationException) {
+
+            } else {
 //                $this->sendMessage('Có lỗi hệ thống. Message: ' . $e->getMessage() . '. File: ' . $e->getFile() . '. Line: ' . $e->getLine() .', url: '. url()->full());
             }
 
@@ -90,10 +94,9 @@ class Handler extends ExceptionHandler
     }
 
 
-
     public static function sendMessage($text)
     {
-        $chat_id='-903942955';
+        $chat_id = '-903942955';
         $url = 'https://api.telegram.org/bot6821611292:AAHAV2DDTaC0HBb6GHDZOzMJ1RElcdIXZ6c/sendMessage';
 
         $data = [

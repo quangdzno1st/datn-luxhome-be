@@ -3,6 +3,7 @@
 
 namespace App\Repositories\Base;
 
+use App\Models\User;
 use App\Repositories\Base\BaseInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -45,7 +46,7 @@ abstract class BaseRepository implements BaseInterface
     {
         $query = $this->model;
         $this->resetModel();
-        return $query->orderBy('id','desc')->value('id');
+        return $query->orderBy('id', 'desc')->value('id');
     }
 
     public function finOrFail($id)
@@ -68,28 +69,28 @@ abstract class BaseRepository implements BaseInterface
         return $query->first();
     }
 
-    public function get(array $where = [], array $orderBy = [] ,array $select=[],$join=null,$groupBy=null)
+    public function get(array $where = [], array $orderBy = [], array $select = [], $join = null, $groupBy = null)
     {
         $query = $this->model;
 
-        if(!empty($select)){
+        if (!empty($select)) {
             $query = $query->select(implode(',', $select));
         }
 
         if (!empty($join)) {
-            $type='join';
-            if(isset($join['type']) && !empty($join['type'])){
-                $type= $join['type'];
+            $type = 'join';
+            if (isset($join['type']) && !empty($join['type'])) {
+                $type = $join['type'];
             }
-            $query=   $query->$type($join['table'], $join['foreign_key'], '=', $join['local_key']);
+            $query = $query->$type($join['table'], $join['foreign_key'], '=', $join['local_key']);
         }
 
         if ($where) {
             $this->applyConditions($query, $where);
         }
 
-        if(!empty($groupBy)){
-            $query=  $query->groupBy($groupBy);
+        if (!empty($groupBy)) {
+            $query = $query->groupBy($groupBy);
         }
 
         if (!empty($orderBy)) {
@@ -161,7 +162,8 @@ abstract class BaseRepository implements BaseInterface
         return $query->pluck($column, $key);
     }
 
-    public function withCount($column){
+    public function withCount($column)
+    {
         $query = $this->model;
         return $query->withCount($column);
     }
@@ -202,7 +204,7 @@ abstract class BaseRepository implements BaseInterface
      */
     public function create($data)
     {
-     return DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($data) {
             $query = $this->model->newInstance($data);
             $query->save();
             $this->resetModel();
@@ -221,10 +223,10 @@ abstract class BaseRepository implements BaseInterface
 
     public function edit($model, $data)
     {
-        return DB::transaction(function () use ($model,$data) {
-        $query = $model->fill($data);
-        $query->save();
-        return $query;
+        return DB::transaction(function () use ($model, $data) {
+            $query = $model->fill($data);
+            $query->save();
+            return $query;
         });
     }
 
@@ -249,13 +251,15 @@ abstract class BaseRepository implements BaseInterface
         return true;
     }
 
-    public function upsert($data, $unique_column, $update_column){
+    public function upsert($data, $unique_column, $update_column)
+    {
         $this->model->upsert($data, $unique_column, $update_column);
         $this->resetModel();
         return true;
     }
 
-    public function updateOrCreate($data, $data_update){
+    public function updateOrCreate($data, $data_update)
+    {
         $this->model->updateOrCreate($data, $data_update);
         $this->resetModel();
         return true;
@@ -274,22 +278,22 @@ abstract class BaseRepository implements BaseInterface
         return true;
     }
 
-    public function paginate(array $where = [], array $orderBy = [], array $select = [], array $with = [], $limit = 50,$selectRaw='',$join=null,array $whereHas = [])
+    public function paginate(array $where = [], array $orderBy = [], $limit = 50, $selectRaw = '', $join = null, array $whereHas = [])
     {
         $query = $this->model;
 
-        if(!empty($select)){
+        if (!empty($select)) {
             $query = $query->select(implode(',', $select));
         }
-        if(!empty($selectRaw)){
+        if (!empty($selectRaw)) {
             $query = $query->selectRaw($selectRaw);
         }
         if (!empty($join)) {
-            $type='join';
-            if(isset($join['type']) && !empty($join['type'])){
-                $type= $join['type'];
+            $type = 'join';
+            if (isset($join['type']) && !empty($join['type'])) {
+                $type = $join['type'];
             }
-            $query=   $query->$type($join['table'], $join['foreign_key'], '=', $join['local_key']);
+            $query = $query->$type($join['table'], $join['foreign_key'], '=', $join['local_key']);
         }
 
         if (!empty($where)) {
@@ -318,7 +322,7 @@ abstract class BaseRepository implements BaseInterface
         if (!empty($with)) {
             $query->with($with);
         }
-        $query = $query->paginate($limit);
+        $query = $query->paginate($limit, $columns = ['*'], $pageName = 'page');
         $this->resetModel();
         return $query;
     }
@@ -331,10 +335,11 @@ abstract class BaseRepository implements BaseInterface
     public function whereHas(&$query, $whereHas)
     {
         $value = $whereHas[2];
-        $query = $query->whereHas($whereHas[0] , function ($q) use ($value){
-            $q->where('shipping_type',$value);
+        $query = $query->whereHas($whereHas[0], function ($q) use ($value) {
+            $q->where('shipping_type', $value);
         });
     }
+
     protected function applyConditions(&$query, $where = [])
     {
 //        echo '<pre>';
@@ -379,9 +384,9 @@ abstract class BaseRepository implements BaseInterface
                     $query = $query->whereJsonContains($field, $val);
                     break;
                 case 'whereJsonDoesntContain':
-                    $query = $query->whereJsonDoesntContain ($field, $val);
+                    $query = $query->whereJsonDoesntContain($field, $val);
                     break;
-                    case 'whereNull':
+                case 'whereNull':
                     $query = $query->whereNull($field);
                     break;
                 case 'whereNotIn':
@@ -390,8 +395,8 @@ abstract class BaseRepository implements BaseInterface
                 case 'orWhereNotIn':
                     $query = $query->orWhereNotIn($field, $val);
                     break;
-                 case 'whereRaw':
-                    $query = $query->whereRaw($field,$val);
+                case 'whereRaw':
+                    $query = $query->whereRaw($field, $val);
                     break;
                 case 'whereBetween':
                     $query = $query->whereBetween($field, $val);
@@ -505,15 +510,17 @@ abstract class BaseRepository implements BaseInterface
         return $sort;
     }
 
-    public function setValue(array $data, $prefix = ''){
+    public function setValue(array $data, $prefix = '')
+    {
         $set = [];
-        foreach ($data as $value){
-            $set[$value] = '$'.$prefix.$value;
+        foreach ($data as $value) {
+            $set[$value] = '$' . $prefix . $value;
         }
         return $set;
     }
 
-    public function raw($query){
+    public function raw($query)
+    {
         $query = $this->model;
         $query->raw($query);
         return $query->get();
