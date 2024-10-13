@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\CatalogueRoomController;
 use App\Http\Controllers\Api\NewController;
 use App\Http\Controllers\Api\PageController;
 use App\Http\Controllers\Api\RoomController;
+use App\Http\Controllers\Api\ServiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -40,6 +41,8 @@ Route::group(['prefix' => 'auth'], function () {
             //            Route::post('password/reset', 'resetPassword');
             Route::post('check-distance', 'calculateDistance');
             Route::get('count-notification', 'countNotification');
+
+
         });
     });
 });
@@ -63,3 +66,16 @@ Route::prefix('hotels')
     Route::get('/restore/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'restore']);
     Route::get('/force-delete/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'forceDelete']);
 });
+
+//Api Service
+Route::prefix('services')
+    ->controller(ServiceController::class)
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show');
+        Route::post('/', 'store');
+        Route::put('/{id}', 'update');
+        Route::put('/delete/{id}', 'delete');
+        Route::put('/restore/{id}', 'restore');
+        Route::delete('/{id}', 'destroy');
+    });
