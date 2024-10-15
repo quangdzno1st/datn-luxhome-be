@@ -79,3 +79,13 @@ Route::prefix('services')
         Route::put('/restore/{id}', 'restore');
         Route::delete('/{id}', 'destroy');
     });
+
+Route::prefix('vouchers')->group(function (){
+    Route::get('/',[\App\Http\Controllers\Api\VoucherController::class,'index']);
+    Route::post('/',[\App\Http\Controllers\Api\VoucherController::class,'store']);
+    Route::put('/{id}',[\App\Http\Controllers\Api\VoucherController::class,'update']);
+    Route::get('/{id}',[\App\Http\Controllers\Api\VoucherController::class,'show']);
+    Route::delete('/delete/{id}',[\App\Http\Controllers\Api\VoucherController::class,'delete']);
+    Route::post('/restore/{id}',[\App\Http\Controllers\Api\VoucherController::class,'restore']);
+    Route::delete('/{id}', [\App\Http\Controllers\Api\VoucherController::class,'destroy']);
+});

@@ -525,5 +525,4 @@ abstract class BaseRepository implements BaseInterface
         $query->raw($query);
         return $query->get();
     }
-
 }
