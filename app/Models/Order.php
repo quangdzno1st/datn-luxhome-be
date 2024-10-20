@@ -6,20 +6,28 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\Uuid;
 
-class CatalogueRoom extends Model
+class Order extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'id',
+        'user_id',
+        'voucher_id',
+        'booking_fee',
+        'phone',
+        'email',
         'name',
-        'hotel_id',
-        'price',
+        'code',
+        'qr_code',
         'status',
-        'description',
-        'image',
-        'view',
-        'like',
-        'org_id'
+        'start_date',
+        'end_date',
+        'check_in',
+        'check_out',
+        'note',
+        'incidental_costs',
+        'total_amount',
     ];
 
     protected $keyType = 'string';
@@ -37,8 +45,8 @@ class CatalogueRoom extends Model
     {
         return $this->belongsToMany(AttributeValue::class, 'catalogue_room_attribute', 'catalogue_room_id', 'attribute_value_id');
     }
-    public function rooms()
+    public function orderItem()
     {
-        return $this->hasMany(Room::class, 'catalogue_room_id');
+        return $this->hasMany(OrderItem::class, 'order_id');
     }
 }

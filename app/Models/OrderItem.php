@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\Uuid;
 
-class CatalogueRoom extends Model
+class OrderItem extends Model
 {
     use HasFactory;
 
+    protected $table = "order_items";
     protected $fillable = [
         'name',
         'hotel_id',
@@ -33,10 +34,11 @@ class CatalogueRoom extends Model
         });
     }
 
-    public function attributeValues()
+    public function order()
     {
-        return $this->belongsToMany(AttributeValue::class, 'catalogue_room_attribute', 'catalogue_room_id', 'attribute_value_id');
+        return $this->belongsTo(Order::class,'order_id');
     }
+
     public function rooms()
     {
         return $this->hasMany(Room::class, 'catalogue_room_id');

@@ -11,6 +11,8 @@ use App\Repositories\CatalogueRoom\CatalogueRoomRepository;
 use App\Repositories\Hotel\HotelRepository;
 use App\Services\CatalogueRoomService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+
 use Ramsey\Uuid\Uuid;
 
 class CatalogueRoomServiceImpl implements CatalogueRoomService
@@ -105,11 +107,9 @@ class CatalogueRoomServiceImpl implements CatalogueRoomService
         $this->catalogueRoomRepos->increment(['id' => $id], $incrementField);
     }
 
-    public function searchByPage(CatalogueRoomSearchRequest $request): void
+    public function search(Request $request)
     {
-        $data = $request->validated();
-
-//        $catalogueRooms = $this->catalogueRoomRepos->paginate();
+        return $this->catalogueRoomRepos->search($request);
     }
 
     public function existsById($id): bool

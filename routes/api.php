@@ -50,6 +50,7 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 Route::resource('/catalogue-rooms', CatalogueRoomController::class);
+Route::get('/search/catalogue-rooms', [CatalogueRoomController::class, 'search']);
 Route::fallback(function () {
     return response()->json([
         'status' => 404,
@@ -58,16 +59,16 @@ Route::fallback(function () {
 });
 
 Route::prefix('hotels')
-->group(function(){
-    Route::get('/', [\App\Http\Controllers\Admin\HotelController::class, 'index']);
-    Route::post('/', [\App\Http\Controllers\Admin\HotelController::class, 'store']);
-    Route::get('/trash', [\App\Http\Controllers\Admin\HotelController::class, 'trash']);
-    Route::get('/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'show']);
-    Route::put('/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'update']);
-    Route::delete('/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'destroy']);
-    Route::get('/restore/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'restore']);
-    Route::get('/force-delete/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'forceDelete']);
-});
+    ->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\HotelController::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\Admin\HotelController::class, 'store']);
+        Route::get('/trash', [\App\Http\Controllers\Admin\HotelController::class, 'trash']);
+        Route::get('/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'show']);
+        Route::put('/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'update']);
+        Route::delete('/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'destroy']);
+        Route::get('/restore/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'restore']);
+        Route::get('/force-delete/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'forceDelete']);
+    });
 
 Route::prefix('regions')
     ->group(function(){
@@ -106,6 +107,7 @@ Route::prefix('services')
         Route::delete('/{id}', 'destroy');
     });
 
+<<<<<<< HEAD
 Route::prefix('vouchers')->group(function (){
     Route::get('/',[\App\Http\Controllers\Api\VoucherController::class,'index']);
     Route::get('/condition/{key}', [\App\Http\Controllers\Api\VoucherController::class,'getByCondition']);
@@ -115,6 +117,16 @@ Route::prefix('vouchers')->group(function (){
     Route::delete('/delete/{id}',[\App\Http\Controllers\Api\VoucherController::class,'delete']);
     Route::post('/restore/{id}',[\App\Http\Controllers\Api\VoucherController::class,'restore']);
     Route::delete('/{id}', [\App\Http\Controllers\Api\VoucherController::class,'destroy']);
+=======
+Route::prefix('vouchers')->group(function () {
+    Route::get('/', [\App\Http\Controllers\Api\VoucherController::class, 'index']);
+    Route::post('/', [\App\Http\Controllers\Api\VoucherController::class, 'store']);
+    Route::put('/{id}', [\App\Http\Controllers\Api\VoucherController::class, 'update']);
+    Route::get('/{id}', [\App\Http\Controllers\Api\VoucherController::class, 'show']);
+    Route::delete('/delete/{id}', [\App\Http\Controllers\Api\VoucherController::class, 'delete']);
+    Route::post('/restore/{id}', [\App\Http\Controllers\Api\VoucherController::class, 'restore']);
+    Route::delete('/{id}', [\App\Http\Controllers\Api\VoucherController::class, 'destroy']);
+>>>>>>> 11e2e04 (viết api số lượng phòng còn lại theo điều kiện lọc của từng loại phòng(mặc định là ngày hiện tại và ngày hôm sau) , Viết api lấy danh sách phòng còn trống theo điều kiện lọc(mặc định là ngày hiện tại và ngày hôm sau), Viết api tìm kiếm loại phòng còn phòng trống theo điều kiện lọc(Mặc định tìm theo ngày hiện tại và ngày tiếp theo))
 });
 
 //Api HotelService

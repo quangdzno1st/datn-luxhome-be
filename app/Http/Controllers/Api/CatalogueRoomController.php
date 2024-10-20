@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\CatalogueRequest;
 use App\Services\CatalogueRoomService;
+use Illuminate\Http\Request;
+
 
 class CatalogueRoomController extends Controller
 {
@@ -43,5 +45,11 @@ class CatalogueRoomController extends Controller
     {
         $this->catalogueRoomService->delete($id);
         return $this->deleteSuccess();
+    }
+
+    public function search(Request $request)
+    {
+        $data = $this->catalogueRoomService->search($request);
+        return $this->sendSuccess($data);
     }
 }
