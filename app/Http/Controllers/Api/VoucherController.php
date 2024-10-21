@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\Api\Voucher\CreateVoucherRequest;
 use App\Http\Requests\Api\Voucher\UpdateVoucherRequest;
 use App\Services\impl\VoucherServiceImpl;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use App\Http\Controllers\Controller;
 use League\Flysystem\Exception;
 
 class VoucherController extends Controller
@@ -94,7 +94,7 @@ class VoucherController extends Controller
             return response()->json([
                 'data'=>$voucher,
                 'message'=>'Thành công voucher'
-            ],201);
+            ],200);
         }catch (\Exception $e){
             return response()->json([
                 'error'=>'Failed to retrieve this voucher',
@@ -193,6 +193,19 @@ class VoucherController extends Controller
                 'error_message' => $exception->getMessage(),
             ], 404);
         }
+    }
+
+    public function getByCondition($key)
+    {
+        $vouchers = $this->voucher->getByCondition($key);
+        if (isset($vouchers)) {
+            return $this->sendSuccess($vouchers);
+        }
+        return response()->json([
+            'result' => false,
+            'message' => 'No Found Data',
+            'data' => []
+        ], Response::HTTP_NOT_FOUND);
     }
 }
 
