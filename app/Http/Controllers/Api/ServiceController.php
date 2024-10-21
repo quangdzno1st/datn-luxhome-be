@@ -21,7 +21,7 @@ class ServiceController extends Controller
 
     public function index()
     {
-        $services = $this->service->getAllServices();
+        $services = $this->service->getAll();
 
         if($services){
             return response()->json([
@@ -39,7 +39,7 @@ class ServiceController extends Controller
 
     public function show($id)
     {
-        $service = $this->service->getServiceById($id);
+        $service = $this->service->getById($id);
 
         if($service){
             return response()->json([
@@ -62,7 +62,7 @@ class ServiceController extends Controller
         try {
             DB::beginTransaction();
 
-            $service = $this->service->createNewService($data);
+            $service = $this->service->createNew($data);
 
             DB::commit();
 
@@ -91,7 +91,7 @@ class ServiceController extends Controller
         try {
             DB::beginTransaction();
 
-            $service = $this->service->updateService($data, $id);
+            $service = $this->service->update($data, $id);
 
             DB::commit();
 
@@ -116,7 +116,7 @@ class ServiceController extends Controller
         try {
             DB::beginTransaction();
 
-            $service = $this->service->deleteService($id);
+            $service = $this->service->delete($id);
 
             DB::commit();
 
@@ -141,7 +141,7 @@ class ServiceController extends Controller
         try {
             DB::beginTransaction();
 
-            $service = $this->service->restoreService($id);
+            $service = $this->service->restore($id);
 
             DB::commit();
 
@@ -167,7 +167,7 @@ class ServiceController extends Controller
         try {
             DB::beginTransaction();
 
-            $service = $this->service->forceDeleteService($id);
+            $service = $this->service->forceDelete($id);
 
             DB::commit();
 
