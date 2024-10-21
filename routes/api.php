@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Api\CatalogueRoomController;
+use App\Http\Controllers\Api\HotelServiceController;
 use App\Http\Controllers\Api\NewController;
 use App\Http\Controllers\Api\PageController;
 use App\Http\Controllers\Api\RoomController;
@@ -89,3 +90,12 @@ Route::prefix('vouchers')->group(function (){
     Route::post('/restore/{id}',[\App\Http\Controllers\Api\VoucherController::class,'restore']);
     Route::delete('/{id}', [\App\Http\Controllers\Api\VoucherController::class,'destroy']);
 });
+
+//Api HotelService
+Route::prefix('hotel/services')->controller(HotelServiceController::class)
+    ->group(function (){
+        Route::get('/{idHotel}', 'index');
+        Route::post('/{idHotel}', 'store');
+        Route::delete('/{id}', 'destroy');
+        Route::delete('/',  'destroyMulti');
+    });

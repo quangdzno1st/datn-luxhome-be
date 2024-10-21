@@ -13,38 +13,38 @@ class ServiceServiceImpl implements ServiceService
         $this->serviceRepository = $serviceRepository;
     }
 
-    public function getAllServices()
+    public function getAll()
     {
         $services = $this->serviceRepository->all();
         return $services;
     }
-    public function getServiceById($id)
+    public function getById($id)
     {
         $service = $this->serviceRepository->first(['id' => $id]);
         return $service;
     }
-    public function createNewService($data)
+    public function createNew($data)
     {
         $service = $this->serviceRepository->create($data);
         return $service;
     }
-    public function updateService($data, $id)
+    public function update($data, $id)
     {
         $model = $this->serviceRepository->find($id);
         $service = $this->serviceRepository->edit($model, $data);
         return $service;
     }
-    public function deleteService($id)
+    public function delete($id)
     {
         $service = $this->serviceRepository->remove($id);
         return $service;
     }
-    public function restoreService($id)
+    public function restore($id)
     {
         $service = $this->serviceRepository->retore($id);
         return $service;
     }
-    public function forceDeleteService($id)
+    public function forceDelete($id)
     {
         $service = $this->serviceRepository->destroy($id);
         return $service;
