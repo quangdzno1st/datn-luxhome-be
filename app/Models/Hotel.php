@@ -42,6 +42,10 @@ class Hotel extends Model
         return $this->belongsTo(City::class);
     }
 
+    public function services(){
+        return $this->belongsToMany(Service::class);
+    }
+
     protected $keyType = 'string';  // Khóa chính là kiểu chuỗi
     public $incrementing = false;   // Tắt auto-increment
 

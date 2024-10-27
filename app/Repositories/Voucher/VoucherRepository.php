@@ -33,4 +33,11 @@ class VoucherRepository extends BaseRepository implements VoucherInterface
         $query->forceDelete();
         return $query;
     }
+
+    public function getWhere(array $condition)
+    {
+        $query = $this->model;
+        $this->resetModel();
+        return $query->where($condition)->get();
+    }
 }
