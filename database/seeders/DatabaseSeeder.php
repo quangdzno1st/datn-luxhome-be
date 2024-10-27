@@ -16,14 +16,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('admins')->insert([
-           [
-               'code'=>'djfhjds',
-               'name'=>'Nam Admin',
-               'username'=>'namadmin',
-               'email'=>'quachnam3010@gmail.com',
-               'password'=>Hash::make('11111111'),
-           ]
+//        DB::table('admins')->insert([
+//           [
+//               'code'=>'djfhjds',
+//               'name'=>'Nam Admin',
+//               'username'=>'namadmin',
+//               'email'=>'quachnam3010@gmail.com',
+//               'password'=>Hash::make('11111111'),
+//           ]
+//        ]);
+        $this->call([
+            RateSeeder::class
         ]);
     }
 }
