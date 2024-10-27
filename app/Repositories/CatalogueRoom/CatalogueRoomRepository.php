@@ -2,8 +2,6 @@
 
 namespace App\Repositories\CatalogueRoom;
 
-use App\Models\Attribute;
-use App\Models\AttributeValue;
 use App\Models\CatalogueRoom;
 use App\Models\Order;
 use App\Repositories\Base\BaseRepository;
@@ -18,11 +16,11 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
         return CatalogueRoom::class;
     }
 
-<<<<<<< HEAD
     public function existsById($id): bool
     {
         return CatalogueRoom::query()->where('id', $id)->exists();
-=======
+    }
+
     public function search($request)
     {
         $validator = Validator::make($request->all(), [
@@ -85,7 +83,6 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
         });
 
         return $roomsCount;
->>>>>>> 11e2e04 (viết api số lượng phòng còn lại theo điều kiện lọc của từng loại phòng(mặc định là ngày hiện tại và ngày hôm sau) , Viết api lấy danh sách phòng còn trống theo điều kiện lọc(mặc định là ngày hiện tại và ngày hôm sau), Viết api tìm kiếm loại phòng còn phòng trống theo điều kiện lọc(Mặc định tìm theo ngày hiện tại và ngày tiếp theo))
     }
 
 }

@@ -21,12 +21,20 @@ class RespException extends Exception
         parent::__construct($message, $statusCode);
     }
 
-    public function render(): \Illuminate\Http\JsonResponse
+    public function render($request): \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
     {
-        return response()->json([
-            'status' => $this->statusCode,
-            'title' => 'Lỗi hệ thống',
-            'message' => $this->message,
-        ], $this->statusCode);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'status' => $this->statusCode,
+                'title' => 'Lỗi hệ thống',
+                'message' => $this->message,
+            ], $this->statusCode);
+        }
+
+        return redirect()->back()->with([
+            'toast_title' => 'Lỗi hệ thống',
+            'toast_message' => $this->message,
+            'toast_status' => $this->statusCode
+        ]);
     }
 }
