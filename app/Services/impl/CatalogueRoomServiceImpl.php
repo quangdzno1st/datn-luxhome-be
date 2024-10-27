@@ -112,4 +112,8 @@ class CatalogueRoomServiceImpl implements CatalogueRoomService
 //        $catalogueRooms = $this->catalogueRoomRepos->paginate();
     }
 
+    public function existsById($id): bool
+    {
+        return $this->catalogueRoomRepos->existsById($id);
+    }
 }

@@ -2,21 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\Uuid;
 
-class CommonKeyCode extends Model
+class Room extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'id',
         'org_id',
-        'current_index',
-        'object_type',
+        'code',
+        'catalogue_room_id',
+        'status'
     ];
 
+    // auto render uuid
     protected static function boot(): void
     {
         parent::boot();

@@ -89,3 +89,16 @@ Route::prefix('vouchers')->group(function (){
     Route::post('/restore/{id}',[\App\Http\Controllers\Api\VoucherController::class,'restore']);
     Route::delete('/{id}', [\App\Http\Controllers\Api\VoucherController::class,'destroy']);
 });
+
+//api Room
+Route::prefix('rooms')
+    ->controller(RoomController::class)
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show');
+        Route::post('/', 'store');
+        Route::put('/{id}', 'update');
+        Route::put('/delete/{id}', 'delete');
+        Route::put('/restore/{id}', 'restore');
+        Route::delete('/{id}', 'destroy');
+    });

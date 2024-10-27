@@ -12,4 +12,9 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
         return CatalogueRoom::class;
     }
 
+    public function existsById($id): bool
+    {
+        return CatalogueRoom::query()->where('id', $id)->exists();
+    }
+
 }
