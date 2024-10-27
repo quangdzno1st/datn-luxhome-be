@@ -79,6 +79,18 @@ Route::prefix('regions')
         Route::get('/force-delete/{id}', [\App\Http\Controllers\Admin\RegionController::class, 'forceDelete']);
     });
 
+Route::prefix('cities')
+    ->group(function(){
+        Route::get('/', [\App\Http\Controllers\Admin\CityController::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\Admin\CityController::class, 'store']);
+        Route::get('/trash', [\App\Http\Controllers\Admin\CityController::class, 'trash']);
+        Route::get('/{id}', [\App\Http\Controllers\Admin\CityController::class, 'show']);
+        Route::put('/{id}', [\App\Http\Controllers\Admin\CityController::class, 'update']);
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\CityController::class, 'destroy']);
+        Route::get('/restore/{id}', [\App\Http\Controllers\Admin\CityController::class, 'restore']);
+        Route::get('/force-delete/{id}', [\App\Http\Controllers\Admin\CityController::class, 'forceDelete']);
+    });
+
 //Api Service
 Route::prefix('services')
     ->controller(ServiceController::class)
