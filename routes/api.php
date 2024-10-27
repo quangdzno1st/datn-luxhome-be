@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\RankController;
+use App\Http\Controllers\Api\RoomStatusController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,8 +45,6 @@ Route::group(['prefix' => 'auth'], function () {
             //            Route::post('password/reset', 'resetPassword');
             Route::post('check-distance', 'calculateDistance');
             Route::get('count-notification', 'countNotification');
-
-
         });
     });
 });
@@ -128,6 +128,39 @@ Route::prefix('hotel/services')->controller(HotelServiceController::class)
     });
 
 Route::get('/booking/confirm', [BookingController::class, 'confirmBooking']);
+
+//api Room
+Route::prefix('rooms')
+    ->controller(RoomController::class)
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show');
+        Route::post('/', 'store');
+        Route::put('/{id}', 'update');
+        Route::put('/delete/{id}', 'delete');
+        Route::put('/restore/{id}', 'restore');
+        Route::delete('/{id}', 'destroy');
+    });
+
+//rate
+Route::prefix('rates')->group(function () {
+    Route::get('/{numRecord}', [\App\Http\Controllers\Api\RateController::class, 'index']);
+    Route::post('/', [\App\Http\Controllers\Api\RateController::class, 'store'])->middleware('auth');
+    Route::put('/{id}', [\App\Http\Controllers\Api\RateController::class, 'update'])->middleware('auth');
+    Route::get('/{id}', [\App\Http\Controllers\Api\RateController::class, 'show']);
+    Route::delete('/delete/{id}', [\App\Http\Controllers\Api\RateController::class, 'delete'])->middleware('auth');
+    Route::post('/restore/{id}', [\App\Http\Controllers\Api\RateController::class, 'restore'])->middleware('auth');
+    Route::delete('/{id}', [\App\Http\Controllers\Api\RateController::class, 'destroy'])->middleware('auth');
+    Route::get('hotels/{hotel_id}/average-rate', [\App\Http\Controllers\Api\RateController::class, 'getAverageRate']);
+});
+//room status
+Route::patch('rooms/{room}/status', [RoomStatusController::class, 'update'])->middleware('auth:api');
+
+//
+Route::apiResource('ranks', RankController::class);
+
+//ranks
+Route::apiResource('ranks', RankController::class);
 
 //api Room
 Route::prefix('rooms')
