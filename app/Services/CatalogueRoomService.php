@@ -14,4 +14,6 @@ interface CatalogueRoomService
     public function detail($id);
 
     public function searchByPage(CatalogueRoomSearchRequest $request);
+
+    public function existsById($id);
 }
