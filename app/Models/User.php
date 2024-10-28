@@ -67,13 +67,4 @@ class User extends Authenticatable
     ];
 
 
-    function admin()
-    {
-        return $this->belongsTo(Admin::class, 'admin_id');
-    }
-
-    function operation()
-    {
-        return $this->hasOne(SaleOperation::class, 'user_id');
-    }
 }

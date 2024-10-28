@@ -2,43 +2,27 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Services\impl\UserServiceImpl;
 use Carbon\Carbon;
 use App\Models\District;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\User\UserRepository;
-use App\Repositories\Ward\WardRepository;
-use App\Repositories\District\DistrictRepository;
-use App\Repositories\Province\ProvinceRepository;
-use App\Repositories\CustomerGroup\CustomerGroupRepository;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-    private $userRepository;
+    private $userServices;
 
     public function __construct(
-        UserRepository          $userRepository,
+        UserServiceImpl         $userServices,
     )
     {
-        $this->userRepository = $userRepository;
+        $this->userServices = $userServices;
     }
     public function index(Request $request)
     {
-
-        $where = [];
-
-        if (!empty($request->name)) {
-            $searchTerm = $request->name;
-            if (is_numeric($searchTerm)) {
-                $where[] = ['users.phone', 'like', $searchTerm];
-            } else {
-                $where[] = ['users.name', 'like', $searchTerm];
-            }
-        }
-
-        $users = $this->userRepository->paginate($where, ['users.id' => 'desc'], [], [], 50);
+        $users = $this->userServices->index($request);
         return view('admin.content.customer.list', compact('users'));
     }
 
@@ -93,7 +77,7 @@ class UserController extends Controller
             $image->move(public_path('storage' . $path), $filename);
             $data['avatar'] = $path . $filename;
         }
-        $this->userRepository->create($data);
+        $this->userServices->create($data);
         return redirect()->route('admin.users.index')->with(['notice' => 'Thêm mới thành công', 'style' => 'success']);
 
     }
@@ -117,7 +101,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = $this->userRepository->find($id);
+        $user = $this->userServices->find($id);
         return view('admin.content.user.edit',compact('user'));
     }
 
@@ -130,7 +114,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = $this->userRepository->find($id);
+        $user = $this->userServices->find($id);
         $rules = [
             'name' => 'required|string|max:255',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:users,phone,'.$id,
@@ -177,7 +161,7 @@ class UserController extends Controller
             $data['avatar'] = $user->avatar;
         }
 
-        $this->userRepository->edit($user, $data);
+        $this->userServices->edit($user, $data);
         return redirect()->route('admin.users.index')->with(['notice'=>'Cập nhật thành công','style'=>'success']);
     }
 
@@ -189,8 +173,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $data = $this->userRepository->find($id);
-        $this->userRepository->delete($data);
+        $data = $this->userServices->find($id);
+        $this->userServices->delete($data);
         return redirect()->back()->with(['notice' => 'Xóa thành công', 'style' => 'success']);
     }
 }
