@@ -60,3 +60,13 @@ Route::prefix('hotel-services')->controller(HotelServiceController::class)->grou
     Route::get("/delete/{id}", 'destroy')->name("hotel.service.destroy");
     Route::delete("/delete", 'destroyMulti')->name("hotel.service.destroyMulti");
 });
+//voucher
+Route::prefix('vouchers')->group(function () {
+    Route::get('/', [\App\Http\Controllers\Admin\VoucherController::class, 'index'])->name('vouchers.index');
+    Route::post('/', [\App\Http\Controllers\Admin\VoucherController::class, 'store'])->name('vouchers.store');
+    Route::put('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'update']);
+    Route::get('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'show'])->name('vouchers.show');
+    Route::delete('/delete/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'delete'])->name('vouchers.delete');
+    Route::post('/restore/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'restore']);
+    Route::delete('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'destroy']);
+});

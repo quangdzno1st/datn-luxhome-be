@@ -61,3 +61,4 @@ Route::group(['middleware' => ['role:2']], function () {
 //    })->name('404');
 });
 //
+//voucher
