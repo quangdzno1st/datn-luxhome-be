@@ -30,5 +30,8 @@ class Attribute extends Model
     protected $keyType = 'string';  // Khóa chính là kiểu chuỗi
     public $incrementing = false;   // Tắt auto-increment
 
-
+    public function attributeValues()
+    {
+        return $this->hasMany(AttributeValue::class);
+    }
 }

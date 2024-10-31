@@ -1,20 +1,18 @@
 <?php
 
 use App\Http\Controllers\Admin\SettingController;
-use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\CatalogueRoomController;
 use App\Http\Controllers\Api\HotelServiceController;
 use App\Http\Controllers\Api\NewController;
 use App\Http\Controllers\Api\PageController;
-use App\Http\Controllers\Api\RoomController;
-use App\Http\Controllers\Api\ServiceController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\RankController;
+use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\RoomStatusController;
+use App\Http\Controllers\Api\ServiceController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------

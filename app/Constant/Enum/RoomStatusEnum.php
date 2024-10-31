@@ -13,4 +13,19 @@ enum RoomStatusEnum: int
     {
         return self::tryFrom($value) !== null;
     }
+
+    public function getName(): string
+    {
+        return match($this) {
+            self::KHONG_HOAT_DONG => 'Không hoạt động',
+            self::DANG_SUA_CHUA => 'Đang sửa chữa',
+            self::DANG_DON_DEP => 'Đang dọn dẹp',
+            self::SAN_SANG_SU_DUNG => 'Sẵn sàng sử dụng',
+        };
+    }
+
+    public static function parse(int $value): ?self
+    {
+        return self::tryFrom($value);
+    }
 }

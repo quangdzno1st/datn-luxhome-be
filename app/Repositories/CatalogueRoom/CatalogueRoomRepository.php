@@ -21,7 +21,7 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
         return CatalogueRoom::query()->where('id', $id)->exists();
     }
 
-    public function search($request)
+    public function searchByPage($request)
     {
         $validator = Validator::make($request->all(), [
             'org_id' => 'required',
@@ -85,4 +85,9 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
         return $roomsCount;
     }
 
+    public function getAllByOrgId($orgId){
+        return CatalogueRoom::query()->where('org_id', $orgId)
+            ->orderBy('name')
+            ->get();
+    }
 }
