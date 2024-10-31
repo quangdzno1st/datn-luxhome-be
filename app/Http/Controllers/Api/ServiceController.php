@@ -14,14 +14,13 @@ use League\Flysystem\Exception;
 class ServiceController extends Controller
 {
     public $service;
-
     public function __construct(ServiceServiceImpl $service){
         $this->service = $service;
     }
 
     public function index()
     {
-        $services = $this->service->getAll();
+        $services = $this->service->getAll(request());
 
         if($services){
             return response()->json([
