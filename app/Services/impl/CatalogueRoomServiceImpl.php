@@ -107,13 +107,18 @@ class CatalogueRoomServiceImpl implements CatalogueRoomService
         $this->catalogueRoomRepos->increment(['id' => $id], $incrementField);
     }
 
-    public function search(Request $request)
+    public function searchByPage(Request $request)
     {
-        return $this->catalogueRoomRepos->search($request);
+        return $this->catalogueRoomRepos->searchByPage($request);
     }
 
     public function existsById($id): bool
     {
         return $this->catalogueRoomRepos->existsById($id);
+    }
+
+    public function getAllByOrgId($orgId)
+    {
+        return $this->catalogueRoomRepos->getAllByOrgId($orgId);
     }
 }

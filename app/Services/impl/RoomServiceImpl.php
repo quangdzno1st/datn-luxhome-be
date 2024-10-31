@@ -137,7 +137,7 @@ class RoomServiceImpl implements RoomService
         $query->join("hotels as h", "c.hotel_id", "=", "h.id");
 
         $query->select("rooms.*", "c.name as catalogue_room_name", "h.name as hotel_name")
-            ->orderBy("rooms.code");
+            ->orderByDesc("rooms.code");
 
         $page = $request->getPage();
         $perPage = $request->getPerPage();
