@@ -114,7 +114,13 @@
                         </ul>
                     </div>
                 </li> <!-- end Catalogue Room Menu -->
-            
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('rooms.index')}}" data-bs-toggle=""
+                       role="button" aria-expanded="false" aria-controls="sidebarCatalogueRoom">
+                        <i class="ri-account-circle-line"></i> <span data-key="t-layouts">Phòng</span>
+                    </a>
+                </li> <!-- end  Room Menu -->
 
             </ul>
         </div>

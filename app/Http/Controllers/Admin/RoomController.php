@@ -30,43 +30,23 @@ class RoomController extends Controller
     }
 
 
-    public function create()
+    public function store(RoomRequest $request)
     {
-
+        $this->roomService->create($request);
+        return redirect()->route('rooms.index');
     }
 
 
-    public function store(Request $request)
+    public function update(RoomRequest $request, $id)
     {
-
-        dd($request->all());
-        $data = $request->validated();
-        $this->roomService->create($data);
-
-        return redirect()->route('admin.rooms.index');
-    }
-
-
-    public function show($id)
-    {
-        //
-    }
-
-
-    public function edit($id)
-    {
-        //
-    }
-
-
-    public function update(Request $request, $id)
-    {
-        //
+        $this->roomService->update($id, $request);
+        return redirect()->route('rooms.index');
     }
 
 
     public function destroy($id)
     {
-        //
+        $this->roomService->delete($id);
+        return redirect()->route('rooms.index');
     }
 }
