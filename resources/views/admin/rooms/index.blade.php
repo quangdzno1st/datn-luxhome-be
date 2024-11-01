@@ -34,25 +34,27 @@
                     </div><!-- end card header -->
 
                     <div class="card-body">
-                        <div class="listjs-table" id="customerList">
+                        <div class="listjs-table" id="">
                             <div class="row g-4 mb-3">
                                 <div class="col-sm-auto">
                                     <div>
                                         <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal"
                                                 id="create-btn" data-bs-target="#showModal"><i
-                                                    class="ri-add-line align-bottom me-1"></i> Add
+                                                    class="ri-add-line align-bottom me-1"></i> Thêm mới
                                         </button>
-                                        <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i
-                                                    class="ri-delete-bin-2-line"></i></button>
                                     </div>
                                 </div>
                                 <div class="col-sm">
-                                    <div class="d-flex justify-content-sm-end">
-                                        <div class="search-box ms-2">
-                                            <input type="text" class="form-control search" placeholder="Search...">
-                                            <i class="ri-search-line search-icon"></i>
+                                    <form method="get" action="{{ route('rooms.index') }}">
+                                        @csrf
+                                        <div class="d-flex justify-content-sm-end">
+                                            <div class="search-box ms-2">
+                                                <input type="text" class="form-control " placeholder="Search..."
+                                                       name="keyword">
+                                                <i class="ri-search-line search-icon"></i>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
 
@@ -66,8 +68,8 @@
                                                        value="option">
                                             </div>
                                         </th>
-                                        <th class="sort" data-sort="code">Mã phòng</th>
-                                        <th class="sort" data-sort="catalogue_room_name">Loại phòng</th>
+                                        <th class="sort" data-sort="status">Mã phòng</th>
+                                        <th class="sort" data-sort="status">Loại phòng</th>
                                         <th class="sort" data-sort="status">Trạng thái</th>
                                         <th class="sort" data-sort="action">Action</th>
                                     </tr>
@@ -123,70 +125,36 @@
                                                         @csrf
                                                         @method('PUT')
                                                         <div class="modal-body">
-                                                            <div class="mb-3">
-                                                                <label for="customername-field"
-                                                                       class="form-label">Code</label>
-                                                                <input type="text" id="customername-field"
-                                                                       class="form-control" placeholder="Enter code"
-                                                                       required name="code" value="{{$room->code}}"/>
-                                                                <div class="invalid-feedback">Please enter a customer
-                                                                    name.
-                                                                </div>
+
+                                                            <div lass="mb-3">
+                                                                <label for="disabledInput" class="form-label">Mã
+                                                                    phòng</label>
+                                                                <input type="text" class="form-control"
+                                                                       id="disabledInput" value="{{$room->code}}"
+                                                                       disabled>
                                                             </div>
 
                                                             <div class="mb-3">
-                                                                <label for="type-field" class="form-label">Type</label>
-                                                                <select class="form-control" data-trigger name="type"
+                                                                <label for="catalogue_room_id" class="form-label">Loại
+                                                                    phòng</label>
+                                                                <select class="form-control" data-trigger
+                                                                        name="catalogue_room_id"
                                                                         id="type-field" required>
-                                                                    <option value="price" @selected($room->type == 'price' ? 'selected' : '')>
-                                                                        Giảm giá theo đơn giá
-                                                                    </option>
-                                                                    <option value="percent" @selected($room->type == 'percent' ? 'selected' : '')>
-                                                                        Giảm giá theo phần trăm (%)
-                                                                    </option>
+                                                                    @foreach($catalogueRooms as $catalogueRoom)
+                                                                        <option value="{{$catalogueRoom->id}} {{ $catalogueRoom->id === $room->catalogue_room_id ? 'selected' : '' }}">{{$catalogueRoom->name}}</option>
+                                                                    @endforeach
                                                                 </select>
                                                             </div>
 
                                                             <div class="mb-3">
-                                                                <label for="phone-field"
-                                                                       class="form-label">Discount</label>
-                                                                <input type="number" id="phone-field"
-                                                                       class="form-control" name="discount"
-                                                                       placeholder="Enter discount" required
-                                                                       value="{{$room->discount}}"/>
-                                                                <div class="invalid-feedback">Please enter a phone.
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="mb-3">
-                                                                <label for="description-field" class="form-label">Description</label>
-                                                                <textarea name="description" class="form-control"
-                                                                          id="description-field" cols="30" rows="5"
-                                                                          placeholder="Enter description">{{$room->description}}</textarea>
-                                                                <div class="invalid-feedback">Please select a date.
-                                                                </div>
-                                                            </div>
-
-                                                            <div>
-                                                                <label for="limit-field"
-                                                                       class="form-label">Limit</label>
-                                                                <input type="number" id="limit-field"
-                                                                       class="form-control" name="limit"
-                                                                       placeholder="Enter limit" required
-                                                                       value="{{$room->limit}}"/>
-                                                                <div class="invalid-feedback">Please enter a phone.
-                                                                </div>
-                                                            </div>
-
-                                                            <div>
-                                                                <label for="expiry-field"
-                                                                       class="form-label">Expiry</label>
-                                                                <input type="date" id="expiry-field"
-                                                                       class="form-control" name="expiry"
-                                                                       placeholder="Enter expiry" required
-                                                                       value="{{$room->expiry}}"/>
-                                                                <div class="invalid-feedback">Please enter a phone.
-                                                                </div>
+                                                                <label for="catalogue_room_id" class="form-label">Trạng
+                                                                    thái</label>
+                                                                <select class="form-control" data-trigger name="status"
+                                                                        id="type-field" required>
+                                                                    @foreach(\App\Constant\Enum\RoomStatusEnum::cases() as $roomStatus)
+                                                                        <option value="{{$roomStatus->value}}" {{ $roomStatus->value === $room->status ? 'selected' : '' }}>{{$roomStatus->getName()}}</option>
+                                                                    @endforeach
+                                                                </select>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -195,7 +163,7 @@
                                                                         data-bs-dismiss="modal">Close
                                                                 </button>
                                                                 <button type="submit" class="btn btn-success"
-                                                                        id="add-btn">Update rooms
+                                                                        id="add-btn">Cập nhật phòng
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -263,11 +231,7 @@
                                 </div>
                             </div>
 
-                            <div class="d-flex justify-content-end">
-                                <div class="pagination-wrap hstack gap-2">
-                                    {{ $rooms->links() }}
-                                </div>
-                            </div>
+
 
                             <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                                  aria-hidden="true">
@@ -287,36 +251,46 @@
                                                     <select class="form-control" data-trigger name="catalogue_room_id"
                                                             id="type-field" required>
                                                         @foreach($catalogueRooms as $catalogueRoom)
-                                                            <option {{$catalogueRoom->id}}>{{$catalogueRoom->name}}</option>
+                                                            <option value="{{$catalogueRoom->id}}">{{$catalogueRoom->name}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
 
                                                 <div class="mb-3">
-                                                    <div class="form-check form-switch">
-                                                        <label for="SwitchCheck1" class="form-label">Kích hoạt</label>
-                                                        <input class="form-check-input" type="checkbox"  id="SwitchCheck1" checked name="status">
-                                                    </div>
+                                                    <label for="catalogue_room_id" class="form-label">Trạng thái</label>
+                                                    <select class="form-control" data-trigger name="status"
+                                                            id="type-field" required>
+                                                        @foreach(\App\Constant\Enum\RoomStatusEnum::cases() as $roomStatus)
+                                                            <option value="{{$roomStatus->value}}">{{$roomStatus->getName()}}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                            <div class="modal-footer">
-                                                <div class="hstack gap-2 justify-content-end">
-                                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-                                                        Close
-                                                    </button>
-                                                    <button type="submit" class="btn btn-success" id="add-btn">Add
-                                                        rooms
-                                                    </button>
+                                                <div class="modal-footer">
+                                                    <div class="hstack gap-2 justify-content-end">
+                                                        <button type="button" class="btn btn-light"
+                                                                data-bs-dismiss="modal">
+                                                            Close
+                                                        </button>
+                                                        <button type="submit" class="btn btn-success" id="add-btn">Thêm
+                                                            mới
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
+
+                        <div class="d-flex justify-content-end">
+                            <div class="pagination-wrap hstack gap-2">
+                                {{ $rooms->links() }}
+                            </div>
+                        </div>
+
                     </div><!-- end card -->
                 </div>
                 <!-- end col -->

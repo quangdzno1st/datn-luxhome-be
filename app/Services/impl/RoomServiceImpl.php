@@ -44,8 +44,11 @@ class RoomServiceImpl implements RoomService
 
         $this->validateBeforeSave($data);
 
+        $user = auth()->user();
+        $data['org_id'] = "4688497a-ca83-4027-a0fc-0929369f9a8d";
+
         $data["code"] = $this->commonKeyCodeService->genNewKeyCode(TypeCodeEnum::ROOM_TYPE->value,
-            Constant::STRING_6_CHAR, $data['org_id']);
+            Constant::STRING_6_CHAR, "4688497a-ca83-4027-a0fc-0929369f9a8d");
 
         return $this->roomRepos->create($data);
     }
@@ -86,6 +89,7 @@ class RoomServiceImpl implements RoomService
     public function update($id, RoomRequest $request)
     {
         $data = $request->validated();
+        unset($data['orgId']);
 
         $this->validateBeforeSave($data);
 
@@ -121,7 +125,8 @@ class RoomServiceImpl implements RoomService
         $query = Room::query();
 
         if ($request->has('keyword')) {
-            $query->where('code', 'like', '%' . $request->get('keyword') . '%');
+            $query->where('code', 'like', '%' . $request->get('keyword') . '%')
+                ->orWhere("c.name", "like", "%" . $request->get('keyword') . "%");
         }
         if ($request->has('status')) {
             $query->where('status', $request->get('status'));
