@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\Hotel\CreateHotelRequest;
-use App\Http\Requests\Admin\Hotel\UpdateHotelRequest;
+use App\Http\Requests\Api\Hotel\CreateHotelRequest;
+use App\Http\Requests\Api\Hotel\UpdateHotelRequest;
 use App\Http\Resources\HotelCollection;
 use App\Http\Resources\HotelResource;
 use App\Repositories\Hotel\HotelRepository;
 use App\Services\impl\HotelServiceImpl;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Log;
 
 class HotelController extends Controller
 {
@@ -32,7 +30,7 @@ class HotelController extends Controller
             return response()->json(
                 [
                     'data' => null,
-                    'message' => 'Not data',
+                    'message' => 'Không có dữ liệu',
                     'status' => Response::HTTP_NOT_FOUND
                 ]
             );
@@ -41,7 +39,7 @@ class HotelController extends Controller
         return response()->json(
             [
                 'data' => new HotelCollection($hotels),
-                'message' => 'Get hotels successfully',
+                'message' => 'Lấy thông tin tất cả khách sạn thành công',
                 'status' => Response::HTTP_OK
             ]
         );
@@ -57,7 +55,7 @@ class HotelController extends Controller
             return response()->json(
                 [
                     'data' => new HotelResource($hotel),
-                    'message' => 'Create hotel successfully',
+                    'message' => 'Thêm mới khách sạn thành công',
                     'status' => Response::HTTP_CREATED
                 ]
             );
@@ -72,15 +70,15 @@ class HotelController extends Controller
         }
     }
 
-    public function show($slug)
+    public function show($id)
     {
-        $hotel = $this->hotelRepository->detailHotel($slug);
+        $hotel = $this->hotelRepository->detailHotel($id);
 
         if ($hotel === null) {
             return response()->json(
                 [
                     'data' => null,
-                    'message' => 'Not found',
+                    'message' => 'Khách sạn không tồn tại hoặc đã bị xóa',
                     'status' => Response::HTTP_NOT_FOUND
                 ]
             );
@@ -89,24 +87,24 @@ class HotelController extends Controller
         return response()->json(
             [
                 'data' => new HotelResource($hotel),
-                'message' => 'Get hotel successfully',
+                'message' => 'Lấy thông tin khách sạn thành công',
                 'status' => Response::HTTP_OK
             ]
         );
     }
 
-    public function update(UpdateHotelRequest $request, $slug)
+    public function update(UpdateHotelRequest $request, $id)
     {
 
         try {
             $data = $request->validated();
 
-            $hotel = $this->hotelService->updateHotel($data, $slug);
+            $hotel = $this->hotelService->updateHotel($data, $id);
 
             return response()->json(
                 [
                     'data' => new HotelResource($hotel),
-                    'message' => 'Update hotel successfully',
+                    'message' => 'Cập nhật khách sạn thành công',
                     'status' => Response::HTTP_OK
                 ]
             );
@@ -121,15 +119,15 @@ class HotelController extends Controller
         }
     }
 
-    public function destroy($slug)
+    public function destroy($id)
     {
         try {
-            $hotel = $this->hotelService->deleteHotel($slug);
+            $hotel = $this->hotelService->deleteHotel($id);
 
             return response()->json(
                 [
                     'data' => null,
-                    'message' => 'Delete hotel successfully',
+                    'message' => 'Xóa khách sạn thành công',
                     'status' => Response::HTTP_OK
                 ]
             );
@@ -145,14 +143,15 @@ class HotelController extends Controller
     }
 
     // thung rac'
-    public function trash(){
+    public function trash()
+    {
         $hotels = $this->hotelRepository->trash();
 
         if ($hotels->isEmpty()) {
             return response()->json(
                 [
                     'data' => null,
-                    'message' => 'Not data',
+                    'message' => 'Không có dữ liệu',
                     'status' => Response::HTTP_NOT_FOUND
                 ]
             );
@@ -161,33 +160,34 @@ class HotelController extends Controller
         return response()->json(
             [
                 'data' => new HotelCollection($hotels),
-                'message' => 'Get hotels deleted successfully',
+                'message' => 'Lấy tất cả khách sạn đã xóa thành công',
                 'status' => Response::HTTP_OK
             ]
         );
     }
 
-    public function restore($slug){
-        $hotel = $this->hotelService->restoreHotel($slug);
+    public function restore($id)
+    {
+        $hotel = $this->hotelService->restoreHotel($id);
 
         return response()->json(
             [
                 'data' => new HotelResource($hotel),
-                'message' => 'Restore hotels successfully',
+                'message' => 'Khôi phục khách sạn thành công',
                 'status' => Response::HTTP_OK
             ]
         );
     }
 
-    public function forceDelete($slug)
+    public function forceDelete($id)
     {
         try {
-            $hotel = $this->hotelService->forceDeleteHotel($slug);
+            $hotel = $this->hotelService->forceDeleteHotel($id);
 
             return response()->json(
                 [
                     'data' => null,
-                    'message' => 'cAI NAY LA XOA VINH VIEN HEHE',
+                    'message' => 'Xóa khách sạn vĩnh viễn thành công',
                     'status' => Response::HTTP_OK
                 ]
             );
