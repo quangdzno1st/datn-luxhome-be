@@ -10,14 +10,11 @@ use Ramsey\Uuid\Uuid;
 class Hotel extends Model
 {
     use HasFactory, SoftDeletes;
-
-    CONST OPEN = 'open';
-    CONST CLOSE = 'close';
-
+    const OPEN = 'open';
+    const CLOSE = 'close';
     protected $fillable = [
         'id',
         'name',
-        'slug',
         'location',
         'quantity_of_room',
         'star',
@@ -38,7 +35,8 @@ class Hotel extends Model
         });
     }
 
-    public function city(){
+    public function city()
+    {
         return $this->belongsTo(City::class);
     }
 

@@ -4,8 +4,6 @@ namespace App\Services\impl;
 
 use App\Repositories\Hotel\HotelRepository;
 use App\Services\HotelService;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class HotelServiceImpl implements HotelService
 {
@@ -19,37 +17,33 @@ class HotelServiceImpl implements HotelService
     public function createNewHotel($data)
     {
         try {
-            $data['slug'] = Str::slug($data['name']);
+
 
             return $this->hotelRepos->create($data);
 
         } catch (\Exception $e) {
-            // Log::error('Error: ' .$e->getMessage()); // Log bug
             throw $e;
         }
     }
 
-    public function updateHotel($data, $slug)
+    public function updateHotel($data, $id)
     {
 
         try {
-            $hotel = $this->getNonNullBySlug($slug);
-
-            $data['slug'] = Str::slug($data['name']);
+            $hotel = $this->getNonNullByID($id);
 
             $hotel->update($data);
 
             return $hotel;
         } catch (\Excdeption $e) {
-            Log::error('Error: ' . $e->getMessage());
             throw $e;
         }
     }
 
-    public function deleteHotel($slug)
+    public function deleteHotel($id)
     {
         try {
-            $hotel = $this->getNonNullBySlug($slug);
+            $hotel = $this->getNonNullByID($id);
 
             $hotel->delete();
 
@@ -59,10 +53,10 @@ class HotelServiceImpl implements HotelService
         }
     }
 
-    public function restoreHotel($slug)
+    public function restoreHotel($id)
     {
         try {
-            $hotel = $this->getNonNullBySlug($slug);
+            $hotel = $this->getNonNullByID($id);
 
             $hotel->restore();
 
@@ -72,10 +66,10 @@ class HotelServiceImpl implements HotelService
         }
     }
 
-    public function forceDeleteHotel($slug)
+    public function forceDeleteHotel($id)
     {
         try {
-            $hotel = $this->getNonNullBySlug($slug);
+            $hotel = $this->getNonNullByID($id);
 
             $hotel->forceDelete();
 
@@ -85,12 +79,12 @@ class HotelServiceImpl implements HotelService
         }
     }
 
-    private function getNonNullBySlug($slug)
+    private function getNonNullByID($id)
     {
-        $hotel = $this->hotelRepos->detailHotel($slug);
+        $hotel = $this->hotelRepos->detailHotel($id);
 
         if ($hotel === null) {
-            throw new \Exception('Not found');
+            throw new \Exception('Khách sạn không tồn tại hoặc đã bị xóa');
         }
 
         return $hotel;
