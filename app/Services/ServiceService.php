@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use Illuminate\Http\Request;
+
 interface ServiceService
 {
-    public function getAll();
+    public function getAll(Request $request);
     public function getById($id);
     public function createNew($data);
     public function update($data, $id);

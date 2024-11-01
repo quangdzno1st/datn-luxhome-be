@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\CatalogueRoomController;
 use App\Http\Controllers\Admin\RoomController;
 use Illuminate\Support\Facades\Route;
@@ -10,6 +11,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 Route::get('/oke', function () {
     return view('admin.users.index');
+});
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('services')->controller(ServiceController::class)->group(function () {
+        Route::get('/', 'index')->name('services.index');
+        Route::post('/store', 'store')->name('services.store');
+        Route::put('/update/{id}', 'update')->name('services.update');
+        Route::delete('/{id}', 'destroy')->name('services.destroy');
+    });
 });
 
 

@@ -2,8 +2,10 @@
 
 namespace App\Services\impl;
 
+use App\Models\Service;
 use App\Repositories\Service\ServiceRepository;
 use App\Services\ServiceService;
+use Illuminate\Http\Request;
 
 class ServiceServiceImpl implements ServiceService
 {
@@ -13,9 +15,18 @@ class ServiceServiceImpl implements ServiceService
         $this->serviceRepository = $serviceRepository;
     }
 
-    public function getAll()
+    public function getAll(Request $request)
     {
-        $services = $this->serviceRepository->all();
+        $query = Service::query();
+        if($request->has('name')) {
+            $query->where('name', 'like', '%'.$request->get('name').'%');
+        }
+        if ($request->has('price')) {
+            $query->where('price', 'like', '%'.$request->get('price').'%');
+        }
+
+        $services = $query->paginate(10);
+
         return $services;
     }
     public function getById($id)
