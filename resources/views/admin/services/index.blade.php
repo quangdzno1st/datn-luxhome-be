@@ -85,7 +85,7 @@
                                             <td class="id" style="display:none;"><a href="javascript:void(0);"
                                                                                     class="fw-medium link-primary"></a>
                                             </td>
-                                            <td class="">{{ $service->id }}</td>
+                                            <td class="">{{ $index + 1 }}</td>
                                             <td class="">{{ $service->name }}</td>
                                             <td class="">{{ $service->price }}</td>
                                             <td class="">{{ $service->description }}</td>

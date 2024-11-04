@@ -18,8 +18,8 @@ class HotelServiceRepository extends BaseRepository implements HotelServiceInter
         $this->resetModel();
         return $query->join('hotels', 'hotel_service.hotel_id', '=', 'hotels.id')
             ->join('services', 'hotel_service.service_id', '=', 'services.id')
-            ->select('hotel_service.*', 'hotels.name as hotel_name', 'services.name as service_name')
-            ->where('hotel_id', $id)->get();
+            ->select('hotel_service.*', 'hotels.name as hotel_name', 'services.name as service_name', 'services.price as service_price', 'services.description as service_description')
+            ->where('hotel_id', $id)->paginate(10);
     }
 
     public function add($data)

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\HotelServiceController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\CatalogueRoomController;
 use App\Http\Controllers\Admin\RoomController;
@@ -53,3 +54,9 @@ Route::prefix('rooms')
 Route::post('/upload-image', [CatalogueRoomController::class, 'storeImage'])->name('upload-image');
 
 //});
+Route::prefix('hotel-services')->controller(HotelServiceController::class)->group(function () {
+    Route::get("/{idHotel}", 'index')->name("hotel.service.index");
+    Route::post("/{idHotel}", 'store')->name("hotel.service.store");
+    Route::get("/delete/{id}", 'destroy')->name("hotel.service.destroy");
+    Route::delete("/delete", 'destroyMulti')->name("hotel.service.destroyMulti");
+});
