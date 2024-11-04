@@ -22,13 +22,15 @@ class HotelServiceServiceImpl implements HotelServiceService
     }
     public function create($idHotel, Request $request)
     {
-        $data = $request->input('hotel_service');
+        $data = $request->input('services');
+
         foreach ($data as &$item){
             $item['id'] = Str::uuid()->toString();
             $item['hotel_id'] = $idHotel;
             $item['created_at'] = date('Y-m-d H:i:s');
             $item['updated_at'] = date('Y-m-d H:i:s');
         }
+
 
         return $this->hotelServiceRepository->add($data);
     }
@@ -41,7 +43,7 @@ class HotelServiceServiceImpl implements HotelServiceService
 
     public function deleteMulti(Request $request)
     {
-        $data = $request->input('ids');
+        $data = $request->input('services');
         return $this->hotelServiceRepository->deleteMany($data);
     }
 }
