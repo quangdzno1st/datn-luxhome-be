@@ -62,32 +62,37 @@
                                     </div>
                                 </div>
                                 <div class="col-5">
-                                    <div class="mb-3">
-                                        <label for="avatar" class="form-label">Avatar:</label>
-                                        <input type="file" class="form-control" id="avatar" name="avatar">
-                                        <img src="{{ \Storage::url($user->avatar) }}" alt="" width="100px">
-                                    </div>
+{{--                                    <div class="mb-3">--}}
+{{--                                        <label for="avatar" class="form-label">Avatar:</label>--}}
+{{--                                        <input type="file" class="form-control" id="avatar" name="avatar">--}}
+{{--                                        <img src="{{ \Storage::url($user->avatar) }}" alt="" width="100px">--}}
+{{--                                    </div>--}}
                                     <div class="mb-3 d-flex">
                                         <div class="form-check form-radio-danger mb-3 me-3">
                                             <input class="form-check-input" type="radio" name="type" id="admin"
-                                                value="admin" {{ $user->type == 'admin' ? 'checked' : '' }}>
+                                                value="2" {{ $user->type == 2 ? 'checked' : '' }}>
                                             <label class="form-check-label" for="admin">
                                                 Admin
                                             </label>
                                         </div>
                                         <div class="form-check form-radio-success mb-3">
                                             <input class="form-check-input" type="radio" name="type" id="member"
-                                                value="member" {{ $user->type == 'member' ? 'checked' : '' }}>
+                                                value="1" {{ $user->type == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label" for="member">
                                                 Member
                                             </label>
                                         </div>
                                     </div>
                                     <div class="mb-3 form-check">
+                                        <!-- Input hidden để trả về giá trị 0 khi checkbox không được chọn -->
+                                        <input type="hidden" name="is_active" value="0">
+
+                                        <!-- Checkbox thực tế -->
                                         <input type="checkbox" class="form-check-input" id="exampleCheck1" value="1"
-                                            name="is_active" {{ $user->is_active == '1' ? 'checked' : '' }}>
+                                               name="is_active" {{ $user->is_active == '1' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="exampleCheck1">Is active</label>
                                     </div>
+
                                 </div>
                                 <div class="card-header align-items-center d-flex">
                                     <button type="submit" class="btn btn-success">Cập nhật</button>

@@ -38,10 +38,16 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Avatar</th>
+{{--                                <th>Avatar</th>--}}
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Type</th>
+
+
+
+
+
+
                                 <th>Is Active</th>
                                 <th>Action</th>
                             </tr>
@@ -50,14 +56,15 @@
                             @foreach ($users as $user)
                                 <tr>
                                     <td>{{ $user->id }}</td>
-                                    <td>
-                                        <img src="{{\Storage::url($user->avatar)}}" alt="" width="50px">
-                                    </td>
+{{--                                    <td>--}}
+{{--                                        <img src="{{\Storage::url($user->avatar)}}" alt="" width="50px">--}}
+{{--                                    </td>--}}
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
+                                    <td>{{ $user->phone }}</td>
                                     <td>
-                                        @if ($user->type === 'member')
-                                        <span class="badge bg-info">Member</span>
+                                        @if ($user->type === \App\Models\User::CUSTOMER)
+                                        <span class="badge bg-info">Customer</span>
                                     @else
                                         <span class="badge bg-danger">Admin</span>
                                     @endif

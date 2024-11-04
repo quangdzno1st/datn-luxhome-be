@@ -21,7 +21,7 @@ class SignupRequest extends FormRequest
     {
         return [
             'name' => 'required|min:3',
-            'phone' => ['required', 'regex:/^(\+84|0)([3|5|7|8|9])+([0-9]{8})$/', 'unique:users,phone'],
+            'phone' => ['required', 'regex:/^(03|05|07|08|09)(\d{8})$/', 'unique:users,phone'],
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|confirmed',
             'address' => 'required',

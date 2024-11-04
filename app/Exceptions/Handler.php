@@ -55,8 +55,20 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e)
     {
         if ($e instanceof ValidationException) {
+            $errors = $e->validator->errors();
+
+            if (!$request->expectsJson()) {
+
+                return redirect()->back()->with([
+                    'toast_title' => 'Lỗi hệ thống',
+                    'error' => $e->getMessage(),
+                ])->withInput()->withErrors($errors);
+            }
+
             return $this->convertValidationExceptionToResponse($e, $request);
         }
+
+
 
         if ($request->is('api/*')) {
             if ($e instanceof AuthenticationException) {

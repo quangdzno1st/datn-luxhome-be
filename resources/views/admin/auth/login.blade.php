@@ -9,18 +9,18 @@
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('assets/admin//images/favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ asset('theme/admin/assets/images/favicon.ico') }}">
 
     <!-- Layout config Js -->
-    <script src="{{ asset('assets/admin/js/layout.js') }}"></script>
+    <script src="{{ asset('theme/admin/assets/js/layout.js') }}"></script>
     <!-- Bootstrap Css -->
-    <link href="{{ asset('assets/admin/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('theme/admin/assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- Icons Css -->
-    <link href="{{ asset('assets/admin/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('theme/admin/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- App Css-->
-    <link href="{{ asset('assets/admin/css/app.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('theme/admin/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- custom Css-->
-    <link href="{{ asset('assets/admin/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('theme/admin/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -63,26 +63,50 @@
                                 <div class="text-center mt-2">
                                     <h5 class="text-primary">Welcome Back !</h5>
                                     <p class="text-muted">Sign in to continue to Velzon.</p>
+                                    @if ($errors->has('error'))
+                                        <div class="alert alert-danger">
+                                            {{ $errors->first('error') }}
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="p-2 mt-4">
                                     <form action="{{ route('admin.auth.login') }}"  method="post">
                                         @csrf
-
                                         <div class="mb-3">
-                                            <label for="username" class="form-label">Username</label>
-                                            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
+                                            <label for="phone" class="form-label">Phone</label>
+                                            <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" placeholder="Enter phone number" value="{{ old('phone') }}">
+
+                                            @error('phone')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
 
+
                                         <div class="mb-3">
-                                            <div class="float-end">
-                                                <a href="auth-pass-reset-basic.html" class="text-muted">Forgot password?</a>
-                                            </div>
+                                            {{-- Uncomment if you want to enable the "Forgot password" link --}}
+                                            {{-- <div class="float-end">
+                                                <a href="{{ route('password.request') }}" class="text-muted">Forgot password?</a>
+                                            </div> --}}
+
                                             <label class="form-label" for="password-input">Password</label>
                                             <div class="position-relative auth-pass-inputgroup mb-3">
-                                                <input type="password" class="form-control pe-5 password-input" name="password" placeholder="Enter password" id="password-input">
-                                                <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
+                                                <input type="password"
+                                                       class="form-control pe-5 password-input @error('password') is-invalid @enderror"
+                                                       name="password"
+                                                       placeholder="Enter password"
+                                                       id="password-input"
+                                                       value="">
+
+                                                <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon">
+                                                    <i class="ri-eye-fill align-middle"></i>
+                                                </button>
+
+                                                @error('password')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                         </div>
+
 
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" value="" id="auth-remember-check">
@@ -142,19 +166,19 @@
     <!-- end auth-page-wrapper -->
 
     <!-- JAVASCRIPT -->
-    <script src="{{ asset('assets/admin/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-    <script src="{{ asset('assets/admin/libs/simplebar/simplebar.min.js')}}"></script>
-    <script src="{{ asset('assets/admin/libs/node-waves/waves.min.js')}}"></script>
-    <script src="{{ asset('assets/admin/libs/feather-icons/feather.min.js')}}"></script>
-    <script src="{{ asset('assets/admin/js/pages/plugins/lord-icon-2.1.0.js')}}"></script>
-    <script src="{{ asset('assets/admin/js/plugins.js')}}"></script>
+    <script src="{{ asset('theme/admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{ asset('theme/admin/assets/libs/simplebar/simplebar.min.js')}}"></script>
+    <script src="{{ asset('theme/admin/assets/libs/node-waves/waves.min.js')}}"></script>
+    <script src="{{ asset('theme/admin/assets/libs/feather-icons/feather.min.js')}}"></script>
+    <script src="{{ asset('theme/admin/assets/js/pages/plugins/lord-icon-2.1.0.js')}}"></script>
+    <script src="{{ asset('theme/admin/assets/js/plugins.js')}}"></script>
 
     <!-- particles js -->
-    <script src="{{ asset('assets/admin/libs/particles.js/particles.js')}}"></script>
+    <script src="{{ asset('theme/admin/assets/libs/particles.js/particles.js')}}"></script>
     <!-- particles app js -->
-    <script src="{{ asset('assets/admin/js/pages/particles.app.js')}}"></script>
+    <script src="{{ asset('theme/admin/assets/js/pages/particles.app.js')}}"></script>
     <!-- password-addon init -->
-    <script src="{{ asset('assets/admin/js/pages/password-addon.init.js')}}"></script>
+    <script src="{{ asset('theme/admin/assets/js/pages/password-addon.init.js')}}"></script>
 </body>
 
 </html>
