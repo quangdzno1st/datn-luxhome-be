@@ -14,7 +14,7 @@ class UserRepository extends BaseRepository implements UserInterface
         return User::class;
     }
 
-    public function getAll($request): ?User
+    public function getAll($request)
     {
         $query = $this->model::query();
 

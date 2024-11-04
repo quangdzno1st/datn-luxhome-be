@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Auth\ChangePasswordRequest;
 use App\Http\Requests\Admin\Auth\LoginRequest;
 use App\Http\Requests\Admin\Auth\UpdateRequest;
-use App\Repositories\Admin\AdminRepository;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -27,15 +27,33 @@ class AuthController extends Controller
 
     public function authenticate(Request $request)
     {
-        if (auth('admin')->attempt(['username' => $request->username, 'password' => $request->password])) {
-            $request->session()->regenerate();
-            return redirect()->intended(route('admin.room.index'));
+        $request->validate([
+            'phone' => ['required', 'regex:/^(0|\+84)[0-9]{9,10}$/'],
+            'password' => 'required|min:6'
+        ], [
+            'phone.required' => 'Vui lòng nhập số điện thoại',
+            'phone.regex' => 'Số điện thoại không đúng định dạng',
+            'password.required' => 'Vui lòng nhập mật khẩu',
+            'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự'
+        ]);
+
+        if (auth()->attempt(['phone' => $request->phone, 'password' => $request->password])) {
+            if (auth()->user()->type === User::ADMIN) {
+                $request->session()->regenerate();
+                return redirect()->intended(route('admin.users.index'));
+            }
+
+            auth()->logout();
+            return back()->withErrors([
+                'error' => 'Bạn không có quyền truy cập vào khu vực này'
+            ]);
         }
 
         return back()->withErrors([
-            'username' => 'Tài khoản hoặc mật khẩu không đúng'
+            'error' => 'Tài khoản hoặc mật khẩu không đúng'
         ])->withInput();
     }
+
 
     public function logout(Request $request)
     {
@@ -48,28 +66,25 @@ class AuthController extends Controller
 
     public function profile(Request $request)
     {
-        $admin=auth()->user();
-        return view('admin.content.auth.profile',compact('admin'));
+        $admin = auth()->user();
+        return view('admin.content.auth.profile', compact('admin'));
     }
-
 
 
     public function update(UpdateRequest $request)
     {
 
-        $admin= $this->adminRepository->find(auth()->user()->id);
-        $data=$request->only(['name','email','username_bell','password_bell']);
-        if(!empty($request->password )){
+        $admin = $this->adminRepository->find(auth()->user()->id);
+        $data = $request->only(['name', 'email', 'username_bell', 'password_bell']);
+        if (!empty($request->password)) {
             $data['password'] = $request->password;
         }
 //        else{
 //            return redirect()->back()->withErrors(['error' => 'Mật khẩu hiện tại không chính xác']);
 //        }
-          $this->adminRepository->edit($admin,$data);
+        $this->adminRepository->edit($admin, $data);
         return redirect()->back()->with('success', 'Mật khẩu đã được cập nhật thành công!');
     }
-
-
 
 
     public function changePassword(ChangePasswordRequest $request)

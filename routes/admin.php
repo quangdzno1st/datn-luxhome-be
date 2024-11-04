@@ -13,15 +13,16 @@
 
 
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['guest:admin']], function () {
+Route::group(['prefix' => 'auth'], function () {
     Route::get('/login', [AuthController::class, 'login'])->name('auth.login');
     Route::post('/login', [AuthController::class, 'authenticate'])->name('auth.login');
 });
-//
-//Route::group(['middleware' => ['auth:admin']], function () {
-//    Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+
+Route::group(['middleware' => ['role:2']], function () {
+    Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 //    Route::get('/profile', [AuthController::class, 'profile'])->name('auth.profile');
 //    Route::post('/auth/update', [AuthController::class, 'update'])->name('auth.update');
 //    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -39,7 +40,7 @@ Route::group(['middleware' => ['guest:admin']], function () {
 //    Route::resource('categories', CategoryController::class);
 //
 //    //user
-//    Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class);
 //    Route::get('user-delete/{id}', [App\Http\Controllers\Admin\UserController::class, 'destroy']);
 //
 //    // thành phố
@@ -58,5 +59,5 @@ Route::group(['middleware' => ['guest:admin']], function () {
 //    Route::get('404', function () {
 //        return view('admin.content.error.404');
 //    })->name('404');
-//});
+});
 //

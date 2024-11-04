@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
+use Ramsey\Uuid\Uuid;
 
 class User extends Authenticatable
 {
@@ -36,6 +37,7 @@ class User extends Authenticatable
     ];
 
     const CUSTOMER = 1;
+    const ADMIN = 2;
     const ACTIVE = 1;
     const INACTIVE = 2;
     /**
@@ -65,6 +67,14 @@ class User extends Authenticatable
     protected $appends = [
         //'profile_photo_url',
     ];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $model->id = Uuid::uuid4()->toString();
+        });
+    }
 
 
 }

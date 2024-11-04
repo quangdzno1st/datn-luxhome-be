@@ -15,9 +15,11 @@ use App\Repositories\User\UserRepository;
 use App\Services\CatalogueRoomService;
 use App\Services\CommonKeyCodeService;
 use App\Services\RoomService;
+use App\Services\UserService;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
 
-class UserServiceImpl implements RoomService
+class UserServiceImpl implements UserService
 {
 
     private UserRepository $userRepository;
@@ -42,60 +44,25 @@ class UserServiceImpl implements RoomService
     /**
      * @throws RespException
      */
-    public function create(RoomRequest $request)
+    public function create($request)
     {
-        $data = $request->validated();
-
-        $this->validateBeforeSave($data);
-
-        $data["code"] = $this->commonKeyCodeService->genNewKeyCode(TypeCodeEnum::ROOM_TYPE->value,
-            Constant::STRING_6_CHAR, $data['org_id']);
-
-        return $this->roomRepos->create($data);
+        $data = $request->all();
+        $data["password"] = Hash::make($data["password"]);
+         $this->userRepository->create($data);
     }
 
     /**
      * @throws RespException
      */
-    private function validateBeforeSave(array $data): void
-    {
-        $this->validateStatus($data['status']);
-        $this->validateCatalogueRoom($data['catalogue_room_id']);
-    }
-
     /**
      * @throws RespException
      */
-    private function validateStatus($status): void
+
+    public function update($id, $request)
     {
-        if (!RoomStatusEnum::isConstant($status)) {
-            throw new RespException(__('messages.room_status_invalid'), HttpStatusCodeEnum::INVALID_VALUE->value);
-        }
-    }
-
-    /**
-     * @throws RespException
-     */
-    private function validateCatalogueRoom($id): void
-    {
-        $existsCatalogueRoom = $this->catalogueRoomService->existsById($id);
-        if (!$existsCatalogueRoom) {
-            throw new RespException(__('messages.catalogue_room_not_found'), HttpStatusCodeEnum::NOT_FOUND->value);
-        }
-    }
-
-    /**
-     * @throws RespException
-     */
-    public function update($id, RoomRequest $request)
-    {
-        $data = $request->validated();
-
-        $this->validateBeforeSave($data);
-
-        $room = $this->detail($id);
-
-        return $this->roomRepos->edit($room, $data);
+        $data = $request->all();
+        $user = $this->detail($id);
+        return $this->userRepository->edit($user, $data);
     }
 
     /**
@@ -103,12 +70,12 @@ class UserServiceImpl implements RoomService
      */
     public function detail($id)
     {
-        $room = $this->roomRepos->getById($id);
-        if (is_null($room)) {
+        $user = $this->userRepository->find($id);
+        if (is_null($user)) {
             throw new RespException(__('message.room_not_found'), HttpStatusCodeEnum::NOT_FOUND->value);
         }
 
-        return $room;
+        return $user;
     }
 
     /**
@@ -116,8 +83,8 @@ class UserServiceImpl implements RoomService
      */
     public function delete($id)
     {
-        $room = $this->detail($id);
-        $this->roomRepos->delete($room);
+        $user = $this->detail($id);
+        $this->userRepository->delete($user);
     }
 
     public function searchByPage(RoomSearchRequest $request)

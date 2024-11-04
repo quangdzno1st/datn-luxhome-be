@@ -7,9 +7,9 @@ use App\Http\Requests\RoomSearchRequest;
 
 interface UserService
 {
-    public function create(RoomRequest $request);
+    public function create( $request);
 
-    public function update($id, RoomRequest $request);
+    public function update($id,  $request);
 
     public function detail($id);
 
