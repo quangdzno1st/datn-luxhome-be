@@ -15,6 +15,7 @@ class UpdateHotelRequest extends FormRequest
     {
         return [
             'name' => 'required|max:255',
+            'images.*' => 'nullable|mimes:jpeg,jpg,png',
             'location' => 'required|max:255',
             'quantity_of_room' => 'required|numeric|min:1',
             'star' => 'required|numeric|min:1',
@@ -46,7 +47,8 @@ class UpdateHotelRequest extends FormRequest
             'email.email' => 'Email không đúng định dạng',
             'quantity_floor.required' => 'Số tầng đang trống',
             'quantity_floor.numeric' => 'Số tầng phải là số',
-            'quantity_floor.min' => 'Số tầng phải lớn hơn hoặc bằng 1'
+            'quantity_floor.min' => 'Số tầng phải lớn hơn hoặc bằng 1',
+            'images.mimes' => 'Ảnh 0 hop le'
         ];
     }
 }

@@ -10,8 +10,7 @@ use Ramsey\Uuid\Uuid;
 class Hotel extends Model
 {
     use HasFactory, SoftDeletes;
-    const OPEN = 'open';
-    const CLOSE = 'close';
+
     protected $fillable = [
         'id',
         'name',
@@ -40,8 +39,14 @@ class Hotel extends Model
         return $this->belongsTo(City::class);
     }
 
-    public function services(){
+    public function services()
+    {
         return $this->belongsToMany(Service::class);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class, 'object_id');
     }
 
     protected $keyType = 'string';  // Khóa chính là kiểu chuỗi
@@ -50,6 +55,7 @@ class Hotel extends Model
     protected $casts = [
         'id' => 'string',          // Khóa chính UUID
         'city_id' => 'string', // Khóa ngoại UUID
+        'status' => 'boolean',
     ];
 
 }

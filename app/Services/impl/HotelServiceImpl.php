@@ -2,12 +2,17 @@
 
 namespace App\Services\impl;
 
+use App\Models\Image;
 use App\Repositories\Hotel\HotelRepository;
 use App\Services\HotelService;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class HotelServiceImpl implements HotelService
 {
     private HotelRepository $hotelRepos;
+
+    const PATH_UPLOAD = 'hotels';
 
     public function __construct(HotelRepository $hotelRepos)
     {
@@ -17,28 +22,77 @@ class HotelServiceImpl implements HotelService
     public function createNewHotel($data)
     {
         try {
+            $hotel = $this->hotelRepos->create($data);
+            $dataImage = [];
 
+            if (isset($data['images']) && is_array($data['images'])) {
 
-            return $this->hotelRepos->create($data);
+                foreach ($data['images'] as $image) {
+                    $path = $image->store(self::PATH_UPLOAD, 'public');
 
+                    $dataImage[] = [
+                        'id' => \Ramsey\Uuid\Uuid::uuid4(),
+                        'path' => $path,
+                        'alt' => $image->getClientOriginalName(),
+                        'object_id' => $hotel->id,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+
+                if (!empty($dataImage)) {
+                    Image::insert($dataImage);
+                }
+            }
+
+            return $hotel;
         } catch (\Exception $e) {
             throw $e;
         }
     }
 
+
     public function updateHotel($data, $id)
     {
-
         try {
             $hotel = $this->getNonNullByID($id);
 
             $hotel->update($data);
 
+            if (isset($data['images']) && is_array($data['images'])) {
+                $dataImage = [];
+
+                if ($hotel->images) {
+                    foreach ($hotel->images as $image) {
+                        Storage::disk('public')->delete($image->path);
+                        $image->delete();
+                    }
+                }
+
+                foreach ($data['images'] as $image) {
+                    $path = $image->store(self::PATH_UPLOAD, 'public');
+
+                    $dataImage[] = [
+                        'id' => \Ramsey\Uuid\Uuid::uuid4(),
+                        'path' => $path,
+                        'alt' => $image->getClientOriginalName(),
+                        'object_id' => $hotel->id,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+
+                if (!empty($dataImage)) {
+                    Image::insert($dataImage);
+                }
+            }
+
             return $hotel;
-        } catch (\Excdeption $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
     }
+
 
     public function deleteHotel($id)
     {

@@ -58,38 +58,38 @@ Route::fallback(function () {
 
 Route::prefix('hotels')
     ->group(function () {
-        Route::get('/', [\App\Http\Controllers\Admin\HotelController::class, 'index']);
-        Route::post('/', [\App\Http\Controllers\Admin\HotelController::class, 'store']);
-        Route::get('/trash', [\App\Http\Controllers\Admin\HotelController::class, 'trash']);
-        Route::get('/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'show']);
-        Route::put('/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'update']);
-        Route::delete('/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'destroy']);
-        Route::get('/restore/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'restore']);
-        Route::get('/force-delete/{slug}', [\App\Http\Controllers\Admin\HotelController::class, 'forceDelete']);
+        Route::get('/', [\App\Http\Controllers\Api\HotelController::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\Api\HotelController::class, 'store']);
+        Route::get('/trash', [\App\Http\Controllers\Api\HotelController::class, 'trash']);
+        Route::get('/{id}', [\App\Http\Controllers\Api\HotelController::class, 'show']);
+        Route::put('/{id}', [\App\Http\Controllers\Api\HotelController::class, 'update']);
+        Route::delete('/{id}', [\App\Http\Controllers\Api\HotelController::class, 'destroy']);
+        Route::get('/restore/{id}', [\App\Http\Controllers\Api\HotelController::class, 'restore']);
+        Route::get('/force-delete/{id}', [\App\Http\Controllers\Api\HotelController::class, 'forceDelete']);
     });
 
 Route::prefix('regions')
     ->group(function () {
-        Route::get('/', [\App\Http\Controllers\Admin\RegionController::class, 'index']);
-        Route::post('/', [\App\Http\Controllers\Admin\RegionController::class, 'store']);
-        Route::get('/trash', [\App\Http\Controllers\Admin\RegionController::class, 'trash']);
-        Route::get('/{id}', [\App\Http\Controllers\Admin\RegionController::class, 'show']);
-        Route::put('/{id}', [\App\Http\Controllers\Admin\RegionController::class, 'update']);
-        Route::delete('/{id}', [\App\Http\Controllers\Admin\RegionController::class, 'destroy']);
-        Route::get('/restore/{id}', [\App\Http\Controllers\Admin\RegionController::class, 'restore']);
-        Route::get('/force-delete/{id}', [\App\Http\Controllers\Admin\RegionController::class, 'forceDelete']);
+        Route::get('/', [\App\Http\Controllers\Api\RegionController::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\Api\RegionController::class, 'store']);
+        Route::get('/trash', [\App\Http\Controllers\Api\RegionController::class, 'trash']);
+        Route::get('/{id}', [\App\Http\Controllers\Api\RegionController::class, 'show']);
+        Route::put('/{id}', [\App\Http\Controllers\Api\RegionController::class, 'update']);
+        Route::delete('/{id}', [\App\Http\Controllers\Api\RegionController::class, 'destroy']);
+        Route::get('/restore/{id}', [\App\Http\Controllers\Api\RegionController::class, 'restore']);
+        Route::get('/force-delete/{id}', [\App\Http\Controllers\Api\RegionController::class, 'forceDelete']);
     });
 
 Route::prefix('cities')
     ->group(function () {
-        Route::get('/', [\App\Http\Controllers\Admin\CityController::class, 'index']);
-        Route::post('/', [\App\Http\Controllers\Admin\CityController::class, 'store']);
-        Route::get('/trash', [\App\Http\Controllers\Admin\CityController::class, 'trash']);
-        Route::get('/{id}', [\App\Http\Controllers\Admin\CityController::class, 'show']);
-        Route::put('/{id}', [\App\Http\Controllers\Admin\CityController::class, 'update']);
-        Route::delete('/{id}', [\App\Http\Controllers\Admin\CityController::class, 'destroy']);
-        Route::get('/restore/{id}', [\App\Http\Controllers\Admin\CityController::class, 'restore']);
-        Route::get('/force-delete/{id}', [\App\Http\Controllers\Admin\CityController::class, 'forceDelete']);
+        Route::get('/', [\App\Http\Controllers\Api\CityController::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\Api\CityController::class, 'store']);
+        Route::get('/trash', [\App\Http\Controllers\Api\CityController::class, 'trash']);
+        Route::get('/{id}', [\App\Http\Controllers\Api\CityController::class, 'show']);
+        Route::put('/{id}', [\App\Http\Controllers\Api\CityController::class, 'update']);
+        Route::delete('/{id}', [\App\Http\Controllers\Api\CityController::class, 'destroy']);
+        Route::get('/restore/{id}', [\App\Http\Controllers\Api\CityController::class, 'restore']);
+        Route::get('/force-delete/{id}', [\App\Http\Controllers\Api\CityController::class, 'forceDelete']);
     });
 
 //Api Service

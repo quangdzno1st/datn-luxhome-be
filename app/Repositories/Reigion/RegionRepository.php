@@ -14,7 +14,7 @@ class RegionRepository extends BaseRepository
 
     // chua xoa
     public function getAllRegion(){
-        $regions = $this->model->select('id', 'name')->latest('id')->get();
+        $regions = $this->model->select('id', 'name')->latest('id')->paginate(10);
 
         return $regions;
     }
@@ -27,7 +27,7 @@ class RegionRepository extends BaseRepository
 
     // da xoa
     public function trash(){
-        $regions = $this->model->onlyTrashed()->select('id', 'name')->latest('id')->get();
+        $regions = $this->model->onlyTrashed()->select('id', 'name')->latest('id')->paginate(10);
 
         return $regions;
     }

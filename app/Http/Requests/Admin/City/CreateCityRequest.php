@@ -32,10 +32,10 @@ class CreateCityRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'Name is require',
-            'name.unique' => 'Name has been exists',
-            'region_id.required' => 'Region is required',
-            'region_id.exists' => 'Region not found',
+            'name.required' => 'Tên thành phố đang trống',
+            'name.unique' => 'Tên thành phố đã tồn tại',
+            'region_id.required' => 'Chọn 1 miền',
+            'region_id.exists' => 'Miền không tồn tại',
         ];
     }
 }
