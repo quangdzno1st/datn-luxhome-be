@@ -115,6 +115,22 @@
                     </div>
                 </li> <!-- end Catalogue Room Menu -->
 
+{{--                voucher--}}
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarVoucher" data-bs-toggle="collapse"
+                       role="button" aria-expanded="false" aria-controls="sidebarCatalogueRoom">
+                        <i class="ri-account-circle-line"></i> <span data-key="t-layouts">Voucher</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarVoucher">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{route('vouchers.index')}}" target="_self" class="nav-link"
+                                   data-key="t-horizontal">Danh sách</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{route('rooms.index')}}" data-bs-toggle=""
                        role="button" aria-expanded="false" aria-controls="sidebarCatalogueRoom">
