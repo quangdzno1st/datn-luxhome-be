@@ -181,3 +181,11 @@ if (!function_exists('buildCategoryOptions')) {
         return $html;
     }
 }
+
+
+if (!function_exists('isRole')) {
+    function isRole($dataArr, $moduleName): bool
+    {
+        return !empty($dataArr) && in_array($moduleName, $dataArr);
+    }
+}

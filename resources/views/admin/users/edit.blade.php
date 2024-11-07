@@ -39,11 +39,17 @@
                                         <label for="name" class="form-label">Name:</label>
                                         <input type="text" class="form-control" id="name" placeholder="Enter name"
                                             name="name" value="{{ $user->name }}">
+                                        @error('name')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email:</label>
                                         <input type="email" class="form-control" id="email" placeholder="Enter email"
                                             name="email" value="{{ $user->email }}">
+                                        @error('email')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                     {{-- <div class="mb-3">
                                         <label for="password" class="form-label">Password:</label>
@@ -54,11 +60,33 @@
                                         <label for="phone" class="form-label">Phone number:</label>
                                         <input type="text" class="form-control" id="phone" placeholder="Enter phone"
                                             name="phone" value="{{$user->phone}}">
+                                        @error('phone')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                     <div class="mb-3">
+
                                         <label for="address" class="form-label">Address:</label>
                                         <input type="text" class="form-control" id="address" placeholder="Enter address"
                                             name="address" value="{{$user->address}}">
+                                        @error('address')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="hotel" class="form-label">Chọn Khách Sạn:</label>
+                                        <select class="form-control @error('hotel') is-invalid @enderror"
+                                                id="hotelSelect" name="org_id">
+                                            <option value="">-- Chọn Khách Sạn --</option>
+                                            @foreach($hotels as $hotel)
+                                                <option value="{{$hotel->id}}" @if($hotel->id == $user?->org_id) selected @endif>{{$hotel->name}}</option>
+                                            @endforeach
+                                        </select>
+
+                                        @error('org_id')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-5">
@@ -70,16 +98,23 @@
                                     <div class="mb-3 d-flex">
                                         <div class="form-check form-radio-danger mb-3 me-3">
                                             <input class="form-check-input" type="radio" name="type" id="admin"
-                                                value="2" {{ $user->type == 2 ? 'checked' : '' }}>
+                                                value="{{\App\Models\User::ADMIN}}" {{ $user->type == \App\Models\User::ADMIN ? 'checked' : '' }}>
                                             <label class="form-check-label" for="admin">
                                                 Admin
                                             </label>
                                         </div>
                                         <div class="form-check form-radio-success mb-3">
                                             <input class="form-check-input" type="radio" name="type" id="member"
-                                                value="1" {{ $user->type == 1 ? 'checked' : '' }}>
+                                                value="{{\App\Models\User::CUSTOMER}}" {{ $user->type == \App\Models\User::CUSTOMER ? 'checked' : '' }}>
                                             <label class="form-check-label" for="member">
                                                 Member
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-radio-success mb-3">
+                                            <input class="form-check-input" type="radio" name="type" id="hotelier"
+                                                value="{{ \App\Models\User::HOTELIER }}" {{ $user->type == \App\Models\User::HOTELIER ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="member">
+                                                Hotelier
                                             </label>
                                         </div>
                                     </div>
@@ -96,6 +131,8 @@
                                 </div>
                                 <div class="card-header align-items-center d-flex">
                                     <button type="submit" class="btn btn-success">Cập nhật</button>
+                                    <a href="{{ route('admin.users.index') }}" class="btn btn-primary ">Quay lại</a>
+
                                 </div>
                             </div>
                         </div>
@@ -105,3 +142,39 @@
         </div>
     </form>
 @endsection
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Hàm kiểm tra khi thay đổi radio button
+        $('input[name="type"]').on('change', function () {
+            if ($('#member').is(':checked')) {
+                $('#hotelSelect').prop('disabled', true); // Vô hiệu hóa trường chọn khách sạn
+            } else {
+                $('#hotelSelect').prop('disabled', false); // Bật lại trường chọn khách sạn
+            }
+        });
+
+        $('#togglePassword').click(function() {
+            // Get the input field and toggle the type
+            const passwordField = $('#password');
+            const passwordFieldType = passwordField.attr('type');
+
+            if (passwordFieldType === 'password') {
+                passwordField.attr('type', 'text');
+                // Change the eye icon to "open" when password is visible
+                $(this).removeClass('bi-eye-slash').addClass('bi-eye');
+            } else {
+                passwordField.attr('type', 'password');
+                // Change the eye icon to "closed" when password is hidden
+                $(this).removeClass('bi-eye').addClass('bi-eye-slash');
+            }
+        });
+
+        // Gọi hàm ngay khi tải trang để đặt trạng thái đúng
+        if ($('#member').is(':checked')) {
+            $('#hotelSelect').prop('disabled', true);
+        }
+    });
+</script>
+

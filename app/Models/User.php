@@ -29,6 +29,7 @@ class User extends Authenticatable
         'email',
         'address',
         'org_id',
+        'group_id',
         'password',
         'cccd',
         'is_active',
@@ -38,6 +39,7 @@ class User extends Authenticatable
 
     const CUSTOMER = 1;
     const ADMIN = 2;
+    const HOTELIER = 3;
     const ACTIVE = 1;
     const INACTIVE = 2;
     /**
@@ -76,5 +78,10 @@ class User extends Authenticatable
         });
     }
 
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
+    }
 
 }

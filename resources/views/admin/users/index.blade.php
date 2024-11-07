@@ -31,31 +31,54 @@
                 <div class="card-header d-flex justify-content-between">
                     <h5 class="card-title mb-0">Danh sách người dùng</h5>
                     <a href="{{ route('admin.users.create') }}" class="btn btn-success">+ Thêm mới</a>
+
                 </div>
+                @if (session('toast_message'))
+                    <div class="card-header   alert alert-{{ session('toast_style') }} alert-dismissible fade show" role="alert">
+                        {{ session('toast_message') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+
+                <form method="GET" id="searchForm" action="{{ route('admin.users.index') }}" class="card-header d-flex justify-content-end mb-3">
+                    <div class="input-group w-auto">
+                        <!-- Tìm kiếm theo tên -->
+                        <input type="text" class="form-control" name="search" id="searchInput" placeholder="Tìm kiếm người dùng..." value="{{ request()->input('search') }}">
+                    </div>
+                    <div class="input-group w-auto ms-2">
+                        <!-- Tìm kiếm theo type (Customer/Admin) -->
+                        <select name="type" class="form-select" id="typeSelect">
+                            <option value="">Tất cả loại</option>
+                            <option value="{{ \App\Models\User::CUSTOMER }}" {{ request()->input('type') == \App\Models\User::CUSTOMER ? 'selected' : '' }}>Customer</option>
+                            <option value="{{ \App\Models\User::ADMIN }}" {{ request()->input('type') == \App\Models\User::ADMIN ? 'selected' : '' }}>Admin</option>
+                            <option value="{{ \App\Models\User::HOTELIER }}" {{ request()->input('type') == \App\Models\User::HOTELIER ? 'selected' : '' }}>Hotelier</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary ms-2">Tìm kiếm</button>
+                </form>
+
+
                 <div class="card-body">
-                    <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
+                    <table id="example" class="table table-bordered dt-responsive nowrap align-middle"
                         style="width:100%">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>STT</th>
 {{--                                <th>Avatar</th>--}}
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Phone</th>
                                 <th>Type</th>
-
-
-
-
-
 
                                 <th>Is Active</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($users as $user)
+                            @foreach ($users as $key => $user)
                                 <tr>
-                                    <td>{{ $user->id }}</td>
+                                    <td>{{ $key+1 }}</td>
 {{--                                    <td>--}}
 {{--                                        <img src="{{\Storage::url($user->avatar)}}" alt="" width="50px">--}}
 {{--                                    </td>--}}
@@ -65,8 +88,10 @@
                                     <td>
                                         @if ($user->type === \App\Models\User::CUSTOMER)
                                         <span class="badge bg-info">Customer</span>
-                                    @else
-                                        <span class="badge bg-danger">Admin</span>
+                                        @elseif($user->type === \App\Models\User::HOTELIER)
+                                        <span class="badge bg-danger">Hotelier</span>
+                                        @else
+                                            <span class="badge bg-warning">Admin</span>
                                     @endif
                                     </td>
                                     <td>
@@ -89,6 +114,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {{ $users->links() }}
                 </div>
             </div>
         </div><!--end col-->
@@ -122,6 +148,9 @@
 
     <script>
         new DataTable("#example", {
+            paging: false,
+            info: false,
+            searching: false,
             order: [
                 [0, 'desc']
             ]

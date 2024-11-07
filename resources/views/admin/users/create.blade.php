@@ -33,51 +33,95 @@
                             <div class="row gy-4">
                                 <div class="col-7">
                                     <div class="mb-3">
+
                                         <label for="name" class="form-label">Name:</label>
-                                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" placeholder="Enter name" name="name" value="{{ old('name') }}">
+                                        <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                               id="name" placeholder="Enter name" name="name" value="{{ old('name') }}">
                                         @error('name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="mb-3">
                                         <label for="text" class="form-label">Email:</label>
-                                        <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" placeholder="Enter email" name="email" value="{{ old('email') }}">
+                                        <input type="text" class="form-control @error('email') is-invalid @enderror"
+                                               id="email" placeholder="Enter email" name="email"
+                                               value="{{ old('email') }}">
                                         @error('email')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="mb-3">
+                                    <div class="mb-3 position-relative">
                                         <label for="password" class="form-label">Password:</label>
-                                        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" placeholder="Enter password" name="password">
+                                        <input type="password"
+                                               class="form-control @error('password') is-invalid @enderror"
+                                               id="password"
+                                               placeholder="Enter password"
+                                               name="password">
+
+                                        <!-- Eye icon to toggle visibility -->
+                                        <i class="bi bi-eye-slash position-absolute  end-0 me-3" id="togglePassword"
+                                           style="top: 45px;  cursor: pointer; transform: translateY(-50%); font-size: 1.5rem;"></i>
+
                                         @error('password')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
+
+
                                     <div class="mb-3">
                                         <label for="phone" class="form-label">Phone number:</label>
-                                        <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" placeholder="Enter phone" name="phone" value="{{ old('phone') }}">
+                                        <input type="text" class="form-control @error('phone') is-invalid @enderror"
+                                               id="phone" placeholder="Enter phone" name="phone"
+                                               value="{{ old('phone') }}">
                                         @error('phone')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="mb-3">
                                         <label for="address" class="form-label">Address:</label>
-                                        <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" placeholder="Enter address" name="address" value="{{ old('address') }}">
+                                        <input type="text" class="form-control @error('address') is-invalid @enderror"
+                                               id="address" placeholder="Enter address" name="address"
+                                               value="{{ old('address') }}">
                                         @error('address')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
+
+                                    <div class="mb-3">
+                                        <label for="hotel" class="form-label">Chọn Khách Sạn:</label>
+                                        <select class="form-control @error('hotel') is-invalid @enderror"
+                                                id="hotelSelect" name="org_id">
+                                            <option value="">-- Chọn Khách Sạn --</option>
+                                            @foreach($hotels as $hotel)
+                                                <option value="{{$hotel->id}}">{{$hotel->name}}</option>
+                                            @endforeach
+                                        </select>
+
+                                        @error('org_id')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
                                 </div>
                                 <div class="col-5">
                                     <div class="mb-3 d-flex">
                                         <div class="form-check form-radio-danger mb-3 me-3">
-                                            <input class="form-check-input" type="radio" name="type" id="admin" value="{{ \App\Models\User::ADMIN }}">
+                                            <input class="form-check-input" type="radio" name="type" id="admin"
+                                                   value="{{ \App\Models\User::ADMIN }}">
                                             <label class="form-check-label" for="admin">
                                                 Admin
                                             </label>
                                         </div>
+                                        <div class="form-check form-radio-danger mb-3 me-3">
+                                            <input class="form-check-input" type="radio" name="type" id="hotelier"
+                                                   value="{{ \App\Models\User::HOTELIER }}">
+                                            <label class="form-check-label" for="admin">
+                                                Hotelier
+                                            </label>
+                                        </div>
                                         <div class="form-check form-radio-success mb-3">
-                                            <input class="form-check-input" type="radio" name="type" id="member" value="{{ \App\Models\User::CUSTOMER }}" checked>
+                                            <input class="form-check-input" type="radio" name="type" id="member"
+                                                   value="{{ \App\Models\User::CUSTOMER }}" checked>
                                             <label class="form-check-label" for="member">
                                                 Customer
                                             </label>
@@ -85,12 +129,14 @@
                                     </div>
                                     <div class="mb-3 form-check">
                                         <input type="hidden" name="is_active" value="0">
-                                        <input type="checkbox" class="form-check-input" id="exampleCheck1" value="1" name="is_active" checked>
+                                        <input type="checkbox" class="form-check-input" id="exampleCheck1" value="1"
+                                               name="is_active" checked>
                                         <label class="form-check-label" for="exampleCheck1">Is active</label>
                                     </div>
                                 </div>
                                 <div class="card-header align-items-center d-flex">
-                                    <button type="submit" class="btn btn-success">Thêm Mới</button>
+                                    <button type="submit" class="btn btn-success ">Thêm Mới</button>
+                                    <a href="{{ route('admin.users.index') }}" class="btn btn-primary ">Quay lại</a>
                                 </div>
                             </div>
                         </div>
@@ -100,3 +146,38 @@
         </div>
     </form>
 @endsection
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Hàm kiểm tra khi thay đổi radio button
+        $('input[name="type"]').on('change', function () {
+            if ($('#member').is(':checked')) {
+                $('#hotelSelect').prop('disabled', true); // Vô hiệu hóa trường chọn khách sạn
+            } else {
+                $('#hotelSelect').prop('disabled', false); // Bật lại trường chọn khách sạn
+            }
+        });
+
+        $('#togglePassword').click(function() {
+            // Get the input field and toggle the type
+            const passwordField = $('#password');
+            const passwordFieldType = passwordField.attr('type');
+
+            if (passwordFieldType === 'password') {
+                passwordField.attr('type', 'text');
+                // Change the eye icon to "open" when password is visible
+                $(this).removeClass('bi-eye-slash').addClass('bi-eye');
+            } else {
+                passwordField.attr('type', 'password');
+                // Change the eye icon to "closed" when password is hidden
+                $(this).removeClass('bi-eye').addClass('bi-eye-slash');
+            }
+        });
+
+        // Gọi hàm ngay khi tải trang để đặt trạng thái đúng
+        if ($('#member').is(':checked')) {
+            $('#hotelSelect').prop('disabled', true);
+        }
+    });
+</script>
