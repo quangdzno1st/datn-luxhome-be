@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -17,6 +18,7 @@ class UserRequest extends FormRequest
     {
         // Lấy ID của người dùng nếu có
         $userId = $this->route('user');
+        $userType = $this->input('type');
 
         $rules = [
             'name' => 'required|string|max:255',
@@ -32,6 +34,10 @@ class UserRequest extends FormRequest
                 Rule::unique('users')->ignore($userId), // Kiểm tra tính duy nhất nhưng bỏ qua người dùng hiện tại
             ],
         ];
+
+        if ($userType == User::CUSTOMER) {
+            $rules['org_id'] = 'prohibited';
+        }
 
         // Nếu không phải là cập nhật, thêm quy tắc cho mật khẩu
         if (!$userId) {
@@ -50,6 +56,7 @@ class UserRequest extends FormRequest
             'name.max' => "Tên không được vượt quá 255 ký tự!",
             'phone.required' => "Vui lòng nhập số điện thoại!",
             'phone.regex' => "Số điện thoại không hợp lệ!",
+            'phone.unique' => "Số điện thoại đã tồn tại!",
             'phone.min' => "Số điện thoại phải có ít nhất 10 chữ số!",
             'email.required' => "Vui lòng nhập email!",
             'email.email' => "Email không hợp lệ!",
@@ -58,6 +65,7 @@ class UserRequest extends FormRequest
             'password.min' => "Mật khẩu phải có ít nhất 8 ký tự!",
             'avatar.required' => "Vui lòng chọn hình ảnh!",
             'avatar.mimes' => "Hình ảnh phải có định dạng jpeg, png, jpg hoặc gif!",
+            'org_id.prohibited' => "Bạn không được chọn khách sạn khi là người dùng!", // Thông báo lỗi tùy chỉnh
             'avatar.max' => "Kích thước hình ảnh không được vượt quá 2MB!"
         ];
     }

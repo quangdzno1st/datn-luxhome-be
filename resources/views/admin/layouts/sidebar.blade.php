@@ -76,23 +76,28 @@
 
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarUsers" data-bs-toggle="collapse"
-                        role="button" aria-expanded="false" aria-controls="sidebarUsers">
+{{--                    <a class="nav-link menu-link" href="#sidebarUsers" data-bs-toggle="collapse"--}}
+{{--                        role="button" aria-expanded="false" aria-controls="sidebarUsers">--}}
+{{--                        <i class="ri-account-circle-line"></i> <span data-key="t-layouts">Người Dùng</span>--}}
+{{--                    </a>--}}
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="#sidebarUsers" data-bs-toggle="collapse"
+                       role="button" aria-expanded="false" aria-controls="sidebarUsers">
                         <i class="ri-account-circle-line"></i> <span data-key="t-layouts">Người Dùng</span>
                     </a>
-                    <div class="collapse menu-dropdown" id="sidebarUsers">
+                    <div class="collapse menu-dropdown {{ request()->routeIs('admin.users.*') ? 'show' : '' }}" id="sidebarUsers">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="#" target="_blank" class="nav-link"
-                                    data-key="t-horizontal">Danh Sách</a>
+                                <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.  users.index') ? 'active' : '' }}"
+                                   data-key="t-horizontal">Danh Sách</a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" target="_blank" class="nav-link"
-                                    data-key="t-detached">Thêm Mới</a>
+                                <a href="{{ route('admin.users.create') }}" class="nav-link {{ request()->routeIs('admin.  users.create') ? 'active' : '' }}"
+                                   data-key="t-detached">Thêm Mới</a>
                             </li>
-                           
                         </ul>
                     </div>
+                </li>
                 </li> <!-- end Dashboard Menu -->
 
                 <li class="nav-item">

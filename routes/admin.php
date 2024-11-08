@@ -21,7 +21,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/login', [AuthController::class, 'authenticate'])->name('auth.login');
 });
 
-Route::group(['middleware' => ['role:2']], function () {
+Route::group(['middleware' => ['role']], function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 //    Route::get('/profile', [AuthController::class, 'profile'])->name('auth.profile');
 //    Route::post('/auth/update', [AuthController::class, 'update'])->name('auth.update');
@@ -40,7 +40,10 @@ Route::group(['middleware' => ['role:2']], function () {
 //    Route::resource('categories', CategoryController::class);
 //
 //    //user
-    Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class)->middleware('can:users');
+    Route::get('/permissions', [UserController::class,'permissionsList'])->name('permissions');
+    Route::get('/permissions/edit/{id}', [UserController::class,'permissionsEdit'])->name('permissions.edit');
+    Route::post('/permissions/update/{id}', [UserController::class,'permissionsUpdate'])->name('permissions.update');
 //    Route::get('user-delete/{id}', [App\Http\Controllers\Admin\UserController::class, 'destroy']);
 //
 //    // thành phố

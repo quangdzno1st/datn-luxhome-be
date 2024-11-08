@@ -27,7 +27,7 @@ class UserServiceImpl implements UserService
     private CommonKeyCodeService $commonKeyCodeService;
 
 
-    public function __construct(UserRepository $userRepository,
+    public function __construct(UserRepository       $userRepository,
                                 CatalogueRoomService $catalogueRoomService,
                                 CommonKeyCodeService $commonKeyCodeService)
     {
@@ -41,33 +41,24 @@ class UserServiceImpl implements UserService
         return $this->userRepository->getAll($request);
     }
 
-    /**
-     * @throws RespException
-     */
+
     public function create($request)
     {
         $data = $request->all();
         $data["password"] = Hash::make($data["password"]);
-         $this->userRepository->create($data);
+        $data["group_id"] = $data["type"];
+        $this->userRepository->create($data);
     }
 
-    /**
-     * @throws RespException
-     */
-    /**
-     * @throws RespException
-     */
 
     public function update($id, $request)
     {
         $data = $request->all();
+        $data["group_id"] = $data["type"];
         $user = $this->detail($id);
         return $this->userRepository->edit($user, $data);
     }
 
-    /**
-     * @throws RespException
-     */
     public function detail($id)
     {
         $user = $this->userRepository->find($id);

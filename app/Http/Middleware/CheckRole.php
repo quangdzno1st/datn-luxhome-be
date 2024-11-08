@@ -15,19 +15,23 @@ class CheckRole
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next,$type): Response
+    public function handle(Request $request, Closure $next,...$type): Response
     {
         if (Auth::check()) {
-            if (Auth::user()->type === User::ADMIN) {
+            if (Auth::user()->type === User::ADMIN || Auth::user()->type === User::HOTELIER) {
                 return $next($request);
             }
 
-            if (Auth::user()->type === User::CUSTOMER && $type === User::CUSTOMER) {
+            if (Auth::user()->type === User::CUSTOMER) {
                 return $next($request);
             }
-            return redirect()->route('user')->with('error', 'Bạn không có quyền truy cập vào trang này.');
+            return redirect()->route('admin.auth.login')->withErrors([
+                'error' => 'Bạn không có quyền truy cập vào trang này.'
+            ]);
         }
 
-        return redirect()->route('admin.auth.login')->with('error', 'Bạn không có quyền truy cập vào trang này!');
+        return redirect()->route('admin.auth.login')->withErrors([
+            'error' => 'Bạn không có quyền truy cập vào trang này.'
+        ]);
     }
 }
