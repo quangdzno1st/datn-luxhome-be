@@ -16,7 +16,8 @@ class Region extends Model
         'name'
     ];
 
-    public function cities(){
+    public function cities()
+    {
         return $this->hasMany(City::class);
     }
 
@@ -26,6 +27,26 @@ class Region extends Model
 
         static::creating(function ($region) {
             $region->id = Uuid::uuid4()->toString();
+        });
+
+        static::deleting(function ($region) {
+                $region->cities()->each(function ($city) {
+                    $city->delete();
+                });
+        });
+
+        static::forceDeleting(function ($region) {
+            $citiesTrashed = $region->cities()->onlyTrashed()->get();
+            $citiesTrashed->each(function ($city) {
+                $city->forceDelete();
+            });
+        });
+
+        static::restoring(function ($region) {
+            $citiesTrashed = $region->cities()->onlyTrashed()->get();
+            $citiesTrashed->each(function ($city) {
+                $city->restore();
+            });
         });
     }
 

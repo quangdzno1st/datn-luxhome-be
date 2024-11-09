@@ -21,11 +21,7 @@ return new class extends Migration {
             $table->uuid('city_id');
             $table->string('phone', 255);
             $table->string('email', 255);
-            $table->enum('status',
-                [
-                    \App\Models\Hotel::class::OPEN,
-                    \App\Models\Hotel::class::CLOSE
-                ])->default(\App\Models\Hotel::class::OPEN);
+            $table->boolean('status')->default(true);
             $table->integer('quantity_floor');
             $table->timestamps();
             $table->softDeletes(); // Soft delete

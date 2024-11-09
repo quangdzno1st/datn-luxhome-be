@@ -4,13 +4,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                    id="NotificationModalbtn-close"></button>
+                        id="NotificationModalbtn-close"></button>
             </div>
             <div class="modal-body">
                 <div class="mt-2 text-center">
                     <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
-                        colors="primary:#f7b84b,secondary:#f06548"
-                        style="width:100px;height:100px"></lord-icon>
+                               colors="primary:#f7b84b,secondary:#f06548"
+                               style="width:100px;height:100px"></lord-icon>
                     <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
                         <h4>Are you sure ?</h4>
                         <p class="text-muted mx-4 mb-0">Are you sure you want to remove this Notification ?</p>
@@ -19,7 +19,8 @@
                 <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
                     <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn w-sm btn-danger" id="delete-notification">Yes, Delete
-                        It!</button>
+                        It!
+                    </button>
                 </div>
             </div>
 
@@ -49,7 +50,7 @@
             </span>
         </a>
         <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
-            id="vertical-hover">
+                id="vertical-hover">
             <i class="ri-record-circle-line"></i>
         </button>
     </div>
@@ -66,7 +67,7 @@
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Tổng Quan</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
-               
+
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#">
@@ -108,11 +109,11 @@
                     <div class="collapse menu-dropdown" id="sidebarCatalogueRoom">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="#" target="_blank" class="nav-link"
+                                <a href="#"  class="nav-link"
                                    data-key="t-horizontal">Danh Sách</a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" target="_blank" class="nav-link"
+                                <a href="#" class="nav-link"
                                    data-key="t-detached">Thêm Mới</a>
                             </li>
 
@@ -133,6 +134,22 @@
                                    data-key="t-horizontal">Danh sách</a>
                             </li>
 
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarHotels" data-bs-toggle="collapse"
+                       role="button" aria-expanded="false" aria-controls="sidebarHotels">
+                        <i class="ri-hotel-line"></i> <span data-key="t-layouts">Khách sạn</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarHotels">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="#"  class="nav-link"
+                                   data-key="t-horizontal">Danh Sách</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link"
+                                   data-key="t-detached">Thêm Mới</a>
+                            </li>
+
                         </ul>
                     </div>
                 </li>
@@ -141,8 +158,37 @@
                        role="button" aria-expanded="false" aria-controls="sidebarCatalogueRoom">
                         <i class="ri-account-circle-line"></i> <span data-key="t-layouts">Phòng</span>
                     </a>
-                </li> <!-- end  Room Menu -->
-
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarHotel" data-bs-toggle="collapse"
+                       role="button" aria-expanded="false" aria-controls="sidebarHotel">
+                        <i class="ri-hotel-line"></i> <span data-key="t-layouts">Khách sạn</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarHotel">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{route('admin.hotels.index')}}" target="_self" class="nav-link"
+                                   data-key="t-horizontal">Danh sách</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('admin.hotels.create')}}" target="_self" class="nav-link"
+                                   data-key="t-horizontal">Thêm mới</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('admin.regions.index')}}" data-bs-toggle=""
+                       role="button" aria-expanded="false" aria-controls="sidebarRegion">
+                        <i class="ri-pin-distance-fill"></i> <span data-key="t-layouts">Miền</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('admin.cities.index')}}" data-bs-toggle=""
+                       role="button" aria-expanded="false" aria-controls="sidebarRegion">
+                        <i class="ri-building-4-fill"></i> <span data-key="t-layouts">Thành phố</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->

@@ -32,8 +32,8 @@ class UpdateRegionRequest extends FormRequest
     public function  messages()
     {
         return [
-            'name.required' => 'Name is require',
-            'name.unique' => 'The name has been exists'
+            'name.required' => 'Tên miền đang trống',
+            'name.unique' => 'Tên miền đã tồn tại'
         ];
     }
 }

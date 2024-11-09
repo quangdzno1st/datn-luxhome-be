@@ -18,8 +18,8 @@ class HotelRepository extends BaseRepository implements HotelInterface
             ->select('id', 'name', 'location', 'quantity_of_room', 'star', 'city_id',
                 'phone', 'email', 'status', 'quantity_floor')
             ->latest('id')
-            ->with('city')
-            ->get();
+            ->with(['city', 'images'])
+            ->paginate(10);
 
         return $hotels;
     }
@@ -39,7 +39,7 @@ class HotelRepository extends BaseRepository implements HotelInterface
             ->latest('id')
             ->with('city')
             ->onlyTrashed()
-            ->get();
+            ->paginate(10);
 
         return $hotels;
     }
