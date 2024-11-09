@@ -15,9 +15,17 @@ class Image extends Model
     protected $fillable = [
         'id',
         'path',
-        'alt',
         'object_id',
+        'alt',
     ];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $model->id = Uuid::uuid4()->toString();
+        });
+    }
 
     protected $keyType = 'string';  // Khóa chính là kiểu chuỗi
     public $incrementing = false;   // Tắt auto-increment

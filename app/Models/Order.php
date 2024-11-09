@@ -28,6 +28,7 @@ class Order extends Model
         'note',
         'incidental_costs',
         'total_amount',
+        'transaction_id'
     ];
 
     protected $keyType = 'string';
@@ -48,5 +49,9 @@ class Order extends Model
     public function orderItem()
     {
         return $this->hasMany(OrderItem::class, 'order_id');
+    }
+
+    public function bookingService() {
+        return $this->hasMany(BookingService::class, 'order_id');
     }
 }

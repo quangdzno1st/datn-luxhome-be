@@ -26,12 +26,16 @@ class CatalogueRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'hotel_id' => 'required|exists:hotels,id',
             'name' => 'required|string',
             'price' => 'required|numeric',
-            'status' => 'required|boolean',
-            'description' => 'required|string',
-            'org_id' => 'string'
+            'status' => 'required|string',
+            'description' => 'nullable|string',
+            'org_id' => 'string',
+            'images' => 'required|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif',
+            'view' => 'required|numeric',
+            'like' => 'required|numeric',
         ];
     }
 
@@ -39,10 +43,14 @@ class CatalogueRequest extends FormRequest
     {
         return [
             'name.required' => 'Vui lòng nhập tên',
-            'hotel_id.required' => 'Vui lòng khách sạn',
+            'org_id.required' => 'Vui lòng khách sạn',
             'price.required' => 'Vui lòng nhập giá',
             'status.required' => 'Vui lòng nhập trạng thái',
+            'view.required' => 'Vui lòng nhập lượt xem',
+            'like.required' => 'Vui lòng nhập lượt thích',
             'description.required' => 'Vui lòng nhập mô tả',
+            'images.required' => 'Vui lòng nhập hình ảnh',
+            'thumbnail.required' => 'Vui lòng nhập ảnh đại diện',
         ];
     }
 

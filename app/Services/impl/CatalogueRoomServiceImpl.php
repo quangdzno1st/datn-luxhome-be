@@ -5,33 +5,33 @@ namespace App\Services\impl;
 use App\Constant\Enum\HttpStatusCodeEnum;
 use App\Exceptions\RespException;
 use App\Http\Requests\CatalogueRequest;
-use App\Http\Requests\CatalogueRoomSearchRequest;
 use App\Models\CatalogueRoom;
 use App\Repositories\CatalogueRoom\CatalogueRoomRepository;
 use App\Repositories\Hotel\HotelRepository;
 use App\Services\CatalogueRoomService;
-use Illuminate\Support\Facades\Auth;
+use App\Services\FileUploadService;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 use Ramsey\Uuid\Uuid;
 
 class CatalogueRoomServiceImpl implements CatalogueRoomService
 {
     private CatalogueRoomRepository $catalogueRoomRepos;
+    private FileUploadService $fileUploadService;
     private HotelRepository $hotelRepo;
-    protected ?Uuid $orgId;
 
     /**
      * @param CatalogueRoomRepository $catalogueRoomRepos
      * @param HotelRepository $hotelRepo
      */
     public function __construct(CatalogueRoomRepository $catalogueRoomRepos,
-                                HotelRepository         $hotelRepo
+                                HotelRepository         $hotelRepo,
+                                FileUploadService       $fileUploadService,
     )
     {
         $this->catalogueRoomRepos = $catalogueRoomRepos;
         $this->hotelRepo = $hotelRepo;
-        $this->orgId = Auth::user()->org_id ?? null;
+        $this->fileUploadService = $fileUploadService;
     }
 
     /**
@@ -39,8 +39,7 @@ class CatalogueRoomServiceImpl implements CatalogueRoomService
      */
     private function validateBeforeSave(array $request): void
     {
-        $hotel = $this->hotelRepo->find($request['hotel_id']);
-
+        $hotel = $this->hotelRepo->find($request['org_id']);
         if (!$hotel) {
             throw new RespException(__('messages.hotel_not_found'), HttpStatusCodeEnum::NOT_FOUND->value);
         }
@@ -53,15 +52,17 @@ class CatalogueRoomServiceImpl implements CatalogueRoomService
     {
         $data = $request->validated();
 
-//        if (isset($data['org_id'])) {
-//            $data['org_id'] = $this->orgId;
-//        }
+        $data['org_id'] = auth()->user()->org_id;
+        $data['status'] = empty($data['status']) ? 0 : 1;
+        $data['thumbnail'] = $this->fileUploadService->storeLocal($request->file('thumbnail'));
 
         $this->validateBeforeSave($data);
 
         $catalogueRoom = $this->getCatalogueRoomBy($id);
+        $catalogueRoom = $this->catalogueRoomRepos->edit($catalogueRoom, $data);
+        $this->fileUploadService->uploadImages($request->file('images'), $catalogueRoom['id']);
 
-        return $this->catalogueRoomRepos->edit($catalogueRoom, $data);
+        return $catalogueRoom;
     }
 
     /**

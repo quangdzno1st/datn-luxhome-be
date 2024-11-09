@@ -45,7 +45,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm">
-                                    <form method="get" action="{{ route('rooms.index') }}">
+                                    <form method="get" action="{{ route('admin.rooms.index') }}">
                                         @csrf
                                         <div class="d-flex justify-content-sm-end">
                                             <div class="search-box ms-2">
@@ -121,7 +121,7 @@
                                                                 aria-label="Close" id="close-modal"></button>
                                                     </div>
                                                     <form class="tablelist-form" autocomplete="off"
-                                                          action="{{route('rooms.update', $room)}}" method="POST">
+                                                          action="{{route('admin.rooms.update', $room)}}" method="POST">
                                                         @csrf
                                                         @method('PUT')
                                                         <div class="modal-body">
@@ -195,7 +195,7 @@
                                                         </div>
                                                         <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
                                                             <form
-                                                                    action="{{ route('rooms.destroy', $room) }}"
+                                                                    action="{{ route('admin.rooms.destroy', $room) }}"
                                                                     method="post">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -232,7 +232,6 @@
                             </div>
 
 
-
                             <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                                  aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
@@ -243,7 +242,7 @@
                                                     aria-label="Close" id="close-modal"></button>
                                         </div>
                                         <form class="tablelist-form" autocomplete="off"
-                                              action="{{route('rooms.store')}}" method="POST">
+                                              action="{{route('admin.rooms.store')}}" method="POST">
                                             @csrf
                                             <div class="modal-body">
                                                 <div class="mb-3">

@@ -35,4 +35,14 @@ class HotelServiceRepository extends BaseRepository implements HotelServiceInter
         $query = $this->model;
         return $query->destroy($ids);
     }
+
+    public function getByOrgIdAndIds($orgId, $ids)
+    {
+        return HotelService::query()
+            ->join("services as s", "hotel_service.service_id", "=", "s.id")
+            ->where("hotel_service.hotel_id", $orgId)
+            ->whereIn("s.id", $ids)
+            ->select("s.id", "s.price")
+            ->get();
+    }
 }

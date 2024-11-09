@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Constant\Enum\AttributeCodeEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CatalogueRequest;
 use App\Models\Hotel;
 use App\Services\AttributeValueService;
 use App\Services\CatalogueRoomService;
+use App\Services\HotelService;
 use Illuminate\Http\Request;
 
 class CatalogueRoomController extends Controller
@@ -14,12 +16,15 @@ class CatalogueRoomController extends Controller
 
     private CatalogueRoomService $catalogueRoomService;
     private AttributeValueService $attributeValueService;
+    private HotelService $hotelService;
 
     public function __construct(CatalogueRoomService  $catalogueRoomService,
-                                AttributeValueService $attributeValueService)
+                                AttributeValueService $attributeValueService,
+    HotelService $hotelService)
     {
         $this->catalogueRoomService = $catalogueRoomService;
         $this->attributeValueService = $attributeValueService;
+        $this->hotelService = $hotelService;
     }
 
     public function index()
@@ -31,15 +36,15 @@ class CatalogueRoomController extends Controller
     public function create()
     {
         $user = auth()->user();
-        $hotels = Hotel::query()->orderBy('name')->get();
-        $attributeValues = $this->attributeValueService->getAttributeFetchJoinValueBy([AttributeCodeEnum::NOI_THAT->value], "4688497a-ca83-4027-a0fc-0929369f9a8d");
-        return view('admin.catalogue_rooms.create')->with(compact('hotels', 'attributeValues'));
+        $hotel = $this->hotelService->getNonNullByID($user["org_id"]);
+        $attributeValues = $this->attributeValueService->getAttributeFetchJoinValueBy([AttributeCodeEnum::NOI_THAT->value], $user['org_Id']);
+        return view('admin.catalogue_rooms.create')->with(compact('hotel', 'attributeValues'));
     }
 
 
-    public function store(Request $request)
+    public function store(CatalogueRequest $request)
     {
-        dd($request->all());
+        $catalogueRoom = $this->catalogueRoomService->createOrUpdate(null, $request);
     }
 
 

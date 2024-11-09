@@ -43,4 +43,9 @@ class HotelRepository extends BaseRepository implements HotelInterface
 
         return $hotels;
     }
+
+    public function existsById($id)
+    {
+        return $this->model->where('id', $id)->exists();
+    }
 }

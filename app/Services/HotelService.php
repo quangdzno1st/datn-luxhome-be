@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Http\Requests\HotelSearchRequest;
-
 interface HotelService
 {
     public function createNewHotel($data);
 
     public function updateHotel($data, $slug);
+
+    public function getNonNullByID($id);
 
     public function deleteHotel($slug);
 
