@@ -2,7 +2,7 @@
 
 @section('style-libs')
     <!-- Plugins css -->
-    <link href="{{asset('theme/admin/assets/libs/dropzone/dropzone.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="{{asset('theme/admin/assets/libs/dropzone/dropzone.css')}} rel="stylesheet" type="text/css"/>
 @endsection
 
 @section('styles')
@@ -33,7 +33,7 @@
     </div>
     <!-- end page title -->
 
-    <form action="{{route('catalogue-rooms.store')}}" method="post" enctype="multipart/form-data">
+    <form action="{{route('admin.catalogue-rooms.store')}}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <div class="col-lg-8">
@@ -42,38 +42,37 @@
                         <div class="mb-3">
                             <label class="form-label" for="name">Tên loại phòng</label>
                             <input type="text" class="form-control" id="name" name="name"
-                                   value="{{old('name')}}" placeholder="Tên loại phòng">
+                                   {{old('name')}} placeholder="Tên loại phòng">
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label" for="price">Giá phòng</label>
                             <input type="number" class="form-control" id="price" name="price"
-                                   value="{{old('price')}}" placeholder="Giá phòng">
+                                   {{old('price')}} placeholder="Giá phòng">
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label" for="thumbnail">Thumbnail</label>
                             <input class="form-control" id="thumbnail" type="file" name="thumbnail"
-                                   value="{{old('thumbnail')}}"
+                                   {{old('thumbnail')}}
                                    accept="image/png, image/gif, image/jpeg">
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label" for="view">Lượt xem</label>
                             <input type="number" class="form-control" id="view" min="0" name="view"
-                                   value="{{old('view')}}" placeholder="Lượt xem">
+                                   {{old('view')}} placeholder="Lượt xem">
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label" for="like">Lượt thích</label>
                             <input type="number" class="form-control" id="like" min="0" name="like"
-                                   value="{{old('like')}}" placeholder="Lượt thích">
+                                   {{old('like')}} placeholder="Lượt thích">
                         </div>
 
                         <div class="form-check form-check-right mb-2">
                             <input class="form-check-input" type="checkbox" name="status" id="formCheckboxRight1"
-                                   checked
-                                   value="{{old('status')}}">
+                                   checked {{old('status')}}>
                             <label class="form-check-label" for="status">
                                 Hoạt động
                             </label>
@@ -82,7 +81,7 @@
                         <div class="mb-3">
                             <label class="form-label">Mô tả</label>
                             <div>
-                                <textarea class="form-control" id="content" rows="2" name="content"></textarea>
+                                <textarea class="form-control" id="content" rows="2" name="description"></textarea>
                             </div>
                         </div>
                     </div>
@@ -90,53 +89,25 @@
                 </div>
                 <!-- end card -->
 
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Attached files</h5>
-                    </div>
-                    <div class="card-body">
-                        <div>
-                            <p class="text-muted">Add Attached files here.</p>
-
-                            <div class="dropzone" id="dropzone" >
-                                <div class="fallback">
-                                    <input name="file[]" type="file" multiple="multiple">
-                                </div>
-                                <div class="dz-message needsclick">
-                                    <div class="mb-3">
-                                        <i class="display-4 text-muted ri-upload-cloud-2-fill"></i>
-                                    </div>
-
-                                    <h5>Drop files here or click to upload.</h5>
-                                </div>
+                <div class="row col-6">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="mb-1 row">
+                            <div class="col-sm-3">
+                                <label class="col-form-label" for="images">Hình ảnh</label>
                             </div>
+                            <div class="col-sm-9">
+                                <input type="file" class="form-control @error('images.*') is-invalid @enderror"
+                                       name="images[]" id="images" multiple accept="image/*">
 
-                            <ul class="list-unstyled mb-0" id="dropzone-preview">
-                                <li class="mt-2" id="dropzone-preview-list">
-                                    <!-- This is used as the file preview template -->
-                                    <div class="border rounded">
-                                        <div class="d-flex p-2">
-                                            <div class="flex-shrink-0 me-3">
-                                                <div class="avatar-sm bg-light rounded">
-                                                    <img src="#" alt="Project-Image" data-dz-thumbnail
-                                                         class="img-fluid rounded d-block"/>
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <div class="pt-1">
-                                                    <h5 class="fs-14 mb-1" data-dz-name>&nbsp;</h5>
-                                                    <p class="fs-13 text-muted mb-0" data-dz-size></p>
-                                                    <strong class="error text-danger" data-dz-errormessage></strong>
-                                                </div>
-                                            </div>
-                                            <div class="flex-shrink-0 ms-3">
-                                                <button data-dz-remove class="btn btn-sm btn-danger">Delete</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                            <!-- end dropzon-preview -->
+                                @error('images')
+                                <div class="invalid-feedback d-block">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                                <input type="file" name="representative_image" id="representative_image_input"
+                                       style="display: none;">
+                                <div id="image-preview" class="mt-2"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -153,11 +124,10 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <select class="js-example-basic-single" name="hotel">
-                                @foreach($hotels as $hotel)
-                                    <option value="{{ $hotel['id'] }}">{{ $hotel['name'] }}</option>
-                                @endforeach
-                            </select>
+                            <label for="disabledInput" class="form-label">Khách sạn</label>
+                            <input type="text" class="form-control"
+                                   id="disabledInput" {{$hotel->name}}
+                                   disabled>
                         </div>
                         <!-- end card body -->
                     </div>
@@ -173,7 +143,7 @@
                             <div class="mb-3">
                                 <label class="form-label" for="capacity">Sức chứa</label>
                                 <input type="number" class="form-control" id="capacity"
-                                       value="{{old('capacity')}}" placeholder="Sức chứa">
+                                       {{old('capacity')}} placeholder="Sức chứa">
                             </div>
                         </div>
 
@@ -181,7 +151,7 @@
                             <div class="mb-3">
                                 <label class="form-label" for="acreage">Diện tích</label>
                                 <input type="text" class="form-control" id="acreage"
-                                       value="{{old('acreage')}}" placeholder="Diện tích">
+                                       {{old('acreage')}} placeholder="Diện tích">
                             </div>
                         </div>
 
@@ -190,7 +160,7 @@
                             <select class="form-control" id="choices-multiple-remove-button"
                                     data-choices data-choices-removeItem name="noiThat[]" multiple>
                                 @foreach($attributeValues as $attributeValue)
-                                    <option value="{{$attributeValue['id']}}">{{$attributeValue['value_text']}}</option>
+                                    <option {{$attributeValue['id']}}>{{$attributeValue['value_text']}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -229,30 +199,37 @@
     <!--select2 cdn-->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
+        $(document).ready(function () {
+            let imagesArray = [];
 
-        import { Dropzone } from "../../../theme/admin/assets/libs/dropzone/dropzone.mjs";
+            $('#images').on('change', function () {
+                const files = this.files;
+                $('#image-preview').empty();
 
-        document.addEventListener("DOMContentLoaded", function() {
-            const myDropzone = new Dropzone("#myDropzone", {
-                url: "{{ route('upload-image') }}", // Route tải lên
-                maxFilesize: 5, // Giới hạn kích thước file, ví dụ 5MB
-                acceptedFiles: 'image/*',
-                addRemoveLinks: true,
-                headers: {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}" // Thêm CSRF token cho các yêu cầu
-                },
-                init: function () {
-                    this.on("success", function (file, response) {
-                        // Khi tải lên thành công, thêm ảnh vào danh sách xem trước
-                        let imageUrl = response.url;
-                        let listItem = `<li class="mt-2">
-                                    <img src="${imageUrl}" alt="Uploaded Image" class="img-fluid" width="100">
-                                </li>`;
-                        document.getElementById('uploaded-images').insertAdjacentHTML('beforeend', listItem);
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const imgURL = URL.createObjectURL(file);
+                    imagesArray.push(imgURL);
+
+                    const imgElement = $('<img>', {
+                        src: imgURL,
+                        class: 'img-fluid img-thumbnail',
+                        style: 'width: 100px; height: 100px; object-fit: cover; margin: 5px;'
                     });
+
+                    imgElement.on('click', function () {
+                        $('#representative-image').attr('src', imgURL).show();
+                        const fileInput = $('#representative_image_input')[0];
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(file);
+                        fileInput.files = dataTransfer.files;
+                    });
+
+                    $('#image-preview').append(imgElement);
                 }
             });
-        });
+        })
+    </script>
 
 
 @endsection

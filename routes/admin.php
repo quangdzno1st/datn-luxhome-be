@@ -13,6 +13,8 @@
 
 
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\CatalogueRoomController;
+use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -62,6 +64,33 @@ Route::group(['middleware' => ['role']], function () {
 //    Route::get('404', function () {
 //        return view('admin.content.error.404');
 //    })->name('404');
+
+
+    Route::prefix('catalogue-rooms')
+        ->controller(CatalogueRoomController::class)
+        ->group(function () {
+            Route::get('/', 'index')->name('catalogue-rooms.index');
+            Route::get('/create', 'create')->name('catalogue-rooms.create');
+            Route::get('/{id}', 'show')->name('catalogue-rooms.show');
+            Route::post('/', 'store')->name('catalogue-rooms.store');
+            Route::put('/{id}', 'update')->name('catalogue-rooms.update');
+            Route::put('/delete/{id}', 'delete')->name('catalogue-rooms.delete');
+            Route::put('/restore/{id}', 'restore')->name('catalogue-rooms.restore');
+            Route::delete('/{id}', 'destroy')->name('catalogue-rooms.destroy');
+        });
+
+    Route::prefix('rooms')
+        ->controller(RoomController::class)
+        ->group(function () {
+            Route::get('/', 'index')->name('rooms.index');
+            Route::get('/create', 'create')->name('rooms.create');
+            Route::get('/{id}', 'show')->name('rooms.show');
+            Route::post('/', 'store')->name('rooms.store');
+            Route::put('/{id}', 'update')->name('rooms.update');
+            Route::put('/delete/{id}', 'delete')->name('rooms.delete');
+            Route::put('/restore/{id}', 'restore')->name('rooms.restore');
+            Route::delete('/{id}', 'destroy')->name('rooms.destroy');
+        });
 });
 //
 //voucher

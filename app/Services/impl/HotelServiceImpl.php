@@ -133,7 +133,7 @@ class HotelServiceImpl implements HotelService
         }
     }
 
-    private function getNonNullByID($id)
+    public function getNonNullByID($id)
     {
         $hotel = $this->hotelRepos->detailHotel($id);
 

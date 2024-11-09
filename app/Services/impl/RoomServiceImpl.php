@@ -44,11 +44,8 @@ class RoomServiceImpl implements RoomService
 
         $this->validateBeforeSave($data);
 
-        $user = auth()->user();
-        $data['org_id'] = "4688497a-ca83-4027-a0fc-0929369f9a8d";
-
         $data["code"] = $this->commonKeyCodeService->genNewKeyCode(TypeCodeEnum::ROOM_TYPE->value,
-            Constant::STRING_6_CHAR, "4688497a-ca83-4027-a0fc-0929369f9a8d");
+            Constant::STRING_6_CHAR, auth()->user()->org_id);
 
         return $this->roomRepos->create($data);
     }

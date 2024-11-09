@@ -2,8 +2,8 @@
 
 namespace App\Repositories\Voucher;
 
-use App\Repositories\Base\BaseRepository;
 use App\Models\Voucher;
+use App\Repositories\Base\BaseRepository;
 
 class VoucherRepository extends BaseRepository implements VoucherInterface
 {
@@ -39,5 +39,14 @@ class VoucherRepository extends BaseRepository implements VoucherInterface
         $query = $this->model;
         $this->resetModel();
         return $query->where($condition)->get();
+    }
+
+    public function existsByIdAndOrgId($id, $orgId)
+    {
+        return Voucher::query()->where("id", $id)
+            ->where(function ($query) use ($orgId) {
+                $query->where("org_id", $orgId)
+                    ->orWhereNull("org_id");
+            });
     }
 }

@@ -6,7 +6,9 @@ use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\CatalogueRoomController;
 use App\Http\Controllers\Api\HotelServiceController;
 use App\Http\Controllers\Api\NewController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PageController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\RankController;
 use App\Http\Controllers\Api\RoomController;
@@ -172,3 +174,16 @@ Route::prefix('rooms')
         Route::put('/restore/{id}', 'restore');
         Route::delete('/{id}', 'destroy');
     });
+
+    //api booking
+    Route::prefix('orders')
+    ->controller(OrderController::class)
+    ->group(function () {
+        Route::get('/{id}', 'show');
+        Route::post('/', 'store');
+    });
+
+
+Route::get('/payment/vnpay-return', [OrderController::class, 'paymentReturn'])->name('vnpay.return');
+
+

@@ -2,6 +2,9 @@
 
 namespace App\Repositories\Room;
 
+use App\Constant\Enum\RoomStatusEnum;
+use App\Constant\Enum\StatusOrderEnum;
+use App\Models\Order;
 use App\Models\Room;
 use App\Repositories\Base\BaseRepository;
 
@@ -24,5 +27,34 @@ class RoomRepository extends BaseRepository implements RoomInterface
         $query->where("rooms.id", $id);
 
         return $query->first();
+    }
+
+    public function getRoomAvailableByIdInAndOrgId($orgId, $ids, $startDate, $endDate)
+    {
+        $orders = Order::with('orderItem')->where('status','<>', StatusOrderEnum::CHUA_THANH_TOAN->value)
+            ->where(function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('start_date', [$startDate, $endDate])
+                ->orWhereBetween('end_date', [$startDate, $endDate])
+                ->orWhere(function ($query) use ($startDate, $endDate) {
+                    $query->where('start_date', '<=', $startDate)
+                        ->where('end_date', '>=', $endDate);
+                });
+        })->get();
+
+
+        $roomBookedIds = $orders->flatMap(function ($order) {
+            return $order->orderItem->flatMap(function ($item) {
+                return [$item->room_id];
+            });
+        });
+
+        return Room::query()
+            ->join("catalogue_rooms as c", "rooms.catalogue_room_id", "=", "c.id")
+            ->where("c.org_id", "=", $orgId)
+            ->where('rooms.status', RoomStatusEnum::SAN_SANG_SU_DUNG->value)
+            ->whereNotIn("rooms.id", $roomBookedIds)
+            ->whereIn("rooms.id", $ids)
+            ->select("rooms.id", "c.id as catalogue_room_id ", "c.name as catalogue_room_name", "c.price")
+            ->get();
     }
 }

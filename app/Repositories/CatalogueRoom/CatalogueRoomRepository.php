@@ -2,6 +2,8 @@
 
 namespace App\Repositories\CatalogueRoom;
 
+use App\Constant\Enum\RoomStatusEnum;
+use App\Constant\Enum\StatusOrderEnum;
 use App\Models\CatalogueRoom;
 use App\Models\Order;
 use App\Repositories\Base\BaseRepository;
@@ -48,7 +50,8 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
         $categories = $categoriesQuery->with('rooms')->get();
 
 
-        $orders = Order::with('orderItem')->where(function ($query) use ($startDate, $endDate) {
+        $orders = Order::with('orderItem')->where('status','<>', StatusOrderEnum::CHUA_THANH_TOAN->value)
+            ->where(function ($query) use ($startDate, $endDate) {
             $query->whereBetween('start_date', [$startDate, $endDate])
                 ->orWhereBetween('end_date', [$startDate, $endDate])
                 ->orWhere(function ($query) use ($startDate, $endDate) {
@@ -64,7 +67,8 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
         })->unique()->values()->toArray();
 
         $roomsCount = $categories->map(function ($category) use ($roomCodes) {
-            $filteredRooms = $category->rooms()->whereNotIn('id', $roomCodes)->get();
+            $filteredRooms = $category->rooms()->whereNotIn('id', $roomCodes)
+                ->where('rooms.status', RoomStatusEnum::SAN_SANG_SU_DUNG->value)->get();
             return [
                 'id' => $category->id,
                 'name' => $category->name,
@@ -85,7 +89,8 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
         return $roomsCount;
     }
 
-    public function getAllByOrgId($orgId){
+    public function getAllByOrgId($orgId)
+    {
         return CatalogueRoom::query()->where('org_id', $orgId)
             ->orderBy('name')
             ->get();
