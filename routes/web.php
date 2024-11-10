@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\HotelServiceController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\CatalogueRoomController;
 use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\StatisticalController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -70,7 +71,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::post('/upload-image', [CatalogueRoomController::class, 'storeImage'])->name('upload-image');
 
 //});
-Route::prefix('hotel-services')->controller(HotelServiceController::class)->group(function () {
+Route::prefix('hotel/services')->controller(HotelServiceController::class)->group(function () {
     Route::get("/{idHotel}", 'index')->name("hotel.service.index");
     Route::post("/{idHotel}", 'store')->name("hotel.service.store");
     Route::get("/delete/{id}", 'destroy')->name("hotel.service.destroy");
@@ -95,3 +96,21 @@ Route::prefix('vouchers')->group(function () {
     Route::post('/restore/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'restore']);
     Route::delete('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'destroy']);
 });
+Route::prefix('vouchers')->group(function () {
+    Route::get('/', [\App\Http\Controllers\Admin\VoucherController::class, 'index'])->name('vouchers.index');
+    Route::post('/', [\App\Http\Controllers\Admin\VoucherController::class, 'store'])->name('vouchers.store');
+    Route::put('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'update']);
+    Route::get('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'show'])->name('vouchers.show');
+    Route::delete('/delete/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'delete'])->name('vouchers.delete');
+    Route::post('/restore/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'restore']);
+    Route::delete('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'destroy']);
+});
+
+Route::controller(StatisticalController::class)->group(function () {
+    Route::get('/statistical', 'index')->name('statistical.index');
+    Route::post('/statistical', 'handleStatistical')->name('handle.statistical');
+});
+
+Route::get('/404', function () {
+    return view('admin.errors.404');
+})->name('error.404');

@@ -12,6 +12,7 @@ class HotelServiceController extends Controller
 {
 
     const PATH_VIEW = 'admin.hotelservices.';
+
     protected $hotelService;
 
     public function __construct(HotelServiceServiceImpl $hotelService)
@@ -21,11 +22,15 @@ class HotelServiceController extends Controller
 
     public function index(string $idHotel)
     {
-        $hotel = Hotel::findOrFail($idHotel);
+        $hotel = Hotel::query()->where('id', $idHotel)->first();
+
+        if (!isset($hotel)) {
+            return  redirect()->route('error.404');
+        }
 
         $services = Service::all();
 
-        $hotelServices = $this->hotelService->getServicesByIdHotel($idHotel);
+        $hotelServices = $this->hotelService->getServicesByIdHotel($idHotel, request());
 
         return view(self::PATH_VIEW . __FUNCTION__, compact('hotelServices', 'hotel', 'services'));
     }

@@ -40,18 +40,18 @@
                                     <div>
                                         <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal"
                                                 id="create-btn" data-bs-target="#showModal"><i
-                                                    class="ri-add-line align-bottom me-1"></i> Add
+                                                    class="ri-add-line align-bottom me-1"></i> Thêm Mới
                                         </button>
-                                        <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i
-                                                    class="ri-delete-bin-2-line"></i></button>
+                                        {{-- <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i
+                                                    class="ri-delete-bin-2-line"></i></button> --}}
                                     </div>
                                 </div>
                                 <div class="col-sm">
                                     <div class="d-flex justify-content-sm-end">
-                                        <div class="search-box ms-2">
-                                            <input type="text" class="form-control" placeholder="Search...">
+                                        <form class="search-box ms-2" method="GET" action="{{route('admin.services.index')}}">
+                                            <input type="text" name="keyword" class="form-control" placeholder="Tìm kiếm...">
                                             <i class="ri-search-line search-icon"></i>
-                                        </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -60,35 +60,45 @@
                                 <table class="table align-middle table-nowrap" id="customerTable">
                                     <thead class="table-light">
                                     <tr>
-                                        <th scope="col" style="width: 50px;">
+                                        {{-- <th scope="col" style="width: 50px;">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" id="checkAll"
                                                        value="option">
                                             </div>
-                                        </th>
-                                        <th>STT</th>
+                                        </th> --}}
+                                        <th class="text-center">STT</th>
                                         <th>Tên dịch vụ</th>
                                         <th>Giá</th>
                                         <th>Mô tả</th>
-                                        <th>Action</th>
+                                        <th>Loại dịch vụ</th>
+                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody class="list form-check-all">
                                     @foreach ($services as $index => $service)
                                         <tr>
-                                            <th scope="row">
+                                            {{-- <th scope="row">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="chk_child"
                                                            value="option1">
                                                 </div>
-                                            </th>
+                                            </th> --}}
                                             <td class="id" style="display:none;"><a href="javascript:void(0);"
                                                                                     class="fw-medium link-primary"></a>
                                             </td>
-                                            <td class="">{{ $index + 1 }}</td>
+                                            <td class="text-center">{{ $index + 1 }}</td>
                                             <td class="">{{ $service->name }}</td>
                                             <td class="">{{ $service->price }}</td>
                                             <td class="">{{ $service->description }}</td>
+                                            <td class="">
+                                                @php
+                                                    $bgColor = 'bg-light text-dark';
+                                                    if ($service->type == 1) {
+                                                        $bgColor = 'bg-info';
+                                                    }
+                                                @endphp
+                                                <span class="badge {{$bgColor}}">{{ App\Models\Service::TYPE_SERVICE["$service->type"]}}</span>
+                                            </td>
 
                                             <td>
                                                 <div class="d-flex gap-2">
@@ -132,8 +142,9 @@
                                                                        class="form-control"
                                                                        placeholder="Nhập tên dịch vụ"
                                                                        required name="name" value="{{$service->name}}"/>
-                                                                <div class="invalid-feedback">
-                                                                </div>
+                                                                @error('name')
+                                                                    <p class="text-danger">{{$message}}</p>
+                                                                @enderror
                                                             </div>
 
                                                             <div class="mb-3">
@@ -143,8 +154,9 @@
                                                                        class="form-control" name="price"
                                                                        placeholder="Nhập giá" required
                                                                        value="{{$service->price}}"/>
-                                                                <div class="invalid-feedback">
-                                                                </div>
+                                                                    @error('price')
+                                                                       <p class="text-danger">{{$message}}</p>
+                                                                   @enderror
                                                             </div>
 
                                                             <div class="mb-3">
@@ -154,18 +166,31 @@
                                                                           id="description" cols="30" rows="5"
                                                                           placeholder="Nhập mô tả"
                                                                           required>{{$service->description}}</textarea>
-                                                                <div class="invalid-feedback">
-                                                                </div>
+                                                                    @error('description')
+                                                                          <p class="text-danger">{{$message}}</p>
+                                                                      @enderror
+                                                            </div>
+
+                                                            <div class="mb-3">
+                                                                <label for="type" class="form-label">Loại dịch vụ</label>
+                                                                <select name="type" id="type" class="form-select">
+                                                                    @foreach ($typesService as $key => $name)
+                                                                        <option value="{{$key}}" @selected("$service->type" == $key)>{{$name}}</option>                                                                   
+                                                                    @endforeach
+                                                                </select>
+                                                                @error('type')
+                                                                    <p class="text-danger">{{$message}}</p>
+                                                                @enderror
                                                             </div>
 
                                                         </div>
                                                         <div class="modal-footer">
                                                             <div class="hstack gap-2 justify-content-end">
                                                                 <button type="button" class="btn btn-light"
-                                                                        data-bs-dismiss="modal">Close
+                                                                        data-bs-dismiss="modal">Đóng
                                                                 </button>
                                                                 <button type="submit" class="btn btn-success"
-                                                                        id="add-btn">Update service
+                                                                        id="add-btn">Cập Nhật Dịch Vụ
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -256,15 +281,19 @@
                                                     <label for="name" class="form-label">Tên dịch vụ</label>
                                                     <input type="text" id="name" class="form-control"
                                                            placeholder="Nhập tên dịch vụ" required name="name"/>
-                                                    <div class="invalid-feedback"></div>
+                                                           @error('name')
+                                                           <p class="text-danger">{{$message}}</p>
+                                                       @enderror
                                                 </div>
 
 
                                                 <div class="mb-3">
                                                     <label for="price" class="form-label">Giá</label>
                                                     <input type="number" id="price" class="form-control"
-                                                           name="giá" placeholder="Nhập giá" required/>
-                                                    <div class="invalid-feedback"></div>
+                                                           name="price" placeholder="Nhập giá" required/>
+                                                           @error('price')
+                                                           <p class="text-danger">{{$message}}</p>
+                                                       @enderror
                                                 </div>
 
                                                 <div class="mb-3">
@@ -273,17 +302,30 @@
                                                     <textarea name="description" class="form-control"
                                                               id="description" cols="30" rows="5"
                                                               placeholder="Nhập mô tả" required></textarea>
-                                                    <div class="invalid-feedback"></div>
+                                                              @error('description')
+                                                              <p class="text-danger">{{$message}}</p>
+                                                          @enderror
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="type" class="form-label">Loại dịch vụ</label>
+                                                    <select name="type" id="type" class="form-select">
+                                                        @foreach ($typesService as $key => $name)
+                                                            <option value="{{$key}}">{{$name}}</option>                                                                   
+                                                        @endforeach
+                                                    </select>
+                                                    @error('type')
+                                                                    <p class="text-danger">{{$message}}</p>
+                                                                @enderror
                                                 </div>
 
                                             </div>
                                             <div class="modal-footer">
                                                 <div class="hstack gap-2 justify-content-end">
                                                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-                                                        Close
+                                                        Đóng
                                                     </button>
-                                                    <button type="submit" class="btn btn-success" id="add-btn">Add
-                                                        service
+                                                    <button type="submit" class="btn btn-success" id="add-btn">Thêm Dịch Vụ
                                                     </button>
                                                 </div>
                                             </div>

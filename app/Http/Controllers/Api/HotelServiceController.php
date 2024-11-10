@@ -18,7 +18,7 @@ class HotelServiceController extends Controller
 
     public function index($idHotel)
     {
-        $data = $this->hotelServices->getServicesByIdHotel($idHotel);
+        $data = $this->hotelServices->getServicesByIdHotel($idHotel, request());
         if ($data) {
             return $this->sendSuccess($data);
         }

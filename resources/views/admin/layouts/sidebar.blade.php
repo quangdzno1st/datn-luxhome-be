@@ -63,15 +63,15 @@
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span data-key="t-menu">Mục lục</span></li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#">
+                    <a class="nav-link menu-link" href="{{route('statistical.index')}}">
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Tổng Quan</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
 
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#">
-                        <i class="ri-layout-3-line"></i> <span data-key="t-layouts">Danh Mục</span>
+                    <a class="nav-link menu-link" href="{{route('admin.services.index')}}">
+                        <i class="ri-customer-service-line"></i> <span data-key="t-layouts">Dịch vụ</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
 

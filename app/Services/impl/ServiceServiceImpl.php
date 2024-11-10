@@ -11,18 +11,27 @@ class ServiceServiceImpl implements ServiceService
 {
     protected ServiceRepository $serviceRepository;
 
-    public function __construct(ServiceRepository $serviceRepository) {
+    public function __construct(ServiceRepository $serviceRepository)
+    {
         $this->serviceRepository = $serviceRepository;
     }
 
     public function getAll(Request $request)
     {
         $query = Service::query();
-        if($request->has('name')) {
-            $query->where('name', 'like', '%'.$request->get('name').'%');
+
+        if ($request->has('keyword')) {
+            $query->where('name', 'like', '%' . $request->get('keyword') . '%')
+                ->orWhere('price', 'like', "%$request->get('keyword')%")
+                ->orWhere('description', 'like', "%$request->get('keyword')%");
         }
+
+        if ($request->has('name')) {
+            $query->where('name', 'like', '%' . $request->get('name') . '%');
+        }
+        
         if ($request->has('price')) {
-            $query->where('price', 'like', '%'.$request->get('price').'%');
+            $query->where('price', 'like', '%' . $request->get('price') . '%');
         }
 
         $services = $query->paginate(10);

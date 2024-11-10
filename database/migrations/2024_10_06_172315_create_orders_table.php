@@ -14,6 +14,7 @@ return new class extends Migration {
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('hotel_id');
             $table->uuid('user_id');
             $table->uuid('voucher_id')->nullable();
             $table->double('booking_fee');

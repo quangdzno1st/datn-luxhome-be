@@ -15,16 +15,28 @@ class HotelServiceServiceImpl implements HotelServiceService
     {
         $this->hotelServiceRepository = $hotelServiceRepository;
     }
-    public function getServicesByIdHotel($idHotel)
+
+    public function getServicesByIdHotel($idHotel, Request $request)
     {
-        $hotelServices = $this->hotelServiceRepository->getAll($idHotel);
+        $type = null;
+
+        $keyword = null;
+
+        if ($request->has('type') && ($request->input('type') == 1 || $request->input('type') == 2)) {
+            $type = $request->input('type');
+        }
+        if ($request->has('keyword')) {
+            $keyword = $request->input('keyword');
+        }
+        $hotelServices = $this->hotelServiceRepository->getAll($idHotel, $type, $keyword);
         return $hotelServices;
     }
+
     public function create($idHotel, Request $request)
     {
         $data = $request->input('services');
 
-        foreach ($data as &$item){
+        foreach ($data as &$item) {
             $item['id'] = Str::uuid()->toString();
             $item['hotel_id'] = $idHotel;
             $item['created_at'] = date('Y-m-d H:i:s');
@@ -34,6 +46,7 @@ class HotelServiceServiceImpl implements HotelServiceService
 
         return $this->hotelServiceRepository->add($data);
     }
+    
     public function delete($id)
     {
         $model =  $this->hotelServiceRepository->find($id);
