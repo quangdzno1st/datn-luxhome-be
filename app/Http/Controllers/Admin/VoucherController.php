@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Api\Controller;
 use App\Http\Requests\Api\Voucher\CreateVoucherRequest;
 use App\Http\Requests\Api\Voucher\UpdateVoucherRequest;
+use App\Models\Voucher;
 use App\Services\impl\VoucherServiceImpl;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
-use League\Flysystem\Exception;
 
 class VoucherController extends Controller
 {
@@ -37,20 +38,19 @@ class VoucherController extends Controller
 
     public function create()
     {
-//        return view(self::PATH_DIRECT.__FUNCTION__);
+        return view(self::PATH_DIRECT.__FUNCTION__);
     }
 
     public function store(CreateVoucherRequest $request)
     {
         try {
             $data = $request->validated();
-
+            $data['code']=Str::upper(Str::random(10));
             $data['id'] = Str::uuid()->toString();
 
             $voucher=$this->voucher->createVoucher($data);
             return $this->index();
         }catch (\Exception $e){
-            // Xử lý ngoại lệ và trả về thông điệp lỗi
             return Redirect::back()->withErrors(['msg' => 'Errors: '.$e->getMessage()]);
         }
     }
@@ -67,15 +67,32 @@ class VoucherController extends Controller
 
     public function edit($id)
     {
-        //
+        try {
+            $voucher=$this->voucher->showVoucher($id);
+//            dd($voucher);
+            return view(self::PATH_DIRECT.__FUNCTION__, compact('voucher'));
+        }catch (\Exception $e){
+            return Redirect::back()->withErrors(['msg' => 'Errors: '.$e->getMessage()]);
+        }
     }
 
     public function update(UpdateVoucherRequest $request, $id)
     {
-        $data = $request->validated();
-        $data['id'] = Str::uuid()->toString();
-        $voucher=$this->voucher->updateVoucher($data,$id);
-        return $this->index();
+        try {
+
+            if ($request->validated()){
+                $data = $request->validated();
+                $data['code']=Str::upper(Str::random(10));
+                $data['id'] = Str::uuid()->toString();
+                $voucher=$this->voucher->updateVoucher($data,$id);
+                return $this->index();
+            }else{
+                return \redirect()->back()->withErrors(['msg' => 'Errors']);
+            }
+        }catch (\Exception $e){
+            return Redirect::back()->withErrors(['msg' => 'Errors: '.$e->getMessage()]);
+        }
+
     }
 
     public function delete($id)
@@ -95,6 +112,12 @@ class VoucherController extends Controller
         }
     }
 
+    public function list_trash(){
+        $trashedVouchers = Voucher::onlyTrashed()->get();
+//        dd($trashedVouchers);
+        return view(self::PATH_DIRECT.__FUNCTION__, compact('trashedVouchers'));
+    }
+
     public function restore($id)
     {
         try {
@@ -104,11 +127,7 @@ class VoucherController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'result' => true,
-                'message' => 'restored successfully',
-                'data' => $voucher,
-            ],200);
+            return $this->index();
 
         } catch (Exception $exception)
         {
@@ -127,11 +146,7 @@ class VoucherController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'result' => true,
-                'message' => 'forcedelete successfully',
-                'data' => $voucher,
-            ],200);
+            return $this->index();
 
         } catch (Exception $exception)
         {

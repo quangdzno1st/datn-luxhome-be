@@ -25,6 +25,10 @@ class Voucher extends Model
         'conditional_rank',
         'conditional_total_amount'
     ];
+    public function rank()
+    {
+        return $this->belongsTo(Rank::class);
+    }
     // public $incrementing = false;   // Không tự động tăng ID
     // protected $keyType = 'string';  // ID sẽ là kiểu string, không phải integer
 
@@ -40,4 +44,7 @@ class Voucher extends Model
     //         }
     //     });
     // }
+    protected $casts = [
+        'id' => 'string', // Đảm bảo id được cast thành string
+    ];
 }

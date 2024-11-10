@@ -13,10 +13,12 @@
                             <div class="col-sm-auto">
                                 <div class="col-sm-auto">
                                     <div>
+                                        <a href="{{route('vouchers.create')}}">
                                         <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal"
                                                 id="create-btn" data-bs-target="#showModal"><i
-                                                    class="ri-add-line align-bottom me-1"></i> Add
+                                                    class="ri-add-line align-bottom me-1"></i> Thêm voucher
                                         </button>
+                                        </a>
                                         <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i
                                                     class="ri-delete-bin-2-line"></i></button>
                                     </div>
@@ -41,19 +43,19 @@
                                             <input class="form-check-input" type="checkbox" id="checkAll" value="option">
                                         </div>
                                     </th>
-                                    <th class="" data-sort="customer_name">Description</th>
-                                    <th class="" data-sort="email">Status</th>
-                                    <th class="" data-sort="phone">Quantity</th>
-                                    <th class="" data-sort="date">Discount type</th>
-                                    <th class="" data-sort="status">Discount value</th>
-                                    <th class="" data-sort="action">Start Date</th>
-                                    <th class="" data-sort="action">End Date</th>
-                                    <th class="" data-sort="action">Min Price</th>
-                                    <th class="" data-sort="action">Max Price</th>
+                                    <th class="" data-sort="customer_name">Mô tả</th>
+                                    <th class="" data-sort="email">Trạng thái</th>
+                                    <th class="" data-sort="phone">Số lượng</th>
+                                    <th class="" data-sort="date">Loại giảm giá</th>
+                                    <th class="" data-sort="status">Giá trị giảm giá</th>
+                                    <th class="" data-sort="action">Ngày bắt đầu</th>
+                                    <th class="" data-sort="action">Ngày kết thúc</th>
+                                    <th class="" data-sort="action">Giá thấp nhất</th>
+                                    <th class="" data-sort="action">Giá cao nhất</th>
                                     <th class="" data-sort="action">Rank</th>
-                                    <th class="" data-sort="action">Conditional rank</th>
+                                    <th class="" data-sort="action">Điều kiện rank</th>
                                     <th class="" data-sort="action">Conditional_total_amount</th>
-                                    <th class="" data-sort="action">Action</th>
+                                    <th class="" data-sort="action">Hành động</th>
 
                                 </tr>
                                 </thead>
@@ -67,35 +69,44 @@
                                         </th>
 
                                         <td class="customer_name">{{$voucher->description}}</td>
-                                        <td class="email">{{$voucher->status}}</td>
+                                        @if($voucher->status==1)
+                                            <td class="status"><span class="badge bg-success-subtle text-success text-uppercase">Active</span></td>
+                                        @else
+                                            <td class="status"><span class="badge bg-danger-subtle text-danger text-uppercase">Inactive</span></td>
+                                        @endif
                                         <td class="phone">{{$voucher->quantity}}</td>
-                                        <td class="date">{{$voucher->discount_type}}</td>
-                                        <td class="date">{{$voucher->discount_value}}</td>
-                                        <td class="date">{{$voucher->start_date}}</td>
-                                        <td class="date">{{$voucher->end_date}}</td>
+                                        @if($voucher->discount_type)
+                                            <td class="date">Phần trăm</td>
+                                            <td class="date">{{$voucher->discount_value}}%</td>
+                                        @else
+                                            <td class="date">Tiền</td>
+                                            <td class="date">{{number_format($voucher->discount_value)}}đ</td>
+                                        @endif
+                                        <td class="date">{{date('d-M-y', strtotime($voucher->start_date))}}</td>
+                                        <td class="date">{{date('d-M-y', strtotime($voucher->end_date))}}</td>
                                         <td class="date">{{$voucher->min_price}}</td>
                                         <td class="date">{{$voucher->max_price}}</td>
                                         <td class="date">{{$voucher->rank_id}}</td>
                                         <td class="date">{{$voucher->conditional_rank}}</td>
-
-                                        <td class="status"><span class="badge bg-success-subtle text-success text-uppercase">Active</span></td>
+                                        <td></td>
                                         <td>
                                             <div class="d-flex gap-2">
                                                 <div class="edit">
-                                                    <a href="{{route('vouchers.show',$vouchers->id)}}">
-                                                        <button class="btn btn-sm btn-success edit-item-btn" data-bs-toggle="modal" data-bs-target="#showModal">Show</button>
+                                                    <a href="{{route('vouchers.edit',$voucher->id)}}">
+                                                        <button class="btn btn-sm btn-success edit-item-btn" data-bs-toggle="modal" data-bs-target="#showModal">Edit</button>
                                                     </a>
                                                 </div>
                                                 <div class="remove">
-                                                    <a href="{{route('vouchers.delete',$vouchers->id)}}">
-                                                        <button class="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
-                                                    </a>
+                                                    <form action="{{route('vouchers.delete',$voucher->id)}}" method="post">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </td>
                                     </tr>
                                 @endforeach
-
                                 </tbody>
                             </table>
                             <div class="noresult" style="display: none">
@@ -118,93 +129,113 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                             aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-light p-3">
-                                        <h5 class="modal-title" id="exampleModalLabel">Thêm voucher</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close" id="close-modal"></button>
-                                    </div>
-                                    <form class="tablelist-form" autocomplete="off"
-                                          action="{{route('vouchers.store')}}" method="POST">
-                                        @csrf
-                                        <div class="modal-body">
+{{--                        <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel"--}}
+{{--                             aria-hidden="true">--}}
+{{--                            <div class="modal-dialog modal-dialog-centered">--}}
+{{--                                <div class="modal-content">--}}
+{{--                                    <div class="modal-header bg-light p-3">--}}
+{{--                                        <h5 class="modal-title" id="exampleModalLabel">Thêm voucher</h5>--}}
+{{--                                        <button type="button" class="btn-close" data-bs-dismiss="modal"--}}
+{{--                                                aria-label="Close" id="close-modal"></button>--}}
+{{--                                    </div>--}}
 
+{{--                                    <form class="tablelist-form" autocomplete="off"--}}
+{{--                                          action="{{route('vouchers.store')}}" method="POST">--}}
+{{--                                        @csrf--}}
+{{--                                        <div class="modal-body">--}}
+{{--                                            <div class="mb-3">--}}
+{{--                                            <label for="discount_type" class="form-label">Loại giảm giá:</label>--}}
+{{--                                            <select id="discount_type" name="discount_type" class="form-control">--}}
+{{--                                                <option value="0">Tiền mặt</option>--}}
+{{--                                                <option value="1">%</option>--}}
+{{--                                            </select>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="mb-3">--}}
+{{--                                                <label for="discount_value" class="form-label">Giá trị giảm giá:</label>--}}
+{{--                                                <input type="number" id="discount_value" name="discount_value" step="0.01" placeholder="Nhập giá trị giảm giá" class="form-control"/>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="mb-3">--}}
+{{--                                                <label for="quantity" class="form-label">Số lượng</label>--}}
+{{--                                                <input type="number" id="quantity" class="form-control"--}}
+{{--                                                       name="quantity" placeholder="Nhập số lượng"--}}
+{{--                                                       value="{{ old('quantity') }}--}}
+{{--                                                       "/>--}}
+{{--                                                <div class="invalid-feedback"></div>--}}
+{{--                                            </div>--}}
 
-                                            <div class="mb-3">
-                                                <label for="quantity" class="form-label">Số lượng</label>
-                                                <input type="number" id="quantity" class="form-control"
-                                                       name="quantity" placeholder="Nhập giá" required/>
-                                                <div class="invalid-feedback"></div>
-                                            </div>
+{{--                                            <div class="mb-3">--}}
+{{--                                                <label for="status">Trạng thái</label>--}}
+{{--                                                <select class="form-control" name="status" id="">--}}
+{{--                                                    <option value="1" {{old('status')=='1'?'selected':''}}>Active</option>--}}
+{{--                                                    <option value="0" {{old('status')=='0'?'selected':''}}>Inactive</option>--}}
+{{--                                                </select>--}}
+{{--                                            </div>--}}
 
-                                            <div class="mb-3">
-                                                <label for="status">Trạng thái</label>
-                                                <select class="form-control" name="status" id="">
-                                                    <option value="1">Active</option>
-                                                    <option value="0">Inactive</option>
-                                                </select>
-                                            </div>
+{{--                                            <div class="mb-3">--}}
+{{--                                                <label for="description"--}}
+{{--                                                       class="form-label">Mô tả</label>--}}
+{{--                                                <textarea name="description" class="form-control"--}}
+{{--                                                          id="description" cols="30" rows="5"--}}
+{{--                                                          placeholder="Nhập mô tả"--}}
+{{--                                                          value="{{ old('description') }}"--}}
+{{--                                                ></textarea>--}}
+{{--                                                <div class="invalid-feedback"></div>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="mb-3">--}}
+{{--                                                <label for="start_date"--}}
+{{--                                                       class="form-label">Ngày bắt đầu</label>--}}
+{{--                                                <input type="date" class="form-control" name="start_date" value="{{old('start_date')}}">--}}
+{{--                                                <div class="invalid-feedback"></div>--}}
+{{--                                            </div>--}}
 
-                                            <div class="mb-3">
-                                                <label for="description"
-                                                       class="form-label">Mô tả</label>
-                                                <textarea name="description" class="form-control"
-                                                          id="description" cols="30" rows="5"
-                                                          placeholder="Nhập mô tả" required></textarea>
-                                                <div class="invalid-feedback"></div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="start_date"
-                                                       class="form-label">Ngày bắt đầu</label>
-                                                <input type="date" class="form-control">
-                                                <div class="invalid-feedback"></div>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label for="end_date"
-                                                       class="form-label">Ngày kết thúc</label>
-                                                <input type="date" class="form-control">
-                                                <div class="invalid-feedback"></div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="min_price"
-                                                       class="form-label">Giảm thấp nhất</label>
-                                                <input type="number" class="form-control">
-                                                <div class="invalid-feedback"></div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="max_price"
-                                                       class="form-label">Giảm cao nhất</label>
-                                                <input type="number" class="form-control">
-                                                <div class="invalid-feedback"></div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="rank"
-                                                       class="form-label">Rank</label>
-                                                <select class="form-control" name="rank" id="">
-                                                    <option value="1">Hội viên Vip</option>
-                                                    <option value="0">Phèn</option>
-                                                </select>
-                                                <div class="invalid-feedback"></div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <div class="hstack gap-2 justify-content-end">
-                                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-                                                    Close
-                                                </button>
-                                                <button type="submit" class="btn btn-success" id="add-btn">Add
-                                                    voucher
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+{{--                                            <div class="mb-3">--}}
+{{--                                                <label for="end_date"--}}
+{{--                                                       class="form-label">Ngày kết thúc</label>--}}
+{{--                                                <input type="date" class="form-control" name="start_end" value="{{old('end_date')}}">--}}
+{{--                                                <div class="invalid-feedback"></div>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="mb-3">--}}
+{{--                                                <label for="min_price"--}}
+{{--                                                       class="form-label">Giảm thấp nhất</label>--}}
+{{--                                                <input type="number" class="form-control"--}}
+{{--                                                       value="{{old('min_price')}}"--}}
+{{--                                                        name="min_price"--}}
+{{--                                                >--}}
+{{--                                                <div class="invalid-feedback"></div>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="mb-3">--}}
+{{--                                                <label for="max_price"--}}
+{{--                                                       class="form-label">Giảm cao nhất</label>--}}
+{{--                                                <input type="number" class="form-control"--}}
+{{--                                                       value="{{old('max_price')}}"--}}
+{{--                                                       name="max_price"--}}
+{{--                                                >--}}
+{{--                                                <div class="invalid-feedback"></div>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="mb-3">--}}
+{{--                                                <label for="rank"--}}
+{{--                                                       class="form-label">Rank</label>--}}
+{{--                                                <select class="form-control" name="rank" id="">--}}
+{{--                                                    <option value="1">Hội viên Vip</option>--}}
+{{--                                                    <option value="0">Phèn</option>--}}
+{{--                                                </select>--}}
+{{--                                                <div class="invalid-feedback"></div>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="modal-footer">--}}
+{{--                                            <div class="hstack gap-2 justify-content-end">--}}
+{{--                                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">--}}
+{{--                                                    Close--}}
+{{--                                                </button>--}}
+{{--                                                <button type="submit" class="btn btn-success" id="add-btn">Add--}}
+{{--                                                    voucher--}}
+{{--                                                </button>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </form>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
                     </div>
                 </div><!-- end card -->
             </div>

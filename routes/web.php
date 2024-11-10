@@ -80,30 +80,14 @@ Route::prefix('hotel/services')->controller(HotelServiceController::class)->grou
 //voucher
 Route::prefix('vouchers')->group(function () {
     Route::get('/', [\App\Http\Controllers\Admin\VoucherController::class, 'index'])->name('vouchers.index');
+    Route::get('/create', [\App\Http\Controllers\Admin\VoucherController::class, 'create'])->name('vouchers.create');
     Route::post('/', [\App\Http\Controllers\Admin\VoucherController::class, 'store'])->name('vouchers.store');
-    Route::put('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'update']);
-    Route::get('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'show'])->name('vouchers.show');
+    Route::get('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'edit'])->name('vouchers.edit');
+    Route::put('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'update'])->name('vouchers.update');
     Route::delete('/delete/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'delete'])->name('vouchers.delete');
-    Route::post('/restore/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'restore']);
-    Route::delete('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'destroy']);
-});
-Route::prefix('vouchers')->group(function () {
-    Route::get('/', [\App\Http\Controllers\Admin\VoucherController::class, 'index'])->name('vouchers.index');
-    Route::post('/', [\App\Http\Controllers\Admin\VoucherController::class, 'store'])->name('vouchers.store');
-    Route::put('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'update']);
-    Route::get('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'show'])->name('vouchers.show');
-    Route::delete('/delete/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'delete'])->name('vouchers.delete');
-    Route::post('/restore/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'restore']);
-    Route::delete('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'destroy']);
-});
-Route::prefix('vouchers')->group(function () {
-    Route::get('/', [\App\Http\Controllers\Admin\VoucherController::class, 'index'])->name('vouchers.index');
-    Route::post('/', [\App\Http\Controllers\Admin\VoucherController::class, 'store'])->name('vouchers.store');
-    Route::put('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'update']);
-    Route::get('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'show'])->name('vouchers.show');
-    Route::delete('/delete/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'delete'])->name('vouchers.delete');
-    Route::post('/restore/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'restore']);
-    Route::delete('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'destroy']);
+    Route::get('/list-trash', [\App\Http\Controllers\Admin\VoucherController::class, 'list_trash'])->name('vouchers.list_trash');
+    Route::post('/restore/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'restore'])->name('vouchers.restore');
+    Route::delete('/force_delete/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'destroy'])->name('vouchers.force_delete');
 });
 
 Route::controller(StatisticalController::class)->group(function () {
@@ -114,3 +98,14 @@ Route::controller(StatisticalController::class)->group(function () {
 Route::get('/404', function () {
     return view('admin.errors.404');
 })->name('error.404');
+//rate
+//Route::prefix('rates')->group(function () {
+//    Route::get('/', [\App\Http\Controllers\Admin\RateController::class, 'index'])->name('rates.index');
+//    Route::get('/', [\App\Http\Controllers\Admin\RateController::class, 'create'])->name('rates.create');
+//    Route::post('/', [\App\Http\Controllers\Admin\RateController::class, 'store'])->name('rates.store');
+//    Route::put('/{id}', [\App\Http\Controllers\Admin\RateController::class, 'update'])->name('rates.update');
+//    Route::get('/{id}', [\App\Http\Controllers\Admin\RateController::class, 'show'])->name('rates.show');
+//    Route::delete('/delete/{id}', [\App\Http\Controllers\Admin\RateController::class, 'delete'])->name('rates.delete');
+//    Route::post('/restore/{id}', [\App\Http\Controllers\Admin\RateController::class, 'restore']);
+//    Route::delete('/{id}', [\App\Http\Controllers\Admin\RateController::class, 'destroy']);
+//});

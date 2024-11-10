@@ -4,13 +4,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                        id="NotificationModalbtn-close"></button>
+                    id="NotificationModalbtn-close"></button>
             </div>
             <div class="modal-body">
                 <div class="mt-2 text-center">
                     <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
-                               colors="primary:#f7b84b,secondary:#f06548"
-                               style="width:100px;height:100px"></lord-icon>
+                        colors="primary:#f7b84b,secondary:#f06548"
+                        style="width:100px;height:100px"></lord-icon>
                     <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
                         <h4>Are you sure ?</h4>
                         <p class="text-muted mx-4 mb-0">Are you sure you want to remove this Notification ?</p>
@@ -19,8 +19,7 @@
                 <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
                     <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn w-sm btn-danger" id="delete-notification">Yes, Delete
-                        It!
-                    </button>
+                        It!</button>
                 </div>
             </div>
 
@@ -50,7 +49,7 @@
             </span>
         </a>
         <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
-                id="vertical-hover">
+            id="vertical-hover">
             <i class="ri-record-circle-line"></i>
         </button>
     </div>
@@ -63,15 +62,15 @@
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span data-key="t-menu">Mục lục</span></li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('statistical.index')}}">
+                    <a class="nav-link menu-link" href="#">
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Tổng Quan</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
-
+               
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('admin.services.index')}}">
-                        <i class="ri-customer-service-line"></i> <span data-key="t-layouts">Dịch vụ</span>
+                    <a class="nav-link menu-link" href="#">
+                        <i class="ri-layout-3-line"></i> <span data-key="t-layouts">Danh Mục</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
 
@@ -102,18 +101,18 @@
                 </li> <!-- end Dashboard Menu -->
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarCatalogueRooms" data-bs-toggle="collapse"
-                       role="button" aria-expanded="false" aria-controls="sidebarUsers">
+                    <a class="nav-link menu-link" href="#sidebarCatalogueRoom" data-bs-toggle="collapse"
+                       role="button" aria-expanded="false" aria-controls="sidebarCatalogueRoom">
                         <i class="ri-account-circle-line"></i> <span data-key="t-layouts">Loại phòng</span>
                     </a>
-                    <div class="collapse menu-dropdown" id="sidebarCatalogueRooms">
+                    <div class="collapse menu-dropdown" id="sidebarCatalogueRoom">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{ route('admin.catalogue-rooms.index')  }}" target="" class="nav-link"
+                                <a href="#" target="_blank" class="nav-link"
                                    data-key="t-horizontal">Danh Sách</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('admin.catalogue-rooms.create')  }}" target="" class="nav-link"
+                                <a href="#" target="_blank" class="nav-link"
                                    data-key="t-detached">Thêm Mới</a>
                             </li>
 
@@ -132,6 +131,14 @@
                             <li class="nav-item">
                                 <a href="{{route('vouchers.index')}}" target="_self" class="nav-link"
                                    data-key="t-horizontal">Danh sách</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('vouchers.create')}}" target="_self" class="nav-link"
+                                   data-key="t-horizontal">Thêm voucher</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('vouchers.list_trash')}}" target="_self" class="nav-link"
+                                   data-key="t-horizontal">Danh sách xóa voucher</a>
                             </li>
                         </ul>
                     </div>
