@@ -21,6 +21,7 @@ class ServiceFactory extends Factory
             'name' => $this->faker->name(),
             'price' => $this->faker->numberBetween(1000, 10000),
             'description' => $this->faker->text(),
+            'type' => rand(1, 2)
         ];
     }
 }

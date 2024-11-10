@@ -40,7 +40,7 @@
                                     <div>
                                         <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal"
                                                 id="create-btn" data-bs-target="#showModal"><i
-                                                    class="ri-add-line align-bottom me-1"></i> Add
+                                                    class="ri-add-line align-bottom me-1"></i> Thêm dịch vụ
                                         </button>
                                         <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i
                                                     class="ri-delete-bin-2-line"></i></button>
@@ -48,10 +48,10 @@
                                 </div>
                                 <div class="col-sm">
                                     <div class="d-flex justify-content-sm-end">
-                                        <div class="search-box ms-2">
-                                            <input type="text" class="form-control" placeholder="Search...">
+                                        <form class="search-box ms-2" method="GET" action="{{route('hotel.service.index', $hotel->id)}}">
+                                            <input type="text" name="keyword" class="form-control" placeholder="Tìm kếm...">
                                             <i class="ri-search-line search-icon"></i>
-                                        </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -73,7 +73,8 @@
                                         <th>Tên dịch vụ</th>
                                         <th>Giá</th>
                                         <th>Mô tả</th>
-                                        <th>Action</th>
+                                        <th>Loại dịch vụ</th>
+                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody class="list form-check-all">
@@ -95,7 +96,15 @@
                                                 <td class="">{{ $hotelService->service_name }}</td>
                                                 <td class="">{{ $hotelService->service_price }}</td>
                                                 <td class="">{{ $hotelService->service_description }}</td>
-
+                                                <td class="">
+                                                    @php
+                                                        $bgColor = 'bg-light text-dark';
+                                                        if ($hotelService->service_type == 1) {
+                                                            $bgColor = 'bg-info';
+                                                        }
+                                                    @endphp
+                                                    <span class="badge {{$bgColor}}">{{ App\Models\Service::TYPE_SERVICE["$hotelService->service_type"]}}</span>
+                                                </td>
                                                 <td>
                                                     <div class="d-flex gap-2">
                                                         <div class="remove">

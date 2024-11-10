@@ -11,6 +11,11 @@ class Service extends Model
 {
     use HasFactory, HasUuids, softDeletes;
 
+    const TYPE_SERVICE = [
+        '1' => 'Ngoài khách sạn',
+        '2' => 'Trong khách sạn'
+    ];
+
     protected $keyType = 'string';
 
     public $incrementing = false;
@@ -20,6 +25,7 @@ class Service extends Model
         'name',
         'description',
         'price',
+        'type'
     ];
 
     protected $casts = [

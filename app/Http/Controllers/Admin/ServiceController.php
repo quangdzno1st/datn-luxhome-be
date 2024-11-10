@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Service\CreateRequest;
-use App\Http\Requests\Api\Service\UpdateRequest;
+use App\Http\Requests\Admin\Service\ServiceRequest;
 use App\Models\Service;
 use App\Services\impl\ServiceServiceImpl;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
@@ -25,12 +23,12 @@ class ServiceController extends Controller
     {
         $services = $this->service->getAll(request());
 
-//        dd($services->toArray());
+        $typesService = Service::TYPE_SERVICE;
 
-        return view(self::PATH_VIEW . __FUNCTION__, compact('services'));
+        return view(self::PATH_VIEW . __FUNCTION__, compact('services', 'typesService'));
     }
 
-    public function store(CreateRequest $request)
+    public function store(ServiceRequest $request)
     {
         $data = $request->validated();
 
@@ -41,14 +39,14 @@ class ServiceController extends Controller
 
             DB::commit();
 
-            return back();
+            return back()->with('success', 'Thêm mới thành công');
 
         } catch (\Exception $exception) {
-            return back()->withErrors(['msg' => $exception->getMessage()]);
+            return back()->withErrors(['error' => $exception->getMessage()]);
         }
     }
 
-    public function update(UpdateRequest $request,  string $id)
+    public function update(ServiceRequest $request,  string $id)
     {
         $data = $request->validated();
         try {
@@ -58,10 +56,10 @@ class ServiceController extends Controller
 
             DB::commit();
 
-            return back();
+            return back()->with('success', 'Cập nhật thành công');
 
         } catch (\Exception $exception) {
-            return back()->withErrors(['msg' => $exception->getMessage()]);
+            return back()->withErrors(['error' => $exception->getMessage()]);
         }
     }
 
@@ -69,6 +67,6 @@ class ServiceController extends Controller
     {
         $service = $this->service->forceDelete($id);
 
-        return back();
+        return back()->with('success', 'Xóa thành công');
     }
 }

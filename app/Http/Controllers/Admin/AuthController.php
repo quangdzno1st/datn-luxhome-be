@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Constant\Enum\RoleEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Auth\ChangePasswordRequest;
 use App\Http\Requests\Admin\Auth\LoginRequest;

@@ -12,14 +12,23 @@ class HotelServiceRepository extends BaseRepository implements HotelServiceInter
         return HotelService::class;
     }
 
-    public function getAll($id)
+    public function getAll($id, $type = null, $keyword = null)
     {
-        $query = $this->model;
-        $this->resetModel();
-        return $query->join('hotels', 'hotel_service.hotel_id', '=', 'hotels.id')
+        $query = HotelService::query();
+        $query->join('hotels', 'hotel_service.hotel_id', '=', 'hotels.id')
             ->join('services', 'hotel_service.service_id', '=', 'services.id')
-            ->select('hotel_service.*', 'hotels.name as hotel_name', 'services.name as service_name', 'services.price as service_price', 'services.description as service_description')
-            ->where('hotel_id', $id)->paginate(10);
+            ->select('hotel_service.*', 'hotels.name as hotel_name', 'services.name as service_name', 'services.price as service_price', 'services.description as service_description', 'services.type as service_type')
+            ->where('hotel_id', $id);
+        if (isset($type)) {
+            $query->where('type', $type);
+        }
+        if (isset($keyword)) {
+            $query->where('hotels.name', 'like', "%$keyword%")
+                ->orWhere('services.name', 'like', "%$keyword%")
+                ->orWhere('services.price', 'like', "%$keyword%")
+                ->orWhere('services.description', 'like', "%$keyword%");
+        }
+        return $query->paginate(10);
     }
 
     public function add($data)

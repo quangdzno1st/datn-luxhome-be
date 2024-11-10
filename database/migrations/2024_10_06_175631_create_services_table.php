@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('name', 255);
             $table->double('price');
             $table->text('description');
+            $table->tinyInteger('type');
             $table->timestamps();
             $table->softDeletes(); // Soft delete
         });

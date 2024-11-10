@@ -125,7 +125,7 @@ class ServiceController extends Controller
                 'data' => $service,
             ], Response::HTTP_OK);
 
-        } catch (Exception $exception)
+        } catch (\Exception $exception)
         {
             return response()->json([
                 'result' => false,
@@ -150,7 +150,7 @@ class ServiceController extends Controller
                 'data' => $service,
             ],Response::HTTP_OK);
 
-        } catch (Exception $exception)
+        } catch (\Exception $exception)
         {
             return response()->json([
                 'result' => false,
@@ -176,7 +176,7 @@ class ServiceController extends Controller
                 'data' => $service,
             ],Response::HTTP_OK);
 
-        } catch (Exception $exception)
+        } catch (\Exception $exception)
         {
             return response()->json([
                 'result' => false,
