@@ -26,7 +26,7 @@ class CreateVoucherRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => 'required|string|max:255|unique:vouchers,code', // bắt buộc, là chuỗi, không quá 255 ký tự, phải unique trong bảng vouchers
+//            'code' => 'required|string|max:255|unique:vouchers,code', // bắt buộc, là chuỗi, không quá 255 ký tự, phải unique trong bảng vouchers
             'description' => 'required|string|max:1000', // có thể bỏ trống, là chuỗi, không quá 1000 ký tự
             'status' => 'required|in:1,0', // bắt buộc, phải là một trong hai giá trị: 'active' hoặc 'inactive'
             'quantity' => 'required|integer|min:1', // bắt buộc, là số nguyên, tối thiểu là 1
@@ -44,10 +44,10 @@ class CreateVoucherRequest extends FormRequest
     public function messages()
     {
         return [
-            'code.required' => 'Mã voucher là bắt buộc',
-            'code.string' => 'Mã voucher phải là một chuỗi ký tự',
-            'code.max' => 'Mã voucher không được vượt quá 255 ký tự',
-            'code.unique' => 'Mã voucher đã tồn tại, vui lòng chọn mã khác',
+//            'code.required' => 'Mã voucher là bắt buộc',
+//            'code.string' => 'Mã voucher phải là một chuỗi ký tự',
+//            'code.max' => 'Mã voucher không được vượt quá 255 ký tự',
+//            'code.unique' => 'Mã voucher đã tồn tại, vui lòng chọn mã khác',
 
             'description.string' => 'Mô tả phải là một chuỗi ký tự',
             'description.max' => 'Mô tả không được vượt quá 1000 ký tự',
