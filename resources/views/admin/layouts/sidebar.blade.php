@@ -76,10 +76,10 @@
 
 
                 <li class="nav-item">
-{{--                    <a class="nav-link menu-link" href="#sidebarUsers" data-bs-toggle="collapse"--}}
-{{--                        role="button" aria-expanded="false" aria-controls="sidebarUsers">--}}
-{{--                        <i class="ri-account-circle-line"></i> <span data-key="t-layouts">Người Dùng</span>--}}
-{{--                    </a>--}}
+                {{--                    <a class="nav-link menu-link" href="#sidebarUsers" data-bs-toggle="collapse"--}}
+                {{--                        role="button" aria-expanded="false" aria-controls="sidebarUsers">--}}
+                {{--                        <i class="ri-account-circle-line"></i> <span data-key="t-layouts">Người Dùng</span>--}}
+                {{--                    </a>--}}
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="#sidebarUsers" data-bs-toggle="collapse"
                        role="button" aria-expanded="false" aria-controls="sidebarUsers">
@@ -120,7 +120,7 @@
                     </div>
                 </li> <!-- end Catalogue Room Menu -->
 
-{{--                voucher--}}
+                {{--                voucher--}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarVoucher" data-bs-toggle="collapse"
                        role="button" aria-expanded="false" aria-controls="sidebarCatalogueRoom">
@@ -142,22 +142,6 @@
                             </li>
                         </ul>
                     </div>
-
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarHotels" data-bs-toggle="collapse"
-                       role="button" aria-expanded="false" aria-controls="sidebarHotels">
-                        <i class="ri-hotel-line"></i> <span data-key="t-layouts">Khách sạn</span>
-                    </a>
-                    <div class="collapse menu-dropdown" id="sidebarHotels">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="#"  class="nav-link"
-                                   data-key="t-horizontal">Danh Sách</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link"
-                                   data-key="t-detached">Thêm Mới</a>
-                            </li>
 
                         </ul>
                     </div>

@@ -25,6 +25,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::prefix('hotels')
         ->name('hotels.')
+        ->middleware('role')
         ->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\HotelController::class, 'index'])->name('index');
             Route::get('/create', [\App\Http\Controllers\Admin\HotelController::class, 'create'])->name('create');

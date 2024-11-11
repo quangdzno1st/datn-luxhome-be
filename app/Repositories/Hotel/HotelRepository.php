@@ -4,6 +4,7 @@ namespace App\Repositories\Hotel;
 
 use App\Models\Hotel;
 use App\Repositories\Base\BaseRepository;
+use Illuminate\Support\Facades\Auth;
 
 class HotelRepository extends BaseRepository implements HotelInterface
 {
@@ -14,10 +15,13 @@ class HotelRepository extends BaseRepository implements HotelInterface
 
     public function getAll()
     {
+        $user = Auth::user();
+
         $hotels = $this->model
             ->select('id', 'name', 'location', 'quantity_of_room', 'star', 'city_id',
                 'phone', 'email', 'status', 'quantity_floor')
             ->latest('id')
+            ->where('id', $user->org_id)
             ->with(['city', 'images'])
             ->paginate(10);
 
