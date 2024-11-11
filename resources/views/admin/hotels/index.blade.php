@@ -28,11 +28,14 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title mb-0">Danh sách khách sạn</h4>
-                        <div>
-                            <a href="{{ route('admin.hotels.trash') }}"
-                               class="btn btn-light bg-gradient waves-effect waves-light">
-                                <i class="ri-delete-bin-fill"></i> Thùng rác</a>
-                        </div>
+                        @if(\Auth::user()->type == \App\Models\User::ADMIN)
+                            <div>
+                                <a href="{{ route('admin.hotels.trash') }}"
+                                   class="btn btn-light bg-gradient waves-effect waves-light">
+                                    <i class="ri-delete-bin-fill"></i> Thùng rác</a>
+                            </div>
+                        @endif
+
                     </div><!-- end card header -->
 
                     <div class="card-body">
@@ -40,8 +43,12 @@
                             <div class="row g-4 mb-3">
                                 <div class="col-sm-auto">
                                     <div>
-                                        <a href="{{ route('admin.hotels.create') }}" class="btn btn-success add-btn">
-                                            <i class="ri-add-line align-bottom me-1"></i> Thêm mới</a>
+                                        @if(\Auth::user()->type == \App\Models\User::ADMIN)
+                                            <a href="{{ route('admin.hotels.create') }}"
+                                               class="btn btn-success add-btn">
+                                                <i class="ri-add-line align-bottom me-1"></i> Thêm mới</a>
+                                        @endif
+
                                         <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i
                                                     class="ri-delete-bin-2-line"></i></button>
                                     </div>
@@ -49,7 +56,8 @@
                                 <div class="col-sm">
                                     <div class="d-flex justify-content-sm-end">
                                         <div class="search-box ms-2">
-                                            <input type="text" class="form-control search" id="nameSearch" placeholder="Tìm kiếm...">
+                                            <input type="text" class="form-control search" id="nameSearch"
+                                                   placeholder="Tìm kiếm...">
                                             <i class="ri-search-line search-icon"></i>
                                         </div>
                                     </div>
@@ -132,12 +140,15 @@
                                                                 class="ri-edit-2-line"></i></a>
                                                     </div>
 
-                                                    <div class="remove">
-                                                        <button class="btn btn-sm btn-soft-danger remove-item-btn"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#deleteRecordModal{{ $hotel->id }}"><i
-                                                                    class="ri-delete-bin-2-line"></i></button>
-                                                    </div>
+                                                    @if(\Auth::user()->type == \App\Models\User::ADMIN)
+                                                        <div class="remove">
+                                                            <button class="btn btn-sm btn-soft-danger remove-item-btn"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#deleteRecordModal{{ $hotel->id }}">
+                                                                <i
+                                                                        class="ri-delete-bin-2-line"></i></button>
+                                                        </div>
+                                                    @endif
 
                                                 </div>
                                             </td>
@@ -310,7 +321,6 @@
                 }
 
 
-
                 document.getElementById('nameSearch').addEventListener('input', function () {
                     const searchValue = this.value.toLowerCase();
                     const rows = document.querySelectorAll('#customerTable tbody tr'); // Các hàng trong bảng
@@ -327,11 +337,6 @@
                         }
                     });
                 });
-
-
-
-
-
 
 
             </script>
@@ -358,7 +363,5 @@
                     $('#' + id).remove()
                 }
             </script>
-
-
 
 @endsection
