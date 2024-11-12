@@ -13,7 +13,19 @@ class HotelRepository extends BaseRepository implements HotelInterface
         return Hotel::class;
     }
 
-    public function getAll()
+    public function getAllForAdmin()
+    {
+        $hotels = $this->model
+            ->select('id', 'name', 'location', 'quantity_of_room', 'star', 'city_id',
+                'phone', 'email', 'status', 'quantity_floor')
+            ->latest('id')
+            ->with(['city', 'images'])
+            ->paginate(10);
+
+        return $hotels;
+    }
+
+    public function getAllForHotelier()
     {
         $user = Auth::user();
 

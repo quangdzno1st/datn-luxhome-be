@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Hotel\CreateHotelRequest;
 use App\Http\Requests\Api\Hotel\UpdateHotelRequest;
+use App\Models\User;
 use App\Repositories\Hotel\HotelRepository;
 use App\Repositories\Reigion\RegionRepository;
 use App\Services\impl\HotelServiceImpl;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HotelController extends Controller
 {
@@ -27,7 +29,14 @@ class HotelController extends Controller
 
     public function index()
     {
-        $data = $this->hotelRepository->getAll();
+        $user = Auth::user();
+
+        if($user->type == User::HOTELIER){
+            $data = $this->hotelRepository->getAllForHotelier();
+        }else if($user->type == User::ADMIN){
+            $data = $this->hotelRepository->getAllForAdmin();
+        }
+
         return view(self::PATH_VIEW . __FUNCTION__, compact('data'));
     }
 
@@ -46,7 +55,7 @@ class HotelController extends Controller
 
             return redirect()->route('admin.hotels.index')->with('success', 'Thêm mới khách sạn thành công');
         } catch (\Exception $e) {
-             dd($e->getMessage());
+//             dd($e->getMessage());
             return back()->withErrors(['msg' => $e->getMessage()]);
         }
     }
