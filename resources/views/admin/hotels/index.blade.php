@@ -62,7 +62,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
 
                             <div class="table-responsive table-card mt-3 mb-1">
@@ -177,7 +176,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
-                                                            <form action="{{ route('rooms.destroy', $hotel) }}"
+                                                            <form action="{{ route('admin.hotels.destroy', $hotel) }}"
                                                                   method="post">
                                                                 @csrf
                                                                 @method('DELETE')
