@@ -26,7 +26,8 @@ class DatabaseSeeder extends Seeder
 //           ]
 //        ]);
         $this->call([
-            RateSeeder::class
+            OrderSeeder::class,
+//            ServiceSeeder::class,
         ]);
     }
 }
