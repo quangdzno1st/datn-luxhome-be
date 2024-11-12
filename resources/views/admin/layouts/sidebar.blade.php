@@ -101,9 +101,9 @@
                 </li> <!-- end Dashboard Menu -->
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarCatalogueRoom" data-bs-toggle="collapse"
-                       role="button" aria-expanded="false" aria-controls="sidebarCatalogueRoom">
-                        <i class="ri-account-circle-line"></i> <span data-key="t-layouts">Loại phòng</span>
+                    <a class="nav-link menu-link" href="#sidebarCatalogueRooms" data-bs-toggle="collapse"
+                       role="button" aria-expanded="false" aria-controls="sidebarUsers">
+                        <i class="ri-layout-3-line"></i> <span data-key="t-layouts">Loại phòng</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarCatalogueRoom">
                         <ul class="nav nav-sm flex-column">
@@ -124,7 +124,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarVoucher" data-bs-toggle="collapse"
                        role="button" aria-expanded="false" aria-controls="sidebarCatalogueRoom">
-                        <i class="ri-account-circle-line"></i> <span data-key="t-layouts">Voucher</span>
+                        <i class="ri-coupon-2-line"></i> <span data-key="t-layouts">Voucher</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarVoucher">
                         <ul class="nav nav-sm flex-column">
@@ -149,7 +149,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{route('admin.rooms.index')}}" data-bs-toggle=""
                        role="button" aria-expanded="false" aria-controls="sidebarCatalogueRoom">
-                        <i class="ri-account-circle-line"></i> <span data-key="t-layouts">Phòng</span>
+                        <i class="ri-hotel-bed-line"></i> <span data-key="t-layouts">Phòng</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -179,7 +179,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{route('admin.cities.index')}}" data-bs-toggle=""
                        role="button" aria-expanded="false" aria-controls="sidebarRegion">
-                        <i class="ri-building-4-fill"></i> <span data-key="t-layouts">Thành phố</span>
+                        <i class="bx bxs-city"></i> <span data-key="t-layouts">Thành phố</span>
                     </a>
                 </li>
             </ul>

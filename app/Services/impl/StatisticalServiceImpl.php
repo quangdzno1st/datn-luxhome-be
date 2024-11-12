@@ -29,6 +29,8 @@ class StatisticalServiceImpl
 
             $data = session('handle_data');
 
+            // dd($data);
+
             if (!empty($data['hotel_id'])) {
                 $hotel_id = $data['hotel_id'];
             }
@@ -44,7 +46,7 @@ class StatisticalServiceImpl
                     ->whereBetween('created_at', [$startDate, $endDate]);
 
                 if (!empty($hotel_id)) {
-                    $query->where('hotel_id', $hotel_id);
+                    $query->where('org_id', $hotel_id);
                 }
 
                 $query->groupBy('year', 'quarter')
@@ -57,7 +59,7 @@ class StatisticalServiceImpl
                     ->whereYear('created_at', '<=', $endDate);
 
                 if (!empty($hotel_id)) {
-                    $query->where('hotel_id', $hotel_id);
+                    $query->where('org_id', $hotel_id);
                 }
 
                 $query->groupBy('year')
@@ -69,7 +71,7 @@ class StatisticalServiceImpl
                     ->where('created_at', '<=', $endDate);
 
                 if (!empty($hotel_id)) {
-                    $query->where('hotel_id', $hotel_id);
+                    $query->where('org_id', $hotel_id);
                 }
 
                 $query->groupBy('year', 'month')
@@ -81,7 +83,7 @@ class StatisticalServiceImpl
                 ->whereYear('created_at', $currentYear);
 
             if (!empty($hotel_id)) {
-                $query->where('hotel_id', $hotel_id);
+                $query->where('org_id', $hotel_id);
             }
 
             $query->groupBy('year', 'month')
@@ -112,7 +114,7 @@ class StatisticalServiceImpl
         $query->selectRaw('COUNT(id) AS total_order');
 
         if (!empty($hotel_id)) {
-            $query->where('hotel_id', $hotel_id);
+            $query->where('org_id', $hotel_id);
         }
 
         $totalOrder = $query->first();
@@ -130,7 +132,7 @@ class StatisticalServiceImpl
         $query->selectRaw('SUM(total_amount) AS total_revenue');
 
         if (!empty($hotel_id)) {
-            $query->where('hotel_id', $hotel_id);
+            $query->where('org_id', $hotel_id);
         }
 
         $totalOrder = $query->first();
@@ -154,7 +156,7 @@ class StatisticalServiceImpl
         $query->selectRaw('COUNT(id) AS total_rating');
 
         if (!empty($hotel_id)) {
-            $query->where('hotel_id', $hotel_id);
+            $query->where('org_id', $hotel_id);
         }
 
         $totalRating = $query->first();
