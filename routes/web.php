@@ -66,9 +66,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
 });
 
-
-
-
 Route::post('/upload-image', [CatalogueRoomController::class, 'storeImage'])->name('upload-image');
 
 //});
@@ -99,7 +96,7 @@ Route::controller(StatisticalController::class)->group(function () {
 Route::get('/404', function () {
     return view('admin.errors.404');
 })->name('error.404');
-//rate
+////rate
 //Route::prefix('rates')->group(function () {
 //    Route::get('/', [\App\Http\Controllers\Admin\RateController::class, 'index'])->name('rates.index');
 //    Route::get('/', [\App\Http\Controllers\Admin\RateController::class, 'create'])->name('rates.create');
@@ -110,3 +107,19 @@ Route::get('/404', function () {
 //    Route::post('/restore/{id}', [\App\Http\Controllers\Admin\RateController::class, 'restore']);
 //    Route::delete('/{id}', [\App\Http\Controllers\Admin\RateController::class, 'destroy']);
 //});
+//Route::middleware(['auth', 'admin'])->group(function () {
+//    Route::get('/admin/rates', [RateController::class, 'index'])->name('rates.index');
+//    Route::post('/admin/rates/{rate}/status', [RateController::class, 'updateStatus'])->name('rates.updateStatus');
+//    Route::delete('/admin/rates/{rate}', [RateController::class, 'destroy'])->name('rates.destroy');
+//});
+Route::prefix('rates')->group(function () {
+    Route::get('/admin/rates', [\App\Http\Controllers\Admin\RateController::class, 'index'])->name('rates.index');
+    Route::post('/admin/rates/{rate}/status', [\App\Http\Controllers\Admin\RateController::class, 'updateStatus'])->name('rates.updateStatus');
+    Route::delete('/admin/rates/{rate}', [\App\Http\Controllers\Admin\RateController::class, 'destroy'])->name('rates.destroy');
+});
+
+//order
+Route::prefix('admin/orders')->group(function () {
+    Route::get('/page={page}', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
+    Route::get('/check-payable/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'checkPayable'])->name('orders.checkPayable');
+});

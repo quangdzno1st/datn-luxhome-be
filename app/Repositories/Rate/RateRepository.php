@@ -23,7 +23,6 @@ class RateRepository extends BaseRepository implements RateInterface {
         }
     }
 
-
     public function remove($id)
     {
         $query = $this->model->find($id);
@@ -48,4 +47,5 @@ class RateRepository extends BaseRepository implements RateInterface {
         $query=Rate::where('hotel_id', $hotel_id)->avg('rate');
         return $query;
     }
+
 }

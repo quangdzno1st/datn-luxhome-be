@@ -30,6 +30,7 @@ class OrderFactory extends Factory
             'check_in' => fake()->dateTime()->format('Y-m-d H:i:s'),
             'check_out' => fake()->dateTime()->format('Y-m-d H:i:s'),
             'incidental_costs' => 1,
+            'org_id'=> 'LHO-' . str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT),
             'total_amount' => fake()->numberBetween(1000000, 10000000)
         ];
     }

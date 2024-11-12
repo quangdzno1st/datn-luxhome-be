@@ -357,4 +357,5 @@ class OrderServiceImpl implements OrderService
         $order->save();
         $this->bookingController->confirmBooking($order);
     }
+
 }
