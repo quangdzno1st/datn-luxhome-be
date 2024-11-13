@@ -27,7 +27,7 @@
                         <div>
                             <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value"
                                     data-target="{{ $totalRevenue->total_revenue }}">0</span><sup>đ</sup> </h4>
-                            <a href="javascript:void(0)" class="text-decoration-underline">Xem doanh thu</a>
+                            <span href="javascript:void(0)" class="text-decoration-underline" style="color: white">.</span>
                         </div>
                         <div class="avatar-sm flex-shrink-0">
                             <span class="avatar-title bg-success-subtle rounded fs-3">
@@ -184,8 +184,12 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex">
-                        <canvas id="revenueChart" style="width:100%;max-width:50%"></canvas>
-                        <canvas id="orderChart" style="width:100%;max-width:50%"></canvas>
+                        <div style="width: 100%; max-width: 50%">
+                            <canvas id="revenueChart" style="width:100%"></canvas>
+                        </div>
+                        <div style="width: 100%; max-width: 50%">
+                            <canvas id="orderChart" style="width:100%"></canvas>
+                        </div>
                     </div>
                 </div><!-- end card -->
             </div>
@@ -227,23 +231,31 @@
         ];
 
         new Chart("revenueChart", {
-            type: "bar",
+            type: "line",
             data: {
                 labels: xValues,
                 datasets: [{
-                    backgroundColor: barColors,
+                    borderWidth: 1,
                     data: yValuesRevenue
                 }]
             },
             options: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: "Thống Kê Doanh Thu"
-                }
-            }
+         plugins: {
+          legend: { // Ẩn phần legend (chú thích)
+            display: false
+          },
+          title: {
+            display: true,
+            text: 'Thống Kê Doanh Thu'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            min: 0
+          }
+        }
+      }
         });
 
         let yValuesOrder = [
@@ -253,39 +265,47 @@
         ];
 
         new Chart("orderChart", {
-            type: "bar",
+            type: "line",
             data: {
                 labels: xValues,
                 datasets: [{
-                    backgroundColor: barColors,
+                    borderWidth: 1,
                     data: yValuesOrder
                 }]
             },
             options: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: "Thống Kê Đặt Phòng"
-                }
-            }
+         plugins: {
+          legend: { // Ẩn phần legend (chú thích)
+            display: false
+          },
+          title: {
+            display: true,
+            text: 'Thống Kê Đặt Phòng'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            min: 0
+          }
+        }
+      }
         });
     </script>
 @endsection
 
 @section('script-libs')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- apexcharts -->
-    <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+    <script src="{{asset('theme/admin/assets/libs/apexcharts/apexcharts.min.js')}}"></script>
 
     <!-- Vector map-->
-    <script src="assets/libs/jsvectormap/js/jsvectormap.min.js"></script>
-    <script src="assets/libs/jsvectormap/maps/world-merc.js"></script>
+    <script src="{{asset('theme/admin/assets/libs/jsvectormap/js/jsvectormap.min.js')}}"></script>
+    <script src="{{asset('theme/admin/assets/libs/jsvectormap/maps/world-merc.js')}}"></script>
 
     <!--Swiper slider js-->
-    <script src="assets/libs/swiper/swiper-bundle.min.js"></script>
+    <script src="{{asset('theme/admin/assets/libs/swiper/swiper-bundle.min.js')}}"></script>
 
     <!-- Dashboard init -->
-    <script src="assets/js/pages/dashboard-ecommerce.init.js"></script>
+    <script src="{{asset('theme/admin/assets/js/pages/dashboard-ecommerce.init.js')}}"></script>
 @endsection

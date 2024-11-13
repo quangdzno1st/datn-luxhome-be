@@ -75,11 +75,6 @@
                 </li> <!-- end Dashboard Menu -->
 
 
-                
-                    {{--                    <a class="nav-link menu-link" href="#sidebarUsers" data-bs-toggle="collapse" --}}
-                    {{--                        role="button" aria-expanded="false" aria-controls="sidebarUsers"> --}}
-                    {{--                        <i class="ri-account-circle-line"></i> <span data-key="t-layouts">Người Dùng</span> --}}
-                    {{--                    </a> --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
                         href="#sidebarUsers" data-bs-toggle="collapse" role="button" aria-expanded="false"
