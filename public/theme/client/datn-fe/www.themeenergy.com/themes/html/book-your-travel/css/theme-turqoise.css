@@ -1,0 +1,55 @@
+a,.widget a:hover,.widget a:focus,aside .widget h5,.main-search h5 span,.details .description a,.results.flights h5,.tab-content h2 a:hover,.tab-content h2 a:focus,.tab-content h3 a:hover,.tab-content h3 a:focus,.tab-content h4,.entry-meta span a:hover,.entry-meta span a:focus,.entry-header h2 a:hover,.entry-header h2 a:focus,.boxes article h4,blockquote i
+{
+	color:#41AFAA;
+}
+
+ul > li:before,.booking h2 span
+{
+	color:#5FC8C2;
+}
+
+.social li a:hover,.social li a:focus,.pager .current,.pager a:hover,.contact:before,.header .ribbon,.destinations article .ribbon:hover,.view-type .active,.tags li:hover,.inner-nav li:hover,.inner-nav li.active,.inner-nav li.active:hover,.chart dd span,.infoBox,.lb-wrap,.ui-slider-horizontal .ui-slider-handle ,.image-overlay:before 	
+{
+	background:#5FC8C2 !important;
+}
+
+.gradient-button,button, input[type="button"], input[type="reset"], input[type="submit"],.scroll-to-top,.testimonials,.ui-datepicker .ui-state-hover,.ui-datepicker .dp-highlight a,.ui-datepicker .dp-highlight span	     
+{
+	background: #5FC8C2;
+	background: -moz-linear-gradient(top, #5FC8C2 0%, #41AFAA 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5FC8C2), color-stop(100%,#41AFAA));
+	background: -webkit-linear-gradient(top, #5FC8C2 0%,#41AFAA 100%);
+	background: -o-linear-gradient(top, #5FC8C2 0%,#41AFAA 100%);
+	background: -ms-linear-gradient(top, #5FC8C2 0%,#41AFAA 100%);
+	background: linear-gradient(to bottom, #5FC8C2 0%,#41AFAA 100%);
+}
+
+.gradient-button:hover,button:hover, input[type="button"]:hover, input[type="reset"]:hover, input[type="submit"]:hover,.gradient-button:focus,button:focus, input[type="button"]:focus, input[type="reset"]:focus, input[type="submit"]:focus,.scroll-to-top:hover,.scroll-to-top:focus	   	
+{
+	background: #41AFAA;
+	background: -moz-linear-gradient(top, #41AFAA 0%, #5FC8C2 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#41AFAA), color-stop(100%,#5FC8C2));
+	background: -webkit-linear-gradient(top, #41AFAA 0%,#5FC8C2 100%);	
+	background: -o-linear-gradient(top, #41AFAA 0%,#5FC8C2 100%);
+	background: -ms-linear-gradient(top, #41AFAA 0%,#5FC8C2 100%);
+	background: linear-gradient(to bottom, #41AFAA 0%,#5FC8C2 100%);
+}
+
+.scroll-to-top:before,
+.ascending:hover:before,
+.ascending:focus:before 			{border-color: transparent transparent #5FC8C2 transparent;}
+
+.scroll-to-top:hover:before,
+.scroll-to-top:focus:before			{border-color: transparent transparent #41AFAA transparent;}
+
+.header .ribbon:before,
+.descending:hover:before,
+.descending:focus:before,
+.infoBox:after 								{border-color:#5fc8c2 transparent transparent transparent;}
+
+.header .ribbon:after					{border-color: transparent #5fc8c2 transparent transparent;}
+
+.inner-nav li.active a:after 			{border-color: transparent transparent transparent #5FC8C2;}
+
+.ball,.ball1 									{border-color:#5FC8C2;}
+
