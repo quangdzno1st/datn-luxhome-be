@@ -125,7 +125,8 @@ Route::prefix('rates')->group(function () {
 //order
 Route::prefix('admin/orders')->group(function () {
     Route::get('/page={page}', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
-    Route::get('/check-payable/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'checkPayable'])->name('orders.checkPayable');
+    Route::post('/updateStatus/{id}', [\App\Http\Controllers\Admin\OrderDetailController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::get('/show/{order}', [\App\Http\Controllers\Admin\OrderDetailController::class, 'showOrderDetail'])->name('orders.show');
 });
 
 Route::get('/test/theme', function () {

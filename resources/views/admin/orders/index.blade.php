@@ -4,6 +4,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
+
                     <h4 class="card-title mb-0">Danh sách order</h4>
                 </div><!-- end card header -->
 
@@ -34,31 +35,29 @@
                             </div>
                         </div>
 
-                        <div class="table-responsive table-card mt-3 mb-1">
-                            <table class="table align-middle table-nowrap" id="customerTable">
-                                <thead class="table-light">
+                        <div class="card-body">
+                            <table id="example" class="table table-bordered dt-responsive nowrap align-middle"
+                                   style="width:100%">
+                                <thead>
                                 <tr>
                                     <th scope="col" style="width: 50px;">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="checkAll" value="option">
                                         </div>
                                     </th>
-                                    <th class="" data-sort="customer_name">User</th>
-                                    <th class="" data-sort="email">voucher</th>
-                                    <th class="" data-sort="phone">booking_fee</th>
-                                    <th class="" data-sort="date">email</th>
-                                    <th class="" data-sort="status">name</th>
-                                    <th class="" data-sort="action">code</th>
-                                    <th class="" data-sort="action">qr_code</th>
-                                    <th class="" data-sort="action">status</th>
-                                    <th class="" data-sort="action">start_date</th>
-                                    <th class="" data-sort="action">end_date</th>
-                                    <th class="" data-sort="action">check_in</th>
-                                    <th class="" data-sort="action">check_out</th>
-                                    <th class="" data-sort="action">total_amount</th>
-{{--                                    <th class="" data-sort="action">created_at</th>--}}
-{{--                                    <th class="" data-sort="action">updated_at</th>--}}
-                                    <th class="" data-sort="action">Payable</th>
+                                    <th>Người dùng</th>
+                                    <th>voucher</th>
+                                    <th>Phí đặt</th>
+                                    <th>Email</th>
+                                    <th>Tên</th>
+                                    <th>Mã code</th>
+                                    <th>QR CODE</th>
+                                    <th>Trạng thái</th>
+                                    <th>Ngày đặt</th>
+                                    <th>Ngày kết thúc</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Tiền còn lại</th>
+                                    <th>Chi tiết</th>
                                 </tr>
                                 </thead>
                                 <tbody class="list form-check-all">
@@ -70,60 +69,45 @@
                                             </div>
                                         </th>
 
-                                        <td class="customer_name">{{$order->User}}</td>
-                                        <td class="phone">{{$order->voucher}}</td>
-                                        <td class="date">{{$order->booking_fee}}</td>
-                                        <td class="date">{{$order->email}}</td>
-                                        <td class="date">{{$order->name}}</td>
-                                        <td class="date">{{$order->code}}</td>
-                                        <td class="date">{{$order->qr_code}}</td>
-                                        <td class="date">{{$order->status}}</td>
-                                        <td class="date">{{date('d-M-y', strtotime($order->start_date))}}</td>
-                                        <td class="date">{{date('d-M-y', strtotime($order->end_date))}}</td>
-                                        <td></td>
+                                        <td>{{$order->User}}</td>
+                                        <td>{{$order->voucher}}</td>
+                                        <td>{{$order->booking_fee}}</td>
+                                        <td>{{$order->email}}</td>
+                                        <td>{{$order->name}}</td>
+                                        <td>{{$order->code}}</td>
+                                        <td>{{$order->qr_code}}</td>
+                                        <td>{{$order->status}}</td>
+                                        <td>{{date('d-M-y', strtotime($order->start_date))}}</td>
+                                        <td>{{date('d-M-y', strtotime($order->end_date))}}</td>
                                         <td>
-                                            <div class="d-flex gap-2">
-                                                <div class="edit">
-                                                    <button
-                                                            class="btn btn-sm btn-success edit-item-btn"
-                                                            onclick="checkoutOrder('{{ $order->id }}')"
-                                                            id="checkout_button_{{ $order->id }}"
-                                                    >
-                                                        Checkout
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            {{number_format($order->total_amount)}}VND
+                                            {{number_format($order->total_amount)}} VND
                                         </td>
                                         <td id="payable_amount_{{ $order->id }}">
-                                            {{ $payable ? number_format($payable) : 'N/A' }} VND
+                                            {{ $payable<=1 ? '0' :number_format($payable)  }} VND
                                         </td>
-
+                                        <td>
+                                            <div class="dropdown d-inline-block">
+                                                <button class="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="ri-more-fill align-middle"></i>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li>
+                                                        <a href="{{route('orders.show',$order)}}" class="dropdown-item">
+                                                            <i class="ri-eye-fill align-bottom me-2 text-muted"></i> Chi tiết</a>
+                                                    </li>
+                                                    <li><a class="dropdown-item edit-item-btn"><i class="ri-pencil-fill align-bottom me-2 text-muted"></i> Edit</a></li>
+                                                    <li>
+                                                        <a class="dropdown-item remove-item-btn">
+                                                            <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
-                            <div class="noresult" style="display: none">
-                                <div class="text-center">
-                                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px"></lord-icon>
-                                    <h5 class="mt-2">Sorry! No Result Found</h5>
-                                    <p class="text-muted mb-0">We've searched more than 150+ Orders We did not find any orders for you search.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-end">
-                            <div class="pagination-wrap hstack gap-2">
-                                <a class="page-item pagination-prev disabled" href="javascript:void(0);">
-                                    Previous
-                                </a>
-                                <ul class="pagination listjs-pagination mb-0"></ul>
-                                <a class="page-item pagination-next" href="javascript:void(0);">
-                                    Next
-                                </a>
-                            </div>
                         </div>
                     </div>
                 </div><!-- end card -->
@@ -133,35 +117,32 @@
         <!-- end col -->
     </div>
 @endsection
-@section('scripts')
-    <script>
-        function checkoutOrder(orderId) {
-            // URL đến route `checkPayable`
-            const url = `/admin/orders/check-payable/${orderId}`;
+@section('style-libs')
+    <!--datatable css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <!--datatable responsive css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
 
-            // Gửi yêu cầu AJAX để tính toán và cập nhật số tiền phải trả
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Lấy phần tử checkout_button và check_out để cập nhật
-                        const checkoutButton = document.getElementById(`checkout_button_${orderId}`);
-                        // const checkOutTime = document.getElementById(`check_out_${orderId}`);
-                        const payableAmount = document.getElementById(`payable_amount_${orderId}`);
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+    <link href="{{ asset('theme/admin/assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet"
+          type="text/css"/>
+@endsection
+@section('script-libs')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!--datatable js-->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 
-                        // Ẩn nút checkout
-                        if (checkoutButton) checkoutButton.style.display = 'none';
-
-                        // Cập nhật thời gian hiện tại vào cột checkout
-                        // const now = new Date();
-                        // checkOutTime.innerText = now.toLocaleString();
-
-                        // Cập nhật số tiền còn lại
-                        payableAmount.innerText = `${data.payable.toLocaleString()} VND`;
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        }
-    </script>
+    <script src="{{asset('theme/admin/assets/js/pages/datatables.init.js')}}"></script>
+    <!-- App js -->
+    <script src="{{asset('theme/admin/assets/js/app.js')}}"></script>
 
 @endsection
