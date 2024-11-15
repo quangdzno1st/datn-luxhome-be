@@ -47,7 +47,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $hotels = $this->hotelRepository->getAll();
+        $hotels = $this->hotelRepository->getAllForAdmin();
         return view('admin.users.create', compact('hotels'));
     }
 
@@ -77,7 +77,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $hotels = $this->hotelRepository->getAll();
+        $hotels = $this->hotelRepository->getAllForAdmin();
         $user = $this->userRepository->find($id);
         return view('admin.users.edit', compact('user', 'hotels'));
     }
