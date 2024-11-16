@@ -122,7 +122,7 @@
 			$('.more-information').slideUp();
 			$('.more-info').click(function() {
 				var moreinformation = $(this).closest('li').find('.more-information');
-				var txt = moreinformation.is(':visible') ? '+ more info' : ' - less info';
+				var txt = moreinformation.is(':visible') ? '+ Xem thêm' : ' - Ẩn';
 				$(this).text(txt);
 				moreinformation.stop(true, true).slideToggle('slow');
 			});
