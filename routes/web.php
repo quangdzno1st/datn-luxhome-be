@@ -123,3 +123,7 @@ Route::prefix('admin/orders')->group(function () {
     Route::get('/page={page}', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
     Route::get('/check-payable/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'checkPayable'])->name('orders.checkPayable');
 });
+
+Route::get('/test/theme', function() {
+    return view('client.booking');
+});
