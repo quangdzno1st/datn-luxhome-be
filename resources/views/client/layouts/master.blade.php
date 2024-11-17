@@ -22,7 +22,15 @@
 	<link rel="shortcut icon" href="{{asset('theme/client/images/favicon.ico')}}" />
 	<link rel="stylesheet" href="{{asset('theme/client/css/styler.css')}}" type="text/css" />
 
-    @yield('style-libs')
+
+
+
+	<!-- Select2 CSS -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+
+
+	@yield('style-libs')
 
     @yield('styles')
 
@@ -56,7 +64,7 @@
 	<script src="{{asset('theme/client/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js')}}"></script>
 	<script type="text/javascript" src="{{asset('theme/client/js/jquery.uniform.min.js')}}"></script>
 	<script type="text/javascript" src="{{asset('theme/client/js/jquery.slimmenu.min.js')}}"></script>
-
+	<!-- jQuery -->
 	<script type="text/javascript" src="{{asset('theme/client/js/scripts.js')}}"></script>
 
 
@@ -77,7 +85,8 @@
 			</ul>
 		</div>
 	</div>--}}
-	<script src="{{asset('theme/client/js/styler.js')}}"></script> 
+	<script src="{{asset('theme/client/js/styler.js')}}"></script>
+
 
     @yield('script-libs')
 

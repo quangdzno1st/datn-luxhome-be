@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Http\Requests\BaseSearchRequest;
+
 interface CityService
 {
     public function createNewCity($data);
@@ -9,4 +11,5 @@ interface CityService
     public function deleteCity($id);
     public function restoreCity($id);
     public function forceDeleteCity($id);
+    public function searchByPage(BaseSearchRequest $request);
 }

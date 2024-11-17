@@ -5,6 +5,9 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\CatalogueRoomController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\StatisticalController;
+use App\Http\Controllers\Client\CityController;
+use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\HotelController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -124,6 +127,13 @@ Route::prefix('admin/orders')->group(function () {
     Route::get('/check-payable/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'checkPayable'])->name('orders.checkPayable');
 });
 
-Route::get('/test/theme', function() {
+Route::get('/test/theme', function () {
     return view('client.booking');
 });
+
+
+//client
+Route::get('/', [HomeController::class, 'index'])->name('home.index');
+Route::get('/hotel/{id}', [HomeController::class, 'searchByPage'] )->name('home.hotel.detail');
+Route::get('/hotel/booking/{id}', [HotelController::class, 'booking'] )->name('hotel.booking');
+Route::get('/cities/search-by-page', [CityController::class, 'searchByPage'] )->name('cities.searchByPage');

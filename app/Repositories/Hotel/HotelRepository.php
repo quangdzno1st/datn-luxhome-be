@@ -15,14 +15,13 @@ class HotelRepository extends BaseRepository implements HotelInterface
 
     public function getAllForAdmin()
     {
-        $hotels = $this->model
+        return $this->model
             ->select('id', 'name', 'location', 'quantity_of_room', 'star', 'city_id',
-                'phone', 'email', 'status', 'quantity_floor')
+                'phone', 'email', 'status', 'quantity_floor', 'thumbnail', 'description', 'province',
+                'district', 'commune')
             ->latest('id')
             ->with(['city', 'images'])
             ->paginate(10);
-
-        return $hotels;
     }
 
     public function getAllForHotelier()
@@ -31,7 +30,8 @@ class HotelRepository extends BaseRepository implements HotelInterface
 
         $hotels = $this->model
             ->select('id', 'name', 'location', 'quantity_of_room', 'star', 'city_id',
-                'phone', 'email', 'status', 'quantity_floor')
+                'phone', 'email', 'status', 'quantity_floor', 'thumbnail', 'description', 'province',
+                'district', 'commune')
             ->latest('id')
             ->where('id', $user->org_id)
             ->with(['city', 'images'])

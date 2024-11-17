@@ -15,6 +15,7 @@ class City extends Model
         'id',
         'name',
         'region_id',
+        'thumbnail'
     ];
 
     public function region()
