@@ -14,7 +14,7 @@ class BookingServiceRepository extends BaseRepository implements BookingServiceI
 
     public function updateStatusByOrderId($status, $orderId)
     {
-        BookingService::query()->whereIn('order_id', $orderId)
+        BookingService::query()->where('order_id', $orderId)
             ->update(['status' => $status]);
     }
 }
