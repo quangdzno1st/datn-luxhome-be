@@ -21,7 +21,12 @@ class Hotel extends Model
         'phone',
         'email',
         'status',
-        'quantity_floor'
+        'quantity_floor',
+        'thumbnail',
+        'description',
+        'province',
+        'district',
+        'commune'
     ];
 
     // auto render uuid

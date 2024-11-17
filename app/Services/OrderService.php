@@ -9,4 +9,6 @@ interface OrderService
 {
     public function create(OrderRequest $request);
     public function paymentReturn(Request $request);
+
+    public function getTotalOrderMapByCityId(array $cityIds);
 }

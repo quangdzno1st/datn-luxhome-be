@@ -45,7 +45,7 @@
     <nav class="main-nav">
         <div class="wrap">
             <ul class="slimmenu" id="nav">
-                <li><a href="hotels.html" title="Hotels">Trang Chủ</a>
+                <li><a href="{{ route('home.index') }}" title="Hotels">Trang Chủ</a>
                     {{-- <ul>
                         <li><a href="#">Secondary navigation</a></li>
                         <li><a href="#">Example links</a>

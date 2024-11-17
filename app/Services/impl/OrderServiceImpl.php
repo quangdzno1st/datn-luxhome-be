@@ -358,4 +358,15 @@ class OrderServiceImpl implements OrderService
         $this->bookingController->confirmBooking($order);
     }
 
+    public function getTotalOrderMapByCityId(array $cityIds)
+    {
+        if (empty($cityIds)) {
+            return [];
+        }
+        $totalOrders = $this->orderRepos->getTotalOrdersMapByCityId($cityIds);
+
+        return collect($totalOrders)->mapWithKeys(function ($item) {
+            return [$item['city_id'] => $item];
+        });
+    }
 }
