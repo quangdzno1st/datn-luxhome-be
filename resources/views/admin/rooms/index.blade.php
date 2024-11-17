@@ -89,7 +89,7 @@
                                             <td class="id">{{ $room->code }}</td>
                                             <td class="customer_name">{{ $room->catalogue_room_name }}</td>
                                             <td class="customer_name"><span
-                                                        class="badge bg-success">{{ \App\Constant\Enum\RoomStatusEnum::parse($room->status)?->getName() }}</span>
+                                                        class="badge bg-success">{{ RoomStatusEnum::parse($room->status)?->getName() }}</span>
                                             </td>
                                             <td>
                                                 <div class="d-flex gap-2">

@@ -1,24 +1,26 @@
 <header class="header">
     <div class="wrap">
         <!--logo-->
-        <div class="logo"><a href="index.html" title="Book Your Travel"><img src="{{asset('theme/client/images/txt/logo.png')}}"
+        <div class="logo"><a href="{{ route('home.index') }}" title="Book Your Travel"><img src="{{asset('theme/client/images/txt/logo.png')}}"
                     alt="Book Your Travel" /></a></div>
         <!--//logo-->
 
         <!--ribbon-->
-        <div class="ribbon">
-            <nav>
-                <ul class="profile-nav">
-                    <li class="active"><a href="#" title="My Account">Tài Khoản</a></li>
-                    <li><a href="my_account.html" title="Settings">Cài Đặt</a></li>
-                    <li><a href="#" title="Logout">Đăng Xuất</a></li>
-                </ul>
-                <ul class="lang-nav">
-                    <li class="active"><a href="login.html" title="Login">Đăng Nhập</a></li>
-                </ul>
-                <ul class="currency-nav">
-                    <li class="active"><a href="#" title="Register">Đăng Ký</a></li>
-                </ul>
+        <div class="ribbon" style="min-height: 0 !important; text-align: center">
+            <nav style="min-height: 0 !important">
+              @if(\Illuminate\Support\Facades\Auth::check())
+                    <ul class="">
+                        <li class="active"><a href="{{ route('orders.index') }}" title="Settings">Cài Đặt</a></li>
+                        <li class="active"><a href="#" title="Logout">Đăng Xuất</a></li>
+                    </ul>
+                @else
+                    <ul class="lang-nav">
+                        <li class="active"><a href="login.html" title="Login">Đăng Nhập</a></li>
+                    </ul>
+                    <ul class="currency-nav">
+                        <li class="active"><a href="#" title="Register">Đăng Ký</a></li>
+                    </ul>
+                @endif
             </nav>
         </div>
         <!--//ribbon-->

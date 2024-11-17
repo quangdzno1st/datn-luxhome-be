@@ -11,6 +11,12 @@
 	<meta name="author" content="themeenergy.com">
 
 	<title>Book Your Travel - Home</title>
+	<!-- Latest compiled and minified CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+	<!-- Latest compiled JavaScript -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 
 	<link rel="stylesheet" href="{{asset('theme/client/css/style.css')}}" />
 	<link rel="stylesheet" href="{{asset('theme/client/css/theme-turqoise.css')}}" id="template-color" />
@@ -21,13 +27,6 @@
 	<script src="{{asset('theme/client/fontawesome/e808bf9397.js')}}"></script>
 	<link rel="shortcut icon" href="{{asset('theme/client/images/favicon.ico')}}" />
 	<link rel="stylesheet" href="{{asset('theme/client/css/styler.css')}}" type="text/css" />
-
-
-
-
-	<!-- Select2 CSS -->
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-
 
 
 	@yield('style-libs')

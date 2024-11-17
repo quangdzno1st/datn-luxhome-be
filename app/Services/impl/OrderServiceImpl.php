@@ -2,13 +2,13 @@
 
 namespace App\Services\impl;
 
-use App\Constant\Enum\HttpStatusCodeEnum;
 use App\Constant\Enum\StatusOrderEnum;
 use App\Constant\Enum\TypeCodeEnum;
 use App\Exceptions\RespException;
 use App\Helpers\Constant;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Requests\OrderRequest;
+use App\Http\Requests\OrderSearchRequest;
 use App\Models\BookingService;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -64,7 +64,7 @@ class OrderServiceImpl implements OrderService
     /**
      * @throws RespException
      */
-    public function create(OrderRequest $request): string
+    public function create(OrderRequest $request)
     {
         $data = $request->validated();
         $this->validateBeforeSave($data);
@@ -73,7 +73,7 @@ class OrderServiceImpl implements OrderService
         $this->createOrder($order, $data);
         $this->handleOrderItem($data, $order);
 
-        return $this->createVnPayUrl($order);
+        return $this->handlePaymentOrder($order);
     }
 
     /**
@@ -86,7 +86,7 @@ class OrderServiceImpl implements OrderService
         $orderItemReqs = $orderRequest['order_items'];
         $serviceMapById = $this->getServiceMapById($order['org_id'], $orderItemReqs);
         $roomMapById = $this->getRoomMapById($order['org_id'], $orderRequest);
-        $totalAmount = 0;
+        $totalServiceAmount = 0;
         $totalBookingFee = 0;
         foreach ($orderItemReqs as $item) {
             $roomEntity = $roomMapById[$item['room_id']];
@@ -94,10 +94,10 @@ class OrderServiceImpl implements OrderService
             $serviceAmount = $this->createBookingServices($bookingServices, $item, $serviceMapById, $order['org_id'], $item['room_id']);
 
             $totalBookingFee += $roomEntity['price'] * 1;
-            $totalAmount += $serviceAmount + $totalBookingFee;
+            $totalServiceAmount += $serviceAmount;
         }
 
-        $order->total_amount = $totalAmount;
+        $order->total_amount = $totalServiceAmount + $totalBookingFee;
         $order->booking_fee = $totalBookingFee;
 
         $order->orderItem()->saveMany($orderItems);
@@ -133,6 +133,7 @@ class OrderServiceImpl implements OrderService
             $totalServicesAmount += $bookingService['quantity'] * $bookingService['price'];
             $bookingServices[] = $bookingService;
         }
+
 
         return $totalServicesAmount;
     }
@@ -256,27 +257,26 @@ class OrderServiceImpl implements OrderService
     /**
      * @throws RespException
      */
-    private function detail($id)
+    public function handlePaymentOrder($order): string
     {
-        $order = $this->orderRepos->find($id);
-        if (is_null($order)) {
-            throw new RespException(__('messages.order_not_found'));
-        }
+        $data = $this->generateUrlRedirect($order['total_amount']);
+        $order->transaction_id = $data['vnp_TxnRef'];
+        $order->save();
 
-        return $order;
+        return $data['vnp_Url'];
     }
 
-    private function createVnPayUrl(Order $order): string
+    public function generateUrlRedirect($totalAmount): array
     {
-        $vnp_TmnCode = "ME3DBPPL";
-        $vnp_HashSecret = "I4DW6LYA3KPCUK7ZYC1GR7054X59P7L3";
-        $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        $vnp_Returnurl = "http://127.0.0.1:8000/vnpay-return";
+        $vnp_TmnCode = env('VNP_TMNCODE');
+        $vnp_HashSecret = env('VNP_HASHSECRET');
+        $vnp_Url = env('VNP_URL');
+        $vnp_Returnurl = env('VNP_RETURNURL');
 
         $vnp_TxnRef = 'MRD' . rand(00, 9999);
         $vnp_OrderInfo = "Thanh toán đặt phòng khách sạn";
         $vnp_OrderType = "vnpay";
-        $vnp_Amount = $order['total_amount'] * 100;
+        $vnp_Amount = $totalAmount * 100;
         $vnp_Locale = 'vn';
         $vnp_BankCode = 'NCB';
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
@@ -322,44 +322,62 @@ class OrderServiceImpl implements OrderService
             $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         }
 
-        $order->transaction_id = $vnp_TxnRef;
-        $order->save();
-
-        return $vnp_Url;
+        return [
+            'vnp_Url' => $vnp_Url,
+            'vnp_TxnRef' => $vnp_TxnRef
+        ];
     }
 
     public function paymentReturn(Request $request)
     {
         $vnp_SecureHash = $request->vnp_SecureHash;
         $inputData = $request->except('vnp_SecureHash');
+        $secureHash = $this->getSecureHash($inputData);
+
+        $dataResp = [];
+
+        if ($secureHash == $vnp_SecureHash) {
+
+            $order = $this->orderRepos->searchByPage(['transaction_id' => $inputData['vnp_TxnRef']], false);
+            $dataResp['order'] = $order;
+            if ($order && $inputData['vnp_ResponseCode'] == '00') {
+                $this->handleWhenPaymentSuccess($order);
+                $dataResp['status'] = true;
+            } else {
+                $dataResp['status'] = false;
+            }
+            return $dataResp;
+        }
+
+        return [
+            'status' => false,
+            'order' => null
+        ];
+    }
+
+    private function getSecureHash(array $inputData)
+    {
         ksort($inputData);
+        $i = 0;
         $hashData = "";
         foreach ($inputData as $key => $value) {
-            $hashData .= $key . '=' . $value . '&';
-        }
-        $hashData = rtrim($hashData, '&');
-        $vnp_HashSecret = "VNPAY_HASH_SECRET";
-
-        $secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
-        if ($secureHash == $vnp_SecureHash) {
-            $order = Order::where('transaction_id', $inputData['vnp_TxnRef'])->first();
-            if ($order) {
-                if ($inputData['vnp_ResponseCode'] == '00') {
-                    $this->handleWhenPaymentSuccess($order);
-
-                }
-                return redirect('/payment-result?status=' . $order->status);
+            if ($i == 1) {
+                $hashData .= '&' . urlencode($key) . "=" . urlencode($value);
+            } else {
+                $hashData .= urlencode($key) . "=" . urlencode($value);
+                $i = 1;
             }
         }
-        return redirect('/payment-result?status=failed');
+        $vnp_HashSecret = env('VNP_HASHSECRET');
+
+        return hash_hmac('sha512', $hashData, $vnp_HashSecret);
     }
 
     private function handleWhenPaymentSuccess($order): void
     {
-        $order->status = StatusOrderEnum::DA_THANH_TOAN->value;
         $this->bookingServiceRepos->updateStatusByOrderId(StatusOrderEnum::DA_THANH_TOAN->value, $order['id']);
-        $order->create();
-        $this->bookingController->confirmBooking($order);
+        $this->orderRepos->updateStatusById(StatusOrderEnum::DA_THANH_TOAN->value, $order['id']);
+//        $this->bookingController->confirmBooking($order);
     }
 
     public function getTotalOrderMapByCityId(array $cityIds)
@@ -373,4 +391,54 @@ class OrderServiceImpl implements OrderService
             return [$item['city_id'] => $item];
         });
     }
+
+    /**
+     * @throws RespException
+     */
+    public function searchByPage(OrderSearchRequest $request)
+    {
+        $data = $request->validated();
+        //        if (!Auth::check()) {
+//            throw new RespException(__('messages.you_have_not_permission'));
+//        }
+
+        //        $data['user_id'] = auth()->user()->id;
+
+        return $this->orderRepos->searchByPage($data, true);
+    }
+
+    /**
+     * @throws RespException
+     */
+    public function paymentOrder($orderId): string
+    {
+        $order = $this->getNonNullById($orderId);
+        $this->validateBeforePayment($order);
+        return $this->handlePaymentOrder($order);
+    }
+
+    /**
+     * @throws RespException
+     */
+    private function getNonNullById($orderId)
+    {
+        $order = Order::query()->where('id', $orderId)->first();
+        if (is_null($order)) {
+            throw new RespException(__('messages.order_not_found'));
+        }
+
+        return $order;
+    }
+
+    /**
+     * @throws RespException
+     */
+    private function validateBeforePayment($order)
+    {
+        if (!StatusOrderEnum::isChuaThanhToan($order['status'])) {
+            throw new RespException(__('messages.payment_has_been_made'));
+        }
+    }
+
+
 }

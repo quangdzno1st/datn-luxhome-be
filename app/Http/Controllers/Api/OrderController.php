@@ -21,9 +21,8 @@ class OrderController extends Controller
        $paymentUrl = $this->orderService->create($request);
        return $this->createSuccess($paymentUrl);
     }
-
     public function paymentReturn(Request $request){
         $returnUrl = $this->orderService->paymentReturn($request);
-        return $this->sendSuccess($returnUrl);
+        return view('client.bookingfinish');
     }
 }
