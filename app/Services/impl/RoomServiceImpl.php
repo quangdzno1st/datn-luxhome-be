@@ -65,7 +65,7 @@ class RoomServiceImpl implements RoomService
     private function validateStatus($status): void
     {
         if (!RoomStatusEnum::isConstant($status)) {
-            throw new RespException(__('messages.room_status_invalid'), HttpStatusCodeEnum::INVALID_VALUE->value);
+            throw new RespException(__('messages.room_status_invalid'));
         }
     }
 
@@ -76,7 +76,7 @@ class RoomServiceImpl implements RoomService
     {
         $existsCatalogueRoom = $this->catalogueRoomService->existsById($id);
         if (!$existsCatalogueRoom) {
-            throw new RespException(__('messages.catalogue_room_not_found'), HttpStatusCodeEnum::NOT_FOUND->value);
+            throw new RespException(__('messages.catalogue_room_not_found'));
         }
     }
 
@@ -102,7 +102,7 @@ class RoomServiceImpl implements RoomService
     {
         $room = $this->roomRepos->getById($id);
         if (is_null($room)) {
-            throw new RespException(__('message.room_not_found'), HttpStatusCodeEnum::NOT_FOUND->value);
+            throw new RespException(__('message.room_not_found'));
         }
 
         return $room;

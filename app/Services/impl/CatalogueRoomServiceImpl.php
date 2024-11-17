@@ -41,7 +41,7 @@ class CatalogueRoomServiceImpl implements CatalogueRoomService
     {
         $hotel = $this->hotelRepo->find($request['org_id']);
         if (!$hotel) {
-            throw new RespException(__('messages.hotel_not_found'), HttpStatusCodeEnum::NOT_FOUND->value);
+            throw new RespException(__('messages.hotel_not_found'));
         }
     }
 
@@ -77,7 +77,7 @@ class CatalogueRoomServiceImpl implements CatalogueRoomService
         $catalogueRoom = $this->catalogueRoomRepos->find($id);
 
         if (is_null($catalogueRoom)) {
-            throw new RespException(__('messages.catalogue_room_not_found'), HttpStatusCodeEnum::NOT_FOUND->value);
+            throw new RespException(__('messages.catalogue_room_not_found'));
         }
 
         return $catalogueRoom;

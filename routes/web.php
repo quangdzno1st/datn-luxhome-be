@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\StatisticalController;
 use App\Http\Controllers\Client\CityController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\HotelController;
+use App\Http\Controllers\Client\OrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -136,4 +137,5 @@ Route::get('/test/theme', function () {
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/hotel/{id}', [HomeController::class, 'searchByPage'] )->name('home.hotel.detail');
 Route::get('/hotel/booking/{id}', [HotelController::class, 'booking'] )->name('hotel.booking');
+Route::get('/order/{',[OrderController::class, 'index'])->name('order.index');
 Route::get('/cities/search-by-page', [CityController::class, 'searchByPage'] )->name('cities.searchByPage');

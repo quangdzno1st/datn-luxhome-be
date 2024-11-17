@@ -41,7 +41,6 @@ class RoomRepository extends BaseRepository implements RoomInterface
                 });
         })->get();
 
-
         $roomBookedIds = $orders->flatMap(function ($order) {
             return $order->orderItem->flatMap(function ($item) {
                 return [$item->room_id];
