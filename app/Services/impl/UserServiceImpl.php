@@ -63,7 +63,7 @@ class UserServiceImpl implements UserService
     {
         $user = $this->userRepository->find($id);
         if (is_null($user)) {
-            throw new RespException(__('message.room_not_found'), HttpStatusCodeEnum::NOT_FOUND->value);
+            throw new RespException(__('message.room_not_found'));
         }
 
         return $user;

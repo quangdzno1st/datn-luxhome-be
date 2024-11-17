@@ -38,14 +38,6 @@ class Order extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected static function boot(): void
-    {
-        parent::boot();
-        static::creating(function ($model) {
-            $model->id = Uuid::uuid4()->toString();
-        });
-    }
-
     public function attributeValues()
     {
         return $this->belongsToMany(AttributeValue::class, 'catalogue_room_attribute', 'catalogue_room_id', 'attribute_value_id');

@@ -21,6 +21,7 @@ use App\Repositories\Voucher\VoucherRepository;
 use App\Services\CommonKeyCodeService;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class OrderServiceImpl implements OrderService
@@ -103,13 +104,13 @@ class OrderServiceImpl implements OrderService
         $order->bookingService()->saveMany($bookingServices);
     }
 
+    /**
+     * @throws RespException
+     */
     private function createOrderItem(&$orderItems, $oderItemReq, $room, $orderId): void
     {
         if (is_null($room)) {
-            throw new RespException(
-                trans('messages.room_not_found', ['room_code' => $oderItemReq["room_code"]]),
-                HttpStatusCodeEnum::NOT_FOUND->value
-            );
+            throw new RespException(trans('messages.room_not_found', ['room_code' => $oderItemReq["room_code"]]));
         }
 
         $orderItem = new OrderItem();
@@ -136,13 +137,13 @@ class OrderServiceImpl implements OrderService
         return $totalServicesAmount;
     }
 
+    /**
+     * @throws RespException
+     */
     private function createBookingService($bookingServicesReq, $serviceEntity, $orderId, $roomId)
     {
         if (is_null($serviceEntity)) {
-            throw new RespException(
-                trans('messages.service_not_found', ['service_name' => $bookingServicesReq["service_name"]]),
-                HttpStatusCodeEnum::NOT_FOUND->value
-            );
+            throw new RespException(trans('messages.service_not_found', ['service_name' => $bookingServicesReq["service_name"]]));
         }
 
         $bookingService = new BookingService();
@@ -193,7 +194,7 @@ class OrderServiceImpl implements OrderService
     {
         $isValid = $this->hotelRepos->existsById($hotelId);
         if (!$isValid) {
-            throw new RespException(__('messages.hotel_not_found'), HttpStatusCodeEnum::NOT_FOUND->value);
+            throw new RespException(__('messages.hotel_not_found'));
         }
     }
 
@@ -208,14 +209,14 @@ class OrderServiceImpl implements OrderService
 
         $isValid = $this->voucherRepos->existsByIdAndOrgId($voucherId, $orgId);
         if (!$isValid) {
-            throw new RespException(__('messages.voucher_not_found'), HttpStatusCodeEnum::NOT_FOUND->value);
+            throw new RespException(__('messages.voucher_not_found'));
         }
     }
 
     /**
      * @throws RespException
      */
-    private function getRoomMapById($orgId, $orderRequest): \Illuminate\Support\Collection
+    private function getRoomMapById($orgId, $orderRequest): Collection
     {
         $roomIds = array_map(function ($room) {
             return $room['room_id'] ?? null;
@@ -224,7 +225,7 @@ class OrderServiceImpl implements OrderService
         $rooms = $this->roomRepos->getRoomAvailableByIdInAndOrgId($orgId, $roomIds, $orderRequest['start_date'], $orderRequest['end_date']);
 
         if (empty($rooms->toArray())) {
-            throw new RespException(__('messages.room_not_found'), HttpStatusCodeEnum::NOT_FOUND->value);
+            throw new RespException(__('messages.room_not_found'));
         }
 
         return collect($rooms)->mapWithKeys(function ($item) {
@@ -232,7 +233,10 @@ class OrderServiceImpl implements OrderService
         });
     }
 
-    private function getServiceMapById($orgId, $orderItems): \Illuminate\Support\Collection
+    /**
+     * @throws RespException
+     */
+    private function getServiceMapById($orgId, $orderItems): Collection
     {
         $serviceIds = collect($orderItems)->flatMap(function ($item) {
             return collect($item['services'])->pluck('service_id');
@@ -241,10 +245,7 @@ class OrderServiceImpl implements OrderService
         $services = $this->hotelServiceRepos->getByOrgIdAndIds($orgId, $serviceIds);
 
         if (empty($services->toArray())) {
-            throw new RespException(
-                trans('messages.service_not_found', ['service_name' => ""]),
-                HttpStatusCodeEnum::NOT_FOUND->value
-            );
+            throw new RespException(trans('messages.service_not_found', ['service_name' => ""]));
         }
 
         return collect($services)->mapWithKeys(function ($item) {
@@ -252,11 +253,14 @@ class OrderServiceImpl implements OrderService
         });
     }
 
+    /**
+     * @throws RespException
+     */
     private function detail($id)
     {
         $order = $this->orderRepos->find($id);
         if (is_null($order)) {
-            throw new RespException(__('messages.order_not_found'), HttpStatusCodeEnum::NOT_FOUND->value);
+            throw new RespException(__('messages.order_not_found'));
         }
 
         return $order;
@@ -354,7 +358,7 @@ class OrderServiceImpl implements OrderService
     {
         $order->status = StatusOrderEnum::DA_THANH_TOAN->value;
         $this->bookingServiceRepos->updateStatusByOrderId(StatusOrderEnum::DA_THANH_TOAN->value, $order['id']);
-        $order->save();
+        $order->create();
         $this->bookingController->confirmBooking($order);
     }
 
