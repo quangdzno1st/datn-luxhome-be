@@ -25,32 +25,40 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
 
     public function searchByPage($request)
     {
-        $validator = Validator::make($request->all(), [
-            'org_id' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Validation Error',
-                'errors' => $validator->errors(),
-            ], 422);
+
+        $startDate = $request->has('start_date')
+            ? Carbon::createFromFormat('Y-m-d', $request->input('start_date'))->startOfDay()
+            : Carbon::now()->startOfDay();
+
+        $endDate = $request->has('end_date')
+            ? Carbon::createFromFormat('Y-m-d', $request->input('end_date'))->endOfDay()
+            : Carbon::tomorrow()->endOfDay();
+
+        $cityId = request()->input('city_id');
+        $numberAdult = request()->input('number_adult');
+        $numberChild = request()->input('number_child');
+//        $categoryIds = $request->has('attribute_value_id')
+//            ? DB::table('catalogue_room_attribute')->where('attribute_value_id', $request->attribute_value_id)->pluck('catalogue_room_id')
+//            : DB::table('catalogue_room_attribute')->pluck('catalogue_room_id');
+
+        $categoriesQuery = CatalogueRoom::query();
+//            ->where('org_id', $request->org_id)
+//            ->whereIn('id', $categoryIds);
+
+//        if ($request->has('catalogue_room_id') && !empty($request->catalogue_room_id)) {
+//            $categoriesQuery->where('id', $request->catalogue_room_id);
+//        }
+        if ($numberAdult){
+            $categoriesQuery->where('number_adult', $numberAdult);
         }
 
-        $startDate = $request->input('start_date', Carbon::now()->startOfDay());
-        $endDate = $request->input('end_date', Carbon::tomorrow()->endOfDay());
-        $categoryIds = $request->has('attribute_value_id')
-            ? DB::table('catalogue_room_attribute')->where('attribute_value_id', $request->attribute_value_id)->pluck('catalogue_room_id')
-            : DB::table('catalogue_room_attribute')->pluck('catalogue_room_id');
-
-        $categoriesQuery = CatalogueRoom::query()->where('org_id', $request->org_id)
-            ->whereIn('id', $categoryIds);
-
-        if ($request->has('catalogue_room_id') && !empty($request->catalogue_room_id)) {
-            $categoriesQuery->where('id', $request->catalogue_room_id);
+        if ($numberChild){
+            $categoriesQuery->where('number_child', $numberChild);
         }
         $categories = $categoriesQuery->with('rooms')->get();
 
-
-        $orders = Order::with('orderItem')->where('status','<>', StatusOrderEnum::CHUA_THANH_TOAN->value)
+        $orders = Order::with('orderItem')
+            ->where('status','<>', StatusOrderEnum::CHUA_THANH_TOAN->value)
             ->where(function ($query) use ($startDate, $endDate) {
             $query->whereBetween('start_date', [$startDate, $endDate])
                 ->orWhereBetween('end_date', [$startDate, $endDate])
@@ -58,20 +66,24 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
                     $query->where('start_date', '<=', $startDate)
                         ->where('end_date', '>=', $endDate);
                 });
-        })->get();
+        })
+            ->get();
 
-        $roomCodes = $orders->flatMap(function ($order) {
+        $roomIds = $orders->flatMap(function ($order) {
+
             return $order->orderItem->flatMap(function ($item) {
-                return json_decode($item->room_codes, true);
+                return $item->room_id ? [$item->room_id] : [];
             });
         })->unique()->values()->toArray();
 
-        $roomsCount = $categories->map(function ($category) use ($roomCodes) {
-            $filteredRooms = $category->rooms()->whereNotIn('id', $roomCodes)
+        return $categories->map(function ($category) use ($roomIds) {
+            $filteredRooms = $category->rooms()->whereNotIn('id', $roomIds)
                 ->where('rooms.status', RoomStatusEnum::SAN_SANG_SU_DUNG->value)->get();
             return [
                 'id' => $category->id,
                 'name' => $category->name,
+                'number_adult' => $category->number_adult,
+                'hotel_id' => $category->hotel_id,
                 'org_id' => $category->org_id,
                 'price' => $category->price,
                 'description' => $category->description,
@@ -81,12 +93,13 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
                 'status' => $category->status,
                 'rooms_count' => $filteredRooms->count(),
                 'available_rooms' => $filteredRooms->map(function ($room) {
-                    return ['room_id' => $room->id];
+                    return [
+                        'room_id' => $room->id,
+                        'code' => $room->code,
+                    ];
                 })->toArray(),
             ];
         });
-
-        return $roomsCount;
     }
 
     public function getAllByOrgId($orgId)

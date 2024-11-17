@@ -53,6 +53,10 @@ class Hotel extends Model
     {
         return $this->hasMany(Image::class, 'object_id');
     }
+    public function catalogues()
+    {
+        return $this->hasMany(CatalogueRoom::class);
+    }
 
     protected $keyType = 'string';  // Khóa chính là kiểu chuỗi
     public $incrementing = false;   // Tắt auto-increment
