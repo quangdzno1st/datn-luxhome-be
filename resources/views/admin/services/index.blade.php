@@ -25,6 +25,24 @@
 
         <!-- end page title -->
 
+                 <!-- Notification -->
+                 <div class="row">
+                    @if (session('msg'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>{{session('msg')}}</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    @endif
+                </div>
+
+                <div class="row">
+                    @if ($errors->has('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Lỗi: </strong>{{$errors->first('error')}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    @endif
+                </div>
 
         <div class="row">
             <div class="col-lg-12">
@@ -280,7 +298,7 @@
                                                 <div class="mb-3">
                                                     <label for="name" class="form-label">Tên dịch vụ</label>
                                                     <input type="text" id="name" class="form-control"
-                                                           placeholder="Nhập tên dịch vụ" required name="name"/>
+                                                           placeholder="Nhập tên dịch vụ"  name="name"/>
                                                            @error('name')
                                                            <p class="text-danger">{{$message}}</p>
                                                        @enderror

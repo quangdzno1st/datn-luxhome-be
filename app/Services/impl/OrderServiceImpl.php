@@ -4,9 +4,9 @@ namespace App\Services\impl;
 
 use App\Constant\Enum\StatusOrderEnum;
 use App\Constant\Enum\TypeCodeEnum;
+use App\Events\OrderSuccess;
 use App\Exceptions\RespException;
 use App\Helpers\Constant;
-use App\Http\Controllers\Api\BookingController;
 use App\Http\Requests\OrderRequest;
 use App\Http\Requests\OrderSearchRequest;
 use App\Models\BookingService;
@@ -34,7 +34,6 @@ class OrderServiceImpl implements OrderService
     private HotelServiceRepository $hotelServiceRepos;
     private OrderRepository $orderRepos;
     private BookingServiceRepository $bookingServiceRepos;
-    private BookingController $bookingController;
 
     /**
      * @param HotelRepository $hotelRepos
@@ -46,8 +45,7 @@ class OrderServiceImpl implements OrderService
         CommonKeyCodeService     $commonKeyCodeService,
         HotelServiceRepository   $hotelServiceRepos,
         OrderRepository          $orderRepos,
-        BookingServiceRepository $bookingServiceRepos,
-        BookingController        $bookingController
+        BookingServiceRepository $bookingServiceRepos
     )
     {
         $this->hotelRepos = $hotelRepos;
@@ -57,7 +55,6 @@ class OrderServiceImpl implements OrderService
         $this->hotelServiceRepos = $hotelServiceRepos;
         $this->orderRepos = $orderRepos;
         $this->bookingServiceRepos = $bookingServiceRepos;
-        $this->bookingController = $bookingController;
     }
 
 
@@ -377,7 +374,8 @@ class OrderServiceImpl implements OrderService
     {
         $this->bookingServiceRepos->updateStatusByOrderId(StatusOrderEnum::DA_THANH_TOAN->value, $order['id']);
         $this->orderRepos->updateStatusById(StatusOrderEnum::DA_THANH_TOAN->value, $order['id']);
-//        $this->bookingController->confirmBooking($order);
+//        //Send mail hóa đơn
+        OrderSuccess::dispatch($order);
     }
 
     public function getTotalOrderMapByCityId(array $cityIds)

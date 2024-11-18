@@ -119,7 +119,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <form action="{{ route('handle.statistical') }}" method="post" class="row">
+                    <form action="{{ route('admin.handle.statistical') }}" method="post" class="row">
                         @csrf
                         @if (Auth::check() && Auth::user()->type == \App\Constant\Enum\RoleEnum::SupperAdmin->value)
                             <div class="mb-3 col-3">

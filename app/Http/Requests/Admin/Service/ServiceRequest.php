@@ -46,7 +46,7 @@ class ServiceRequest extends FormRequest
 
     // protected function failedValidation(Validator $validator)
     // {
-    //     dd($validator->errors()); // Hiển thị lỗi chi tiết khi xác thực thất bại
+    //     dd($validator->errors()->toArray()); // Hiển thị lỗi chi tiết khi xác thực thất bại
     // }
 
 }

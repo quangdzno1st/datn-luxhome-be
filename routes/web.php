@@ -1,10 +1,7 @@
 <?php
 
-use App\Http\Controllers\Admin\HotelServiceController;
-use App\Http\Controllers\Admin\ServiceController;
-use App\Http\Controllers\Admin\CatalogueRoomController;
 use App\Http\Controllers\Admin\RoomController;
-use App\Http\Controllers\Admin\StatisticalController;
+use App\Http\Controllers\Admin\CatalogueRoomController;
 use App\Http\Controllers\Client\CityController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\HotelController;
@@ -20,12 +17,6 @@ Route::get('/oke', function () {
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::prefix('services')->controller(ServiceController::class)->group(function () {
-        Route::get('/', 'index')->name('services.index');
-        Route::post('/store', 'store')->name('services.store');
-        Route::put('/update/{id}', 'update')->name('services.update');
-        Route::delete('/{id}', 'destroy')->name('services.destroy');
-    });
 
     Route::prefix('hotels')
         ->name('hotels.')
@@ -73,12 +64,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::post('/upload-image', [CatalogueRoomController::class, 'storeImage'])->name('upload-image');
 
 //});
-Route::prefix('hotel/services')->controller(HotelServiceController::class)->group(function () {
-    Route::get("/{idHotel}", 'index')->name("hotel.service.index");
-    Route::post("/{idHotel}", 'store')->name("hotel.service.store");
-    Route::get("/delete/{id}", 'destroy')->name("hotel.service.destroy");
-    Route::delete("/delete", 'destroyMulti')->name("hotel.service.destroyMulti");
-});
+
 //voucher
 Route::prefix('vouchers')->group(function () {
     Route::get('/', [\App\Http\Controllers\Admin\VoucherController::class, 'index'])->name('vouchers.index');
@@ -90,11 +76,6 @@ Route::prefix('vouchers')->group(function () {
     Route::get('/list-trash', [\App\Http\Controllers\Admin\VoucherController::class, 'list_trash'])->name('vouchers.list_trash');
     Route::post('/restore/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'restore'])->name('vouchers.restore');
     Route::delete('/force_delete/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'destroy'])->name('vouchers.force_delete');
-});
-
-Route::controller(StatisticalController::class)->group(function () {
-    Route::get('/statistical', 'index')->name('statistical.index');
-    Route::post('/statistical', 'handleStatistical')->name('handle.statistical');
 });
 
 Route::get('/404', function () {

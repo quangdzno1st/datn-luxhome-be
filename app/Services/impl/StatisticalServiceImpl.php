@@ -91,7 +91,7 @@ class StatisticalServiceImpl
                 ->orderBy('month');
         }
 
-        session()->remove('handle_data');
+        // session()->remove('handle_data');
 
         $data = $query->get();
 
@@ -111,10 +111,57 @@ class StatisticalServiceImpl
 
         $query = Order::query();
 
-        $query->selectRaw('COUNT(id) AS total_order');
+        if(session()->has('handle_data')) {
+            $data = session('handle_data');
 
-        if (!empty($hotel_id)) {
-            $query->where('org_id', $hotel_id);
+            // dd($hotel_id);
+
+            if (!empty($data['hotel_id'])) {
+                $hotel_id = $data['hotel_id'];
+            }
+
+            $startDate = $data['start_date'];
+
+            $endDate = $data['end_date'];
+
+            $selectTime = $data['option_time'];
+
+            if ($selectTime == 'quarter') {
+                $query->selectRaw('COUNT(id) AS total_order')
+                    ->whereBetween('created_at', [$startDate, $endDate]);
+
+                if (!empty($hotel_id)) {
+                    $query->where('org_id', $hotel_id);
+                }
+
+            }
+            if ($selectTime == 'year') {
+                $query->selectRaw('COUNT(id) AS total_order')
+                    ->whereYear('created_at', '>=', $startDate)
+                    ->whereYear('created_at', '<=', $endDate);
+
+                if (!empty($hotel_id)) {
+                    $query->where('org_id', $hotel_id);
+                }
+
+            }
+            if ($selectTime == 'month') {
+                $query->selectRaw('COUNT(id) AS total_order')
+                    ->where('created_at', '>=', $startDate)
+                    ->where('created_at', '<=', $endDate);
+
+                if (!empty($hotel_id)) {
+                    $query->where('org_id', $hotel_id);
+                }
+
+            }
+        } else {
+            $query->selectRaw('COUNT(id) AS total_order');
+    
+            if (!empty($hotel_id)) {
+                $query->where('org_id', $hotel_id);
+            }
+
         }
 
         $totalOrder = $query->first();
@@ -129,11 +176,59 @@ class StatisticalServiceImpl
 
         $query = Order::query();
 
-        $query->selectRaw('SUM(total_amount) AS total_revenue');
+        if(session()->has('handle_data')) {
+            $data = session('handle_data');
 
-        if (!empty($hotel_id)) {
-            $query->where('org_id', $hotel_id);
+            // dd($hotel_id);
+
+            if (!empty($data['hotel_id'])) {
+                $hotel_id = $data['hotel_id'];
+            }
+
+            $startDate = $data['start_date'];
+
+            $endDate = $data['end_date'];
+
+            $selectTime = $data['option_time'];
+
+            if ($selectTime == 'quarter') {
+                $query->selectRaw('SUM(total_amount) AS total_revenue')
+                    ->whereBetween('created_at', [$startDate, $endDate]);
+
+                if (!empty($hotel_id)) {
+                    $query->where('org_id', $hotel_id);
+                }
+
+            }
+            if ($selectTime == 'year') {
+                $query->selectRaw('SUM(total_amount) AS total_revenue')
+                    ->whereYear('created_at', '>=', $startDate)
+                    ->whereYear('created_at', '<=', $endDate);
+
+                if (!empty($hotel_id)) {
+                    $query->where('org_id', $hotel_id);
+                }
+
+            }
+            if ($selectTime == 'month') {
+                $query->selectRaw('SUM(total_amount) AS total_revenue')
+                    ->where('created_at', '>=', $startDate)
+                    ->where('created_at', '<=', $endDate);
+
+                if (!empty($hotel_id)) {
+                    $query->where('org_id', $hotel_id);
+                }
+
+            }
+        } else {
+            $query->selectRaw('SUM(total_amount) AS total_revenue');
+    
+            if (!empty($hotel_id)) {
+                $query->where('org_id', $hotel_id);
+            }
+
         }
+
 
         $totalOrder = $query->first();
 

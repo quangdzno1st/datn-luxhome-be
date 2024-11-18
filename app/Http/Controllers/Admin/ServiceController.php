@@ -8,6 +8,7 @@ use App\Models\Service;
 use App\Services\impl\ServiceServiceImpl;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\MessageBag;
 
 class ServiceController extends Controller
 {
@@ -39,7 +40,7 @@ class ServiceController extends Controller
 
             DB::commit();
 
-            return back()->with('success', 'Thêm mới thành công');
+            return back()->with('msg', 'Thêm mới thành công');
 
         } catch (\Exception $exception) {
             return back()->withErrors(['error' => $exception->getMessage()]);
@@ -56,7 +57,7 @@ class ServiceController extends Controller
 
             DB::commit();
 
-            return back()->with('success', 'Cập nhật thành công');
+            return back()->with('msg', 'Cập nhật thành công');
 
         } catch (\Exception $exception) {
             return back()->withErrors(['error' => $exception->getMessage()]);
@@ -65,8 +66,18 @@ class ServiceController extends Controller
 
     public function destroy(string $id)
     {
-        $service = $this->service->forceDelete($id);
+        try {
+            DB::beginTransaction();
 
-        return back()->with('success', 'Xóa thành công');
+            $service = $this->service->forceDelete($id);
+            
+            DB::commit();
+
+            return back()->with('msg', 'Xóa thành công');
+
+        } catch (\Exception $exception) {
+            return back()->withErrors(['error' => $exception->getMessage()]);
+        }
+
     }
 }
