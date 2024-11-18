@@ -25,6 +25,16 @@
 
         <!-- end page title -->
 
+         <!-- Notification -->
+        <div class="row">
+            @if (session('msg'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>{{session('msg')}}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
+        </div>
+
 
         <div class="row">
             <div class="col-lg-12">
@@ -48,7 +58,7 @@
                                 </div>
                                 <div class="col-sm">
                                     <div class="d-flex justify-content-sm-end">
-                                        <form class="search-box ms-2" method="GET" action="{{route('hotel.service.index', $hotel->id)}}">
+                                        <form class="search-box ms-2" method="GET" action="{{url()->full()}}">
                                             <input type="text" name="keyword" class="form-control" placeholder="Tìm kếm...">
                                             <i class="ri-search-line search-icon"></i>
                                         </form>
@@ -57,7 +67,7 @@
                             </div>
 
                             <div class="table-responsive table-card mt-3 mb-1">
-                                <form action="{{route('hotel.service.destroyMulti')}}" method="post" id="deleteMulti">
+                                <form action="{{route('admin.hotel.service.destroyMulti')}}" method="post" id="deleteMulti">
                                     @csrf
                                     @method('DELETE')
                                 <table class="table align-middle table-nowrap" id="customerTable">
@@ -148,7 +158,7 @@
                                                                             class="btn w-sm btn-light"
                                                                             data-bs-dismiss="modal">Đóng
                                                                     </button>
-                                                                    <a href="{{ route('hotel.service.destroy', $hotelService) }}" class="btn w-sm btn-danger "
+                                                                    <a href="{{ route('admin.hotel.service.destroy', $hotelService) }}" class="btn w-sm btn-danger "
                                                                             id="delete-record">Chắc chắn!
                                                                     </a>
                                                                 </div>
@@ -192,7 +202,7 @@
                                                     aria-label="Close" id="close-modal"></button>
                                         </div>
                                         <form class="tablelist-form" autocomplete="off"
-                                              action="{{route('hotel.service.store', $hotel->id)}}" method="POST">
+                                              action="{{url()->current()}}" method="POST">
                                             @csrf
                                             <div class="modal-body">
                                                 <div class="mb-3">
@@ -202,8 +212,8 @@
                                                             data-choices data-choices-removeItem
                                                             name="services[][service_id]" multiple>
                                                         @foreach($services as $service)
-                                                            <option value="{{$service->id}}" @foreach($hotelServices as $hotelService)
-                                                                {{$hotelService->service_id == $service->id ? 'disabled' : ''}}
+                                                            <option value="{{$service->id}}" @foreach($hotelServiceConstants as $hotelServiceConstant)
+                                                                {{$hotelServiceConstant->service_id == $service->id ? 'disabled' : ''}}
                                                                     @endforeach>{{$service->name}}</option>
                                                         @endforeach
                                                     </select>

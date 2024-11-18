@@ -12,11 +12,14 @@
 */
 
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\CatalogueRoomController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\UserController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\StatisticalController;
+use App\Http\Controllers\Admin\HotelServiceController;
+use App\Http\Controllers\Admin\CatalogueRoomController;
 
 Route::group(['prefix' => 'auth'], function () {
     Route::get('/login', [AuthController::class, 'login'])->name('auth.login');
@@ -91,6 +94,25 @@ Route::group(['middleware' => ['role']], function () {
             Route::put('/restore/{id}', 'restore')->name('rooms.restore');
             Route::delete('/{id}', 'destroy')->name('rooms.destroy');
         });
+
+    Route::controller(StatisticalController::class)->group(function () {
+        Route::get('/', 'index')->name('statistical.index');
+        Route::post('/statistical', 'handleStatistical')->name('handle.statistical');
+    });
+
+    Route::prefix('services')->controller(ServiceController::class)->group(function () {
+        Route::get('/', 'index')->name('services.index');
+        Route::post('/store', 'store')->name('services.store');
+        Route::put('/update/{id}', 'update')->name('services.update');
+        Route::delete('/{id}', 'destroy')->name('services.destroy');
+    });
+
+    Route::prefix('hotel/services')->controller(HotelServiceController::class)->group(function () {
+        Route::get("/{idHotel?}", 'index')->name("hotel.service.index");
+        Route::post("/{idHotel?}", 'store')->name("hotel.service.store");
+        Route::get("/delete/{id}", 'destroy')->name("hotel.service.destroy");
+        Route::delete("/delete", 'destroyMulti')->name("hotel.service.destroyMulti");
+    });
 });
 //
 //voucher

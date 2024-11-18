@@ -47,6 +47,7 @@ class StatisticalController extends Controller
         $totalRevenue = $this->statistical->totalRevenue();
 
         // dd($thongke->toArray());
+        session()->remove('handle_data');
 
         return view('admin.statisticals.index', compact('totalRevenue', 'totalOrder', 'totalRating', 'totalUser', 'thongke', 'hotels', 'hotel_id', 'optionTime', 'startDate', 'endDate', 'selectTime'));
     }

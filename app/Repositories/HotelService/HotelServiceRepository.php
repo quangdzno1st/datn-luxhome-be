@@ -23,10 +23,12 @@ class HotelServiceRepository extends BaseRepository implements HotelServiceInter
             $query->where('type', $type);
         }
         if (isset($keyword)) {
-            $query->where('hotels.name', 'like', "%$keyword%")
+            $query->where(function($query) use ($keyword) {
+                $query->where('hotels.name', 'like', "%$keyword%")
                 ->orWhere('services.name', 'like', "%$keyword%")
                 ->orWhere('services.price', 'like', "%$keyword%")
                 ->orWhere('services.description', 'like', "%$keyword%");
+            });
         }
         return $query->paginate(10);
     }
