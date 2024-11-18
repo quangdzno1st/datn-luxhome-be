@@ -2,195 +2,234 @@
 
 @section('content')
     <!--main-->
+    <style>
+        .no-data-message {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff3333; /* Màu đỏ */
+            padding: 10px 20px;
+            background-color: #f8d7da; /* Màu nền nhẹ nhàng */
+            border: 1px solid #f5c6cb; /* Viền nhẹ */
+            border-radius: 5px; /* Bo tròn góc */
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+            margin-top: 20px; /* Khoảng cách trên */
+            width: 100%;
+            max-width: 400px; /* Đảm bảo không quá rộng */
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
     <main class="main">
         <div class="wrap">
             <!--breadcrumbs-->
-            <nav class="breadcrumbs">
-                <!--crumbs-->
-                <ul>
-                    <li><a href="#" title="Home">Home</a></li>
-                    <li><a href="#" title="Hotels">Hotels</a></li>
-                    <li><a href="#" title="United Kingdom">United Kingdom</a></li>
-                    <li><a href="#" title="London">London</a></li>
-                    <li>Search results</li>
-                </ul>
-                <!--//crumbs-->
+{{--            <nav class="breadcrumbs">--}}
+{{--                <!--crumbs-->--}}
+{{--                <ul>--}}
+{{--                    <li><a href="#" title="Home">Home</a></li>--}}
+{{--                    <li><a href="#" title="Hotels">Hotels</a></li>--}}
+{{--                    <li><a href="#" title="United Kingdom">United Kingdom</a></li>--}}
+{{--                    <li><a href="#" title="London">London</a></li>--}}
+{{--                    <li>Search results</li>--}}
+{{--                </ul>--}}
+{{--                <!--//crumbs-->--}}
 
-                <!--top right navigation-->
-                <ul class="top-right-nav">
-                    <li><a href="#" title="Back to results">Back to results</a></li>
-                    <li><a href="#" title="Change search">Change search</a></li>
-                </ul>
-                <!--//top right navigation-->
-            </nav>
+{{--                <!--top right navigation-->--}}
+{{--                <ul class="top-right-nav">--}}
+{{--                    <li><a href="#" title="Back to results">Back to results</a></li>--}}
+{{--                    <li><a href="#" title="Change search">Change search</a></li>--}}
+{{--                </ul>--}}
+{{--                <!--//top right navigation-->--}}
+{{--            </nav>--}}
             <!--//breadcrumbs-->
 
             <div class="row">
                 <!--sidebar-->
                 <aside class="one-fourth left-sidebar">
                     <article class="widget refine-search-results">
-                        <h4>Refine search results</h4>
+                        <h4>Thu hẹp kết quả tìm kiếm</h4>
                         <dl>
-                            <!--Price (per night)-->
-                            <dt>Price (per night)</dt>
-                            <dd>
-                                <div class="checkbox">
-                                    <input type="checkbox" id="ch1" name="price"/>
-                                    <label for="ch1">0 - 49 $</label>
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" id="ch2" name="price"/>
-                                    <label for="ch2">50 - 99 $</label>
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" id="ch3" name="price"/>
-                                    <label for="ch3">100 -149 $</label>
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" id="ch4" name="price"/>
-                                    <label for="ch4">150 - 199 $</label>
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" id="ch5" name="price"/>
-                                    <label for="ch5">200 $ +</label>
-                                </div>
-                            </dd>
-                            <!--//Price (per night)-->
+                            <!--Giá (mỗi đêm)-->
 
-                            <!--Star rating-->
-                            <dt>Star rating</dt>
-                            <dd>
-                                <div class="checkbox">
-                                    <input type="checkbox" id="ch1" name="price"/>
-                                    <label for="ch1" class="stars" style="float:unset">
-                                        <i class="material-icons">&#xE838;</i>
-                                        <i class="material-icons">&#xE838;</i>
-                                        <i class="material-icons">&#xE838;</i>
-                                        <i class="material-icons">&#xE838;</i>
-                                        <i class="material-icons">&#xE838;</i>
-                                    </label>
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" id="ch2" name="price"/>
-                                    <label for="ch2" class="stars" style="float:unset">
-                                        <i class="material-icons">&#xE838;</i>
-                                        <i class="material-icons">&#xE838;</i>
-                                        <i class="material-icons">&#xE838;</i>
-                                        <i class="material-icons">&#xE838;</i>
-                                    </label>
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" id="ch3" name="price"/>
-                                    <label for="ch3" class="stars" style="float:unset">
-                                        <i class="material-icons">&#xE838;</i>
-                                        <i class="material-icons">&#xE838;</i>
-                                        <i class="material-icons">&#xE838;</i>
-                                    </label>
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" id="ch4" name="price"/>
-                                    <label for="ch4" class="stars" style="float:unset">
-                                        <i class="material-icons">&#xE838;</i>
-                                        <i class="material-icons">&#xE838;</i>
-                                    </label>
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" id="ch5" name="price"/>
-                                    <label for="ch5" class="stars" style="float:unset">
-                                        <i class="material-icons">&#xE838;</i>
-                                    </label>
-                                </div>
-                            </dd>
-                            <!--//Star rating-->
+                            <form action="" method="GET">
+                                <!-- Khoảng giá -->
+                                <dt>Khoảng Giá</dt>
+                                <dd>
+                                    <input type="hidden" name="city_id" value="{{ request()->get('city_id', '') }}">
+                                    <input type="hidden" name="start_date" value="{{ request()->get('start_date', '') }}">
+                                    <input type="hidden" name="end_date" value="{{ request()->get('end_date', '') }}">
+                                    <input type="hidden" name="number_adult" value="{{ request()->get('number_adult', '') }}">
+                                    <input type="hidden" name="number_child" value="{{ request()->get('number_child', '') }}">
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="ch1" name="price[]" value="1000000-2000000"
+                                                {{ in_array('1000000-2000000', request()->get('price', [])) ? 'checked' : '' }} />
+                                        <label for="ch1">1,000,000 - 2,000,000 VND</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="ch3" name="price[]" value="2000000-4000000"
+                                                {{ in_array('2000000-4000000', request()->get('price', [])) ? 'checked' : '' }} />
+                                        <label for="ch3">2,000,000 - 4,000,000 VND</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="ch4" name="price[]" value="4000000-8000000"
+                                                {{ in_array('4000000-8000000', request()->get('price', [])) ? 'checked' : '' }} />
+                                        <label for="ch4">4,000,000 - 8,000,000 VND</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="ch10" name="price[]" value="8000000"
+                                                {{ in_array('8000000', request()->get('price', [])) ? 'checked' : '' }} />
+                                        <label for="ch10">8,000,000 VND+</label>
+                                    </div>
+                                </dd>
 
-                            <!--User rating-->
-                            <dt>User rating</dt>
-                            <dd>
-                                <div id="slider"></div>
-                                <span class="min">0</span><span class="max">10</span>
-                            </dd>
-                            <!--//User rating-->
+                                <!-- Xếp hạng sao -->
+                                <dt>Xếp hạng sao</dt>
+                                <dd>
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="ch1_star" name="star[]" value="5"
+                                                {{ in_array('5', request()->get('star', [])) ? 'checked' : '' }} />
+                                        <label for="ch1_star" class="stars" style="float:unset">
+                                            <i class="material-icons">&#xE838;</i>
+                                            <i class="material-icons">&#xE838;</i>
+                                            <i class="material-icons">&#xE838;</i>
+                                            <i class="material-icons">&#xE838;</i>
+                                            <i class="material-icons">&#xE838;</i>
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="ch2_star" name="star[]" value="4"
+                                                {{ in_array('4', request()->get('star', [])) ? 'checked' : '' }} />
+                                        <label for="ch2_star" class="stars" style="float:unset">
+                                            <i class="material-icons">&#xE838;</i>
+                                            <i class="material-icons">&#xE838;</i>
+                                            <i class="material-icons">&#xE838;</i>
+                                            <i class="material-icons">&#xE838;</i>
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="ch3_star" name="star[]" value="3"
+                                                {{ in_array('3', request()->get('star', [])) ? 'checked' : '' }} />
+                                        <label for="ch3_star" class="stars" style="float:unset">
+                                            <i class="material-icons">&#xE838;</i>
+                                            <i class="material-icons">&#xE838;</i>
+                                            <i class="material-icons">&#xE838;</i>
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="ch4_star" name="star[]" value="2"
+                                                {{ in_array('2', request()->get('star', [])) ? 'checked' : '' }} />
+                                        <label for="ch4_star" class="stars" style="float:unset">
+                                            <i class="material-icons">&#xE838;</i>
+                                            <i class="material-icons">&#xE838;</i>
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="ch5_star" name="star[]" value="1"
+                                                {{ in_array('1', request()->get('star', [])) ? 'checked' : '' }} />
+                                        <label for="ch5_star" class="stars" style="float:unset">
+                                            <i class="material-icons">&#xE838;</i>
+                                        </label>
+                                    </div>
+                                </dd>
 
+                                <!-- Nút Submit -->
+                                <button type="submit">Tìm kiếm</button>
+                            </form>
+
+
+
+                            <!--//Xếp hạng sao-->
+
+                            <!--Đánh giá của người dùng-->
+{{--                            <dt>Đánh giá của người dùng</dt>--}}
+{{--                            <dd>--}}
+{{--                                <div id="slider"></div>--}}
+{{--                                <span class="min">0</span><span class="max">10</span>--}}
+{{--                            </dd>--}}
+                            <!--//Đánh giá của người dùng-->
                         </dl>
                     </article>
                 </aside>
+
                 <!--//sidebar-->
 
                 <!--three-fourth content-->
                 <div class="three-fourth">
-                    <div class="sort-by">
-                        <h3>Sort by</h3>
-                        <ul class="sort">
-                            <li>Popularity <a href="#" title="ascending" class="ascending">ascending</a><a href="#"
-                                                                                                           title="descending"
-                                                                                                           class="descending">descending</a>
-                            </li>
-                            <li>Price <a href="#" title="ascending" class="ascending">ascending</a><a href="#"
-                                                                                                      title="descending"
-                                                                                                      class="descending">descending</a>
-                            </li>
-                            <li>Stars <a href="#" title="ascending" class="ascending">ascending</a><a href="#"
-                                                                                                      title="descending"
-                                                                                                      class="descending">descending</a>
-                            </li>
-                            <li>Rating <a href="#" title="ascending" class="ascending">ascending</a><a href="#"
-                                                                                                       title="descending"
-                                                                                                       class="descending">descending</a>
-                            </li>
-                        </ul>
+{{--                    <div class="sort-by">--}}
+{{--                        <h3>Sort by</h3>--}}
+{{--                        <ul class="sort">--}}
+{{--                            <li>Popularity <a href="#" title="ascending" class="ascending">ascending</a><a href="#"--}}
+{{--                                                                                                           title="descending"--}}
+{{--                                                                                                           class="descending">descending</a>--}}
+{{--                            </li>--}}
+{{--                            <li>Price <a href="#" title="ascending" class="ascending">ascending</a><a href="#"--}}
+{{--                                                                                                      title="descending"--}}
+{{--                                                                                                      class="descending">descending</a>--}}
+{{--                            </li>--}}
+{{--                            <li>Stars <a href="#" title="ascending" class="ascending">ascending</a><a href="#"--}}
+{{--                                                                                                      title="descending"--}}
+{{--                                                                                                      class="descending">descending</a>--}}
+{{--                            </li>--}}
+{{--                            <li>Rating <a href="#" title="ascending" class="ascending">ascending</a><a href="#"--}}
+{{--                                                                                                       title="descending"--}}
+{{--                                                                                                       class="descending">descending</a>--}}
+{{--                            </li>--}}
+{{--                        </ul>--}}
 
-                        <ul class="view-type">
-                            <li class="grid-view"><a href="#" title="grid view">grid view</a></li>
-                            <li class="list-view"><a href="#" title="list view">list view</a></li>
-                            <li class="location-view"><a href="#" title="location view">location view</a></li>
-                        </ul>
-                    </div>
+{{--                        <ul class="view-type">--}}
+{{--                            <li class="grid-view"><a href="#" title="grid view">grid view</a></li>--}}
+{{--                            <li class="list-view"><a href="#" title="list view">list view</a></li>--}}
+{{--                            <li class="location-view"><a href="#" title="location view">location view</a></li>--}}
+{{--                        </ul>--}}
+{{--                    </div>--}}
 
                     <div class="row deals  results">
                         <!--deal-->
 
-                        @foreach($hotels as $hotel)
-                            <article class="one-third">
-                                <figure><a href="" title=""><img
-                                                src="{{asset('theme/client/images/uploads/hotel1.jpg')}}"
-                                                alt=""/></a></figure>
-                                <div class="details">
-                                    <h3>{{$hotel->name}}
-                                        <span class="stars">
-                                      @for ($i = 1; $i <= 5; $i++)
-                                                @if ($i <= $hotel->star)
-                                                    <i class="fa fa-star star-full"></i>
-                                                @else
-                                                    <i class="fa fa-star-o star-empty"></i>
-                                                @endif
-                                            @endfor
-    </span>
-                                    </h3>
+                        @if(!$hotels->isEmpty())
+                            @foreach($hotels as $hotel)
+                                <article class="one-third">
+                                    <figure><a href="" title=""><img src="{{ Storage::url($hotel?->images[0]->path) }}" alt=""/></a></figure>
+                                    <div class="details">
+                                        <h3>{{$hotel->name}}
+                                            <span class="stars">
+                        @for ($i = 1; $i <= 5; $i++)
+                                                    @if ($i <= $hotel->star)
+                                                        <i class="fa fa-star star-full"></i>
+                                                    @else
+                                                        <i class="fa fa-star-o star-empty"></i>
+                                                    @endif
+                                                @endfor
+                    </span>
+                                        </h3>
 
-                                    <span class="address">{{$hotel?->city?->name}}</span>
-                                    {{--                                <span class="rating"> 8 /10</span>--}}
-                                    @php
-                                        $prices = $hotel?->catalogues()->pluck('price');
-                                        $minPrice = $prices->min(); // Giá nhỏ nhất
-                                        $maxPrice = $prices->max(); // Giá lớn nhất
+                                        <span class="address">{{$hotel?->city?->name}}</span>
 
-                                    @endphp
-                                    <span style="   display: flex;
-    justify-content: space-between" class="price">Giá:  <strong>{{ number_format($minPrice, 0, ',', '.') }} - {{ number_format($maxPrice, 0, ',', '.') }} VND</strong> </span>
-                                    <div class="description">
-                                        <p>{{ Str::limit($hotel->description, 150, '...') }}</p>
+                                        @php
+                                            $prices = $hotel?->catalogues()->pluck('price');
+                                            $minPrice = $prices->min(); // Giá nhỏ nhất
+                                            $maxPrice = $prices->max(); // Giá lớn nhất
+                                        @endphp
+                                        <span style="display: flex; justify-content: space-between" class="price">
+                    Giá:  <strong>{{ number_format($minPrice, 0, ',', '.') }} - {{ number_format($maxPrice, 0, ',', '.') }} VND</strong>
+                </span>
+                                        <div class="description">
+                                            <p>{{ Str::limit($hotel->description, 150, '...') }}</p>
+                                        </div>
+                                        <a href="{{route('hotel.show',$hotel->id)}}" title="Book now" class="gradient-button">Đặt ngay</a>
                                     </div>
-                                    <a href="{{route('hotel.show',$hotel->id)}}" title="Book now"
-                                       class="gradient-button">Book now</a>
-                                </div>
-                            </article>
-                        @endforeach
+                                </article>
+                            @endforeach
+                        @else
+                            <!-- Hiển thị thông báo nếu không có dữ liệu -->
+                            <strong class="no-data-message">Chưa có dữ liệu !</strong>
+                        @endif
                         <!--//deal-->
 
                         <!--bottom navigation-->
                         <div class="bottom-nav">
                             <!--back up button-->
-                            <a href="#" class="scroll-to-top" title="Back up">Back up</a>
+{{--                            <a href="#" class="scroll-to-top" title="Back up">Back up</a>--}}
                             <!--//back up button-->
 
                             <!--pager-->

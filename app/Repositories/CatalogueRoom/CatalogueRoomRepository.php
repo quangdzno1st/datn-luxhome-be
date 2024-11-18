@@ -27,12 +27,12 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
     {
 
         $startDate = $request->has('start_date')
-            ? Carbon::createFromFormat('Y-m-d', $request->input('start_date'))->startOfDay()
-            : Carbon::now()->startOfDay();
+            ? Carbon::createFromFormat('Y-m-d', $request->input('start_date'))->format('Y-m-d')
+            : Carbon::now()->format('Y-m-d');
 
         $endDate = $request->has('end_date')
-            ? Carbon::createFromFormat('Y-m-d', $request->input('end_date'))->endOfDay()
-            : Carbon::tomorrow()->endOfDay();
+            ? Carbon::createFromFormat('Y-m-d', $request->input('end_date'))->format('Y-m-d')
+            : Carbon::tomorrow()->format('Y-m-d');
 
         $cityId = request()->input('city_id');
         $numberAdult = request()->input('number_adult');
@@ -66,8 +66,7 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
                     $query->where('start_date', '<=', $startDate)
                         ->where('end_date', '>=', $endDate);
                 });
-        })
-            ->get();
+        })->get();
 
         $roomIds = $orders->flatMap(function ($order) {
 
@@ -76,14 +75,19 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
             });
         })->unique()->values()->toArray();
 
-        return $categories->map(function ($category) use ($roomIds) {
+        return $categories->map(function ($category) use ($roomIds,$startDate,$endDate,$numberChild,$numberAdult) {
             $filteredRooms = $category->rooms()->whereNotIn('id', $roomIds)
                 ->where('rooms.status', RoomStatusEnum::SAN_SANG_SU_DUNG->value)->get();
             return [
                 'id' => $category->id,
                 'name' => $category->name,
-                'number_adult' => $category->number_adult,
+                'number_adult_search' =>$numberAdult ,
+                'number_child_search' =>  $numberChild ?? null,
+                'number_adult' =>$category->number_adult ,
+                'number_child' =>  $category->number_child,
                 'hotel_id' => $category->hotel_id,
+                'attributeValues' => $category?->attributeValues,
+                'images' => $category?->images,
                 'org_id' => $category->org_id,
                 'price' => $category->price,
                 'description' => $category->description,
@@ -91,6 +95,8 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
                 'view' => $category->view,
                 'like' => $category->like,
                 'status' => $category->status,
+                'start_date' => $startDate,
+                'end_date' => $endDate,
                 'rooms_count' => $filteredRooms->count(),
                 'available_rooms' => $filteredRooms->map(function ($room) {
                     return [
