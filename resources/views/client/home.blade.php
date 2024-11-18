@@ -20,7 +20,7 @@
     <!--search-->
     <div class="main-search">
         <div class="wrap">
-            <form id="main-search" method="post" action="">
+            <form id="main-search" method="get" action="{{ route('home.search') }}">
                 <div class="row">
 
                     <div class="four-fourth">
@@ -48,39 +48,44 @@
                                 <h5><span>02</span> Bạn đến khi nào?</h5>
                                 <div class="row">
                                     <div class="f-item one-half datepicker">
-                                        <label for="datepicker1">Ngày nhận</label>
+                                        <label for="datepicker1">Ngày bắt đầu</label>
                                         <div class="datepicker-wrap">
-                                            <input type="text" required placeholder="" id="datepicker1"
-                                                   name="start_date"/>
-                                            <img src="https://www.themeenergy.com/themes/html/book-your-travel/images/ico/calendar.png"
-                                                 class="ui-datepicker-trigger">
+                                            <input type="text" placeholder="" id="datepicker1" name="start_date"
+                                                   value="{{ old('start_date') }}"/>
                                         </div>
+                                        @error('start_date')
+                                        <div class="text-danger" style="color:red">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                     <div class="f-item one-half datepicker">
-                                        <label for="datepicker2">Ngày trả</label>
+                                        <label for="datepicker2">Ngày kết thúc</label>
                                         <div class="datepicker-wrap">
-                                            <input type="text" placeholder="" id="datepicker2" required
-                                                   name="end_date"/>
-                                            <img src="https://www.themeenergy.com/themes/html/book-your-travel/images/ico/calendar.png"
-                                                 class="ui-datepicker-trigger">
+                                            <input type="text" placeholder="" id="datepicker2" name="end_date"
+                                                   value="{{ old('end_date') }}"/>
                                         </div>
+                                        @error('end_date')
+                                        <div class="text-danger" style="color:red">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
-                            <!--//column-->
 
-                            <!--column-->
+                            <!-- Số người lớn -->
                             <div class="column one-third">
                                 <h5><span>03</span> Thông tin</h5>
                                 <div class="row">
-                                    <div class="f-item one-half spinner">
+                                    <div class="f-item one-third spinner">
                                         <label for="spinner2">Người lớn</label>
-                                        <input type="number" placeholder="Số lượng người lớn" id="spinner2" required
-                                               name="number_adult"/>
+                                        <input type="text" placeholder="" id="spinner2" name="number_adult"
+                                               value="{{ old('number_adult') }}"/>
+                                        @error('number_adult')
+                                        <div class="text-danger" style="color:red">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="f-item one-half spinner">
+                                    <div class="f-item one-third spinner">
                                         <label for="spinner3">Trẻ em</label>
-                                        <input type="text" placeholder="Số lượng trẻ em" id="spinner3" name="number_child"/>
+                                        <input type="text" placeholder="" id="spinner3" name="number_child"
+                                               value="{{ old('number_child') }}"/>
                                     </div>
                                 </div>
 
@@ -196,6 +201,7 @@
 
 @section('script-libs')
     <script type="text/javascript" src="{{asset('theme/client/js/lightslider.min.js')}}"></script>
+
     <script type="text/javascript">
         (function ($) {
             $(document).ready(function () {

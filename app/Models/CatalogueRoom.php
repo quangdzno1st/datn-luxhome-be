@@ -19,6 +19,8 @@ class CatalogueRoom extends Model
         'image',
         'view',
         'like',
+        'number_adult',
+        'number_child',
         'org_id'
     ];
 

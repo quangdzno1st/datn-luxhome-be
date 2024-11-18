@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BaseSearchRequest;
 use App\Repositories\City\CityRepository;
 use App\Repositories\Hotel\HotelRepository;
+use App\Repositories\User\UserRepository;
+use App\Services\impl\UserServiceImpl;
 use App\Services\OrderService;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -18,13 +21,21 @@ class HomeController extends Controller
     public function __construct(
         CityRepository  $cityRepos,
         HotelRepository $hotelRepos,
-        OrderService    $orderService
+        OrderService    $orderService,
+        UserServiceImpl $userServices,
+        UserRepository  $userRepository,
+        HotelRepository $hotelRepository,
+
     )
     {
+        $this->userServices = $userServices;
+        $this->userRepository = $userRepository;
+        $this->hotelRepository = $hotelRepository;
         $this->cityRepos = $cityRepos;
         $this->hotelRepos = $hotelRepos;
         $this->orderService = $orderService;
     }
+
 
     public function index()
     {
@@ -36,11 +47,5 @@ class HomeController extends Controller
 
         $totalOrderMap = $this->orderService->getTotalOrderMapByCityId($cityIds);
         return view("client/home", compact('cities', 'hotels', 'totalOrderMap'));
-    }
-
-
-    public function hotelDetail($hotelId)
-    {
-
     }
 }

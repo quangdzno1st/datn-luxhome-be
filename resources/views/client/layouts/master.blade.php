@@ -27,6 +27,7 @@
 	<script src="{{asset('theme/client/fontawesome/e808bf9397.js')}}"></script>
 	<link rel="shortcut icon" href="{{asset('theme/client/images/favicon.ico')}}" />
 	<link rel="stylesheet" href="{{asset('theme/client/css/styler.css')}}" type="text/css" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
 
 	@yield('style-libs')
@@ -63,7 +64,7 @@
 	<script src="{{asset('theme/client/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js')}}"></script>
 	<script type="text/javascript" src="{{asset('theme/client/js/jquery.uniform.min.js')}}"></script>
 	<script type="text/javascript" src="{{asset('theme/client/js/jquery.slimmenu.min.js')}}"></script>
-	<!-- jQuery -->
+
 	<script type="text/javascript" src="{{asset('theme/client/js/scripts.js')}}"></script>
 
 

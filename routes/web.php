@@ -1,22 +1,31 @@
 <?php
 
-use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\CatalogueRoomController;
+use App\Http\Controllers\Admin\HotelServiceController;
+use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\StatisticalController;
+use App\Http\Controllers\Client\AccountSettingController;
 use App\Http\Controllers\Client\CityController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\HotelController;
-use App\Http\Controllers\Client\AccountSettingController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->group(function () {
     require 'admin.php';
 });
 
-Route::get('/oke', function () {
-    return view('admin.users.index');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home.index');
+Route::get('/search', [\App\Http\Controllers\Client\HotelController::class, 'search'])->name('home.search');
+Route::get('/hotel/{hotel_id}', [\App\Http\Controllers\Client\HotelController::class, 'show'])->name('hotel.show');
+
 
 Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('services')->controller(ServiceController::class)->group(function () {
+        Route::get('/', 'index')->name('services.index');
+        Route::post('/store', 'store')->name('services.store');
+        Route::put('/update/{id}', 'update')->name('services.update');
+        Route::delete('/{id}', 'destroy')->name('services.destroy');
+    });
 
     Route::prefix('hotels')
         ->name('hotels.')
@@ -64,7 +73,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::post('/upload-image', [CatalogueRoomController::class, 'storeImage'])->name('upload-image');
 
 //});
-
+Route::prefix('hotel/services')->controller(HotelServiceController::class)->group(function () {
+    Route::get("/{idHotel}", 'index')->name("hotel.service.index");
+    Route::post("/{idHotel}", 'store')->name("hotel.service.store");
+    Route::get("/delete/{id}", 'destroy')->name("hotel.service.destroy");
+    Route::delete("/delete", 'destroyMulti')->name("hotel.service.destroyMulti");
+});
 //voucher
 Route::prefix('vouchers')->group(function () {
     Route::get('/', [\App\Http\Controllers\Admin\VoucherController::class, 'index'])->name('vouchers.index');
@@ -76,6 +90,11 @@ Route::prefix('vouchers')->group(function () {
     Route::get('/list-trash', [\App\Http\Controllers\Admin\VoucherController::class, 'list_trash'])->name('vouchers.list_trash');
     Route::post('/restore/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'restore'])->name('vouchers.restore');
     Route::delete('/force_delete/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'destroy'])->name('vouchers.force_delete');
+});
+
+Route::controller(StatisticalController::class)->group(function () {
+    Route::get('/statistical', 'index')->name('statistical.index');
+    Route::post('/statistical', 'handleStatistical')->name('handle.statistical');
 });
 
 Route::get('/404', function () {
@@ -106,8 +125,7 @@ Route::prefix('rates')->group(function () {
 //order
 Route::prefix('admin/orders')->group(function () {
     Route::get('/page={page}', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
-    Route::post('/updateStatus/{id}', [\App\Http\Controllers\Admin\OrderDetailController::class, 'updateStatus'])->name('orders.updateStatus');
-    Route::get('/show/{order}', [\App\Http\Controllers\Admin\OrderDetailController::class, 'showOrderDetail'])->name('orders.show');
+    Route::get('/check-payable/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'checkPayable'])->name('orders.checkPayable');
 });
 
 Route::get('/test/theme', function () {
@@ -117,9 +135,9 @@ Route::get('/test/theme', function () {
 
 //client
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
-Route::get('/hotel/{id}', [HomeController::class, 'searchByPage'] )->name('home.hotel.detail');
-Route::get('/hotel/booking/{id}', [HotelController::class, 'booking'] )->name('hotel.booking');
-Route::get('/orders',[AccountSettingController::class, 'index'])->name('orders.index');
-Route::get('/payment-order/{id}',[AccountSettingController::class, 'paymentOrder'])->name('orders.payment');
-Route::get('/payment-return',[AccountSettingController::class, 'paymentReturn'])->name('orders.paymentReturn');
-Route::get('/cities/search-by-page', [CityController::class, 'searchByPage'] )->name('cities.searchByPage');
+Route::get('/hotel/{id}', [HomeController::class, 'searchByPage'])->name('home.hotel.detail');
+Route::get('/hotel/booking/{id}', [HotelController::class, 'booking'])->name('hotel.booking');
+Route::get('/orders', [AccountSettingController::class, 'index'])->name('orders.index');
+Route::get('/payment-order/{id}', [AccountSettingController::class, 'paymentOrder'])->name('orders.payment');
+Route::get('/payment-return', [AccountSettingController::class, 'paymentReturn'])->name('orders.paymentReturn');
+Route::get('/cities/search-by-page', [CityController::class, 'searchByPage'])->name('cities.searchByPage');
