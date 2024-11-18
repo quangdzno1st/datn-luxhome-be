@@ -45,4 +45,9 @@ class HotelController extends Controller
         $hotels = Hotel::query()->whereIn('id', $hotelIds)->where('city_id', $request->city_id)->paginate(10);
         return view('client.searchresult', compact('hotels'));
     }
+
+    public function booking($hotelId)
+    {
+
+    }
 }

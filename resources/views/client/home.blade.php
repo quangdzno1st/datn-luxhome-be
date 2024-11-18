@@ -52,6 +52,8 @@
                                         <div class="datepicker-wrap">
                                             <input type="text" placeholder="" id="datepicker1" name="start_date"
                                                    value="{{ old('start_date') }}"/>
+                                            <img src="https://www.themeenergy.com/themes/html/book-your-travel/images/ico/calendar.png"
+                                                 class="ui-datepicker-trigger">
                                         </div>
                                         @error('start_date')
                                         <div class="text-danger" style="color:red">{{ $message }}</div>
@@ -62,6 +64,8 @@
                                         <div class="datepicker-wrap">
                                             <input type="text" placeholder="" id="datepicker2" name="end_date"
                                                    value="{{ old('end_date') }}"/>
+                                            <img src="https://www.themeenergy.com/themes/html/book-your-travel/images/ico/calendar.png"
+                                                 class="ui-datepicker-trigger">
                                         </div>
                                         @error('end_date')
                                         <div class="text-danger" style="color:red">{{ $message }}</div>
@@ -76,7 +80,7 @@
                                 <div class="row">
                                     <div class="f-item one-third spinner">
                                         <label for="spinner2">Người lớn</label>
-                                        <input type="text" placeholder="" id="spinner2" name="number_adult"
+                                        <input type="number" placeholder="" id="spinner2" name="number_adult"
                                                value="{{ old('number_adult') }}"/>
                                         @error('number_adult')
                                         <div class="text-danger" style="color:red">{{ $message }}</div>
@@ -84,7 +88,7 @@
                                     </div>
                                     <div class="f-item one-third spinner">
                                         <label for="spinner3">Trẻ em</label>
-                                        <input type="text" placeholder="" id="spinner3" name="number_child"
+                                        <input type="number" placeholder="" id="spinner3" name="number_child"
                                                value="{{ old('number_child') }}"/>
                                     </div>
                                 </div>
