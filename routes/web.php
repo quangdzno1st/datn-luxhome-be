@@ -17,7 +17,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/search', [\App\Http\Controllers\Client\HotelController::class, 'search'])->name('home.search');
 Route::get('/hotel/{hotel_id}', [\App\Http\Controllers\Client\HotelController::class, 'show'])->name('hotel.show');
-
+Route::post('/ok', function (\Illuminate\Http\Request $request){
+    dd($request->except('_token'));
+})->name('ok');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::prefix('services')->controller(ServiceController::class)->group(function () {

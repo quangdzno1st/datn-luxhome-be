@@ -20,10 +20,11 @@ class SearchRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'number_adult' => 'required|integer|min:1', // Bắt buộc, phải là số nguyên, ít nhất là 1
-            'start_date'   => 'required|date|before_or_equal:end_date', // Bắt buộc, định dạng ngày, trước hoặc bằng `end_date`
-            'end_date'     => 'required|date|after_or_equal:start_date', // Bắt buộc, định dạng ngày, sau hoặc bằng `start_date`
-            'city_id' => $this->isHomePage() ?'required|exists:cities,id' :  'nullable',
+            'number_adult' => 'sometimes|required|integer|min:1',
+            'start_date' => 'sometimes|required|date_format:Y-m-d|before_or_equal:end_date', // Định dạng ngày: d//m/dyyyy
+            'end_date' => 'sometimes|required|date_format:Y-m-d|after_or_equal:start_date', // Định dạng ngày: d//m/dyyyy
+// Bắt buộc, định dạng ngày, sau hoặc bằng `start_date`
+            'city_id' => $this->isHomePage() ?'sometimes|required|exists:cities,id' :  'nullable',
         ];
     }
 
@@ -33,9 +34,9 @@ class SearchRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'number_adult.required' => 'Số lượng người lớn là bắt buộc.',
-            'number_adult.integer'  => 'Số lượng người lớn phải là số.',
-            'number_adult.min'      => 'Số lượng người lớn phải ít nhất là 1.',
+            'number_adult.required' => 'Người lớn là bắt buộc.',
+            'number_adult.integer'  => 'Người lớn phải là số.',
+            'number_adult.min'      => 'Người lớn phải ít nhất là 1.',
             'start_date.required'   => 'Ngày bắt đầu là bắt buộc.',
             'start_date.date'       => 'Ngày bắt đầu không đúng định dạng.',
             'start_date.before_or_equal' => 'Ngày bắt đầu phải trước hoặc bằng ngày kết thúc.',
@@ -45,6 +46,8 @@ class SearchRequest extends FormRequest
             'city_id.required'      => 'Thành phố là bắt buộc.',
             'city_id.integer'       => 'Thành phố không đúng định dạng.',
             'city_id.exists'        => 'Thành phố không tồn tại.',
+            'start_date.date_format' => 'Ngày bắt đầu phải có định dạng yyyy/mm/dd.',
+            'end_date.date_format' => 'Ngày kết thúc phải có định dạng yyyy/mm/dd.',
         ];
     }
 

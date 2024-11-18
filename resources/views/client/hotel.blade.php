@@ -89,6 +89,7 @@
             background-color: #0056b3;
             border-color: #0056b3;
         }
+
         /* Đảm bảo các phần tử form nằm ngang */
         .form-row {
             display: flex;
@@ -151,55 +152,112 @@
             border-color: #0056b3;
         }
 
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            height: 100%; /* Đảm bảo chiều cao đồng nhất */
+        }
+
+        .form-group input {
+            height: 40px; /* Chiều cao cố định */
+            box-sizing: border-box; /* Bao gồm padding và border */
+        }
+
+        .form-group .text-danger {
+            font-size: 14px; /* Kích thước nhỏ để không ảnh hưởng layout */
+            height: 20px; /* Chiều cao cố định cho thông báo lỗi */
+            margin-top: 5px; /* Khoảng cách giữa input và lỗi */
+            color: red; /* Màu chữ lỗi */
+        }
+
+        .submit button {
+            height: 40px;
+        }
+
+        .alert-box {
+            border: 1px solid red;
+            border-radius: 5px;
+            background-color: #fff5f5;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        .alert-icon {
+            color: red;
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        .alert-content {
+            color: #333;
+        }
+        .alert-content strong {
+            font-size: 16px;
+        }
+        .alert-content p {
+            margin: 5px 0 0 0;
+            font-size: 14px;
+        }
+        .facility-list {
+            display: block; /* Mỗi mục sẽ nằm trên một dòng */
+            margin: 0;
+            padding: 0;
+        }
+
+        .facility-item {
+            padding-left: 20px; /* Khoảng cách bên trái giống như li */
+            position: relative;
+            margin-bottom: 10px; /* Khoảng cách giữa các mục */
+        }
+
+        .facility-item::before {
+            content: '\2022'; /* Mã Unicode cho dấu đầu dòng (•) */
+            position: absolute;
+            left: 0;
+            font-size: 20px;
+            color: #333; /* Màu sắc của dấu đầu dòng */
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
     </style>
     <main class="main">
         <div class="wrap">
 
             <!--breadcrumbs-->
-            <nav class="breadcrumbs">
-                <!--crumbs-->
-                <ul>
-                    <li><a href="#" title="Home">Home</a></li>
-                    <li><a href="#" title="Hotels">Hotels</a></li>
-                    <li><a href="#" title="United Kingdom">United Kingdom</a></li>
-                    <li><a href="#" title="London">London</a></li>
-                    <li>Search results</li>
-                </ul>
-                <!--//crumbs-->
+            {{--            <nav class="breadcrumbs">--}}
+            {{--                <!--crumbs-->--}}
+            {{--                <ul>--}}
+            {{--                    <li><a href="#" title="Home">Home</a></li>--}}
+            {{--                    <li><a href="#" title="Hotels">Hotels</a></li>--}}
+            {{--                    <li><a href="#" title="United Kingdom">United Kingdom</a></li>--}}
+            {{--                    <li><a href="#" title="London">London</a></li>--}}
+            {{--                    <li>Search results</li>--}}
+            {{--                </ul>--}}
+            {{--                <!--//crumbs-->--}}
 
-                <!--top right navigation-->
-                <ul class="top-right-nav">
-                    <li><a href="search_results.html" title="Back to results">Back to results</a></li>
-                    <li><a href="#" title="Change search">Change search</a></li>
-                </ul>
-                <!--//top right navigation-->
-            </nav>
+            {{--                <!--top right navigation-->--}}
+            {{--                <ul class="top-right-nav">--}}
+            {{--                    <li><a href="search_results.html" title="Back to results">Back to results</a></li>--}}
+            {{--                    <li><a href="#" title="Change search">Change search</a></li>--}}
+            {{--                </ul>--}}
+            {{--                <!--//top right navigation-->--}}
+            {{--            </nav>--}}
             <!--//breadcrumbs-->
 
-            <div class="row">
+            <div class="">
                 <!--hotel three-fourth content-->
-                <section class="three-fourth">
+                <section class="">
                     <!--gallery-->
                     <div class="gallery">
                         <ul id="image-gallery" class="cS-hidden">
-                            <li data-thumb="{{asset('theme/client/images/uploads/hotel4.jpg')}}">
-                                <img src="{{asset('theme/client/images/uploads/hotel4.jpg')}}" alt=""/>
-                            </li>
-                            <li data-thumb="{{asset('theme/client/images/uploads/hotel1.jpg')}}">
-                                <img src="{{asset('theme/client/images/uploads/hotel1.jpg')}}" alt=""/>
-                            </li>
-                            <li data-thumb="{{asset('theme/client/images/uploads/hotel2.jpg')}}">
-                                <img src="{{asset('theme/client/images/uploads/hotel2.jpg')}}" alt=""/>
-                            </li>
-                            <li data-thumb="{{asset('theme/client/images/uploads/hotel5.jpg')}}">
-                                <img src="{{asset('theme/client/images/uploads/hotel5.jpg')}}" alt=""/>
-                            </li>
-                            <li data-thumb="{{asset('theme/client/images/uploads/hotel3.jpg')}}">
-                                <img src="{{asset('theme/client/images/uploads/hotel3.jpg')}}" alt=""/>
-                            </li>
-                            <li data-thumb="{{asset('theme/client/images/uploads/hotel6.jpg')}}">
-                                <img src="{{asset('theme/client/images/uploads/hotel6.jpg')}}" alt=""/>
-                            </li>
+                            @foreach($hotel->images as $image)
+                                <li data-thumb="{{  Storage::url($image['path']) }}">
+                                    <img src="{{  Storage::url($image['path']) }}" alt=""/>
+                                </li>
+                            @endforeach
                         </ul>
                     </div>
                     <!--//gallery-->
@@ -207,12 +265,14 @@
                     <!--inner navigation-->
                     <nav class="inner-nav">
                         <ul>
-                            <li class="availability"><a href="#availability" title="Availability">Availability</a></li>
-                            <li class="description"><a href="#description" title="Description">Description</a></li>
-                            <li class="facilities"><a href="#facilities" title="Facilities">Facilities</a></li>
-                            <li class="location"><a href="#location" title="Location">Location</a></li>
-                            <li class="reviews"><a href="#reviews" title="Reviews">Reviews</a></li>
-                            <li class="things-to-do"><a href="#things-to-do" title="Things to do">Things to do</a></li>
+                            <li class="availability"><a href="#availability" title="Availability">Tình trạng phòng</a>
+                            </li>
+                            <li class="description"><a href="#description" title="Description">Mô tả</a></li>
+                            <li class="facilities"><a href="#facilities" title="Facilities">Tiện nghi</a></li>
+                            {{--                            <li class="location"><a href="#location" title="Location">Vị trí</a></li>--}}
+{{--                            <li class="reviews"><a href="#reviews" title="Reviews">Đánh giá</a></li>--}}
+                            {{--                            <li class="things-to-do"><a href="#things-to-do" title="Things to do">Hoạt động</a></li>--}}
+
                         </ul>
                     </nav>
                     <!--//inner navigation-->
@@ -223,122 +283,158 @@
                             <h2>Phòng trống</h2>
                             <form id="main-search" method="get" action="{{ route('home.search') }}">
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-row align-items-center">
+                                    @php
+                                    $data = session('search_data')[0] ?? [];
+                                    @endphp
 
-                                            <!-- Tìm kiếm theo ngày -->
+                                    <div class="col-md-12">
+                                        <div class="form-row align-items-center gap-1">
                                             <div class="form-group col-md-3">
                                                 <label for="datepicker1">Ngày bắt đầu</label>
-                                                <div class="datepicker-wrap">
-                                                    <input type="text" id="datepicker1" name="start_date" class="form-control"
-                                                           placeholder="Chọn ngày bắt đầu" value="{{ old('start_date') }}"/>
-                                                    @error('start_date')
-                                                    <div class="text-danger" style="color: red">{{ $message }}</div>
+                                                <input type="text" id="datepicker1" name="start_date"
+                                                       class="form-control"
+                                                       placeholder="Chọn ngày bắt đầu" value="{{ old('start_date') ?? $data['start_date'] }}"/>
+                                                @error('start_date')
+                                                <div class="text-danger">{{ $message }}</div>
+                                                @else
+                                                    <div class="text-danger" style="visibility: hidden;">&nbsp;</div>
                                                     @enderror
-                                                </div>
                                             </div>
 
                                             <div class="form-group col-md-3">
                                                 <label for="datepicker2">Ngày kết thúc</label>
-                                                <div class="datepicker-wrap">
-                                                    <input type="text" id="datepicker2" name="end_date" class="form-control"
-                                                           placeholder="Chọn ngày kết thúc" value="{{ old('end_date') }}"/>
-                                                    @error('end_date')
-                                                    <div class="text-danger" style="color: red">{{ $message }}</div>
+                                                <input type="text" id="datepicker2" name="end_date" class="form-control"
+                                                       placeholder="Chọn ngày kết thúc" value="{{ old('end_date') ?? $data['end_date'] }}"/>
+                                                @error('end_date')
+                                                <div class="text-danger">{{ $message }}</div>
+                                                @else
+                                                    <div class="text-danger" style="visibility: hidden;">&nbsp;</div>
                                                     @enderror
-                                                </div>
                                             </div>
 
-                                            <!-- Số người lớn -->
-                                            <div class="form-group col-md-2">
+                                            <div class="form-group col-md-3">
                                                 <label for="spinner2">Số người lớn</label>
-                                                <input type="number" id="spinner2" name="number_adult" class="form-control"
-                                                       placeholder="Số người lớn" value="{{ old('number_adult') }}"/>
+                                                <input type="number" id="spinner2" name="number_adult"
+                                                       class="form-control"
+                                                       placeholder="Số  người lớn" value="{{ old('number_adult') ?? $data['number_adult_search'] }}"/>
                                                 @error('number_adult')
-                                                <div class="text-danger" style="color: red">{{ $message }}</div>
-                                                @enderror
+                                                <div class="text-danger">{{ $message }}</div>
+                                                @else
+                                                    <div class="text-danger" style="visibility: hidden;">&nbsp;</div>
+                                                    @enderror
                                             </div>
 
-                                            <!-- Số trẻ em -->
                                             <div class="form-group col-md-2">
                                                 <label for="spinner3">Số trẻ em</label>
-                                                <input type="number" id="spinner3" name="number_child" class="form-control"
-                                                       placeholder="Số trẻ em" value="{{ old('number_child') }}"/>
-                                            </div>
-                                            <input type="hidden" name="check" value="1">
-                                            <input type="hidden" name="hotel_id" value="{{$hotel->id}}">
-                                            <!-- Nút submit -->
-                                            <div class="form-group col-md-2 submit">
-                                                <button type="submit" class="btn btn-primary w-100">Tiến hành tìm kiếm</button>
+                                                <input type="number" id="spinner3" name="number_child"
+                                                       class="form-control"
+                                                       placeholder="Số trẻ em" value="{{ old('number_child') ?? $data['number_child_search'] }}"/>
+                                                <div class="text-danger" style="visibility: hidden;">&nbsp;</div>
                                             </div>
 
+                                            <input type="hidden" name="check" value="1">
+                                            <input type="hidden" name="hotel_id" value="{{$hotel->id}}">
+
+                                            <div class="form-group col-md-2 submit" >
+                                                <button type="submit" class="btn btn-primary w-100">Tiến hành tìm kiếm
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </form>
 
 
+                            <h2>Loại phòng</h2>
+                            <form action="{{route('ok')}}" method="POST">
+                                @csrf
+                                <ul class="room-types">
 
-                            <h2>Room types</h2>
-                            <ul class="room-types">
-                                @foreach($filteredData as $key => $data)
-                                    <li>
-                                        <figure class="left" id="gallery1">
-                                            <a href="{{asset('theme/client/images/uploads/room1.jpg')}}"
-                                               data-sub-html="<p>Superior Double Room</p>">
-                                                <img src="{{asset('theme/client/images/uploads/room1.jpg')}}" alt=""/>
-                                                <span  class="image-overlay" style="z-index: 0"></span>
-                                            </a>
-                                            <a href="{{asset('theme/client/images/uploads/room2.jpg')}}"
-                                               data-sub-html="<p>Superior Double Room</p>">
-                                                <img src="{{asset('theme/client/images/uploads/room2.jpg')}}" alt=""/>
-                                            </a>
-                                        </figure>
-                                        <div class="meta">
-                                            <h3>{{$data['name']}}</h3>
+                                    @forelse($filteredData as $key => $data)
+                                        <li>
+                                            <figure class="left" id="gallery1">
+                                                <a href="{{asset('theme/client/images/uploads/room1.jpg')}}"
+                                                   data-sub-html="<p>Superior Double Room</p>">
+                                                    <img src="{{asset('theme/client/images/uploads/room1.jpg')}}" alt=""/>
+                                                    <span class="image-overlay" style="z-index: 0"></span>
+                                                </a>
+                                                <a href="{{asset('theme/client/images/uploads/room2.jpg')}}"
+                                                   data-sub-html="<p>Superior Double Room</p>">
+                                                    <img src="{{asset('theme/client/images/uploads/room2.jpg')}}" alt=""/>
+                                                </a>
+                                            </figure>
+                                            <div class="meta">
+                                                <h3>{{$data['name']}}</h3>
 
-                                            <div style="display: flex; justify-content: space-between">
-                                                <p class="first">Price:</p>
-                                                <strong class="second">{{number_format($data['price'])}} VND</strong>
+                                                <div style="display: flex; justify-content: space-between">
+                                                    <p class="first">Giá:</p>
+                                                    <strong class="second">{{number_format($data['price'])}} VND</strong>
+                                                </div>
+                                                <div style="margin-bottom: 10px">
+                                                    Nhập số lượng phòng:
+                                                    <input type="number" id="qty_room_{{$key}}" name=""
+                                                           style="margin-top: 10px" class="qty-input"
+                                                           placeholder="Số lượng phòng" value="0"/>
+
+                                                    <input type="hidden" id="hidden_qty_{{$key}}" name="{{$data['id']}}"
+                                                           value=""/>
+
+
+                                                    <div id="error-message_{{$key}}" style="color: red; display: none;">Số lượng phòng không được vượt quá số phòng có sẵn!</div>
+                                                </div>
+
+                                                <a href="javascript:void(0)" title="more info" class="more-info">+ Xem thêm</a>
                                             </div>
-                                            <div class="" style="margin-bottom: 10px">
-                                                Chọn phòng:
-                                                <select name="rooms[]" id="rooms_{{$key}}" class="select-room" multiple>
-                                                    @foreach($data['available_rooms'] as $room)
-                                                        <option value="{{$room['room_id']}}">{{$room['code']}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+                                            <div class="room-information">
+                                                <div class="row">
+                                                    <div class="">Người lớn: {{$data['number_adult']}}
+{{--                                                        @for ( $i = 1; $i <= $data['number_adult']; $i++)--}}
+{{--                                                            <i class="material-icons">&#xE7FD;</i>--}}
+{{--                                                        @endfor</div>--}}
+                                                </div>
 
-                                            <a href="javascript:void(0)" title="more info" class="more-info">+ Xem
-                                                thêm</a>
+                                                <div class="row " style="margin-top: 10px;">
+                                                    <span class="first">Trẻ em: {{$data['number_child']}}</span>
+                                                </div>
+                                                <div class="row " style="margin-top: 10px;">
+                                                    <span class="first">Phòng trống: {{$data['rooms_count']}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="more-information">
+                                                @php
+                                                    $facilities =  $data['attributeValues']
+                                                          ->flatten()
+                                                          ->unique()
+                                                @endphp
+                                                @foreach($facilities as $facilitie)
+                                                    <div class="text-wrap">
+                                                        <div style="margin-bottom: 10px"><strong>+ Tiện nghi</strong></div>
+                                                        <div class="facility-list">
+                                                            <div class="facility-item">{{$facilitie->value_text}}</div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </li>
+                                    @empty
+                                        <div class="alert-box">
+                                            <i class="fas fa-exclamation-circle alert-icon"></i>
+                                            <div class="alert-content">
+                                                <strong>Trang web chúng tôi không còn phòng tại chỗ nghỉ này từ ngày {{ request()->start_date }} đến T4, {{request()->end_date}}</strong>
+                                                <p>Chọn ngày khác để xem phòng trống</p>
+                                            </div>
                                         </div>
-                                        <div class="room-information">
-                                            <div class="row">
-                                                <span class="first">Max:</span>
+                                    @endforelse
+                                </ul>
 
-                                                <span class="second">
-                                                    @for ( $i = 1; $i <= $data['number_adult']; $i++)
-                                                        <i class="material-icons">&#xE7FD;</i>
-                                                    @endfor
-                                                </span>
-                                            </div>
+                                <!-- Nút Đặt Ngay -->
+                                <div class="submit-btn" style="display: flex; justify-content: center; margin: auto; margin-top: 20px;">
+                                    <button type="submit" class="gradient-button" style="padding: 15px; font-size: 18px; width: 200px; height: 50px">Đặt ngay</button>
+                                </div>
 
-                                            <div class="row">
-                                                <span class="first">Rooms:</span>
-                                                <span class="second">{{$data['rooms_count']}}</span>
-                                            </div>
-                                            <a href="booking-step1.html" class="gradient-button" title="Book">Book
-                                                now</a>
-                                        </div>
-                                        <div class="more-information">
-                                            <p>{{$data['description']}}</p>
+                            </form>
 
-                                        </div>
-                                    </li>
-                                @endforeach
 
-                            </ul>
                         </article>
                     </section>
                     <!--//availability-->
@@ -346,53 +442,11 @@
                     <!--description-->
                     <section id="description" class="tab-content">
                         <article>
-                            <h2>General</h2>
+                            <h2>Mô tả khách sạn</h2>
                             <div class="text-wrap">
-                                <p>The Best Ipsum hotel features over 1,000 luxuriously appointed, individually styled
-                                    rooms, suites and apartments, each containing unique works of art. Accommodation at
-                                    the hotel includes air conditioning in all the rooms, private bathroom with heated
-                                    mirrors, hair dryer, power shower, BT Openzone Wi-Fi, coffee and tea making
-                                    facilities, complimentary toiletries, Egyptian linen, flat Screen LCD TV with free
-                                    view, work desk, 24 hour room service.</p>
+                                <p>{!! $hotel->description !!}</p>
                             </div>
 
-                            <h2>Check-in</h2>
-                            <div class="text-wrap">
-                                <p>From 15:00 hours </p>
-                            </div>
-
-                            <h2>Check-out</h2>
-                            <div class="text-wrap">
-                                <p>Untill 12:00 hours </p>
-                            </div>
-
-                            <h2>Cancellation / Prepayment</h2>
-                            <div class="text-wrap">
-                                <p>Cancellation and prepayment policies vary according to room type. Please check the <a
-                                            href="#">room conditions</a> when selecting your room. </p>
-                            </div>
-
-                            <h2>Children and extra beds</h2>
-                            <div class="text-wrap">
-                                <p><strong>Free!</strong> All children under 8 years stay free of charge when using
-                                    existing beds.<strong>Free!</strong> All children under 2 years stay free of charge
-                                    for children’s cots/cribs.All older children or adults are charged USD 40 per person
-                                    per night for extra beds.The maximum number of extra beds/children’s cots permitted
-                                    in a room is 1.Any type of extra bed or child’s cot/crib is upon request and needs
-                                    to be confirmed by management.Supplements are not calculated automatically in the
-                                    total costs and will have to be paid for separately when checking out.</p>
-                            </div>
-
-                            <h2>Pets</h2>
-                            <div class="text-wrap">
-                                <p>Pets are allowed. Charges may be applicable.</p>
-                            </div>
-
-                            <h2>Accepted credit cards</h2>
-                            <div class="text-wrap">
-                                <p>American Express, Visa, Euro/Mastercard, Diners ClubThe hotel reserves the right to
-                                    pre-authorise credit cards prior to arrival.</p>
-                            </div>
                         </article>
                     </section>
                     <!--//description-->
@@ -400,42 +454,23 @@
                     <!--facilities-->
                     <section id="facilities" class="tab-content">
                         <article>
-                            <h2>Facilities</h2>
-                            <div class="text-wrap">
-                                <ul class="three-col">
-                                    <li>Kitchenette</li>
-                                    <li>Ironing board</li>
-                                    <li>Catering services</li>
-                                    <li>Beachfront</li>
-                                    <li>Hotspots</li>
-                                    <li>Exhibition/convention floor</li>
-                                    <li>Restaurant</li>
-                                    <li>Room service - full menu</li>
-                                    <li>Courtyard</li>
-                                    <li>Lounges/bars</li>
-                                    <li>Laundry/Valet service</li>
-                                    <li>Airport Shuttle Service</li>
-                                    <li>Complimentary breakfast</li>
-                                    <li>Valet cleaning</li>
-                                    <li>Car hire</li>
-                                </ul>
-                            </div>
+                            <h2>Tiện nghi</h2>
+                            @php
+                                $facilities =   $hotel->catalogues()
+                                      ->with('attributeValues') // Lấy thông tin các attribute_value của các loại phòng
+                                      ->get()
+                                      ->pluck('attributeValues') // Lấy tất cả các giá trị attribute_value từ các catalogue
+                                      ->flatten() // Làm phẳng các mảng để có danh sách các attribute_value
+                                      ->unique()
+                            @endphp
+                            @foreach($facilities as $facilitie)
+                                <div class="text-wrap">
+                                    <ul class="three-col">
+                                        <li>{{$facilitie->value_text}}</li>
+                                    </ul>
+                                </div>
+                            @endforeach
 
-                            <h2>Activities</h2>
-                            <div class="text-wrap">
-                                <p>Tennis court, Sauna, Fitness centre, Massage </p>
-                            </div>
-
-                            <h2>Internet</h2>
-                            <div class="text-wrap">
-                                <p><strong>Free!</strong> WiFi is available in all areas and is free of charge. </p>
-                            </div>
-
-                            <h2>Parking</h2>
-                            <div class="text-wrap">
-                                <p>Private parking is possible at a location nearby (reservation is not needed) and
-                                    costs USD 28.80 per day.</p>
-                            </div>
                         </article>
                     </section>
                     <!--//facilities-->
@@ -621,149 +656,35 @@
                 <!--sidebar-->
                 <aside class="one-fourth right-sidebar">
                     <!--hotel details-->
-                    <article class="hotel-details">
-                        <h1>{{$hotel->name}}
-                            <span class="stars">
-							  @for ($i = 1; $i <= 5; $i++)
-                                    @if ($i <= $hotel->star)
-                                        <i class="fa fa-star star-full"></i>
-                                    @else
-                                        <i class="fa fa-star-o star-empty"></i>
-                                    @endif
-                                @endfor
-							</span>
-                        </h1>
-                        <span class="address">{{$hotel?->city?->name}}</span>
-{{--                        <span class="rating"> 8 /10</span>--}}
-                        <div class="description">
-                            <p>{{ $hotel->description }}</p>
-                        </div>
-{{--                        <div class="tags">--}}
-{{--                            <ul>--}}
-{{--                                <li><a href="#" title="Wellness">Wellness</a></li>--}}
-{{--                                <li><a href="#" title="Last minute">Last minute</a></li>--}}
-{{--                                <li><a href="#" title="Thailand">Thailand</a></li>--}}
-{{--                                <li><a href="#" title="SPA">SPA</a></li>--}}
-{{--                                <li><a href="#" title="Romantic">Romantic</a></li>--}}
-{{--                            </ul>--}}
-{{--                        </div>--}}
-                    </article>
+                    {{--                    <article class="hotel-details">--}}
+                    {{--                        <h1>{{$hotel->name}}--}}
+                    {{--                            <span class="stars">--}}
+                    {{--							  @for ($i = 1; $i <= 5; $i++)--}}
+                    {{--                                    @if ($i <= $hotel->star)--}}
+                    {{--                                        <i class="fa fa-star star-full"></i>--}}
+                    {{--                                    @else--}}
+                    {{--                                        <i class="fa fa-star-o star-empty"></i>--}}
+                    {{--                                    @endif--}}
+                    {{--                                @endfor--}}
+                    {{--							</span>--}}
+                    {{--                        </h1>--}}
+                    {{--                        <span class="address">{{$hotel?->city?->name}}</span>--}}
+                    {{--                        <span class="rating"> 8 /10</span>--}}
+                    {{--                        <div class="description">--}}
+                    {{--                            <p>{{ $hotel->description }}</p>--}}
+                    {{--                        </div>--}}
+                    {{--                        <div class="tags">--}}
+                    {{--                            <ul>--}}
+                    {{--                                <li><a href="#" title="Wellness">Wellness</a></li>--}}
+                    {{--                                <li><a href="#" title="Last minute">Last minute</a></li>--}}
+                    {{--                                <li><a href="#" title="Thailand">Thailand</a></li>--}}
+                    {{--                                <li><a href="#" title="SPA">SPA</a></li>--}}
+                    {{--                                <li><a href="#" title="Romantic">Romantic</a></li>--}}
+                    {{--                            </ul>--}}
+                    {{--                        </div>--}}
+                    {{--                    </article>--}}
                     <!--//hotel details-->
 
-                    <!--testimonials-->
-                    <article class="testimonials">
-                        <blockquote>Loved the staff and the location was just amazing... Perfect!”</blockquote>
-                        <span class="name">- Jane Doe, Solo Traveller</span>
-                    </article>
-                    <!--//testimonials-->
-
-                    <!--Need Help Booking?-->
-                    <article class="widget">
-                        <h4>Need Help Booking?</h4>
-                        <p>Call our customer services team on the number below to speak to one of our advisors who will
-                            help you with all of your holiday needs.</p>
-                        <p class="number">1- 555 - 555 - 555</p>
-                    </article>
-                    <!--//Need Help Booking?-->
-
-                    <!--Why Book with us?-->
-                    <article class="widget">
-                        <h4>Why Book with us?</h4>
-                        <h5>Low rates</h5>
-                        <p>Get the best rates, or get a refund.No booking fees. Save money!</p>
-                        <h5>Largest Selection</h5>
-                        <p>140,000+ hotels worldwide130+ airlinesOver 3 million guest reviews</p>
-                        <h5>We’re Always Here</h5>
-                        <p>Call or email us, anytimeGet 24-hour support before, during, and after your trip</p>
-                    </article>
-                    <!--//Why Book with us?-->
-
-                    <!--Popular hotels in the area-->
-                    <article class="widget">
-                        <h4>Popular hotels in the area</h4>
-                        <ul class="popular-hotels small-list">
-                            <li>
-                                <a href="#">
-                                    <h3>Plaza Resort Hotel &amp; SPA
-                                        <span class="stars">
-											<i class="material-icons">&#xE838;</i>
-											<i class="material-icons">&#xE838;</i>
-											<i class="material-icons">&#xE838;</i>
-											<i class="material-icons">&#xE838;</i>
-										</span>
-                                    </h3>
-                                    <p>From <span class="price">$ 100 <small>/ per night</small></span></p>
-                                    <span class="rating"> 8 /10</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <h3>Lorem Ipsum Inn
-                                        <span class="stars">
-											<i class="material-icons">&#xE838;</i>
-											<i class="material-icons">&#xE838;</i>
-											<i class="material-icons">&#xE838;</i>
-											<i class="material-icons">&#xE838;</i>
-											<i class="material-icons">&#xE838;</i>
-										</span>
-                                    </h3>
-                                    <p>From <span class="price">$ 110 <small>/ per night</small></span></p>
-                                    <span class="rating"> 7 /10</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <h3>Best Eastern London
-                                        <span class="stars">
-											<i class="material-icons">&#xE838;</i>
-											<i class="material-icons">&#xE838;</i>
-											<i class="material-icons">&#xE838;</i>
-											<i class="material-icons">&#xE838;</i>
-											<i class="material-icons">&#xE838;</i>
-										</span>
-                                    </h3>
-                                    <p>From <span class="price">$ 125 <small>/ per night</small></span></p>
-                                    <span class="rating"> 8 /10</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <h3>Plaza Resort Hotel &amp; SPA
-                                        <span class="stars">
-											<i class="material-icons">&#xE838;</i>
-											<i class="material-icons">&#xE838;</i>
-											<i class="material-icons">&#xE838;</i>
-											<i class="material-icons">&#xE838;</i>
-										</span>
-                                    </h3>
-                                    <p>From <span class="price">$ 100 <small>/ per night</small></span></p>
-                                    <span class="rating"> 8 /10</span>
-                                </a>
-                            </li>
-                        </ul>
-                        <a href="#" title="Show all" class="show-all">Show all</a>
-                    </article>
-                    <!--//Popular hotels in the area-->
-
-                    <!--Deal of the day-->
-                    <article class="widget">
-                        <h4>Deal of the day</h4>
-                        <div class="deal-of-the-day">
-                            <figure><a href="hotel.html"><img src="{{asset('theme/client/images/uploads/hotel2.jpg')}}"
-                                                              alt=""/></a></figure>
-                            <h3><a href="hotel.html">Plaza Resort Hotel &amp; SPA
-                                    <span class="stars">
-										<i class="material-icons">&#xE838;</i>
-										<i class="material-icons">&#xE838;</i>
-										<i class="material-icons">&#xE838;</i>
-										<i class="material-icons">&#xE838;</i>
-									</span>
-                                </a></h3>
-                            <p>From <span class="price">$ 100 <small>/ per night</small></span></p>
-                            <span class="rating"> 8 /10</span>
-                        </div>
-                    </article>
-                    <!--//Deal of the day-->
                 </aside>
                 <!--//sidebar-->
             </div>
@@ -777,7 +698,7 @@
     <link rel="stylesheet" href="{{asset('theme/client/css/lightslider.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('theme/client/css/lightgallery.min.css')}}"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css" rel="stylesheet"/>
-  <link rel="stylesheet" href="{{asset('theme/client/css/lightslider.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('theme/client/css/lightslider.min.css')}}"/>
 @endsection
 
 @section('script-libs')
@@ -788,10 +709,36 @@
     <script type="text/javascript" src="{{asset('theme/client/js/infobox.js')}}"></script>
     <script type="text/javascript" src="{{asset('theme/client/js/lightslider.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('theme/client/js/lightgallery-all.min.js')}}"></script>
- <script type="text/javascript" src="{{asset('theme/client/js/lightslider.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('theme/client/js/lightslider.min.js')}}"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
+
+            @foreach($filteredData as $key => $data)
+            $('#qty_room_{{$key}}').on('input', function() {
+                var qty = $(this).val();  // Lấy giá trị số lượng phòng nhập vào
+                var availableRooms = {{$data['rooms_count']}};  // Lấy số phòng có sẵn từ server
+
+                // Kiểm tra nếu số lượng phòng nhập vào vượt quá số phòng có sẵn
+                if (qty > availableRooms) {
+                    $('#error-message_{{$key}}').show();
+                } else {
+                    $('#error-message_{{$key}}').hide();
+                }
+            });
+            @endforeach
+
+            $('.qty-input').on('input', function () {
+                // Lấy giá trị vừa nhập
+                let inputValue = $(this).val();
+
+                // Lấy id của input hiện tại
+                let inputId = $(this).attr('id');
+
+                let hiddenInputId = inputId.replace('qty_room_', 'hidden_qty_');
+                $('#' + hiddenInputId).val(inputValue);
+            });
+
             $('#image-gallery').lightSlider({
                 gallery: true,
                 item: 1,

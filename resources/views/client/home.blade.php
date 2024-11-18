@@ -51,7 +51,7 @@
                                         <label for="datepicker1">Ngày bắt đầu</label>
                                         <div class="datepicker-wrap">
                                             <input type="text" placeholder="" id="datepicker1" name="start_date"
-                                                   value="{{ old('start_date') }}"/>
+                                                   value="{{ old('start_date') ?? \Carbon\Carbon::now()->format('Y-m-d') }}"/>
                                             <img src="https://www.themeenergy.com/themes/html/book-your-travel/images/ico/calendar.png"
                                                  class="ui-datepicker-trigger">
                                         </div>
@@ -63,7 +63,7 @@
                                         <label for="datepicker2">Ngày kết thúc</label>
                                         <div class="datepicker-wrap">
                                             <input type="text" placeholder="" id="datepicker2" name="end_date"
-                                                   value="{{ old('end_date') }}"/>
+                                                   value="{{ old('end_date') ?? \Carbon\Carbon::tomorrow()->format('Y-m-d') }}"/>
                                             <img src="https://www.themeenergy.com/themes/html/book-your-travel/images/ico/calendar.png"
                                                  class="ui-datepicker-trigger">
                                         </div>
@@ -134,7 +134,9 @@
                                                 @for($i = 1; $i <= $hotel['star']; $i++)
                                                     <i class="material-icons">&#xE838;</i>
                                                 @endfor
-                                                @if( $key/3 ==0 )<i class="material-icons">&#xE838;</i>@endif
+                                                @if( $key/3 ==0 )
+                                                    <i class="material-icons">&#xE838;</i>
+                                                @endif
 									        </span>
                                         </h3>
                                         <span class="address">{{$hotel['district']}} • {{$hotel['province']}}</span>
@@ -146,7 +148,8 @@
                                                         href="{{ route('home.hotel.detail', $hotel['id'])  }} ">Xem
                                                     thêm</a></p>
                                         </div>
-                                        <a href="{{route('hotel.booking', $hotel['id'])}}" title="Book now" class="gradient-button">Đặt ngay</a>
+                                        <a href="{{route('hotel.show', ['hotel_id'=>$hotel['id'],'check'=>1, 'start_date' => \Carbon\Carbon::now()->format('Y-m-d'), 'end_date' => \Carbon\Carbon::tomorrow()->format('Y-m-d')])}}" title="Book now"
+                                           class="gradient-button">Đặt ngay</a>
                                     </div>
                                 </article>
                                 <!--//deal-->
@@ -169,20 +172,25 @@
                                                     src="{{ Storage::url('images'. '/' . $city['thumbnail']) }}"
                                                     alt=""/></a></figure>
                                     <div class="details">
-                                        <a href="#" title="View all" class="gradient-button">Xem tất cả</a>
+                                        <a href="{{ route('home.search', ['city_id' => $city['id'], 'start_date' => \Carbon\Carbon::now()->format('Y-m-d'), 'end_date' => \Carbon\Carbon::tomorrow()->format('Y-m-d')]) }}"
+                                           title="View all" class="gradient-button">Xem tất cả</a>
+
                                         <h4>{{ $city['name']}}</h4>
                                         <span class="count">{{ $city['hotel_qty'] }} Khách sạn</span>
                                         <div class="ribbon">
                                             <div class="half">
                                                 <a href="hotels.html" title="View all" style="padding: 5px;">
-                                                    <span class="small" style="text-align:center">Tổng lượt đặt (tháng)</span>
-                                                    <span class="price" style="text-align: center; padding-top: 3px">{{ $totalOrderMap[$city['id']]['orders_this_month']}}</span>
+                                                    <span class="small"
+                                                          style="text-align:center">Tổng lượt đặt (tháng)</span>
+                                                    <span class="price"
+                                                          style="text-align: center; padding-top: 3px">{{ $totalOrderMap[$city['id']]['orders_this_month']}}</span>
                                                 </a>
                                             </div>
                                             <div class="half">
                                                 <a href="flights.html" title="View all" style="padding: 5px;">
                                                     <span class="small" style="text-align:center">Tổng lượt đặt</span>
-                                                    <span class="price" style="text-align:center; padding-top: 3px">{{ $totalOrderMap[$city['id']]['total_orders']}}</span>
+                                                    <span class="price"
+                                                          style="text-align:center; padding-top: 3px">{{ $totalOrderMap[$city['id']]['total_orders']}}</span>
                                                 </a>
                                             </div>
                                         </div>

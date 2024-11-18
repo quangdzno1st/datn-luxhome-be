@@ -8,6 +8,8 @@ use App\Models\Hotel;
 use App\Repositories\CatalogueRoom\CatalogueRoomRepository;
 use App\Repositories\Hotel\HotelRepository;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+
 
 class HotelController extends Controller
 {
@@ -23,9 +25,9 @@ class HotelController extends Controller
         $this->hotelRoomRepository = $hotelRoomRepository;
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        $searchData = session('search_data');
+        $searchData = $request->check ? session('search_data') : $this->catalogueRoomRepository->searchByPage($request);;
         $hotel = Hotel::query()->findOrFail($id);
         $filteredData = collect($searchData)->filter(function ($item) use ($hotel) {
             return $item['hotel_id'] === $hotel->id;
@@ -36,13 +38,53 @@ class HotelController extends Controller
 
     public function search(SearchRequest $request)
     {
+
         $data = $this->catalogueRoomRepository->searchByPage($request);
+
         session(['search_data' => $data]);
         if (isset($request->check) && $request->check) {
-          return redirect()->route('hotel.show', ['hotel_id' => $request->hotel_id]);
+            return redirect()->route('hotel.show', ['hotel_id' => $request->hotel_id]);
         }
+
+        $prices = $request->price ?? null;
+        $stars = $request->star ?? null;
+        $minValue = PHP_INT_MAX;
+        $maxValue = PHP_INT_MIN;
+
+        if ($prices && is_array($prices)) {
+            foreach ($prices as $ranges) {
+                if (strpos($ranges, '-') !== false) {
+                    list($min, $max) = explode('-', $ranges);
+                    $minValue = min($minValue, (int)$min);
+                    $maxValue = max($maxValue, (int)$max);
+                } else {
+                    $minValue = min($minValue, (int)$ranges);
+                }
+            }
+        }
+
+
         $hotelIds = $data->pluck('hotel_id')->unique();
-        $hotels = Hotel::query()->whereIn('id', $hotelIds)->where('city_id', $request->city_id)->paginate(10);
+        $query = Hotel::query()
+            ->whereIn('id', $hotelIds)
+            ->where('city_id', $request->city_id);
+
+        if ($minValue !== PHP_INT_MAX || $maxValue !== PHP_INT_MIN) {
+            $query->whereHas('catalogues', function ($query) use ($minValue, $maxValue) {
+                if ($minValue !== PHP_INT_MAX) {
+                    $query->where('price', '>=', $minValue);
+                }
+                if ($maxValue !== PHP_INT_MIN) {
+                    $query->where('price', '<=', $maxValue);
+                }
+            });
+        }
+
+        if ($stars && is_array($stars)){
+            $query->whereIn('star', $stars);
+        }
+
+        $hotels = $query->paginate(10);
         return view('client.searchresult', compact('hotels'));
     }
 
