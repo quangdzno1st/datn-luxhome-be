@@ -185,21 +185,26 @@
             max-width: 800px;
             margin: 20px auto;
         }
+
         .alert-icon {
             color: red;
             font-size: 24px;
             margin-right: 10px;
         }
+
         .alert-content {
             color: #333;
         }
+
         .alert-content strong {
             font-size: 16px;
         }
+
         .alert-content p {
             margin: 5px 0 0 0;
             font-size: 14px;
         }
+
         .facility-list {
             display: block; /* Mỗi mục sẽ nằm trên một dòng */
             margin: 0;
@@ -270,7 +275,7 @@
                             <li class="description"><a href="#description" title="Description">Mô tả</a></li>
                             <li class="facilities"><a href="#facilities" title="Facilities">Tiện nghi</a></li>
                             {{--                            <li class="location"><a href="#location" title="Location">Vị trí</a></li>--}}
-{{--                            <li class="reviews"><a href="#reviews" title="Reviews">Đánh giá</a></li>--}}
+                            {{--                            <li class="reviews"><a href="#reviews" title="Reviews">Đánh giá</a></li>--}}
                             {{--                            <li class="things-to-do"><a href="#things-to-do" title="Things to do">Hoạt động</a></li>--}}
 
                         </ul>
@@ -284,7 +289,7 @@
                             <form id="main-search" method="get" action="{{ route('home.search') }}">
                                 <div class="row">
                                     @php
-                                    $data = session('search_data')[0] ?? [];
+                                        $data = session('search_data')[0] ?? [];
                                     @endphp
 
                                     <div class="col-md-12">
@@ -293,7 +298,8 @@
                                                 <label for="datepicker1">Ngày bắt đầu</label>
                                                 <input type="text" id="datepicker1" name="start_date"
                                                        class="form-control"
-                                                       placeholder="Chọn ngày bắt đầu" value="{{ old('start_date') ?? $data['start_date'] }}"/>
+                                                       placeholder="Chọn ngày bắt đầu"
+                                                       value="{{ old('start_date') ?? $data['start_date'] }}"/>
                                                 @error('start_date')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @else
@@ -304,7 +310,8 @@
                                             <div class="form-group col-md-3">
                                                 <label for="datepicker2">Ngày kết thúc</label>
                                                 <input type="text" id="datepicker2" name="end_date" class="form-control"
-                                                       placeholder="Chọn ngày kết thúc" value="{{ old('end_date') ?? $data['end_date'] }}"/>
+                                                       placeholder="Chọn ngày kết thúc"
+                                                       value="{{ old('end_date') ?? $data['end_date'] }}"/>
                                                 @error('end_date')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @else
@@ -316,7 +323,8 @@
                                                 <label for="spinner2">Số người lớn</label>
                                                 <input type="number" id="spinner2" name="number_adult"
                                                        class="form-control"
-                                                       placeholder="Số  người lớn" value="{{ old('number_adult') ?? $data['number_adult_search'] }}"/>
+                                                       placeholder="Số  người lớn"
+                                                       value="{{ old('number_adult') ?? $data['number_adult_search'] }}"/>
                                                 @error('number_adult')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @else
@@ -328,14 +336,15 @@
                                                 <label for="spinner3">Số trẻ em</label>
                                                 <input type="number" id="spinner3" name="number_child"
                                                        class="form-control"
-                                                       placeholder="Số trẻ em" value="{{ old('number_child') ?? $data['number_child_search'] }}"/>
+                                                       placeholder="Số trẻ em"
+                                                       value="{{ old('number_child') ?? $data['number_child_search'] }}"/>
                                                 <div class="text-danger" style="visibility: hidden;">&nbsp;</div>
                                             </div>
 
                                             <input type="hidden" name="check" value="1">
                                             <input type="hidden" name="hotel_id" value="{{$hotel->id}}">
 
-                                            <div class="form-group col-md-2 submit" >
+                                            <div class="form-group col-md-2 submit">
                                                 <button type="submit" class="btn btn-primary w-100">Tiến hành tìm kiếm
                                                 </button>
                                             </div>
@@ -343,10 +352,23 @@
                                     </div>
                                 </div>
                             </form>
+                            @if ($errors->any())
+                                @if(session('error'))
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            <li>Số lượng đặt phòng không thể để trống</li>
+                                        </ul>
+                                    </div>
+                                @endif
 
-
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        <li>Số lượng đặt phòng không thể để trống</li>
+                                    </ul>
+                                </div>
+                            @endif
                             <h2>Loại phòng</h2>
-                            <form action="{{route('ok')}}" method="POST">
+                            <form action="{{route('orders.services')}}" method="GET">
                                 @csrf
                                 <ul class="room-types">
 
@@ -355,20 +377,22 @@
                                             <figure class="left" id="gallery1">
                                                 <a href="{{asset('theme/client/images/uploads/room1.jpg')}}"
                                                    data-sub-html="<p>Superior Double Room</p>">
-                                                    <img src="{{asset('theme/client/images/uploads/room1.jpg')}}" alt=""/>
+                                                    <img src="{{asset('theme/client/images/uploads/room1.jpg')}}"
+                                                         alt=""/>
                                                     <span class="image-overlay" style="z-index: 0"></span>
                                                 </a>
                                                 <a href="{{asset('theme/client/images/uploads/room2.jpg')}}"
                                                    data-sub-html="<p>Superior Double Room</p>">
-                                                    <img src="{{asset('theme/client/images/uploads/room2.jpg')}}" alt=""/>
+                                                    <img src="{{asset('theme/client/images/uploads/room2.jpg')}}"
+                                                         alt=""/>
                                                 </a>
                                             </figure>
                                             <div class="meta">
                                                 <h3>{{$data['name']}}</h3>
-
                                                 <div style="display: flex; justify-content: space-between">
                                                     <p class="first">Giá:</p>
-                                                    <strong class="second">{{number_format($data['price'])}} VND</strong>
+                                                    <strong class="second">{{number_format($data['price'])}}
+                                                        VND</strong>
                                                 </div>
                                                 <div style="margin-bottom: 10px">
                                                     Nhập số lượng phòng:
@@ -380,47 +404,53 @@
                                                            value=""/>
 
 
-                                                    <div id="error-message_{{$key}}" style="color: red; display: none;">Số lượng phòng không được vượt quá số phòng có sẵn!</div>
+                                                    <div id="error-message_{{$key}}" style="color: red; display: none;">
+                                                        Số lượng phòng không được vượt quá số phòng có sẵn!
+                                                    </div>
                                                 </div>
 
-                                                <a href="javascript:void(0)" title="more info" class="more-info">+ Xem thêm</a>
+                                                <a href="javascript:void(0)" title="more info" class="more-info">+ Xem
+                                                    thêm</a>
                                             </div>
                                             <div class="room-information">
                                                 <div class="row">
                                                     <div class="">Người lớn: {{$data['number_adult']}}
-{{--                                                        @for ( $i = 1; $i <= $data['number_adult']; $i++)--}}
-{{--                                                            <i class="material-icons">&#xE7FD;</i>--}}
-{{--                                                        @endfor</div>--}}
-                                                </div>
-
-                                                <div class="row " style="margin-top: 10px;">
-                                                    <span class="first">Trẻ em: {{$data['number_child']}}</span>
-                                                </div>
-                                                <div class="row " style="margin-top: 10px;">
-                                                    <span class="first">Phòng trống: {{$data['rooms_count']}}</span>
-                                                </div>
-                                            </div>
-                                            <div class="more-information">
-                                                @php
-                                                    $facilities =  $data['attributeValues']
-                                                          ->flatten()
-                                                          ->unique()
-                                                @endphp
-                                                @foreach($facilities as $facilitie)
-                                                    <div class="text-wrap">
-                                                        <div style="margin-bottom: 10px"><strong>+ Tiện nghi</strong></div>
-                                                        <div class="facility-list">
-                                                            <div class="facility-item">{{$facilitie->value_text}}</div>
-                                                        </div>
+                                                        {{--                                                        @for ( $i = 1; $i <= $data['number_adult']; $i++)--}}
+                                                        {{--                                                            <i class="material-icons">&#xE7FD;</i>--}}
+                                                        {{--                                                        @endfor</div>--}}
                                                     </div>
-                                                @endforeach
-                                            </div>
+
+                                                    <div class="row " style="margin-top: 10px;">
+                                                        <span class="first">Trẻ em: {{$data['number_child']}}</span>
+                                                    </div>
+                                                    <div class="row " style="margin-top: 10px;">
+                                                        <span class="first">Phòng trống: {{$data['rooms_count']}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="more-information">
+                                                    @php
+                                                        $facilities =  $data['attributeValues']
+                                                              ->flatten()
+                                                              ->unique()
+                                                    @endphp
+                                                    @foreach($facilities as $facilitie)
+                                                        <div class="text-wrap">
+                                                            <div style="margin-bottom: 10px"><strong>+ Tiện
+                                                                    nghi</strong></div>
+                                                            <div class="facility-list">
+                                                                <div class="facility-item">{{$facilitie->value_text}}</div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
                                         </li>
                                     @empty
                                         <div class="alert-box">
                                             <i class="fas fa-exclamation-circle alert-icon"></i>
                                             <div class="alert-content">
-                                                <strong>Trang web chúng tôi không còn phòng tại chỗ nghỉ này từ ngày {{ request()->start_date }} đến T4, {{request()->end_date}}</strong>
+                                                <strong>Trang web chúng tôi không còn phòng tại chỗ nghỉ này từ
+                                                    ngày {{ request()->start_date }} đến
+                                                    T4, {{request()->end_date}}</strong>
                                                 <p>Chọn ngày khác để xem phòng trống</p>
                                             </div>
                                         </div>
@@ -428,8 +458,11 @@
                                 </ul>
 
                                 <!-- Nút Đặt Ngay -->
-                                <div class="submit-btn" style="display: flex; justify-content: center; margin: auto; margin-top: 20px;">
-                                    <button type="submit" class="gradient-button" style="padding: 15px; font-size: 18px; width: 200px; height: 50px">Đặt ngay</button>
+                                <div class="submit-btn"
+                                     style="display: flex; justify-content: center; margin: auto; margin-top: 20px;">
+                                    <button type="submit" class="gradient-button"
+                                            style="padding: 15px; font-size: 18px; width: 200px; height: 50px">Đặt ngay
+                                    </button>
                                 </div>
 
                             </form>
@@ -715,7 +748,7 @@
         $(document).ready(function () {
 
             @foreach($filteredData as $key => $data)
-            $('#qty_room_{{$key}}').on('input', function() {
+            $('#qty_room_{{$key}}').on('input', function () {
                 var qty = $(this).val();  // Lấy giá trị số lượng phòng nhập vào
                 var availableRooms = {{$data['rooms_count']}};  // Lấy số phòng có sẵn từ server
 

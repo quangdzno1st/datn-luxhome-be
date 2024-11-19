@@ -55,7 +55,7 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
         if ($numberChild){
             $categoriesQuery->where('number_child', $numberChild);
         }
-        $categories = $categoriesQuery->with('rooms')->get();
+        $categories = $categoriesQuery->with('rooms', 'hotel')->get();
 
         $orders = Order::with('orderItem')
             ->where('status','<>', StatusOrderEnum::CHUA_THANH_TOAN->value)
@@ -86,6 +86,7 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
                 'number_adult' =>$category->number_adult ,
                 'number_child' =>  $category->number_child,
                 'hotel_id' => $category->hotel_id,
+                'hotel_name' => $category->hotel->name,
                 'attributeValues' => $category?->attributeValues,
                 'images' => $category?->images,
                 'org_id' => $category->org_id,

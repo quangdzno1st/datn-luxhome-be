@@ -43,7 +43,7 @@
                                     </div>
                                 </div>
 
-                                <h3>Yêu cầu đặc biện</h3>
+                                <h3>Yêu cầu đặc biệt</h3>
                                 <div class="text-wrap">
                                     <p>{{ $order['note'] }}</p>
                                 </div>

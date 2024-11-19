@@ -84,7 +84,7 @@
                         @endforeach
 
                         <div class="d-flex justify-content-center">
-                            {{ $orders->links('pagination::bootstrap-5') }}
+                            {{ $orders->links() }}
                         </div>
                     </section>
                     <!--//My Bookings-->

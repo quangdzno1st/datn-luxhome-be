@@ -175,15 +175,4 @@ Route::prefix('rooms')
         Route::delete('/{id}', 'destroy');
     });
 
-    //api booking
-    Route::prefix('orders')
-    ->controller(OrderController::class)
-    ->group(function () {
-        Route::get('/{id}', 'show');
-        Route::post('/', 'store');
-    });
-
-
-Route::get('/payment/vnpay-return', [OrderController::class, 'paymentReturn'])->name('vnpay.return');
-
 

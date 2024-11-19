@@ -43,4 +43,9 @@ class CatalogueRoom extends Model
     {
         return $this->hasMany(Room::class, 'catalogue_room_id');
     }
+
+    public function hotel()
+    {
+        return $this->belongsTo(Hotel::class);
+    }
 }

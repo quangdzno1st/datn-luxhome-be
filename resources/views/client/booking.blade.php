@@ -8,64 +8,73 @@
 			<nav class="breadcrumbs">
 				<!--crumbs-->
 				<ul>
-					<li><a href="#" title="Home">Home</a></li>
-					<li><a href="#" title="Hotels">Hotels</a></li>
-					<li><a href="#" title="United Kingdom">United Kingdom</a></li>
-					<li><a href="#" title="London">London</a></li>  
-					<li>Best ipsum hotel</li>                                       
+					<li><a href="#" title="Home">Trang chủ</a></li>
+					<li><a href="#" title="Hotels">Khách sạn</a></li>
+					<li>Thông tin hóa đơn</li>
 				</ul>
 				<!--//crumbs-->
-				
-				<!--top right navigation-->
-				<ul class="top-right-nav">
-					<li><a href="#" title="Back to results">Back to results</a></li>
-					<li><a href="#" title="Change search">Change search</a></li>
-				</ul>
-				<!--//top right navigation-->
 			</nav>
 			<!--//breadcrumbs-->
-			
 			<div class="row">
 				<!--three-fourth content-->
 				<div class="three-fourth">
-					<form id="booking" method="post" action="https://www.themeenergy.com/themes/html/book-your-travel/booking-step2.html" class="static-content booking">
+					<form id="booking" method="post" action="{{ route('orders.store') }}" class="static-content booking">
+						@csrf
 						<fieldset>
-							<h2><span>01 </span>Traveller info</h2>
+							<h2>Thông tin hóa đơn</h2>
 							<div class="row">
 								<div class="f-item one-half">
 									<label for="first_name">Họ Và Tên*</label>
-									<input type="text" id="first_name" name="first_name" />
+									<input type="text" id="first_name" name="user_name" value="{{ old('user_name') }}" />
+
+									@error('user_name')
+									<div class="text-danger" style="color:red">{{ $message }}</div>
+									@enderror
+
 								</div>
 								<div class="f-item one-half">
 									<label for="last_name">Địa Chỉ Email*</label>
-									<input type="text" id="last_name" name="last_name" />
+									<input type="text" id="last_name" name="user_email" value="{{ old('user_email') }}" />
+
+									@error('user_email')
+									<div class="text-danger" style="color:red">{{ $message }}</div>
+									@enderror
 								</div>
 							</div>
 							
 							<div class="row">
 								<div class="f-item one-half">
 									<label for="email">Số Điện Thoại*</label>
-									<input type="email" id="email" name="email" />
+									<input type="number" id="email" name="user_phone_number" value="{{ old('user_phone_number') }}"/>
+
+									@error('user_phone_number')
+									<div class="text-danger" style="color:red">{{ $message }}</div>
+									@enderror
 								</div>
 								<div class="f-item one-half">
 									<label for="confirm_email">Mã Phiếu Giảm Giá (Nếu Có)</label>
-									<input type="text" id="confirm_email" name="confirm_email" />
-								</div>
-								<span class="info"></span>
-							</div>
-							
-							
-							<div class="row">
-								<div class="f-item full-width">
-									<label>Ghi chú: <span>(Không đảm bảo)</span></label>
-									<textarea rows="10" cols="10"></textarea>
+										<select class="select" name="voucher_id">
+											@foreach($vouchers as $voucher)
+												<option value="{{ $voucher['id'] }}" >
+													<div>Giảm giá tối đa {{ $voucher['max_price'] }}</div>
+												</option>
+											@endforeach
+										</select>
 								</div>
 								<span class="info"></span>
 							</div>
 							
 							<div class="row">
 								<div class="f-item full-width">
-									<input type="submit" class="gradient-button" value="Proceed to next step" id="next-step" />
+									<label>Ghi chú: </label>
+									<textarea rows="10" cols="10" name="note" >{{ old('note') }}</textarea>
+								</div>
+								<span class="info"></span>
+							</div>
+							
+							<div class="row">
+								<div class="f-item full-width">
+									<input type="submit" class="gradient-button" value="Thanh toán hóa đơn" id="next-step" />
 								</div>
 							</div>
 						</fieldset>
@@ -100,18 +109,9 @@
 						</dl>
 						<div class="price">
 							<p class="total">Total Price:  $ 55,00</p>
-							<p>VAT (20%) included</p>
 						</div>
 					</article>
 					<!--//Booking details-->
-					
-					<!--Need Help Booking?-->
-					<article class="widget">
-						<h4>Need Help Booking?</h4>
-						<p>Call our customer services team on the number below to speak to one of our advisors who will help you with all of your holiday needs.</p>
-						<p class="number">1- 555 - 555 - 555</p>
-					</article>
-					<!--//Need Help Booking?-->
 				</aside>
 				<!--//right sidebar-->
 			</div>

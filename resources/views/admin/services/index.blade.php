@@ -298,7 +298,7 @@
                                                 <div class="mb-3">
                                                     <label for="name" class="form-label">Tên dịch vụ</label>
                                                     <input type="text" id="name" class="form-control"
-                                                           placeholder="Nhập tên dịch vụ"  name="name"/>
+                                                           placeholder="Nhập tên dịch vụ"  name="name" required/>
                                                            @error('name')
                                                            <p class="text-danger">{{$message}}</p>
                                                        @enderror

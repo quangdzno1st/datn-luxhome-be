@@ -7,7 +7,6 @@ use App\Http\Requests\SearchRequest;
 use App\Models\Hotel;
 use App\Repositories\CatalogueRoom\CatalogueRoomRepository;
 use App\Repositories\Hotel\HotelRepository;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 
@@ -27,8 +26,9 @@ class HotelController extends Controller
 
     public function show(Request $request, $id)
     {
-        $searchData = $request->check ? session('search_data') : $this->catalogueRoomRepository->searchByPage($request);;
+        $searchData = !$request->check ? session('search_data') : $this->catalogueRoomRepository->searchByPage($request);
         $hotel = Hotel::query()->findOrFail($id);
+        session(['hotel_id' => $hotel->id]);
         $filteredData = collect($searchData)->filter(function ($item) use ($hotel) {
             return $item['hotel_id'] === $hotel->id;
         });
@@ -42,6 +42,9 @@ class HotelController extends Controller
         $data = $this->catalogueRoomRepository->searchByPage($request);
 
         session(['search_data' => $data]);
+        session(['start_date' => $request->start_date]);
+        session(['end_date' => $request->end_date]);
+
         if (isset($request->check) && $request->check) {
             return redirect()->route('hotel.show', ['hotel_id' => $request->hotel_id]);
         }
@@ -80,7 +83,7 @@ class HotelController extends Controller
             });
         }
 
-        if ($stars && is_array($stars)){
+        if ($stars && is_array($stars)) {
             $query->whereIn('star', $stars);
         }
 

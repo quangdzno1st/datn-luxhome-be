@@ -17,9 +17,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/search', [\App\Http\Controllers\Client\HotelController::class, 'search'])->name('home.search');
 Route::get('/hotel/{hotel_id}', [\App\Http\Controllers\Client\HotelController::class, 'show'])->name('hotel.show');
-Route::post('/ok', function (\Illuminate\Http\Request $request){
-    dd($request->except('_token'));
-})->name('ok');
+
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::prefix('services')->controller(ServiceController::class)->group(function () {
@@ -130,8 +128,8 @@ Route::prefix('admin/orders')->group(function () {
     Route::get('/check-payable/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'checkPayable'])->name('orders.checkPayable');
 });
 
-Route::get('/test/theme', function () {
-    return view('client.booking');
+    Route::get('/test/theme', function () {
+    return view('client.bookingdetail');
 });
 
 
@@ -139,7 +137,18 @@ Route::get('/test/theme', function () {
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/hotel/{id}', [HomeController::class, 'searchByPage'])->name('home.hotel.detail');
 Route::get('/hotel/booking/{id}', [HotelController::class, 'booking'])->name('hotel.booking');
-Route::get('/orders', [AccountSettingController::class, 'index'])->name('orders.index');
+
 Route::get('/payment-order/{id}', [AccountSettingController::class, 'paymentOrder'])->name('orders.payment');
 Route::get('/payment-return', [AccountSettingController::class, 'paymentReturn'])->name('orders.paymentReturn');
 Route::get('/cities/search-by-page', [CityController::class, 'searchByPage'])->name('cities.searchByPage');
+
+//api booking
+Route::prefix('orders')
+    ->controller(AccountSettingController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('orders.index');
+        Route::get('/services', 'orderService')->name('orders.services');
+        Route::get('/confirm', 'confirmOrder')->name('orders.confirm');
+        Route::post('/', 'store')->name('orders.store');
+    });
+

@@ -8,12 +8,14 @@ use App\Services\CityService;
 use App\Services\CommonKeyCodeService;
 use App\Services\FileUploadService;
 use App\Services\HotelService;
+use App\Services\HotelServiceService;
 use App\Services\impl\AttributeValueServiceImpl;
 use App\Services\impl\CatalogueRoomServiceImpl;
 use App\Services\impl\CityServiceImpl;
 use App\Services\impl\CommonKeyCodeServiceImpl;
 use App\Services\impl\FileUploadServiceImpl;
 use App\Services\impl\HotelServiceImpl;
+use App\Services\impl\HotelServiceServiceImpl;
 use App\Services\impl\OrderServiceImpl;
 use App\Services\impl\RoomServiceImpl;
 use App\Services\OrderService;
@@ -38,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(FileUploadService::class, FileUploadServiceImpl::class);
         $this->app->bind(OrderService::class, OrderServiceImpl::class);
         $this->app->bind(CityService::class, CityServiceImpl::class);
+        $this->app->bind(HotelServiceService::class, HotelServiceServiceImpl::class);
     }
 
     /**
