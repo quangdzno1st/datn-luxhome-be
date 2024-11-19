@@ -41,6 +41,7 @@ class RoomRepository extends BaseRepository implements RoomInterface
                 });
         })->get();
 
+
         $roomBookedIds = $orders->flatMap(function ($order) {
             return $order->orderItem->flatMap(function ($item) {
                 return [$item->room_id];
@@ -49,7 +50,7 @@ class RoomRepository extends BaseRepository implements RoomInterface
 
         return Room::query()
             ->join("catalogue_rooms as c", "rooms.catalogue_room_id", "=", "c.id")
-            ->where("c.org_id", "=", $orgId)
+            ->where("c.hotel_id", "=", $orgId)
             ->where('rooms.status', RoomStatusEnum::SAN_SANG_SU_DUNG->value)
             ->whereNotIn("rooms.id", $roomBookedIds)
             ->whereIn("rooms.id", $ids)

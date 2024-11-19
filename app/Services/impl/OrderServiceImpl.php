@@ -23,6 +23,7 @@ use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Validator;
 
 class OrderServiceImpl implements OrderService
 {
@@ -64,11 +65,12 @@ class OrderServiceImpl implements OrderService
     public function create(OrderRequest $request)
     {
         $data = $request->validated();
+        $data['hotel_id'] = session('hotel_id') ?? null;
         $this->validateBeforeSave($data);
 
         $order = new Order();
         $this->createOrder($order, $data);
-        $this->handleOrderItem($data, $order);
+        $this->handleOrderItem($order);
 
         return $this->handlePaymentOrder($order);
     }
@@ -76,22 +78,31 @@ class OrderServiceImpl implements OrderService
     /**
      * @throws RespException
      */
-    private function handleOrderItem($orderRequest, $order): void
+    private function handleOrderItem($order): void
     {
         $orderItems = [];
         $bookingServices = [];
-        $orderItemReqs = $orderRequest['order_items'];
-        $serviceMapById = $this->getServiceMapById($order['org_id'], $orderItemReqs);
-        $roomMapById = $this->getRoomMapById($order['org_id'], $orderRequest);
         $totalServiceAmount = 0;
         $totalBookingFee = 0;
+
+        $orderItemReqs = $this->validateAngGetBookingData();
+        $serviceReqs = session('service_booking') ?? null;
+        $serviceMapById = $this->getServiceMapById($order['org_id']);
+        $roomMapById = $this->getRoomMapById($order['org_id'], $orderItemReqs, $order);
+
         foreach ($orderItemReqs as $item) {
-            $roomEntity = $roomMapById[$item['room_id']];
+            $roomEntity = $roomMapById[$item['room_id']] ?? null;
             $this->createOrderItem($orderItems, $item, $roomEntity, $order['id']);
-            $serviceAmount = $this->createBookingServices($bookingServices, $item, $serviceMapById, $order['org_id'], $item['room_id']);
+
+            $serviceForRoom = $serviceReqs[$item['room_id']] ?? null;
+            if (!empty($serviceForRoom)) {
+                $serviceAmount = $this->createBookingServices($bookingServices, $serviceForRoom,
+                    $serviceMapById, $order['org_id'], $item['room_id']);
+
+                $totalServiceAmount += $serviceAmount;
+            }
 
             $totalBookingFee += $roomEntity['price'] * 1;
-            $totalServiceAmount += $serviceAmount;
         }
 
         $order->total_amount = $totalServiceAmount + $totalBookingFee;
@@ -99,6 +110,16 @@ class OrderServiceImpl implements OrderService
 
         $order->orderItem()->saveMany($orderItems);
         $order->bookingService()->saveMany($bookingServices);
+    }
+
+    private function validateAngGetBookingData()
+    {
+        $orderItemReqs = session('booking_data') ?? null;
+        if (!isset($orderItemReqs)) {
+            return redirect()->back()->with('error', 'Thông tin phòng cần đặt đang trống');
+        }
+
+        return $orderItemReqs;
     }
 
     /**
@@ -114,7 +135,6 @@ class OrderServiceImpl implements OrderService
         $orderItem->order_id = $orderId;
         $orderItem->quantity = 1;
         $orderItem->room_id = $room['id'];
-        $orderItem->room_codes = $room['code'];
 
         $orderItems[] = $orderItem;
     }
@@ -122,15 +142,14 @@ class OrderServiceImpl implements OrderService
     /**
      * @throws RespException
      */
-    private function createBookingServices(&$bookingServices, $orderItemReqs, $serviceMapById, $orderId, $roomId): float|int
+    private function createBookingServices(&$bookingServices, $serviceReqs, $serviceMapById, $orderId, $roomId): float|int
     {
         $totalServicesAmount = 0;
-        foreach ($orderItemReqs["services"] as $bookingServicesReq) {
-            $bookingService = $this->createBookingService($bookingServicesReq, $serviceMapById[$bookingServicesReq['service_id']], $orderId, $roomId);
+        foreach ($serviceReqs as $serviceReqId) {
+            $bookingService = $this->createBookingService($serviceReqId, $serviceMapById[$serviceReqId], $orderId, $roomId);
             $totalServicesAmount += $bookingService['quantity'] * $bookingService['price'];
             $bookingServices[] = $bookingService;
         }
-
 
         return $totalServicesAmount;
     }
@@ -138,17 +157,17 @@ class OrderServiceImpl implements OrderService
     /**
      * @throws RespException
      */
-    private function createBookingService($bookingServicesReq, $serviceEntity, $orderId, $roomId)
+    private function createBookingService($serviceId, $serviceEntity, $orderId, $roomId)
     {
         if (is_null($serviceEntity)) {
-            throw new RespException(trans('messages.service_not_found', ['service_name' => $bookingServicesReq["service_name"]]));
+            throw new RespException(trans('messages.service_not_found'));
         }
 
         $bookingService = new BookingService();
 
         $bookingService->order_id = $orderId;
-        $bookingService->service_id = $bookingServicesReq["service_id"];
-        $bookingService->quantity = $bookingServicesReq["service_quantity"];
+        $bookingService->service_id = $serviceId;
+        $bookingService->quantity = 1;
         $bookingService->price = $serviceEntity["price"];
         $bookingService->status = StatusOrderEnum::CHUA_THANH_TOAN->value;
         $bookingService->room_id = $roomId;
@@ -170,8 +189,8 @@ class OrderServiceImpl implements OrderService
             $data['hotel_id']
         );
         $order->status = StatusOrderEnum::CHUA_THANH_TOAN->value;
-        $order->start_date = $data['start_date'];
-        $order->end_date = $data['end_date'];
+        $order->start_date = session('start_date');
+        $order->end_date = session('end_date');
         $order->note = $data['note'];
         $order->incidental_costs = 0;
     }
@@ -214,13 +233,15 @@ class OrderServiceImpl implements OrderService
     /**
      * @throws RespException
      */
-    private function getRoomMapById($orgId, $orderRequest): Collection
+    private function getRoomMapById($orgId, $orderItemReqs, $order): Collection
     {
+
         $roomIds = array_map(function ($room) {
             return $room['room_id'] ?? null;
-        }, $orderRequest['order_items']);
+        }, $orderItemReqs);
 
-        $rooms = $this->roomRepos->getRoomAvailableByIdInAndOrgId($orgId, $roomIds, $orderRequest['start_date'], $orderRequest['end_date']);
+
+        $rooms = $this->roomRepos->getRoomAvailableByIdInAndOrgId($orgId, $roomIds, $order['start_date'], $order['end_date']);
 
         if (empty($rooms->toArray())) {
             throw new RespException(__('messages.room_not_found'));
@@ -234,12 +255,14 @@ class OrderServiceImpl implements OrderService
     /**
      * @throws RespException
      */
-    private function getServiceMapById($orgId, $orderItems): Collection
+    private function getServiceMapById($orgId): Collection
     {
-        $serviceIds = collect($orderItems)->flatMap(function ($item) {
-            return collect($item['services'])->pluck('service_id');
-        });
+        $data = session('service_booking') ?? null;// lưu trữ thông tin đặt phòng và địch vụ
+        if (!isset($data)) {
+            return collect();
+        }
 
+        $serviceIds = array_unique(array_merge(...array_values($data)));
         $services = $this->hotelServiceRepos->getByOrgIdAndIds($orgId, $serviceIds);
 
         if (empty($services->toArray())) {
@@ -374,8 +397,8 @@ class OrderServiceImpl implements OrderService
     {
         $this->bookingServiceRepos->updateStatusByOrderId(StatusOrderEnum::DA_THANH_TOAN->value, $order['id']);
         $this->orderRepos->updateStatusById(StatusOrderEnum::DA_THANH_TOAN->value, $order['id']);
-//        //Send mail hóa đơn
-        OrderSuccess::dispatch($order);
+        //        //Send mail hóa đơn
+       OrderSuccess::dispatch($order);
     }
 
     public function getTotalOrderMapByCityId(array $cityIds)
@@ -438,5 +461,128 @@ class OrderServiceImpl implements OrderService
         }
     }
 
+    public function getDataBookingOrder(Request $request)
+    {
 
+        $bookingData = $this->validateOrderQtyRequest($request);
+        $dataSearch = session('search_data');
+        if (empty([[$dataSearch]])) {
+            return redirect()->back()->with('error', 'Thông tin đặt phòng trống');
+        }
+
+        return $this->handleBookingData($dataSearch, $bookingData);
+    }
+
+    private function validateOrderQtyRequest(Request $request): array
+    {
+        $data = $request->except('_token');
+
+        $rules = [];
+        $isInvalid = false;
+        foreach ($data as $key => $value) {
+            if (!empty($value)) {
+                $isInvalid = true;
+            } else {
+                unset($data[$key]);
+            }
+
+            $rules[$key] = 'required';
+        }
+
+        if (!$isInvalid) {
+            $request->validate($rules);
+        }
+
+        return $data;
+    }
+
+    private function handleBookingData(&$searchData, array $bookingsData)
+    {
+        $dataResp = [];
+        foreach ($searchData as $key => &$item) {
+
+            $roomQty = $bookingsData[$item['id']] ?? null;
+            if (is_null($roomQty)) {
+                unset($searchData[$key]);
+                continue;
+            }
+
+            $item['available_rooms'] = array_slice($item['available_rooms'], 0, $roomQty);
+            $this->buildRoomBookingResp($dataResp, $item['available_rooms'], $item);
+        }
+
+        if (!empty($dataResp)) {
+            session(['booking_data' => $dataResp]);
+        }
+
+        return $dataResp;
+    }
+
+    private function buildRoomBookingResp(&$dataResp, $roomsBooking, $catalogueInformation)
+    {
+        foreach ($roomsBooking as $key => $item) {
+            $dataResp[] = [
+                'room_id' => $item['room_id'],
+                'code' => $item['code'],
+                'catalogue_room_name' => $catalogueInformation['name'],
+                'start_date' => $catalogueInformation['start_date'],
+                'end_date' => $catalogueInformation['end_date'],
+                'price' => $catalogueInformation['price'],
+                'hotel_id' => $catalogueInformation['hotel_id'],
+                'hotel_name' => $catalogueInformation['hotel_name'],
+                'number_adult' => $catalogueInformation['number_adult'],
+                'number_child' => $catalogueInformation['number_child']
+            ];
+        }
+    }
+
+    /**
+     * @throws RespException
+     */
+    public function getDataBookingForConfirm(Request $request, $hotelId)
+    {
+        $data = $this->getBookingServiceForRooms($request);
+        if (empty($data)) {
+            return [];
+        }
+
+        session(['service_booking' => $data]);// lưu trữ thông tin đặt phòng và địch vụ
+
+        $serviceBookingsQty = $this->handleCountService($data);// sử lý thông tin đầu ra hiển thị giao diện;
+        $serviceMapById = $this->getServiceMapById($hotelId);
+
+        return [
+            'serviceBookingsQty' => $serviceBookingsQty,
+            'serviceMapById' => $serviceMapById
+        ];
+    }
+
+    private function handleCountService($data)
+    {
+        $result = [];
+
+        foreach ($data as $roomId => $services) {
+            foreach ($services as $serviceId) {
+                if (isset($result[$serviceId])) {
+                    $result[$serviceId]++;
+                } else {
+                    $result[$serviceId] = 1;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    private function getBookingServiceForRooms($request)
+    {
+        $data = $request->input('services', []);
+        $result = [];
+
+        foreach ($data as $roomId => $services) {
+            $result[$roomId] = array_keys($services); // Lấy danh sách các service_id
+        }
+
+        return $result;
+    }
 }

@@ -19,4 +19,8 @@ interface OrderService
     public function generateUrlRedirect($total_amount);
 
     public function paymentOrder($orderId);
+
+    public function getDataBookingOrder(Request $request);
+
+    public function getDataBookingForConfirm(Request $request, $hotelId);
 }

@@ -2,11 +2,9 @@
 
 namespace App\Listeners;
 
-use App\Mail\BookingInvoice;
-use Illuminate\Support\Facades\Mail;
 use App\Events\OrderSuccess;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Mail;
 
 class OrderSuccessNotification implements ShouldQueue
 {
@@ -23,16 +21,17 @@ class OrderSuccessNotification implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param  \App\Events\OrderSuccess  $event
+     * @param \App\Events\OrderSuccess $event
      * @return void
      */
     public function handle(OrderSuccess $event)
     {
-        $data = $event->bookingDetails;
+        $data = $event->bookingDetails->toArray();
 
-        Mail::send('emails.booking.invoice', $data, function ($message) {
-            $message->to('kiennmph41026@fpt.edu.vn') //chỗ $message->to thay bằng mail khách hàng nhé, nhận được trong $data
-                    ->subject('Hóa Đơn Đặt Phòng Khách Sạn');
+        Mail::send('emails.booking.invoice', $data, function ($message) use ($data) {
+            $message->from('quangdzno1st@gmail.com');
+            $message->to($data['email']) //chỗ $message->to thay bằng mail khách hàng nhé, nhận được trong $data
+            ->subject('Hóa Đơn Đặt Phòng Khách Sạn');
         });
     }
 }
