@@ -13,9 +13,11 @@
                             <div class="col-sm-auto">
                                 <div class="col-sm-auto">
                                     <div>
-                                        <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal"
-                                                id="create-btn" data-bs-target="#showModal">Danh sách
-                                        </button>
+                                        <a href="{{route('vouchers.index')}}">
+                                            <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal"
+                                                    id="create-btn" data-bs-target="#showModal">Danh sách
+                                            </button>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -24,6 +26,15 @@
                         <form class="tablelist-form" autocomplete="off"
                               action="{{route('vouchers.store')}}" method="POST">
                             @csrf
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label for="discount_type" class="form-label">Loại giảm giá:</label>

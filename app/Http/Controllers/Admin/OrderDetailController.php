@@ -8,6 +8,8 @@ use App\Models\BookingService;
 use App\Models\CatalogueRoom;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Service;
+use App\Models\Voucher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +23,6 @@ class OrderDetailController extends Controller
     {
         $sumService=0;
         $sumOrderItem=0;
-        $payable=0;
         if($order->status == StatusOrderEnum::CHUA_THANH_TOAN->value){
             $order->status='Chưa thanh toán';
         }elseif ($order->status==StatusOrderEnum::DA_THANH_TOAN->value){
@@ -37,11 +38,22 @@ class OrderDetailController extends Controller
         foreach ($servicesInfo as $item){
             $sumService+=$item->serviceQuantity*$item->servicePrice;
         }
-
+        if ($order->voucher_id!=null){
+            $voucher=$this->VoucherOrder($order->voucher_id);
+        }else{
+            $voucher=null;
+        }
+//        dd($voucher);
         $payable=$this->checkPayableOrTotal($order->id);
+        $roomCode=$this->roomCode($order->id);
+//        dd($roomCode);
+        $services=Service::all();
+//        dd($services);
         return view(self::PATH_VIEW, compact('order',
             'orderItemInfo','servicesInfo','sumService',
-            'sumOrderItem','payable'));
+            'sumOrderItem','payable','voucher','services',
+            'roomCode'
+        ));
     }
 
     public function checkPayableOrTotal($idOrder)
@@ -108,10 +120,9 @@ class OrderDetailController extends Controller
     }
 
     public function updateStatus($idOrder){
-        $order=Order::query()->find($idOrder);
         $this->updateStatusGeneral('booking_services',$idOrder);
         $this->updateStatusGeneral('orders',$idOrder);
-        return redirect()->route('orders.show',$order)->with('success','Checkout thành công');
+        return redirect()->back()->with('success','Checkout thành công');
     }
 
     public function updateStatusGeneral($table,$idOrder){
@@ -135,15 +146,18 @@ class OrderDetailController extends Controller
     public function servicesInfo($orderId)
     {
         try {
+            $convertStatus=new OrderController();
             $result = Order::where('orders.id', $orderId)
                     ->join('booking_services', 'booking_services.order_id', '=', 'orders.id')
                     ->join('services', 'services.id', '=', 'booking_services.service_id')
                     ->select(
                     'services.name as serviceName',
                     'booking_services.quantity as serviceQuantity',
-                    'booking_services.price as servicePrice'
+                    'booking_services.price as servicePrice',
+                    'booking_services.status as status',
                 )
                 ->get();
+            $convertStatus->convertStatus($result);
             return $result;
         }catch (\Exception $exception){
             return $exception->getMessage();
@@ -164,5 +178,24 @@ class OrderDetailController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
+    }
+    public function checkinOrder($orderId)
+    {
+        Order::query()->where('id', $orderId)->update(['check_in' => Carbon::now()]);
+        return redirect()->back()->with('success','Checkin thành công');
+    }
+    public function VoucherOrder($voucherId){
+        $voucher=Voucher::query()->where('vouchers.id', $voucherId)
+            ->select('vouchers.description','vouchers.discount_type',
+                'vouchers.discount_value')->get()
+        ;
+        return $voucher;
+    }
+    public function roomCode($orderId)
+    {
+        $result=OrderItem::query()->where('order_id', $orderId)
+            ->join('rooms', 'rooms.id', '=', 'order_items.room_id')
+            ->select('order_items.room_codes as roomCode','rooms.id as roomId')->get();
+        return $result;
     }
 }

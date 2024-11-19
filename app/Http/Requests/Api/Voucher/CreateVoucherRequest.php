@@ -87,14 +87,14 @@ class CreateVoucherRequest extends FormRequest
         ];
     }
 
-    protected function failedValidation(Validator $validator)
-    {
-        $json = [
-            'status' => false,
-            'message' => $validator->errors()->first()
-        ];
-        $response = response( $json, 422 );
-        throw (new ValidationException($validator, $response))->status(422);
-    }
+//    protected function failedValidation(Validator $validator)
+//    {
+//        $json = [
+//            'status' => false,
+//            'message' => $validator->errors()->first()
+//        ];
+//        $response = response( $json, 422 );
+//        throw (new ValidationException($validator, $response))->status(422);
+//    }
 
 }

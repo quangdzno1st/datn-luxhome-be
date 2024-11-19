@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CatalogueRoomController;
 use App\Http\Controllers\Admin\HotelServiceController;
 use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\StatisticalController;
 use App\Http\Controllers\Client\AccountSettingController;
 use App\Http\Controllers\Client\CityController;
@@ -32,7 +33,7 @@ Route::prefix('hotel/services')->controller(HotelServiceController::class)->grou
     Route::delete("/delete", 'destroyMulti')->name("hotel.service.destroyMulti");
 });
 //voucher
-Route::prefix('vouchers')->group(function () {
+Route::prefix('admin/vouchers')->group(function () {
     Route::get('/', [\App\Http\Controllers\Admin\VoucherController::class, 'index'])->name('vouchers.index');
     Route::get('/create', [\App\Http\Controllers\Admin\VoucherController::class, 'create'])->name('vouchers.create');
     Route::post('/', [\App\Http\Controllers\Admin\VoucherController::class, 'store'])->name('vouchers.store');
@@ -77,7 +78,12 @@ Route::prefix('rates')->group(function () {
 //order
 Route::prefix('admin/orders')->group(function () {
     Route::get('/page={page}', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
-    Route::get('/check-payable/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'checkPayable'])->name('orders.checkPayable');
+    Route::post('/updateStatus/{id}', [\App\Http\Controllers\Admin\OrderDetailController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::get('/show/{order}', [\App\Http\Controllers\Admin\OrderDetailController::class, 'showOrderDetail'])->name('orders.show');
+    Route::get('/checkin/{orderId}', [\App\Http\Controllers\Admin\OrderDetailController::class, 'checkinOrder'])->name('orders.checkin');
+    Route::post('/addBookingServices/{id}', [\App\Http\Controllers\Admin\BookingServicesInOrderDetailController::class, 'addBookingServicesInOrderDetail'])->name('orders.addBookingServices');
+
+    Route::delete('/delete/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'delete'])->name('orders.delete');
 });
 
     Route::get('/test/theme', function () {
