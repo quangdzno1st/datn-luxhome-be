@@ -21,17 +21,31 @@ class OrderController extends Controller
         $orders=$this->convertStatus($orders);
         return view(self::PATH_VIEW.__FUNCTION__, compact('orders','payable'));
     }
-    public function convertStatus($orders)
+    public function convertStatus($items)
     {
-        foreach($orders as $order){
-            if($order->status == StatusOrderEnum::CHUA_THANH_TOAN->value){
-                $order->status='Chưa thanh toán';
-            }elseif ($order->status==StatusOrderEnum::DA_THANH_TOAN->value){
-                $order->status='Đã thanh toán';
+        foreach($items as $item){
+            if($item->status == StatusOrderEnum::CHUA_THANH_TOAN->value){
+                $item->status='Chưa thanh toán';
+            }elseif ($item->status==StatusOrderEnum::DA_THANH_TOAN->value){
+                $item->status='Đã thanh toán';
             }else{
-                $order->status='Thanh toán kết thúc';
+                $item->status='Thanh toán kết thúc';
             }
         }
-        return $orders;
+        return $items;
+    }
+    public function delete($order){
+        if ($order->status=='Chưa thanh toán'){
+            Order::query()->find($order)->delete();
+            return redirect()->back()-with([
+                'result'=>'Xóa thành công',
+                'color'=>'success'
+                ]);
+        }else{
+            return redirect()->back()-with([
+                'result'=>'Xóa không thành công',
+                'color'=>'danger'
+                ]);
+        }
     }
 }

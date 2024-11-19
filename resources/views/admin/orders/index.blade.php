@@ -10,32 +10,13 @@
 
                 <div class="card-body">
                     <div class="listjs-table" id="customerList">
-                        <div class="row g-4 mb-3">
-                            <div class="col-sm-auto">
-                                <div class="col-sm-auto">
-                                    <div>
-                                        <a href="">
-{{--                                            <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal"--}}
-{{--                                                    id="create-btn" data-bs-target="#showModal"><i--}}
-{{--                                                        class="ri-add-line align-bottom me-1"></i> Thêm voucher--}}
-{{--                                            </button>--}}
-                                        </a>
-                                        <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i
-                                                    class="ri-delete-bin-2-line"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm">
-                                <div class="d-flex justify-content-sm-end">
-                                    <div class="search-box ms-2">
-                                        <input type="text" class="form-control search" placeholder="Search...">
-                                        <i class="ri-search-line search-icon"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="card-body">
+                            @if (session('result'))
+                                <div class="card-header   alert alert-{{session('color')}} alert-dismissible fade show" role="alert">
+                                    {{ session('success') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            @endif
                             <table id="example" class="table table-bordered dt-responsive nowrap align-middle"
                                    style="width:100%">
                                 <thead>
@@ -45,16 +26,13 @@
                                             <input class="form-check-input" type="checkbox" id="checkAll" value="option">
                                         </div>
                                     </th>
-                                    <th>Người dùng</th>
-                                    <th>voucher</th>
-                                    <th>Phí đặt</th>
                                     <th>Email</th>
-                                    <th>Tên</th>
+                                    <th>Người đặt</th>
                                     <th>Mã code</th>
-                                    <th>QR CODE</th>
                                     <th>Trạng thái</th>
                                     <th>Ngày đặt</th>
                                     <th>Ngày kết thúc</th>
+                                    <th>Phí đặt</th>
                                     <th>Tổng tiền</th>
                                     <th>Tiền còn lại</th>
                                     <th>Chi tiết</th>
@@ -68,20 +46,16 @@
                                                 <input class="form-check-input" type="checkbox" name="chk_child" value="option1">
                                             </div>
                                         </th>
-
-                                        <td>{{$order->User}}</td>
-                                        <td>{{$order->voucher}}</td>
-                                        <td>{{$order->booking_fee}}</td>
                                         <td>{{$order->email}}</td>
                                         <td>{{$order->name}}</td>
                                         <td>{{$order->code}}</td>
-                                        <td>{{$order->qr_code}}</td>
                                         <td>{{$order->status}}</td>
                                         <td>{{date('d-M-y', strtotime($order->start_date))}}</td>
                                         <td>{{date('d-M-y', strtotime($order->end_date))}}</td>
                                         <td>
                                             {{number_format($order->total_amount)}} VND
                                         </td>
+                                        <td>{{number_format($order->booking_fee)}}VND</td>
                                         <td id="payable_amount_{{ $order->id }}">
                                             {{ $payable<=1 ? '0' :number_format($payable)  }} VND
                                         </td>
@@ -95,11 +69,14 @@
                                                         <a href="{{route('orders.show',$order)}}" class="dropdown-item">
                                                             <i class="ri-eye-fill align-bottom me-2 text-muted"></i> Chi tiết</a>
                                                     </li>
-                                                    <li><a class="dropdown-item edit-item-btn"><i class="ri-pencil-fill align-bottom me-2 text-muted"></i> Edit</a></li>
                                                     <li>
-                                                        <a class="dropdown-item remove-item-btn">
-                                                            <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete
-                                                        </a>
+                                                        <form method="post" action="{{route('orders.delete',$order)}}">
+                                                            @csrf
+                                                            @method('delete')
+                                                            <button type="submit" class="dropdown-item remove-item-btn">
+                                                                <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Xóa
+                                                            </button>
+                                                        </form>
                                                     </li>
                                                 </ul>
                                             </div>
