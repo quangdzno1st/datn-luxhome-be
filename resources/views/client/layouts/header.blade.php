@@ -11,14 +11,14 @@
               @if(\Illuminate\Support\Facades\Auth::check())
                     <ul class="">
                         <li class="active"><a href="{{ route('orders.index') }}" title="Settings">Cài Đặt</a></li>
-                        <li class="active"><a href="#" title="Logout">Đăng Xuất</a></li>
+                        <li class="active"><a href="{{route('client.logout')}}" title="Logout" onclick="return confirm('Bạn có muốn đăng xuất không?')">Đăng Xuất</a></li>
                     </ul>
                 @else
                     <ul class="lang-nav">
-                        <li class="active"><a href="login.html" title="Login">Đăng Nhập</a></li>
+                        <li class="active"><a href="{{route('client.login')}}" title="Login">Đăng Nhập</a></li>
                     </ul>
                     <ul class="currency-nav">
-                        <li class="active"><a href="#" title="Register">Đăng Ký</a></li>
+                        <li class="active"><a href="{{route('client.register')}}" title="Register">Đăng Ký</a></li>
                     </ul>
                 @endif
             </nav>

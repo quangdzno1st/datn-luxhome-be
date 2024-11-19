@@ -23,6 +23,22 @@
             </div>
         </div>
 
+         <!-- Notification -->
+         <div class="row">
+            @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>{{session('success')}}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
+            @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>{{session('error')}}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
+        </div>
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
@@ -93,12 +109,6 @@
                                             <td class="region_id">{{ $city->region->name }}</td>
                                             <td>
                                                 <div class="d-flex gap-2">
-                                                    <div class="show">
-                                                        <button class="btn btn-sm btn-soft-warning edit-item-btn"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#detailModal{{ $city->id }}">
-                                                            <i class="ri-eye-line"></i></button>
-                                                    </div>
                                                     <div class="edit">
                                                         <button class="btn btn-sm btn-soft-warning edit-item-btn"
                                                                 data-bs-toggle="modal"
@@ -141,8 +151,8 @@
                                                                 @enderror
                                                             </div>
 
-                                                            <select class="form-control @error('region_id') is-invalid @enderror" id="region_id" data-choices data-choices-groups
-                                                                    data-placeholder="Select City" name="region_id">
+                                                            <select class="form-select @error('region_id') is-invalid @enderror" id="region_id"
+                                                                    name="region_id">
                                                                 <option value="">Chọn miền</option>
                                                                 @foreach ($regions as $region)
                                                                     <option value="{{ $region->id }}" {{ $region->id == $city->region_id ? 'selected' : '' }}>
@@ -170,50 +180,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="modal fade" id="detailModal{{ $city->id }}" tabindex="-1"
-                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <div class="modal-header bg-light p-3">
-                                                        <h5 class="modal-title" id="exampleModalLabel"> Chi tiết thành phố
-                                                        </h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close" id="close-modal"></button>
-                                                    </div>
-                                                    <form class="tablelist-form" autocomplete="off"
-                                                          action=""
-                                                          method="POST">
-
-                                                        <div class="modal-body">
-                                                            <div class="mb-3">
-                                                                <label class="form-label" for="name">Tên thành phố</label>
-                                                                <input type="text" class="form-control" id="name" name="name"
-                                                                       value="{{ $city->name }}" placeholder="Tên thành phố" readonly>
-                                                            </div>
-
-                                                            <div class="mb-3">
-                                                                <label class="form-label" for="name">Tên miền</label>
-                                                                <input type="text" class="form-control" id="name" name="name"
-                                                                       value="{{ $city->region->name  }}" placeholder="Tên miền" readonly>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="modal-footer">
-                                                            <div class="hstack gap-2 justify-content-end">
-                                                                <button type="button" class="btn btn-light"
-                                                                        data-bs-dismiss="modal">
-                                                                    Đóng
-                                                                </button>
-
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
 
                                         <!-- Modal -->
-                                        <div class="modal fade zoomIn" id="deleteRecordModal{{ $region->id }}"
+                                        <div class="modal fade zoomIn" id="deleteRecordModal{{ $city->id }}"
                                              tabindex="-1" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered">
                                                 <div class="modal-content">
@@ -234,7 +203,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
-                                                            <form action="{{ route('admin.regions.destroy', $region) }}"
+                                                            <form action="{{ route('admin.cities.destroy', $city) }}"
                                                                   method="post">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -268,12 +237,6 @@
                                 </div>
                             </div>
 
-                            <div class="d-flex justify-content-end">
-                                <div class="pagination-wrap hstack gap-2">
-                                </div>
-                            </div>
-
-
                             <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                                  aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
@@ -296,8 +259,7 @@
                                                     @enderror
                                                 </div>
 
-                                                <select class="form-control @error('region_id') is-invalid @enderror" id="region_id" data-choices data-choices-groups
-                                                        data-placeholder="Select City" name="region_id">
+                                                <select class="form-control @error('region_id') is-invalid @enderror" id="region_id" name="region_id">
                                                     <option value="">Chọn miền</option>
                                                     @foreach ($regions as $region)
                                                         <option value="{{ $region->id }}">{{ $region->name }}</option>

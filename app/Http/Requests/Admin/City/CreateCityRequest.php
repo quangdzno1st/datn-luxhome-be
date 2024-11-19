@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin\City;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 
 class CreateCityRequest extends FormRequest
 {
@@ -37,5 +38,12 @@ class CreateCityRequest extends FormRequest
             'region_id.required' => 'Chọn 1 miền',
             'region_id.exists' => 'Miền không tồn tại',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        session()->flash('error', 'Thêm thành phố không thành công.');
+
+        parent::failedValidation($validator);
     }
 }

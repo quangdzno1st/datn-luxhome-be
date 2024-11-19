@@ -251,7 +251,7 @@ class StatisticalServiceImpl
         $query->selectRaw('COUNT(id) AS total_rating');
 
         if (!empty($hotel_id)) {
-            $query->where('org_id', $hotel_id);
+            $query->where('hotel_id', $hotel_id);
         }
 
         $totalRating = $query->first();

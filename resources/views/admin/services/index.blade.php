@@ -33,12 +33,9 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     @endif
-                </div>
-
-                <div class="row">
-                    @if ($errors->has('error'))
+                    @if (session('error'))
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>Lỗi: </strong>{{$errors->first('error')}}
+                        <strong>{{session('error')}}</strong>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     @endif
@@ -155,7 +152,7 @@
                                                         <div class="modal-body">
                                                             <div class="mb-3">
                                                                 <label for="name"
-                                                                       class="form-label">Code</label>
+                                                                       class="form-label">Tên dịch vụ</label>
                                                                 <input type="text" id="name"
                                                                        class="form-control"
                                                                        placeholder="Nhập tên dịch vụ"
@@ -298,7 +295,7 @@
                                                 <div class="mb-3">
                                                     <label for="name" class="form-label">Tên dịch vụ</label>
                                                     <input type="text" id="name" class="form-control"
-                                                           placeholder="Nhập tên dịch vụ"  name="name" required/>
+                                                           placeholder="Nhập tên dịch vụ" required name="name"/>
                                                            @error('name')
                                                            <p class="text-danger">{{$message}}</p>
                                                        @enderror

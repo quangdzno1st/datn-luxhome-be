@@ -8,6 +8,9 @@ use App\Http\Controllers\Client\AccountSettingController;
 use App\Http\Controllers\Client\CityController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\HotelController;
+use App\Http\Controllers\Client\Auth\ForgotPasswordController;
+use App\Http\Controllers\Client\Auth\LoginController;
+use App\Http\Controllers\Client\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -18,57 +21,6 @@ Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/search', [\App\Http\Controllers\Client\HotelController::class, 'search'])->name('home.search');
 Route::get('/hotel/{hotel_id}', [\App\Http\Controllers\Client\HotelController::class, 'show'])->name('hotel.show');
 
-
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::prefix('services')->controller(ServiceController::class)->group(function () {
-        Route::get('/', 'index')->name('services.index');
-        Route::post('/store', 'store')->name('services.store');
-        Route::put('/update/{id}', 'update')->name('services.update');
-        Route::delete('/{id}', 'destroy')->name('services.destroy');
-    });
-
-    Route::prefix('hotels')
-        ->name('hotels.')
-        ->middleware('role')
-        ->group(function () {
-            Route::get('/', [\App\Http\Controllers\Admin\HotelController::class, 'index'])->name('index');
-            Route::get('/create', [\App\Http\Controllers\Admin\HotelController::class, 'create'])->name('create');
-            Route::post('/', [\App\Http\Controllers\Admin\HotelController::class, 'store'])->name('store');
-            Route::get('/trash', [\App\Http\Controllers\Admin\HotelController::class, 'trash'])->name('trash');
-            Route::get('/show/{id}', [\App\Http\Controllers\Admin\HotelController::class, 'show'])->name('show');
-            Route::get('/edit/{id}', [\App\Http\Controllers\Admin\HotelController::class, 'edit'])->name('edit');
-            Route::put('/{id}', [\App\Http\Controllers\Admin\HotelController::class, 'update'])->name('update');
-            Route::delete('/{id}', [\App\Http\Controllers\Admin\HotelController::class, 'destroy'])->name('destroy');
-            Route::get('/restore/{id}', [\App\Http\Controllers\Admin\HotelController::class, 'restore'])->name('restore');
-            Route::delete('/force-delete/{id}', [\App\Http\Controllers\Admin\HotelController::class, 'forceDelete'])->name('forceDelete');
-        });
-
-    Route::prefix('regions')
-        ->name('regions.')
-        ->group(function () {
-            Route::get('/', [\App\Http\Controllers\Admin\RegionController::class, 'index'])->name('index');
-            Route::post('/', [\App\Http\Controllers\Admin\RegionController::class, 'store'])->name('store');
-            Route::get('/trash', [\App\Http\Controllers\Admin\RegionController::class, 'trash'])->name('trash');
-            Route::get('/show/{id}', [\App\Http\Controllers\Admin\RegionController::class, 'show'])->name('show');
-            Route::put('/{id}', [\App\Http\Controllers\Admin\RegionController::class, 'update'])->name('update');
-            Route::delete('/{id}', [\App\Http\Controllers\Admin\RegionController::class, 'destroy'])->name('destroy');
-            Route::get('/restore/{id}', [\App\Http\Controllers\Admin\RegionController::class, 'restore'])->name('restore');
-            Route::delete('/force-delete/{id}', [\App\Http\Controllers\Admin\RegionController::class, 'forceDelete'])->name('forceDelete');
-        });
-    Route::prefix('cities')
-        ->as('cities.')
-        ->group(function () {
-            Route::get('/', [\App\Http\Controllers\Admin\CityController::class, 'index'])->name('index');
-            Route::get('/create', [\App\Http\Controllers\Admin\CityController::class, 'create'])->name('create');
-            Route::post('/', [\App\Http\Controllers\Admin\CityController::class, 'store'])->name('store');
-            Route::get('/trash', [\App\Http\Controllers\Admin\CityController::class, 'trash'])->name('trash');
-            Route::get('/show/{id}', [\App\Http\Controllers\Admin\CityController::class, 'show'])->name('show');
-            Route::put('/{id}', [\App\Http\Controllers\Admin\CityController::class, 'update'])->name('update');
-            Route::delete('/{id}', [\App\Http\Controllers\Admin\CityController::class, 'destroy'])->name('destroy');
-            Route::get('/restore/{id}', [\App\Http\Controllers\Admin\CityController::class, 'restore'])->name('restore');
-            Route::delete('/force-delete/{id}', [\App\Http\Controllers\Admin\CityController::class, 'forceDelete'])->name('forceDelete');
-        });
-});
 
 Route::post('/upload-image', [CatalogueRoomController::class, 'storeImage'])->name('upload-image');
 
@@ -152,3 +104,24 @@ Route::prefix('orders')
         Route::post('/', 'store')->name('orders.store');
     });
 
+Route::get('/hotel/{id}', [HomeController::class, 'searchByPage'] )->name('home.hotel.detail');
+Route::get('/hotel/booking/{id}', [HotelController::class, 'booking'] )->name('hotel.booking');
+Route::get('/payment-order/{id}',[AccountSettingController::class, 'paymentOrder'])->name('orders.payment');
+Route::get('/payment-return',[AccountSettingController::class, 'paymentReturn'])->name('orders.paymentReturn');
+Route::get('/cities/search-by-page', [CityController::class, 'searchByPage'] )->name('cities.searchByPage');
+
+Route::middleware('is.login')->group(function(){
+    Route::get('/orders',[AccountSettingController::class, 'index'])->name('orders.index');
+    Route::post('/update/user', [AccountSettingController::class, 'changeUserInfo'])->name('client.update.user');
+    Route::post('/change/password/user', [AccountSettingController::class, 'changePassword'])->name('client.change.password.user');
+});
+
+Route::get('/login', [LoginController::class, 'index'])->name('client.login');
+Route::post('/login', [LoginController::class, 'login'])->name('client.login');
+Route::get('/logout', [LoginController::class, 'logout'])->name('client.logout');
+Route::get('/register', [RegisterController::class, 'index'])->name('client.register');
+Route::post('/register', [RegisterController::class, 'register'])->name('client.register');
+Route::get('/password/reset', [ForgotPasswordController::class, 'showFormForgot'])->name('client.password.reset');
+Route::post('/password/reset', [ForgotPasswordController::class, 'sendMailReset'])->name('client.password.reset');
+Route::get('/password/reset/{token}', [ForgotPasswordController::class, 'showFormResetPassword'])->name('client.show.form.reset');
+Route::post('/password/reset/update', [ForgotPasswordController::class, 'ResetUpdatePassword'])->name('client.reset.update');
