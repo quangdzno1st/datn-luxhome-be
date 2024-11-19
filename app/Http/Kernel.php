@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\CheckPermissions;
 use App\Http\Middleware\IsAdmin;
+use App\Http\Middleware\IsLogin;
 use App\Http\Middleware\IsSale;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -59,6 +60,7 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $routeMiddleware = [
+        'is.login' => IsLogin::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'role' => \App\Http\Middleware\CheckRole::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,

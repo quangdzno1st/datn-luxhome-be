@@ -19,7 +19,15 @@
                 <!--three-fourth content-->
                 <section class="three-fourth">
 
-                    <h1>My account</h1>
+                    <div style="display: flex; justify-content:space-between">
+                        <h1>Tài khoản của tôi</h1>
+                        @if (session('msg'))
+                            <h1 style="color: #19b4ac; font-size:1rem; text-align:right">{{ session('msg') }}</h1>
+                        @endif
+                        @if (session('error'))
+                            <h1 style="color: red; font-size:1rem; text-align:right">{{ session('error') }}</h1>
+                        @endif
+                    </div>
 
                     <!--inner navigation-->
                     <nav class="inner-nav">
@@ -27,6 +35,7 @@
                             <li><a href="#MyBookings" title="My Bookings">Lịch sử đặt phòng</a></li>
                             <li><a href="#MyReviews" title="My Reviews">Lịch sử review</a></li>
                             <li><a href="#MySettings" title="Settings">Cài đặt thông tin</a></li>
+                            <li><a href="#ChangePassword" title="Change Password">Đổi mật khẩu</a></li>
                         </ul>
                     </nav>
                     <!--//inner navigation-->
@@ -36,7 +45,7 @@
                         <!--booking-->
 
 
-                        @foreach($orders as $order)
+                        @foreach ($orders as $order)
                             <article class="bookings">
                                 <h2><a href="#">{{ $order['hotel_name'] }}</a></h2>
                                 <div class="b-info">
@@ -47,18 +56,21 @@
                                         </tr>
                                         <tr>
                                             <th>Ngày đặt phòng</th>
-                                            <td>{{ \Carbon\Carbon::parse($order['start_date'])->locale('vi')->isoFormat('[Ngày] D [tháng] M [năm] YYYY') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($order['start_date'])->locale('vi')->isoFormat('[Ngày] D [tháng] M [năm] YYYY') }}
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th>Ngày trả phòng</th>
-                                            <td>{{ \Carbon\Carbon::parse($order['end_date'])->locale('vi')->isoFormat('[Ngày] D [tháng] M [năm] YYYY') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($order['end_date'])->locale('vi')->isoFormat('[Ngày] D [tháng] M [năm] YYYY') }}
+                                            </td>
                                         </tr>
 
                                         <tr>
                                             <th>Trạng thái thanh toán</th>
                                             <td>
-                                                <span style="padding: 8px 40px; border-radius: 20px; color: #FFFFFF;
-                                                background-color: {{ \App\Constant\Enum\StatusOrderEnum::isChuaThanhToan($order['status']) ? '#575145' : '#d5b26b'}}; ">
+                                                <span
+                                                    style="padding: 8px 40px; border-radius: 20px; color: #FFFFFF;
+                                                background-color: {{ \App\Constant\Enum\StatusOrderEnum::isChuaThanhToan($order['status']) ? '#575145' : '#d5b26b' }}; ">
                                                     {{ \App\Constant\Enum\StatusOrderEnum::parse($order['status'])->getName() }}
                                                 </span>
                                             </td>
@@ -73,14 +85,13 @@
 
                                 <div class="actions">
                                     <a href="#" class="gradient-button">Chi tiết đặt phòng</a>
-                                    @if(\App\Constant\Enum\StatusOrderEnum::isChuaThanhToan($order['status']))
+                                    @if (\App\Constant\Enum\StatusOrderEnum::isChuaThanhToan($order['status']))
                                         <a href="{{ route('orders.payment', $order['id']) }}" class="gradient-button">Thanh
                                             toán hóa đơn</a>
                                     @endif
                                 </div>
                             </article>
                             <!--//booking-->
-
                         @endforeach
 
                         <div class="d-flex justify-content-center">
@@ -98,9 +109,13 @@
                                 <span> / 10</span>
                             </div>
                             <div class="reviews">
-                                <div class="rev pro"><p>It was a warm friendly hotel. Very easy access to shops and
-                                        underground stations. Staff very welcoming.</p></div>
-                                <div class="rev con"><p>noisy neigbourghs spoilt the rather calm environment</p></div>
+                                <div class="rev pro">
+                                    <p>It was a warm friendly hotel. Very easy access to shops and
+                                        underground stations. Staff very welcoming.</p>
+                                </div>
+                                <div class="rev con">
+                                    <p>noisy neigbourghs spoilt the rather calm environment</p>
+                                </div>
                             </div>
                         </article>
 
@@ -111,9 +126,13 @@
                                 <span> / 10</span>
                             </div>
                             <div class="reviews">
-                                <div class="rev pro"><p>It was a warm friendly hotel. Very easy access to shops and
-                                        underground stations. Staff very welcoming.</p></div>
-                                <div class="rev con"><p>noisy neigbourghs spoilt the rather calm environment</p></div>
+                                <div class="rev pro">
+                                    <p>It was a warm friendly hotel. Very easy access to shops and
+                                        underground stations. Staff very welcoming.</p>
+                                </div>
+                                <div class="rev con">
+                                    <p>noisy neigbourghs spoilt the rather calm environment</p>
+                                </div>
                             </div>
                         </article>
 
@@ -124,9 +143,13 @@
                                 <span> / 10</span>
                             </div>
                             <div class="reviews">
-                                <div class="rev pro"><p>It was a warm friendly hotel. Very easy access to shops and
-                                        underground stations. Staff very welcoming.</p></div>
-                                <div class="rev con"><p>noisy neigbourghs spoilt the rather calm environment</p></div>
+                                <div class="rev pro">
+                                    <p>It was a warm friendly hotel. Very easy access to shops and
+                                        underground stations. Staff very welcoming.</p>
+                                </div>
+                                <div class="rev con">
+                                    <p>noisy neigbourghs spoilt the rather calm environment</p>
+                                </div>
                             </div>
                         </article>
                     </section>
@@ -135,124 +158,138 @@
                     <!--MySettings-->
                     <section id="MySettings" class="tab-content">
                         <article class="mysettings">
-                            <h2>Personal details</h2>
-                            <table>
-                                <tr>
-                                    <th>First name:</th>
-                                    <td>John
-                                        <!--edit fields-->
-                                        <div class="edit_field" id="field1">
-                                            <label for="new_name">Your new name:</label>
-                                            <input type="text" id="new_name"/>
-                                            <input type="submit" value="save" class="gradient-button" id="submit1"/>
-                                            <a href="#">Cancel</a>
-                                        </div>
-                                        <!--//edit fields-->
-                                    </td>
-                                    <td><a href="#field1" class="gradient-button edit">Edit</a></td>
-                                </tr>
-                                <tr>
-                                    <th>Last name:</th>
-                                    <td>Livingston
-                                        <!--edit fields-->
-                                        <div class="edit_field" id="field2">
-                                            <label for="new_last_name">Your new name:</label>
-                                            <input type="text" id="new_last_name"/>
-                                            <input type="submit" value="save" class="gradient-button" id="submit2"/>
-                                            <a href="#">Cancel</a>
-                                        </div>
-                                        <!--//edit fields-->
-                                    </td>
-                                    <td><a href="#field2" class="gradient-button edit">Edit</a></td>
-                                </tr>
-                                <tr>
-                                    <th>E-mail address:</th>
-                                    <td>mail@google.com
-                                        <!--edit fields-->
-                                        <div class="edit_field" id="field3">
-                                            <label for="new_email">Your new email:</label>
-                                            <input type="text" id="new_email"/>
-                                            <input type="submit" value="save" class="gradient-button" id="submit3"/>
-                                            <a href="#">Cancel</a>
-                                        </div>
-                                        <!--//edit fields-->
-                                    </td>
-                                    <td><a href="#field3" class="gradient-button edit">Edit</a></td>
-                                </tr>
-                                <tr>
-                                    <th>Password:</th>
-                                    <td>*********
-                                        <!--edit fields-->
-                                        <div class="edit_field" id="field4">
-                                            <label for="new_password">Your new password:</label>
-                                            <input type="password" id="new_password"/>
-                                            <input type="submit" value="save" class="gradient-button" id="submit4"/>
-                                            <a href="#">Cancel</a>
-                                        </div>
-                                        <!--//edit fields-->
-                                    </td>
-                                    <td><a href="#field4" class="gradient-button edit">Edit</a></td>
-                                </tr>
-                                <tr>
-                                    <th>Street Address and number:</th>
-                                    <td>Some street name 55
-                                        <!--edit fields-->
-                                        <div class="edit_field" id="field5">
-                                            <label for="new_address">Your new address:</label>
-                                            <input type="text" id="new_address"/>
-                                            <input type="submit" value="save" class="gradient-button" id="submit5"/>
-                                            <a href="#">Cancel</a>
-                                        </div>
-                                        <!--//edit fields-->
-                                    </td>
-                                    <td><a href="#field5" class="gradient-button edit">Edit</a></td>
-                                </tr>
+                            <h2>Thông tin cá nhân</h2>
+                            <form action="{{route('client.update.user')}}" method="post">
+                                @csrf
+                                <table>
+                                    <tr>
+                                        <th>Họ tên:</th>
+                                        <td>{{ !empty($user->name) ? $user->name : '' }}
+                                            @error('name')
+                                                <p style="color: red">{{ $message }}</p>
+                                            @enderror
+                                            <!--edit fields-->
+                                            <div class="edit_field" id="field1">
+                                                <label for="new_name">Nhập tên mới:</label>
+                                                <input type="text" id="new_name" name="name"
+                                                    value="{{ !empty($user->name) ? $user->name : '' }}" />
+                                                <input type="submit" value="Lưu" onclick="return confirm('Bạn có chắc chắn muốn cập nhật thông tin không?')" class="gradient-button"
+                                                    id="submit1" />
+                                                <a href="#">Hủy</a>
+                                            </div>
+                                            <!--//edit fields-->
+                                        </td>
+                                        <td><a href="#field1" class="gradient-button edit">Sửa</a></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Email:</th>
+                                        <td>{{ !empty($user->email) ? $user->email : '' }}
+                                            @error('email')
+                                                <p style="color: red">{{ $message }}</p>
+                                            @enderror
+                                            <!--edit fields-->
+                                            <div class="edit_field" id="field2">
+                                                <label for="email">Email mới:</label>
+                                                <input type="email" id="email" name="email"
+                                                    value="{{ !empty($user->email) ? $user->email : '' }}" />
+                                                <input type="submit" value="Lưu" onclick="return confirm('Bạn có chắc chắn muốn cập nhật thông tin không?')" class="gradient-button"
+                                                    id="submit2" />
+                                                <a href="#">Hủy</a>
+                                            </div>
+                                            <!--//edit fields-->
+                                        </td>
+                                        <td><a href="#field2" class="gradient-button edit">Sửa</a></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Số điện thoại:</th>
+                                        <td>{{ !empty($user->phone) ? $user->phone : '' }}
+                                            @error('phone')
+                                                <p style="color: red">{{ $message }}</p>
+                                            @enderror
+                                            <!--edit fields-->
+                                            <div class="edit_field" id="field3">
+                                                <label for="phone">Số điện thoại mới:</label>
+                                                <input type="text" id="phone" name="phone"
+                                                    value="{{ !empty($user->phone) ? $user->phone : '' }}" />
+                                                <input type="submit" value="Lưu" onclick="return confirm('Bạn có chắc chắn muốn cập nhật thông tin không?')" class="gradient-button"
+                                                    id="submit3" />
+                                                <a href="#">Hủy</a>
+                                            </div>
+                                            <!--//edit fields-->
+                                        </td>
+                                        <td><a href="#field3" class="gradient-button edit">Sửa</a></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Địa chỉ:</th>
+                                        <td>{{ !empty($user->address) ? $user->address : '' }}
+                                            <!--edit fields-->
+                                            <div class="edit_field" id="field5">
+                                                <label for="new_address">Địa chỉ mới:</label>
+                                                <input type="text" id="new_address" name="address"
+                                                    value="{{ !empty($user->address) ? $user->address : '' }}" />
+                                                <input type="submit" value="Lưu" onclick="return confirm('Bạn có chắc chắn muốn cập nhật thông tin không?')" class="gradient-button"
+                                                    id="submit5" />
+                                                <a href="#">Hủy</a>
+                                            </div>
+                                            <!--//edit fields-->
+                                        </td>
+                                        <td><a href="#field5" class="gradient-button edit">Sửa</a></td>
+                                    </tr>
 
-                                <tr>
-                                    <th>Town / City:</th>
-                                    <td>Sunnytown
-                                        <!--edit fields-->
-                                        <div class="edit_field" id="field6">
-                                            <label for="new_city">Your new city:</label>
-                                            <input type="text" id="new_city"/>
-                                            <input type="submit" value="save" class="gradient-button" id="submit6"/>
-                                            <a href="#">Cancel</a>
-                                        </div>
-                                        <!--//edit fields-->
-                                    </td>
-                                    <td><a href="#field6" class="gradient-button edit">Edit</a></td>
-                                </tr>
+                                    <tr>
+                                        <th>CCCD:</th>
+                                        <td>{{ !empty($user->cccd) ? $user->cccd : '' }}
+                                            <!--edit fields-->
+                                            <div class="edit_field" id="field6">
+                                                <label for="cccd">CCCD mới:</label>
+                                                <input type="text" id="cccd" name="cccd"
+                                                    value="{{ !empty($user->cccd) ? $user->cccd : '' }}" />
+                                                <input type="submit" value="Lưu" onclick="return confirm('Bạn có chắc chắn muốn cập nhật thông tin không?')" class="gradient-button"
+                                                    id="submit6" />
+                                                <a href="#">Hủy</a>
+                                            </div>
+                                            <!--//edit fields-->
+                                        </td>
+                                        <td><a href="#field6" class="gradient-button edit">Sửa</a></td>
+                                    </tr>
 
-                                <tr>
-                                    <th>ZIP code:</th>
-                                    <td>9500 - 100
-                                        <!--edit fields-->
-                                        <div class="edit_field" id="field7">
-                                            <label for="new_zip">Your new ZIP code:</label>
-                                            <input type="text" id="new_zip"/>
-                                            <input type="submit" value="save" class="gradient-button" id="submit7"/>
-                                            <a href="#">Cancel</a>
-                                        </div>
-                                        <!--//edit fields-->
-                                    </td>
-                                    <td><a href="#field7" class="gradient-button edit">Edit</a></td>
-                                </tr>
+                                </table>
+                            </form>
 
-                                <tr>
-                                    <th>Country:</th>
-                                    <td>Neverland
-                                        <!--edit fields-->
-                                        <div class="edit_field" id="field8">
-                                            <label for="new_country">Your new country:</label>
-                                            <input type="text" id="new_country"/>
-                                            <input type="submit" value="save" class="gradient-button" id="submit8"/>
-                                            <a href="#">Cancel</a>
-                                        </div>
-                                        <!--//edit fields-->
-                                    </td>
-                                    <td><a href="#field8" class="gradient-button edit">Edit</a></td>
-                                </tr>
-                            </table>
+                        </article>
+                    </section>
+                    <!--//MySettings-->
+
+                    <!--MySettings-->
+                    <section id="ChangePassword" class="tab-content">
+                        <article class="mysettings">
+                            <h2>Đổi mật khẩu</h2>
+                            <form action="{{route('client.change.password.user')}}" method="post">
+                                @csrf
+                                <table>
+                                    <tr>
+                                        <th>Mật khẩu:</th>
+                                        <td>*********
+                                            @error('password')
+                                                    <p style="color: red">{{ $message }}</p>
+                                                @enderror
+                                            <!--edit fields-->
+                                            <div class="edit_field" id="field4">
+                                                <label for="new_password">Mật khẩu mới:</label>
+                                                <input type="password" id="new_password" name="password" />
+                                                <label for="new_password">Xác nhận mật khẩu:</label>
+                                                <input type="password" id="new_password" name="password_confirmation" />
+                                                <input type="submit" value="Lưu" onclick="return confirm('Bạn có chắc chắn muốn thay đổi mật khẩu không?')" class="gradient-button"
+                                                    id="submit4" />
+                                                <a href="#">Hủy</a>
+                                            </div>
+                                            <!--//edit fields-->
+                                        </td>
+                                        <td><a href="#field4" class="gradient-button edit">Sửa</a></td>
+                                    </tr>
+    
+                                </table>
+                            </form>
 
                         </article>
                     </section>

@@ -18,7 +18,7 @@ class CityController extends Controller
     protected $cityRepository, $cityService;
     protected $regionRepository;
 
-    const PATH_VIEW = 'admin/cities.';
+    const PATH_VIEW = 'admin.cities.';
 
     public function __construct(CityRepository $cityRepository, CityServiceImpl $cityService, RegionRepository $regionRepository)
     {
@@ -30,7 +30,7 @@ class CityController extends Controller
     public function index()
     {
         $data = $this->cityRepository->getAllCity();
-//        dd($data->toArray());
+        // dd($data->toArray());
         $regions = $this->regionRepository->getAllRegion();
 
         return view(self::PATH_VIEW . __FUNCTION__, compact('data', 'regions'));
@@ -51,21 +51,21 @@ class CityController extends Controller
         }
     }
 
-    public function show($id)
-    {
-        $data = $this->cityRepository->detailCity($id);
+    // public function show($id)
+    // {
+    //     $data = $this->cityRepository->detailCity($id);
 
-        return view(self::PATH_VIEW . __FUNCTION__, compact('data'));
-    }
+    //     return view(self::PATH_VIEW . __FUNCTION__, compact('data'));
+    // }
 
-    public function edit($id)
-    {
-        $regions = $this->regionRepository->getAllRegion();
+    // public function edit($id)
+    // {
+    //     $regions = $this->regionRepository->getAllRegion();
 
-        $data = $this->cityRepository->detailCity($id);
+    //     $data = $this->cityRepository->detailCity($id);
 
-        return view(self::PATH_VIEW . __FUNCTION__, compact('data', 'regions'));
-    }
+    //     return view(self::PATH_VIEW . __FUNCTION__, compact('data', 'regions'));
+    // }
 
     public function update(UpdateCityRequest $request, $id)
     {

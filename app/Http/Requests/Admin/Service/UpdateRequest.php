@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
-class ServiceRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -44,9 +44,12 @@ class ServiceRequest extends FormRequest
         ];
     }
 
-    // protected function failedValidation(Validator $validator)
-    // {
-    //     dd($validator->errors()->toArray()); // Hiển thị lỗi chi tiết khi xác thực thất bại
-    // }
+    protected function failedValidation(Validator $validator)
+    {
+        // dd($validator->errors()->toArray()); // Hiển thị lỗi chi tiết khi xác thực thất bại
+        session()->flash('error', 'Sửa dịch vụ không thành công.');
+
+        parent::failedValidation($validator);
+    }
 
 }

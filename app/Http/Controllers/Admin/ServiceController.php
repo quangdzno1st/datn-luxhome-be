@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\Service\ServiceRequest;
+use App\Http\Requests\Admin\Service\CreateRequest;
+use App\Http\Requests\Admin\Service\UpdateRequest;
 use App\Models\Service;
 use App\Services\impl\ServiceServiceImpl;
 use Illuminate\Http\Response;
@@ -29,7 +30,7 @@ class ServiceController extends Controller
         return view(self::PATH_VIEW . __FUNCTION__, compact('services', 'typesService'));
     }
 
-    public function store(ServiceRequest $request)
+    public function store(CreateRequest $request)
     {
         $data = $request->validated();
 
@@ -47,7 +48,7 @@ class ServiceController extends Controller
         }
     }
 
-    public function update(ServiceRequest $request,  string $id)
+    public function update(UpdateRequest $request,  string $id)
     {
         $data = $request->validated();
         try {
