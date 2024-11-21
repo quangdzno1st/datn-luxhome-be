@@ -50,6 +50,7 @@ class HotelController extends Controller
     {
         try {
             $data = $request->validated();
+//            dd($data);
             $data['status'] = $request->status ? 1 : 0;
             $this->hotelService->createNewHotel($data);
 

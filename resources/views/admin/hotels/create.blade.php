@@ -47,6 +47,15 @@
                             @enderror
                         </div>
 
+                        <div class="mb-3">
+                            <label class="form-label" for="thumbnail">Ảnh đại diện</label>
+                            <input type="file" class="form-control @error('thumbnail') is-invalid @enderror" id="thumbnail" name="thumbnail"
+                                   value="{{ old('thumbnail') }}">
+                            @error('thumbnail')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-header align-items-center d-flex">
@@ -143,6 +152,64 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="mb-3">
+                            <label class="form-label" for="province">Tỉnh</label>
+                            <input type="text" class="form-control  @error('province') is-invalid @enderror" id="province" name="province"
+                                   value="{{ old('province') }}" placeholder="Tỉnh">
+                            @error('province')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="district">Huyện</label>
+                            <input type="text" class="form-control  @error('district') is-invalid @enderror" id="district" name="district"
+                                   value="{{ old('district') }}" placeholder="Huyện">
+                            @error('district')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="commune">Xã</label>
+                            <input type="text" class="form-control  @error('commune') is-invalid @enderror" id="commune" name="commune"
+                                   value="{{ old('commune') }}" placeholder="Xã">
+                            @error('commune')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label" for="latitude">Vĩ độ</label>
+                            <input type="text" class="form-control  @error('latitude') is-invalid @enderror" id="latitude" name="latitude"
+                                   value="{{ old('latitude') }}" placeholder="Vĩ độ">
+                            @error('latitude')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="longitude">Kinh độ</label>
+                            <input type="text" class="form-control  @error('longitude') is-invalid @enderror" id="longitude" name="longitude"
+                                   value="{{ old('longitude') }}" placeholder="Kinh độ">
+                            @error('longitude')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-lg-6 col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mb-3">
                             <label class="form-label" for="quantity_of_room">Số lượng phòng</label>
                             <input type="text" class="form-control  @error('quantity_of_room') is-invalid @enderror" id="quantity_of_room" name="quantity_of_room"
                                    value="{{ old('quantity_of_room') }}" placeholder="Số lượng phòng">
@@ -172,6 +239,20 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-lg-12 col-md-12 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label" for="description">Mô tả</label>
+                            <textarea class="form-control" name="description" id="description" rows="2"></textarea>
+                            @error('description')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="text-end mb-4">
@@ -194,7 +275,7 @@
 
 @section('scripts')
     <script>
-        CKEDITOR.replace('content')
+        CKEDITOR.replace('description')
     </script>
     <script src="https://cdn.ckeditor.com/4.8.0/full-all/ckeditor.js"></script>
     <!--jquery cdn-->

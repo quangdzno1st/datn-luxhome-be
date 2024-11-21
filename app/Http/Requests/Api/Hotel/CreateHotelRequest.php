@@ -22,7 +22,14 @@ class CreateHotelRequest extends FormRequest
             'city_id' => 'required|exists:cities,id',
             'phone' => 'required|numeric',
             'email' => 'required|email',
-            'quantity_floor' => 'required|numeric|min:1'
+            'quantity_floor' => 'required|numeric|min:1',
+            'thumbnail' => 'nullable',
+            'description' => 'nullable',
+            'province' => 'required',
+            'district' => 'required',
+            'commune' => 'required',
+            'latitude' => 'required|max:255',
+            'longitude' => 'required|max:255',
         ];
     }
 
@@ -48,7 +55,15 @@ class CreateHotelRequest extends FormRequest
             'quantity_floor.required' => 'Số tầng đang trống',
             'quantity_floor.numeric' => 'Số tầng phải là số',
             'quantity_floor.min' => 'Số tầng phải lớn hơn hoặc bằng 1',
-            'images.mimes' => 'Ảnh 0 hop le'
+            'images.mimes' => 'Ảnh 0 hop le',
+            'thumbnail.mimes' => 'Ảnh không đúng định dạng',
+            'province.required' => 'Tỉnh đang trống',
+            'district.required' => 'Quận đang trống',
+            'commune.required' => 'Xã đang trống',
+            'latitude.required' => 'Vĩ độ đang trống',
+            'latitude.max' => 'Vĩ độ quá dài',
+            'longitude.required' => 'Kinh độ đang trống',
+            'longitude.max' => 'Kinh độ quá dài'
         ];
     }
 }

@@ -10,7 +10,7 @@ class Image extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'image';
+    protected $table = 'images';
 
     protected $fillable = [
         'id',
