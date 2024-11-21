@@ -111,7 +111,7 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
 
     public function getAllByOrgId($orgId)
     {
-        return CatalogueRoom::query()->where('org_id', $orgId)
+        return CatalogueRoom::query()->where('hotel_id', $orgId)
             ->orderBy('name')
             ->get();
     }

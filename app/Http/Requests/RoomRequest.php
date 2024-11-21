@@ -26,7 +26,7 @@ class RoomRequest extends FormRequest
         return [
             "catalogue_room_id" => "required|string",
             "status" => "string",
-            "org_id" => "string"
+            "hotel_id" => "string"
         ];
     }
 }

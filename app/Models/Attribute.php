@@ -13,9 +13,7 @@ class Attribute extends Model
 
     protected $fillable = [
         'id',
-        'name',
-        'code',
-        'org_id',
+        'content',
     ];
 
     protected static function boot()

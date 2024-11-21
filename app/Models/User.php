@@ -35,6 +35,7 @@ class User extends Authenticatable
         'is_active',
         'rank_id',
         'type',
+        'avatar'
     ];
 
     const CUSTOMER = 1;

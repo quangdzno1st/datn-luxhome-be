@@ -14,6 +14,7 @@ use App\Repositories\Room\RoomRepository;
 use App\Services\CatalogueRoomService;
 use App\Services\CommonKeyCodeService;
 use App\Services\RoomService;
+use Illuminate\Support\Facades\Auth;
 
 class RoomServiceImpl implements RoomService
 {
@@ -46,6 +47,7 @@ class RoomServiceImpl implements RoomService
 
         $data["code"] = $this->commonKeyCodeService->genNewKeyCode(TypeCodeEnum::ROOM_TYPE->value,
             Constant::STRING_6_CHAR, auth()->user()->org_id);
+        $data['hotel_id'] = Auth::user()->org_id;
 
         return $this->roomRepos->create($data);
     }
@@ -131,8 +133,8 @@ class RoomServiceImpl implements RoomService
         if ($request->has('catalogue_room_id')) {
             $query->where('catalogue_room_id', $request->get('catalogue_room_id'));
         }
-        if ($request->has('org_id')) {
-            $query->where('org_id', $request->get('org_id'));
+        if ($request->has('hotel_id')) {
+            $query->where('hotel_id', $request->get('hotel_id'));
         }
 
         $query->join("catalogue_rooms as c", "rooms.catalogue_room_id", "=", "c.id");
