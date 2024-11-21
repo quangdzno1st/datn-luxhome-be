@@ -22,6 +22,7 @@ class HotelServiceImpl implements HotelService
     public function createNewHotel($data)
     {
         try {
+            $data['thumbnail'] = Storage::put(self::PATH_UPLOAD, $data['thumbnail']);
             $hotel = $this->hotelRepos->create($data);
             $dataImage = [];
 
@@ -56,6 +57,16 @@ class HotelServiceImpl implements HotelService
     {
         try {
             $hotel = $this->getNonNullByID($id);
+
+            if(isset($data['thumbnail'])) {
+                $data['thumbnail'] = Storage::put(self::PATH_UPLOAD, $data['thumbnail']);
+
+                if(Storage::exists($hotel->thumbnail) && $hotel->thumbnail) {
+                    Storage::delete($hotel->thumbnail);
+                }
+            } else {
+                $data['thumbnail'] = $hotel->thumbnail;
+            }
 
             $hotel->update($data);
 

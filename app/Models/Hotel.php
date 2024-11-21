@@ -26,7 +26,9 @@ class Hotel extends Model
         'description',
         'province',
         'district',
-        'commune'
+        'commune',
+        'latitude',
+        'longitude',
     ];
 
     // auto render uuid

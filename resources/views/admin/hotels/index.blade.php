@@ -76,6 +76,7 @@
                                         </th>
                                         <th>STT</th>
                                         <th>Tên</th>
+                                        <th>Ảnh đại diện</th>
                                         <th>Ảnh</th>
                                         <th>Địa chỉ</th>
                                         <th>Số phòng</th>
@@ -84,6 +85,12 @@
                                         <th>Số điện thoại</th>
                                         <th>Email</th>
                                         <th>Số tầng</th>
+                                        <th>Tỉnh</th>
+                                        <th>Huyện</th>
+                                        <th>Xã</th>
+                                        <th>Vĩ độ</th>
+                                        <th>Kinh độ</th>
+                                        <th>Mô tả</th>
                                         <th>Trạng thái</th>
                                         <th>###</th>
                                     </tr>
@@ -106,6 +113,13 @@
 
                                             <td>
                                                 <div class="hotel-image-wrapper">
+                                                        <img src="{{ \Storage::url($hotel->thumbnail) }}"
+                                                             alt="{{ $hotel->name }}">
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <div class="hotel-image-wrapper">
                                                     @foreach ($hotel->images as $image)
                                                         <img src="{{ \Storage::url($image->path) }}"
                                                              alt="{{ $image->alt }}">
@@ -120,6 +134,12 @@
                                             <td>{{ $hotel->phone }}</td>
                                             <td>{{ $hotel->email }}</td>
                                             <td>{{ $hotel->quantity_floor }}</td>
+                                            <td>{{ $hotel->province }}</td>
+                                            <td>{{ $hotel->district }}</td>
+                                            <td>{{ $hotel->commune }}</td>
+                                            <td>{{ $hotel->latitude }}</td>
+                                            <td>{{ $hotel->longitude }}</td>
+                                            <td>{!! $hotel->description !!}</td>
                                             <td>{!! $hotel->status
                                                     ? '<span class="badge rounded-pill border border-success text-success">Hoạt động</span>'
                                                     : '<span class="badge rounded-pill border border-danger text-danger">Không hoạt động</span>' !!}
