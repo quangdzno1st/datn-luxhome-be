@@ -29,12 +29,14 @@
                                     <th>Email</th>
                                     <th>Người đặt</th>
                                     <th>Mã code</th>
-                                    <th>Trạng thái</th>
                                     <th>Ngày đặt</th>
                                     <th>Ngày kết thúc</th>
                                     <th>Phí đặt</th>
                                     <th>Tổng tiền</th>
-                                    <th>Tiền còn lại</th>
+                                    <th>Tiền thực nhận</th>
+                                    <th>Chi phí phát sinh</th>
+                                    <th>Trạng thái</th>
+                                    <th>Trạng thái thanh toán</th>
                                     <th>Chi tiết</th>
                                 </tr>
                                 </thead>
@@ -49,15 +51,39 @@
                                         <td>{{$order->email}}</td>
                                         <td>{{$order->name}}</td>
                                         <td>{{$order->code}}</td>
-                                        <td>{{$order->status}}</td>
                                         <td>{{date('d-M-y', strtotime($order->start_date))}}</td>
                                         <td>{{date('d-M-y', strtotime($order->end_date))}}</td>
+                                        <td>{{number_format($order->booking_fee)}}VND</td>
                                         <td>
                                             {{number_format($order->total_amount)}} VND
                                         </td>
-                                        <td>{{number_format($order->booking_fee)}}VND</td>
-                                        <td id="payable_amount_{{ $order->id }}">
-                                            {{ $payable<=1 ? '0' :number_format($payable)  }} VND
+                                        <td>{{number_format($order->net_amount)}}VND</td>
+                                        <td>{{number_format($order->incidental_costs)}}VND</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                @if($order->status=='Yêu cầu hủy')
+                                                    <a class="btn btn-sm btn-danger edit-item-btn" data-bs-toggle="modal" href="#cancelOrder">
+                                                        Yêu cầu hủy
+                                                    </a>
+                                                @elseif($order->status=='Đã xác nhận'||$order->status=='Hoàn thành')
+                                                    <button class="btn btn-sm btn-success">{{$order->status}}</button>
+                                                @else
+                                                    <button class="btn btn-sm btn-warning">{{$order->status}}</button>
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                @if($order->status_payment=='Chưa hoàn tiền'&&$order->status=='Đã hủy')
+                                                    <form method="post" action="{{route}}">
+                                                        <button type="submit" class="btn btn-sm btn-danger">Hoàn tiền</button>
+                                                    </form>
+                                                @elseif($order->status_payment=='Chưa thanh toán')
+                                                    <button class="btn btn-sm btn-warning">{{$order->status_payment}}</button>
+                                                @else
+                                                    <button class="btn btn-sm btn-success">{{$order->status_payment}}</button>
+                                                @endif
+                                            </div>
                                         </td>
                                         <td>
                                             <div class="dropdown d-inline-block">
@@ -70,10 +96,8 @@
                                                             <i class="ri-eye-fill align-bottom me-2 text-muted"></i> Chi tiết</a>
                                                     </li>
                                                     <li>
-                                                        <form method="post" action="{{route('orders.delete',$order)}}">
-                                                            @csrf
-                                                            @method('delete')
-                                                            <button type="submit" class="dropdown-item remove-item-btn">
+                                                        <form>
+                                                            <button type="button" class="dropdown-item remove-item-btn">
                                                                 <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Xóa
                                                             </button>
                                                         </form>
@@ -82,6 +106,38 @@
                                             </div>
                                         </td>
                                     </tr>
+                                    <div class="modal fade flip" id="cancelOrder" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-body p-5 text-center">
+                                                    <i class="fa-solid fa-money-bill-wave"></i>
+                                                    <div class="mt-4 text-center">
+                                                        <h4>Hủy order!</h4>
+                                                        <p class="text-muted fs-15 mb-4">Bạn có muốn hủy order này không?</p>
+                                                        <div class="hstack gap-2 justify-content-center remove">
+                                                            <form method="POST" action="{{route('orders.not_accepted_cancel',$order)}}">
+                                                                @csrf
+                                                                <button class="btn btn-link link-success fw-medium text-decoration-none"
+                                                                        type="submit"
+                                                                        id="deleteRecord-close"
+                                                                        data-bs-dismiss="modal">
+                                                                    <i class="ri-close-line me-1 align-middle"></i>Hủy</button>
+                                                            </form>
+                                                            <form method="POST" action="{{route('orders.accepted_cancel',$order)}}">
+                                                                @csrf
+                                                                <button
+                                                                        class="btn btn-sm btn-danger edit-item-btn"
+                                                                        type="submit"
+                                                                >
+                                                                    Xác nhận
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 @endforeach
                                 </tbody>
                             </table>
