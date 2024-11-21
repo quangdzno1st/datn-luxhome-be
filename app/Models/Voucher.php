@@ -15,15 +15,11 @@ class Voucher extends Model
         'description',
         'status',
         'quantity',
-        'discount_type',
         'discount_value',
         'start_date',
         'end_date',
-        'min_price',
-        'max_price',
-        'rank_id',
-        'conditional_rank',
-        'conditional_total_amount'
+        'hotel_id',
+        'thumbnail'
     ];
     public function rank()
     {

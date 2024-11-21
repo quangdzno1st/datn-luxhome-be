@@ -33,6 +33,7 @@ class Order extends Model
         'note',
         'incidental_costs',
         'total_amount',
+        'net_amount',
         'transaction_id'
     ];
 

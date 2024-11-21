@@ -24,7 +24,7 @@ class RoomSearchRequest extends BaseSearchRequest
         return [
             'catalogue_room_id' => 'string|',
             'status' => 'numeric|',
-            'org_id' => 'string|'
+            'hotel_id' => 'string|'
         ];
     }
 }

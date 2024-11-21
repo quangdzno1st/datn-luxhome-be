@@ -16,12 +16,14 @@ class CatalogueRoom extends Model
         'price',
         'status',
         'description',
-        'image',
+        'thumbnail',
         'view',
         'like',
         'number_adult',
         'number_child',
-        'org_id'
+        'org_id',
+        'price_hour',
+        'acreage'
     ];
 
     protected $keyType = 'string';
@@ -37,7 +39,7 @@ class CatalogueRoom extends Model
 
     public function attributeValues()
     {
-        return $this->belongsToMany(AttributeValue::class, 'catalogue_room_attribute', 'catalogue_room_id', 'attribute_value_id');
+        return $this->belongsToMany(Attribute::class, 'catalogue_room_attribute', 'catalogue_room_id', 'attribute_id');
     }
     public function rooms()
     {

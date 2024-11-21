@@ -13,7 +13,7 @@ class Room extends Model
 
     protected $fillable = [
         'id',
-        'org_id',
+        'hotel_id',
         'code',
         'catalogue_room_id',
         'status'
