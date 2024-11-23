@@ -21,6 +21,15 @@
 					<form id="booking" method="post" action="{{ route('orders.store') }}" class="static-content booking">
 						@csrf
 						<fieldset>
+
+							@if(session('error'))
+								<div class="alert alert-danger">
+									<ul>
+										<li>{{ session('error') }}</li>
+									</ul>
+								</div>
+							@endif
+
 							<h2>Thông tin hóa đơn</h2>
 							<div class="row">
 								<div class="f-item one-half">
@@ -56,7 +65,7 @@
 										<select class="select" name="voucher_id">
 											@foreach($vouchers as $voucher)
 												<option value="{{ $voucher['id'] }}" >
-													<div>Giảm giá tối đa {{ $voucher['max_price'] }}</div>
+													<div>Giảm giá tối đa </div>
 												</option>
 											@endforeach
 										</select>

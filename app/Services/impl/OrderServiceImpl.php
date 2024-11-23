@@ -3,6 +3,7 @@
 namespace App\Services\impl;
 
 use App\Constant\Enum\StatusOrderEnum;
+use App\Constant\Enum\StatusPaymentOrderEnum;
 use App\Constant\Enum\TypeCodeEnum;
 use App\Events\OrderSuccess;
 use App\Exceptions\RespException;
@@ -20,10 +21,11 @@ use App\Repositories\Room\RoomRepository;
 use App\Repositories\Voucher\VoucherRepository;
 use App\Services\CommonKeyCodeService;
 use App\Services\OrderService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Validator;
 
 class OrderServiceImpl implements OrderService
 {
@@ -46,7 +48,7 @@ class OrderServiceImpl implements OrderService
         CommonKeyCodeService     $commonKeyCodeService,
         HotelServiceRepository   $hotelServiceRepos,
         OrderRepository          $orderRepos,
-        BookingServiceRepository $bookingServiceRepos
+        BookingServiceRepository $bookingServiceRepos,
     )
     {
         $this->hotelRepos = $hotelRepos;
@@ -92,7 +94,7 @@ class OrderServiceImpl implements OrderService
 
         foreach ($orderItemReqs as $item) {
             $roomEntity = $roomMapById[$item['room_id']] ?? null;
-            $this->createOrderItem($orderItems, $item, $roomEntity, $order['id']);
+            $this->createOrderItem($orderItems, $roomEntity, $order['id']);
 
             $serviceForRoom = $serviceReqs[$item['room_id']] ?? null;
             if (!empty($serviceForRoom)) {
@@ -125,10 +127,10 @@ class OrderServiceImpl implements OrderService
     /**
      * @throws RespException
      */
-    private function createOrderItem(&$orderItems, $oderItemReq, $room, $orderId): void
+    private function createOrderItem(&$orderItems, $room, $orderId): void
     {
         if (is_null($room)) {
-            throw new RespException(trans('messages.room_not_found', ['room_code' => $oderItemReq["room_code"]]));
+            throw new RespException(trans('messages.room_not_available'));
         }
 
         $orderItem = new OrderItem();
@@ -169,7 +171,7 @@ class OrderServiceImpl implements OrderService
         $bookingService->service_id = $serviceId;
         $bookingService->quantity = 1;
         $bookingService->price = $serviceEntity["price"];
-        $bookingService->status = StatusOrderEnum::CHUA_THANH_TOAN->value;
+        $bookingService->status = StatusOrderEnum::DANG_CHO->value;
         $bookingService->room_id = $roomId;
 
         return $bookingService;
@@ -182,15 +184,17 @@ class OrderServiceImpl implements OrderService
         $order->voucher_id = $data['voucher_id'];
         $order->phone = $data['user_phone_number'];
         $order->email = $data['user_email'];
+        $order->user_id = Auth::user()?->id ?? null;
         $order->name = $data['user_name'];
         $order->code = $this->commonKeyCodeService->genNewKeyCode(
             TypeCodeEnum::ORDER_TYPE->value,
             Constant::STRING_6_CHAR,
             $data['hotel_id']
         );
-        $order->status = StatusOrderEnum::CHUA_THANH_TOAN->value;
-        $order->start_date = session('start_date');
-        $order->end_date = session('end_date');
+        $order->status = StatusOrderEnum::DANG_CHO->value;
+        $order->status_payment = StatusPaymentOrderEnum::CHUA_THANH_TOAN->value;
+        $order->start_date = Carbon::createFromFormat('Y-m-d', session('start_date'))->setTime(14, 00);
+        $order->end_date = Carbon::createFromFormat('Y-m-d', session('end_date'))->setTime(11, 30);
         $order->note = $data['note'];
         $order->incidental_costs = 0;
     }
@@ -395,10 +399,11 @@ class OrderServiceImpl implements OrderService
 
     private function handleWhenPaymentSuccess($order): void
     {
-        $this->bookingServiceRepos->updateStatusByOrderId(StatusOrderEnum::DA_THANH_TOAN->value, $order['id']);
-        $this->orderRepos->updateStatusById(StatusOrderEnum::DA_THANH_TOAN->value, $order['id']);
+        $this->bookingServiceRepos->updateStatusByOrderId(StatusOrderEnum::DA_XAC_NHAN->value, $order['id']);
+        $this->orderRepos->updateStatusById(StatusOrderEnum::DA_XAC_NHAN->value,
+            StatusPaymentOrderEnum::DA_THANH_TOAN, $order['id']);
         //        //Send mail hóa đơn
-       OrderSuccess::dispatch($order);
+        OrderSuccess::dispatch($order);
     }
 
     public function getTotalOrderMapByCityId(array $cityIds)
@@ -419,11 +424,11 @@ class OrderServiceImpl implements OrderService
     public function searchByPage(OrderSearchRequest $request)
     {
         $data = $request->validated();
-        //        if (!Auth::check()) {
-//            throw new RespException(__('messages.you_have_not_permission'));
-//        }
+        if (!Auth::check()) {
+            throw new RespException(__('messages.you_have_not_permission'));
+        }
 
-        //        $data['user_id'] = auth()->user()->id;
+        $data['user_id'] = auth()->user()->id;
 
         return $this->orderRepos->searchByPage($data, true);
     }
@@ -456,11 +461,30 @@ class OrderServiceImpl implements OrderService
      */
     private function validateBeforePayment($order)
     {
-        if (!StatusOrderEnum::isChuaThanhToan($order['status'])) {
+        if (!StatusOrderEnum::isDangCho($order['status'])) {
             throw new RespException(__('messages.payment_has_been_made'));
+        }
+        if ($order['start_date'] < Carbon::now()) {
+            throw new RespException(__('messages.the_order_cannot_be_paid', ['order_name' => $order['code']]));
+        }
+        $this->validateAvailableRoom($order);
+    }
+
+    /**
+     * @throws RespException
+     */
+    public function validateAvailableRoom($order)
+    {
+        $roomIds = $this->orderRepos->getRoomIdsById($order['id']);
+        $roomAvailable = $this->roomRepos->getRoomBookedIdByIdIn($order['hotel_id'], $roomIds, $order['start_date'], $order['end_date']);
+        if (!empty($roomAvailable)) {
+            throw new RespException(__('messages.room_not_available'));
         }
     }
 
+    /**
+     * @throws RespException
+     */
     public function getDataBookingOrder(Request $request)
     {
 
@@ -470,7 +494,13 @@ class OrderServiceImpl implements OrderService
             return redirect()->back()->with('error', 'Thông tin đặt phòng trống');
         }
 
-        return $this->handleBookingData($dataSearch, $bookingData);
+        $dataResp = $this->handleBookingData($dataSearch, $bookingData);
+
+        if (empty($dataResp)) {
+            throw new RespException('Thông tin đặt phòng trống');
+        }
+
+        return $dataResp;
     }
 
     private function validateOrderQtyRequest(Request $request): array
@@ -496,6 +526,9 @@ class OrderServiceImpl implements OrderService
         return $data;
     }
 
+    /**
+     * @throws RespException
+     */
     private function handleBookingData(&$searchData, array $bookingsData)
     {
         $dataResp = [];
@@ -505,6 +538,10 @@ class OrderServiceImpl implements OrderService
             if (is_null($roomQty)) {
                 unset($searchData[$key]);
                 continue;
+            }
+
+            if (sizeof($item['available_rooms']) < $roomQty) {
+                throw new RespException(__('Số lượng phòng còn trống không đủ ' . $roomQty . ' phòng'));
             }
 
             $item['available_rooms'] = array_slice($item['available_rooms'], 0, $roomQty);
@@ -585,4 +622,45 @@ class OrderServiceImpl implements OrderService
 
         return $result;
     }
+
+    /**
+     * @throws RespException
+     */
+    public function cancelOrder($orderId): void
+    {
+        $order = $this->getNonNullById($orderId);
+        $this->validateBeforeRequirementCancel($order);
+        $this->orderRepos->updateWhenRequirementCancel(StatusOrderEnum::YEU_CAU_HUY->value,
+            StatusPaymentOrderEnum::DA_THANH_TOAN, $orderId);
+    }
+
+
+    /**
+     * @throws RespException
+     */
+    public function validateBeforeRequirementCancel($order): void
+    {
+        if (!StatusOrderEnum::isDaXacNhan($order['status'])) {
+            throw new RespException('Đơn đặt ở trạng thái không thể hủy.');
+        }
+
+        if (isset($order['check_in'])) {
+            throw new RespException('Không thể hủy đơn khi đã sử dụng phòng');
+        }
+    }
+
+    /**
+     * @throws RespException
+     */
+    public function getOrderById($orderId)
+    {
+        $order = $this->orderRepos->getById($orderId);
+
+        if (empty($order)) {
+            throw new RespException(__('messages.order_not_found'));
+        }
+
+        return $order;
+    }
+
 }

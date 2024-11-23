@@ -31,16 +31,16 @@ class RoomRepository extends BaseRepository implements RoomInterface
 
     public function getRoomAvailableByIdInAndOrgId($orgId, $ids, $startDate, $endDate)
     {
-        $orders = Order::with('orderItem')->where('status','<>', StatusOrderEnum::CHUA_THANH_TOAN->value)
+        $orders = Order::with('orderItem')->whereIn('status', [StatusOrderEnum::DA_XAC_NHAN->value, StatusOrderEnum::YEU_CAU_HUY])
+            ->where('org_id', $orgId)
             ->where(function ($query) use ($startDate, $endDate) {
-            $query->whereBetween('start_date', [$startDate, $endDate])
-                ->orWhereBetween('end_date', [$startDate, $endDate])
-                ->orWhere(function ($query) use ($startDate, $endDate) {
-                    $query->where('start_date', '<=', $startDate)
-                        ->where('end_date', '>=', $endDate);
-                });
-        })->get();
-
+                $query->whereBetween('start_date', [$startDate, $endDate])
+                    ->orWhereBetween('end_date', [$startDate, $endDate])
+                    ->orWhere(function ($query) use ($startDate, $endDate) {
+                        $query->where('start_date', '<=', $startDate)
+                            ->where('end_date', '>=', $endDate);
+                    });
+            })->get();
 
         $roomBookedIds = $orders->flatMap(function ($order) {
             return $order->orderItem->flatMap(function ($item) {
@@ -56,5 +56,25 @@ class RoomRepository extends BaseRepository implements RoomInterface
             ->whereIn("rooms.id", $ids)
             ->select("rooms.id", "c.id as catalogue_room_id ", "c.name as catalogue_room_name", "c.price")
             ->get();
+    }
+
+    public function getRoomBookedIdByIdIn($orgId, $ids, $startDate, $endDate)
+    {
+        $orders = Order::with('orderItem')->whereIn('status', [StatusOrderEnum::DA_XAC_NHAN->value, StatusOrderEnum::YEU_CAU_HUY])
+            ->where('org_id', $orgId)
+            ->where(function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('start_date', [$startDate, $endDate])
+                    ->orWhereBetween('end_date', [$startDate, $endDate])
+                    ->orWhere(function ($query) use ($startDate, $endDate) {
+                        $query->where('start_date', '<=', $startDate)
+                            ->where('end_date', '>=', $endDate);
+                    });
+            })->get();
+
+        return $orders->flatMap(function ($order) use ($ids) {
+            return $order->orderItem->filter(function ($item) use ($ids) {
+                return in_array($item->room_id, $ids);
+            })->pluck('room_id');
+        });
     }
 }

@@ -2,8 +2,9 @@
 
 namespace App\Repositories\Service;
 
-use App\Repositories\Base\BaseRepository;
 use App\Models\Service;
+use App\Repositories\Base\BaseRepository;
+use Illuminate\Support\Facades\DB;
 
 class ServiceRepository extends BaseRepository implements ServiceInterface
 {
@@ -35,4 +36,13 @@ class ServiceRepository extends BaseRepository implements ServiceInterface
         return $query;
     }
 
+    public function getByOrderId($orderId)
+    {
+        return Service::query()
+            ->select('services.name', 'services.price', DB::raw('count(1) as service_quantity'), 'bs.status',
+                DB::raw('count(1) * services.price as total_price'))
+            ->join('booking_services as bs', 'bs.service_id', '=', 'services.id')
+            ->where('bs.order_id', $orderId)
+            ->groupBy('services.id', 'bs.status')->get()->toArray();
+    }
 }
