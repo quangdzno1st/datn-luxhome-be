@@ -12,6 +12,7 @@
 */
 
 
+use App\Http\Controllers\Admin\AmenitiesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\RoomController;
@@ -105,6 +106,13 @@ Route::group(['middleware' => ['role']], function () {
         Route::post('/store', 'store')->name('services.store');
         Route::put('/update/{id}', 'update')->name('services.update');
         Route::delete('/{id}', 'destroy')->name('services.destroy');
+    });
+
+    Route::prefix('amenities')->controller(AmenitiesController::class)->group(function () {
+        Route::get('/', 'index')->name('amenities.index');
+        Route::post('/store', 'store')->name('amenities.store');
+        Route::put('/update/{id}', 'update')->name('amenities.update');
+        Route::delete('/{id}', 'destroy')->name('amenities.destroy');
     });
 
     Route::prefix('hotel/services')->controller(HotelServiceController::class)->group(function () {

@@ -20,7 +20,7 @@
     <!--search-->
     <div class="main-search">
         <div class="wrap">
-            <form id="main-search" method="get" action="{{ route('home.search') }}">
+            <form id="main-search" style="height: 200px" method="get" action="{{ route('home.search') }}">
                 <div class="row">
 
                     <div class="four-fourth">
