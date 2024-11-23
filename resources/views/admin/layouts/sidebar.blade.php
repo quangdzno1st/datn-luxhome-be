@@ -86,18 +86,41 @@
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a href="{{ route('admin.users.index') }}"
-                                    class="nav-link {{ request()->routeIs('admin.  users.index') ? 'active' : '' }}"
+                                    class="nav-link {{ request()->routeIs('admin.users.index') ? 'active' : '' }}"
                                     data-key="t-horizontal">Danh Sách</a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('admin.users.create') }}"
-                                    class="nav-link {{ request()->routeIs('admin.  users.create') ? 'active' : '' }}"
+                                    class="nav-link {{ request()->routeIs('admin.users.create') ? 'active' : '' }}"
                                     data-key="t-detached">Thêm Mới</a>
                             </li>
                         </ul>
                     </div>
                 </li>
-                </li> <!-- end Dashboard Menu -->
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('admin.amenities.*') ? 'active' : '' }}"
+                        href="#sidebarAmenities" data-bs-toggle="collapse" role="button" aria-expanded="false"
+                        aria-controls="sidebarAmenities">
+                        <i class="ri-customer-service-line"></i> <span data-key="t-layouts">Tiện nghi</span>
+                    </a>
+                    <div class="collapse menu-dropdown {{ request()->routeIs('admin.amenities.*') ? 'show' : '' }}"
+                        id="sidebarAmenities">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.amenities.index') }}"
+                                    class="nav-link {{ request()->routeIs('admin.amenities.index') ? 'active' : '' }}"
+                                    data-key="t-horizontal">Danh Sách</a>
+                            </li>
+{{--                            <li class="nav-item">--}}
+{{--                                <a href="{{ route('admin.amenities.create') }}"--}}
+{{--                                    class="nav-link {{ request()->routeIs('admin.amenities.create') ? 'active' : '' }}"--}}
+{{--                                    data-key="t-detached">Thêm Mới</a>--}}
+{{--                            </li>--}}
+                        </ul>
+                    </div>
+                </li>
+
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarCatalogueRooms" data-bs-toggle="collapse" role="button"

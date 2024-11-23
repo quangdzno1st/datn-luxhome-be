@@ -50,4 +50,8 @@ class CatalogueRoom extends Model
     {
         return $this->belongsTo(Hotel::class);
     }
+    public function images()
+    {
+        return $this->hasMany(Image::class,'object_id');
+    }
 }

@@ -77,7 +77,7 @@ class AccountSettingController extends Controller
 
     public function orderService(Request $request)
     {
-        $roomsOrder = $this->orderService->getDataBookingOrder($request);
+        $roomsOrder = $this->orderService->getDataBookingOrder($request);dd(123333);
         $services = $this->hotelServiceService->getServicesByIdHotel($roomsOrder[0]['hotel_id'],
             new Request(['type' => ServiceTypeEnum::DICH_VU_TRA_PHI->value]));
         return view('client.bookingservice', compact('roomsOrder', 'services'));

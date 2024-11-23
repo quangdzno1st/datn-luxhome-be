@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SearchRequest extends FormRequest
@@ -21,11 +22,26 @@ class SearchRequest extends FormRequest
     {
         return [
             'number_adult' => 'sometimes|required|integer|min:1',
-            'start_date' => 'sometimes|required|date_format:Y-m-d|before_or_equal:end_date', // Định dạng ngày: d//m/dyyyy
-            'end_date' => 'sometimes|required|date_format:Y-m-d|after_or_equal:start_date', // Định dạng ngày: d//m/dyyyy
-// Bắt buộc, định dạng ngày, sau hoặc bằng `start_date`
-            'city_id' => $this->isHomePage() ?'sometimes|required|exists:cities,id' :  'nullable',
+
+            'start_date' => [
+                'sometimes',
+                'required',
+                'date_format:Y-m-d',
+//                'after_or_equal:' . Carbon::now()->format('Y-m-d'),
+                'before_or_equal:end_date',
+            ],
+
+            'end_date' => [
+                'sometimes',
+                'required',
+                'date_format:Y-m-d',
+                'after_or_equal:start_date',
+//                'after_or_equal:' . Carbon::now()->format('Y-m-d'),
+            ],
+
+            'city_id' => $this->isHomePage() ? 'sometimes|required|exists:cities,id' : 'nullable',
         ];
+
     }
 
     /**
@@ -35,19 +51,21 @@ class SearchRequest extends FormRequest
     {
         return [
             'number_adult.required' => 'Người lớn là bắt buộc.',
-            'number_adult.integer'  => 'Người lớn phải là số.',
-            'number_adult.min'      => 'Người lớn phải ít nhất là 1.',
-            'start_date.required'   => 'Ngày bắt đầu là bắt buộc.',
-            'start_date.date'       => 'Ngày bắt đầu không đúng định dạng.',
-            'start_date.before_or_equal' => 'Ngày bắt đầu phải trước hoặc bằng ngày kết thúc.',
-            'end_date.required'     => 'Ngày kết thúc là bắt buộc.',
-            'end_date.date'         => 'Ngày kết thúc không đúng định dạng.',
-            'end_date.after_or_equal' => 'Ngày kết thúc phải sau hoặc bằng ngày bắt đầu.',
-            'city_id.required'      => 'Thành phố là bắt buộc.',
-            'city_id.integer'       => 'Thành phố không đúng định dạng.',
-            'city_id.exists'        => 'Thành phố không tồn tại.',
-            'start_date.date_format' => 'Ngày bắt đầu phải có định dạng yyyy/mm/dd.',
-            'end_date.date_format' => 'Ngày kết thúc phải có định dạng yyyy/mm/dd.',
+            'number_adult.integer' => 'Người lớn phải là số.',
+            'number_adult.min' => 'Người lớn phải ít nhất là 1.',
+            'start_date.required' => 'Ngày bắt đầu là bắt buộc.',
+            'start_date.date' => 'Ngày bắt đầu không đúng định dạng.',
+            'end_date.required' => 'Ngày kết thúc là bắt buộc.',
+            'end_date.date' => 'Ngày kết thúc không đúng định dạng.',
+            'city_id.required' => 'Thành phố là bắt buộc.',
+            'city_id.integer' => 'Thành phố không đúng định dạng.',
+            'city_id.exists' => 'Thành phố không tồn tại.',
+            'start_date.date_format' => 'Sai định dạng yyyy/mm/dd.',
+            'end_date.date_format' => 'Sai định dạng yyyy/mm/dd.',
+            'start_date.after_or_equal' => 'Ngày bắt đầu phải là hôm nay hoặc sau đó.',
+            'start_date.before_or_equal' => 'Ngày bắt đầu trước ngày kết thúc.',
+            'end_date.after_or_equal' => 'Ngày kết thúc phải là hôm nay hoặc sau đó.',
+            'end_date.after_or_equal.start_date' => 'Ngày kết thúc sau ngày bắt đầu.',
         ];
     }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SearchRequest;
 use App\Models\Hotel;
+use App\Models\Rate;
 use App\Repositories\CatalogueRoom\CatalogueRoomRepository;
 use App\Repositories\Hotel\HotelRepository;
 use Illuminate\Http\Request;
@@ -28,19 +29,19 @@ class HotelController extends Controller
     {
         $searchData = !$request->check ? session('search_data') : $this->catalogueRoomRepository->searchByPage($request);
         $hotel = Hotel::query()->findOrFail($id);
+        $rates = Rate::query()->where('hotel_id',$id)->paginate(20);
         session(['hotel_id' => $hotel->id]);
         $filteredData = collect($searchData)->filter(function ($item) use ($hotel) {
             return $item['hotel_id'] === $hotel->id;
         });
 //        dd($filteredData);
-        return view('client.hotel', compact('filteredData', 'hotel'));
+        return view('client.hotel', compact('filteredData', 'hotel','rates'));
     }
 
     public function search(SearchRequest $request)
     {
 
         $data = $this->catalogueRoomRepository->searchByPage($request);
-
         session(['search_data' => $data]);
         session(['start_date' => $request->start_date]);
         session(['end_date' => $request->end_date]);

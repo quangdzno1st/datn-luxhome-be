@@ -19,28 +19,58 @@
             margin-left: auto;
             margin-right: auto;
         }
+
+        .alert-box {
+            border: 1px solid red;
+            border-radius: 5px;
+            background-color: #fff5f5;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .alert-icon {
+            color: red;
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .alert-content {
+            color: #333;
+        }
+
+        .alert-content strong {
+            font-size: 16px;
+        }
+
+        .alert-content p {
+            margin: 5px 0 0 0;
+            font-size: 14px;
+        }
     </style>
     <main class="main">
         <div class="wrap">
             <!--breadcrumbs-->
-{{--            <nav class="breadcrumbs">--}}
-{{--                <!--crumbs-->--}}
-{{--                <ul>--}}
-{{--                    <li><a href="#" title="Home">Home</a></li>--}}
-{{--                    <li><a href="#" title="Hotels">Hotels</a></li>--}}
-{{--                    <li><a href="#" title="United Kingdom">United Kingdom</a></li>--}}
-{{--                    <li><a href="#" title="London">London</a></li>--}}
-{{--                    <li>Search results</li>--}}
-{{--                </ul>--}}
-{{--                <!--//crumbs-->--}}
+            {{--            <nav class="breadcrumbs">--}}
+            {{--                <!--crumbs-->--}}
+            {{--                <ul>--}}
+            {{--                    <li><a href="#" title="Home">Home</a></li>--}}
+            {{--                    <li><a href="#" title="Hotels">Hotels</a></li>--}}
+            {{--                    <li><a href="#" title="United Kingdom">United Kingdom</a></li>--}}
+            {{--                    <li><a href="#" title="London">London</a></li>--}}
+            {{--                    <li>Search results</li>--}}
+            {{--                </ul>--}}
+            {{--                <!--//crumbs-->--}}
 
-{{--                <!--top right navigation-->--}}
-{{--                <ul class="top-right-nav">--}}
-{{--                    <li><a href="#" title="Back to results">Back to results</a></li>--}}
-{{--                    <li><a href="#" title="Change search">Change search</a></li>--}}
-{{--                </ul>--}}
-{{--                <!--//top right navigation-->--}}
-{{--            </nav>--}}
+            {{--                <!--top right navigation-->--}}
+            {{--                <ul class="top-right-nav">--}}
+            {{--                    <li><a href="#" title="Back to results">Back to results</a></li>--}}
+            {{--                    <li><a href="#" title="Change search">Change search</a></li>--}}
+            {{--                </ul>--}}
+            {{--                <!--//top right navigation-->--}}
+            {{--            </nav>--}}
             <!--//breadcrumbs-->
 
             <div class="row">
@@ -56,10 +86,13 @@
                                 <dt>Khoảng Giá</dt>
                                 <dd>
                                     <input type="hidden" name="city_id" value="{{ request()->get('city_id', '') }}">
-                                    <input type="hidden" name="start_date" value="{{ request()->get('start_date', '') }}">
+                                    <input type="hidden" name="start_date"
+                                           value="{{ request()->get('start_date', '') }}">
                                     <input type="hidden" name="end_date" value="{{ request()->get('end_date', '') }}">
-                                    <input type="hidden" name="number_adult" value="{{ request()->get('number_adult', '') }}">
-                                    <input type="hidden" name="number_child" value="{{ request()->get('number_child', '') }}">
+                                    <input type="hidden" name="number_adult"
+                                           value="{{ request()->get('number_adult', '') }}">
+                                    <input type="hidden" name="number_child"
+                                           value="{{ request()->get('number_child', '') }}">
                                     <div class="checkbox">
                                         <input type="checkbox" id="ch1" name="price[]" value="1000000-2000000"
                                                 {{ in_array('1000000-2000000', request()->get('price', [])) ? 'checked' : '' }} />
@@ -137,15 +170,14 @@
                             </form>
 
 
-
                             <!--//Xếp hạng sao-->
 
                             <!--Đánh giá của người dùng-->
-{{--                            <dt>Đánh giá của người dùng</dt>--}}
-{{--                            <dd>--}}
-{{--                                <div id="slider"></div>--}}
-{{--                                <span class="min">0</span><span class="max">10</span>--}}
-{{--                            </dd>--}}
+                            {{--                            <dt>Đánh giá của người dùng</dt>--}}
+                            {{--                            <dd>--}}
+                            {{--                                <div id="slider"></div>--}}
+                            {{--                                <span class="min">0</span><span class="max">10</span>--}}
+                            {{--                            </dd>--}}
                             <!--//Đánh giá của người dùng-->
                         </dl>
                     </article>
@@ -155,81 +187,110 @@
 
                 <!--three-fourth content-->
                 <div class="three-fourth">
-{{--                    <div class="sort-by">--}}
-{{--                        <h3>Sort by</h3>--}}
-{{--                        <ul class="sort">--}}
-{{--                            <li>Popularity <a href="#" title="ascending" class="ascending">ascending</a><a href="#"--}}
-{{--                                                                                                           title="descending"--}}
-{{--                                                                                                           class="descending">descending</a>--}}
-{{--                            </li>--}}
-{{--                            <li>Price <a href="#" title="ascending" class="ascending">ascending</a><a href="#"--}}
-{{--                                                                                                      title="descending"--}}
-{{--                                                                                                      class="descending">descending</a>--}}
-{{--                            </li>--}}
-{{--                            <li>Stars <a href="#" title="ascending" class="ascending">ascending</a><a href="#"--}}
-{{--                                                                                                      title="descending"--}}
-{{--                                                                                                      class="descending">descending</a>--}}
-{{--                            </li>--}}
-{{--                            <li>Rating <a href="#" title="ascending" class="ascending">ascending</a><a href="#"--}}
-{{--                                                                                                       title="descending"--}}
-{{--                                                                                                       class="descending">descending</a>--}}
-{{--                            </li>--}}
-{{--                        </ul>--}}
+                    {{--                    <div class="sort-by">--}}
+                    {{--                        <h3>Sort by</h3>--}}
+                    {{--                        <ul class="sort">--}}
+                    {{--                            <li>Popularity <a href="#" title="ascending" class="ascending">ascending</a><a href="#"--}}
+                    {{--                                                                                                           title="descending"--}}
+                    {{--                                                                                                           class="descending">descending</a>--}}
+                    {{--                            </li>--}}
+                    {{--                            <li>Price <a href="#" title="ascending" class="ascending">ascending</a><a href="#"--}}
+                    {{--                                                                                                      title="descending"--}}
+                    {{--                                                                                                      class="descending">descending</a>--}}
+                    {{--                            </li>--}}
+                    {{--                            <li>Stars <a href="#" title="ascending" class="ascending">ascending</a><a href="#"--}}
+                    {{--                                                                                                      title="descending"--}}
+                    {{--                                                                                                      class="descending">descending</a>--}}
+                    {{--                            </li>--}}
+                    {{--                            <li>Rating <a href="#" title="ascending" class="ascending">ascending</a><a href="#"--}}
+                    {{--                                                                                                       title="descending"--}}
+                    {{--                                                                                                       class="descending">descending</a>--}}
+                    {{--                            </li>--}}
+                    {{--                        </ul>--}}
 
-{{--                        <ul class="view-type">--}}
-{{--                            <li class="grid-view"><a href="#" title="grid view">grid view</a></li>--}}
-{{--                            <li class="list-view"><a href="#" title="list view">list view</a></li>--}}
-{{--                            <li class="location-view"><a href="#" title="location view">location view</a></li>--}}
-{{--                        </ul>--}}
-{{--                    </div>--}}
+                    {{--                        <ul class="view-type">--}}
+                    {{--                            <li class="grid-view"><a href="#" title="grid view">grid view</a></li>--}}
+                    {{--                            <li class="list-view"><a href="#" title="list view">list view</a></li>--}}
+                    {{--                            <li class="location-view"><a href="#" title="location view">location view</a></li>--}}
+                    {{--                        </ul>--}}
+                    {{--                    </div>--}}
 
                     <div class="row deals  results">
                         <!--deal-->
 
                         @if(!$hotels->isEmpty())
-                            @foreach($hotels as $hotel)
-                                <article class="one-third">
-                                    <figure><a href="" title=""><img src="{{ Storage::url($hotel?->images[0]->path) }}" alt=""/></a></figure>
-                                    <div class="details">
-                                        <h3>{{$hotel->name}}
-                                            <span class="stars">
+                            @php
+                                $searchData = session('search_data');
+                                $allRoomsEmpty = collect($searchData)->every(fn($item) => $item['rooms_count'] == 0);
+                            @endphp
+                            @if($allRoomsEmpty)
+                                <div class="alert-box">
+                                    <i class="fas fa-exclamation-circle alert-icon"></i>
+                                    <div class="alert-content">
+                                        <strong>Trang web chúng tôi không còn phòng tại chỗ nghỉ này từ
+                                            ngày {{ request()->start_date }} đến
+                                            T4, {{request()->end_date}}</strong>
+                                        <p>Chọn ngày khác để xem phòng trống</p>
+                                    </div>
+                                </div>
+                            @else
+                                @foreach($hotels as $hotel)
+                                    <article class="one-third">
+
+                                        <figure><a href="" title=""><img
+                                                        src="{{ Storage::url($hotel?->thumbnail) }}"
+                                                        alt=""/></a></figure>
+                                        <div class="details">
+                                            <h3>{{$hotel->name}}
+                                                <span class="stars">
                         @for ($i = 1; $i <= 5; $i++)
-                                                    @if ($i <= $hotel->star)
-                                                        <i class="fa fa-star star-full"></i>
-                                                    @else
-                                                        <i class="fa fa-star-o star-empty"></i>
-                                                    @endif
-                                                @endfor
+                                                        @if ($i <= $hotel->star)
+                                                            <i class="fa fa-star star-full"></i>
+                                                        @else
+                                                            <i class="fa fa-star-o star-empty"></i>
+                                                        @endif
+                                                    @endfor
                     </span>
-                                        </h3>
+                                            </h3>
 
-                                        <span class="address">{{$hotel?->city?->name}}</span>
+                                            <span class="address">{{$hotel?->city?->name}}</span>
 
-                                        @php
-                                            $prices = $hotel?->catalogues()->pluck('price');
-                                            $minPrice = $prices->min(); // Giá nhỏ nhất
-                                            $maxPrice = $prices->max(); // Giá lớn nhất
-                                        @endphp
-                                        <span style="display: flex; justify-content: space-between" class="price">
+                                            @php
+                                                $prices = $hotel?->catalogues()->pluck('price');
+                                                $minPrice = $prices->min(); // Giá nhỏ nhất
+                                                $maxPrice = $prices->max(); // Giá lớn nhất
+                                            @endphp
+                                            <span style="display: flex; justify-content: space-between" class="price">
                     Giá:  <strong>{{ number_format($minPrice, 0, ',', '.') }} - {{ number_format($maxPrice, 0, ',', '.') }} VND</strong>
                 </span>
-                                        <div class="description">
-                                            <p>{{ Str::limit($hotel->description, 150, '...') }}</p>
+                                            <div class="description">
+                                                <p>{{  \Illuminate\Support\Str::limit(strip_tags(html_entity_decode($hotel->description), 150)) }}</p>
+                                            </div>
+                                            <a href="{{route('hotel.show',$hotel->id)}}" title="Book now"
+                                               class="gradient-button">Đặt ngay</a>
                                         </div>
-                                        <a href="{{route('hotel.show',$hotel->id)}}" title="Book now" class="gradient-button">Đặt ngay</a>
-                                    </div>
-                                </article>
-                            @endforeach
+                                    </article>
+                                @endforeach
+
+                            @endif
+
                         @else
-                            <!-- Hiển thị thông báo nếu không có dữ liệu -->
-                            <strong class="no-data-message">Chưa có dữ liệu !</strong>
+                            <div class="alert-box">
+                                <i class="fas fa-exclamation-circle alert-icon"></i>
+                                <div class="alert-content">
+                                    <strong>Trang web chúng tôi không còn phòng tại chỗ nghỉ này từ
+                                        ngày {{ request()->start_date }} đến
+                                        T4, {{request()->end_date}}</strong>
+                                    <p>Chọn ngày khác để xem phòng trống</p>
+                                </div>
+                            </div>
                         @endif
                         <!--//deal-->
 
                         <!--bottom navigation-->
                         <div class="bottom-nav">
                             <!--back up button-->
-{{--                            <a href="#" class="scroll-to-top" title="Back up">Back up</a>--}}
+                            {{--                            <a href="#" class="scroll-to-top" title="Back up">Back up</a>--}}
                             <!--//back up button-->
 
                             <!--pager-->

@@ -75,10 +75,13 @@ class HotelServiceImpl implements HotelService
 
                 if ($hotel->images) {
                     foreach ($hotel->images as $image) {
-                        Storage::disk('public')->delete($image->path);
+                        if (!empty($image->path)) {
+                            Storage::disk('public')->delete($image->path);
+                        }
                         $image->delete();
                     }
                 }
+
 
                 foreach ($data['images'] as $image) {
                     $path = $image->store(self::PATH_UPLOAD, 'public');
