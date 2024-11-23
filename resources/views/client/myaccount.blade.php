@@ -1,5 +1,14 @@
 @extends('client.layouts.master')
 
+<style>
+    .no-hover:hover {
+        pointer-events: none; /* Vô hiệu hóa sự kiện hover */
+        color: inherit; /* Giữ nguyên màu văn bản (hoặc thay đổi theo nhu cầu) */
+        background-color: inherit; /* Không thay đổi màu nền */
+        text-decoration: none; /* Xóa gạch chân nếu cần */
+    }
+</style>
+
 @section('content')
     <!--main-->
     <main class="main">
@@ -17,7 +26,7 @@
 
             <div class="row">
                 <!--three-fourth content-->
-                <section class="three-fourth">
+                <section class="">
 
                     <div style="display: flex; justify-content:space-between">
                         <h1>Tài khoản của tôi</h1>
@@ -25,7 +34,18 @@
                             <h1 style="color: #19b4ac; font-size:1rem; text-align:right">{{ session('msg') }}</h1>
                         @endif
                         @if (session('error'))
-                            <h1 style="color: red; font-size:1rem; text-align:right">{{ session('error') }}</h1>
+                            <div class="alert alert-danger">
+                                <ul>
+                                    <li>{{session('error')}}</li>
+                                </ul>
+                            </div>
+                        @endif
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                <ul>
+                                    <li>{{session('success')}}</li>
+                                </ul>
+                            </div>
                         @endif
                     </div>
 
@@ -43,9 +63,7 @@
                     <!--My Bookings-->
                     <section id="MyBookings" class="tab-content">
                         <!--booking-->
-
-
-                        @foreach ($orders as $order)
+                        @forelse($orders as $order)
                             <article class="bookings">
                                 <h2><a href="#">{{ $order['hotel_name'] }}</a></h2>
                                 <div class="b-info">
@@ -69,8 +87,8 @@
                                             <th>Trạng thái thanh toán</th>
                                             <td>
                                                 <span
-                                                    style="padding: 8px 40px; border-radius: 20px; color: #FFFFFF;
-                                                background-color: {{ \App\Constant\Enum\StatusOrderEnum::isChuaThanhToan($order['status']) ? '#575145' : '#d5b26b' }}; ">
+                                                        style="padding: 8px 40px; border-radius: 20px; color: #FFFFFF;
+                                                background-color: {{ \App\Constant\Enum\StatusOrderEnum::isDangCho($order['status']) ? '#575145' : '#d5b26b' }}; ">
                                                     {{ \App\Constant\Enum\StatusOrderEnum::parse($order['status'])->getName() }}
                                                 </span>
                                             </td>
@@ -84,19 +102,83 @@
                                 </div>
 
                                 <div class="actions">
-                                    <a href="#" class="gradient-button">Chi tiết đặt phòng</a>
-                                    @if (\App\Constant\Enum\StatusOrderEnum::isChuaThanhToan($order['status']))
+                                    <a href="{{ route('orders.detail', $order['id']) }}" class="gradient-button">Chi tiết đặt phòng</a>
+                                    @if ( $order['start_date'] >= \Carbon\Carbon::now() && \App\Constant\Enum\StatusOrderEnum::isDangCho($order['status']))
                                         <a href="{{ route('orders.payment', $order['id']) }}" class="gradient-button">Thanh
                                             toán hóa đơn</a>
                                     @endif
+
+                                    @if( $order['is_requried_cancel'] != 1 && $order['start_date'] > \Carbon\Carbon::now() && \App\Constant\Enum\StatusOrderEnum::isDaXacNhan($order['status']))
+                                        <a href="#" class="gradient-button" data-bs-toggle="modal"
+                                           data-bs-target="#myModal">
+                                            Hủy đơn
+                                        </a>
+
+                                        <!-- The Modal -->
+                                        <div class="modal fade" id="myModal">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+
+                                                    <!-- Modal Header -->
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Hủy đơn đặt phòng</h4>
+                                                        <a type="button" class="btn-close" data-bs-dismiss="modal"></a>
+                                                    </div>
+
+                                                    <!-- Modal body -->
+                                                    <div class="modal-body">
+                                                        <p>
+                                                            Yêu cầu hủy đặt phòng sẽ được gửi đến chủ khách
+                                                            sạn {{ $order['hotel_name']}}.
+                                                        </p>
+                                                        <p>Chính sách hủy phòng: </p>
+                                                        <p>Hủy trong vòng từ 2-3 ngày trước ngày nhận phòng: </p>
+                                                        <ul>
+                                                            <li>
+                                                                Phí hủy phòng là 50% tổng số tiền đã thanh toán.
+                                                            </li>
+                                                            <li>
+                                                                Số tiền hoàn trả (nếu có) sẽ được chuyển khoản trong vòng 7 ngày
+                                                                làm việc.
+                                                            </li>
+                                                        </ul>
+                                                        <p>
+                                                            Hủy trong vòng 1 ngày trước ngày nhận phòng hoặc không đến:
+                                                        </p>
+                                                        <ul>
+                                                            <li>Không hoàn trả bất kỳ khoản thanh toán nào.</li>
+                                                        </ul>
+                                                        <p>
+                                                            Trường hợp đặc biệt:
+                                                        </p>
+                                                        <ul>
+                                                            <li>
+                                                                Nếu bạn cần thay đổi hoặc hủy đặt phòng do lý do bất khả kháng (thiên tai, dịch bệnh, v.v.),
+                                                                vui lòng liên hệ bộ phận hỗ trợ của khách sạn để được xem xét và xử lý.
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <!-- Modal footer -->
+                                                    <div class="modal-footer">
+                                                        <a href="{{ route('orders.cancel', $order['id']) }}" type="button" class="btn btn-danger">Xác
+                                                            nhận hủy
+                                                        </a>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+
                                 </div>
                             </article>
                             <!--//booking-->
-                        @endforeach
-
-                        <div class="d-flex justify-content-center">
-                            {{ $orders->links() }}
-                        </div>
+                        @empty
+                            <article class="bookings">
+                                <h3 style="text-align: center">Bạn chưa có đơn đặt nào!</h3>
+                            </article>
+                        @endforelse
                     </section>
                     <!--//My Bookings-->
 
@@ -166,15 +248,17 @@
                                         <th>Họ tên:</th>
                                         <td>{{ !empty($user->name) ? $user->name : '' }}
                                             @error('name')
-                                                <p style="color: red">{{ $message }}</p>
+                                            <p style="color: red">{{ $message }}</p>
                                             @enderror
                                             <!--edit fields-->
                                             <div class="edit_field" id="field1">
                                                 <label for="new_name">Nhập tên mới:</label>
                                                 <input type="text" id="new_name" name="name"
-                                                    value="{{ !empty($user->name) ? $user->name : '' }}" />
-                                                <input type="submit" value="Lưu" onclick="return confirm('Bạn có chắc chắn muốn cập nhật thông tin không?')" class="gradient-button"
-                                                    id="submit1" />
+                                                       value="{{ !empty($user->name) ? $user->name : '' }}"/>
+                                                <input type="submit" value="Lưu"
+                                                       onclick="return confirm('Bạn có chắc chắn muốn cập nhật thông tin không?')"
+                                                       class="gradient-button"
+                                                       id="submit1"/>
                                                 <a href="#">Hủy</a>
                                             </div>
                                             <!--//edit fields-->
@@ -185,15 +269,17 @@
                                         <th>Email:</th>
                                         <td>{{ !empty($user->email) ? $user->email : '' }}
                                             @error('email')
-                                                <p style="color: red">{{ $message }}</p>
+                                            <p style="color: red">{{ $message }}</p>
                                             @enderror
                                             <!--edit fields-->
                                             <div class="edit_field" id="field2">
                                                 <label for="email">Email mới:</label>
                                                 <input type="email" id="email" name="email"
-                                                    value="{{ !empty($user->email) ? $user->email : '' }}" />
-                                                <input type="submit" value="Lưu" onclick="return confirm('Bạn có chắc chắn muốn cập nhật thông tin không?')" class="gradient-button"
-                                                    id="submit2" />
+                                                       value="{{ !empty($user->email) ? $user->email : '' }}"/>
+                                                <input type="submit" value="Lưu"
+                                                       onclick="return confirm('Bạn có chắc chắn muốn cập nhật thông tin không?')"
+                                                       class="gradient-button"
+                                                       id="submit2"/>
                                                 <a href="#">Hủy</a>
                                             </div>
                                             <!--//edit fields-->
@@ -204,15 +290,17 @@
                                         <th>Số điện thoại:</th>
                                         <td>{{ !empty($user->phone) ? $user->phone : '' }}
                                             @error('phone')
-                                                <p style="color: red">{{ $message }}</p>
+                                            <p style="color: red">{{ $message }}</p>
                                             @enderror
                                             <!--edit fields-->
                                             <div class="edit_field" id="field3">
                                                 <label for="phone">Số điện thoại mới:</label>
                                                 <input type="text" id="phone" name="phone"
-                                                    value="{{ !empty($user->phone) ? $user->phone : '' }}" />
-                                                <input type="submit" value="Lưu" onclick="return confirm('Bạn có chắc chắn muốn cập nhật thông tin không?')" class="gradient-button"
-                                                    id="submit3" />
+                                                       value="{{ !empty($user->phone) ? $user->phone : '' }}"/>
+                                                <input type="submit" value="Lưu"
+                                                       onclick="return confirm('Bạn có chắc chắn muốn cập nhật thông tin không?')"
+                                                       class="gradient-button"
+                                                       id="submit3"/>
                                                 <a href="#">Hủy</a>
                                             </div>
                                             <!--//edit fields-->
@@ -226,9 +314,11 @@
                                             <div class="edit_field" id="field5">
                                                 <label for="new_address">Địa chỉ mới:</label>
                                                 <input type="text" id="new_address" name="address"
-                                                    value="{{ !empty($user->address) ? $user->address : '' }}" />
-                                                <input type="submit" value="Lưu" onclick="return confirm('Bạn có chắc chắn muốn cập nhật thông tin không?')" class="gradient-button"
-                                                    id="submit5" />
+                                                       value="{{ !empty($user->address) ? $user->address : '' }}"/>
+                                                <input type="submit" value="Lưu"
+                                                       onclick="return confirm('Bạn có chắc chắn muốn cập nhật thông tin không?')"
+                                                       class="gradient-button"
+                                                       id="submit5"/>
                                                 <a href="#">Hủy</a>
                                             </div>
                                             <!--//edit fields-->
@@ -243,9 +333,11 @@
                                             <div class="edit_field" id="field6">
                                                 <label for="cccd">CCCD mới:</label>
                                                 <input type="text" id="cccd" name="cccd"
-                                                    value="{{ !empty($user->cccd) ? $user->cccd : '' }}" />
-                                                <input type="submit" value="Lưu" onclick="return confirm('Bạn có chắc chắn muốn cập nhật thông tin không?')" class="gradient-button"
-                                                    id="submit6" />
+                                                       value="{{ !empty($user->cccd) ? $user->cccd : '' }}"/>
+                                                <input type="submit" value="Lưu"
+                                                       onclick="return confirm('Bạn có chắc chắn muốn cập nhật thông tin không?')"
+                                                       class="gradient-button"
+                                                       id="submit6"/>
                                                 <a href="#">Hủy</a>
                                             </div>
                                             <!--//edit fields-->
@@ -271,23 +363,25 @@
                                         <th>Mật khẩu:</th>
                                         <td>*********
                                             @error('password')
-                                                    <p style="color: red">{{ $message }}</p>
-                                                @enderror
+                                            <p style="color: red">{{ $message }}</p>
+                                            @enderror
                                             <!--edit fields-->
                                             <div class="edit_field" id="field4">
                                                 <label for="new_password">Mật khẩu mới:</label>
-                                                <input type="password" id="new_password" name="password" />
+                                                <input type="password" id="new_password" name="password"/>
                                                 <label for="new_password">Xác nhận mật khẩu:</label>
-                                                <input type="password" id="new_password" name="password_confirmation" />
-                                                <input type="submit" value="Lưu" onclick="return confirm('Bạn có chắc chắn muốn thay đổi mật khẩu không?')" class="gradient-button"
-                                                    id="submit4" />
+                                                <input type="password" id="new_password" name="password_confirmation"/>
+                                                <input type="submit" value="Lưu"
+                                                       onclick="return confirm('Bạn có chắc chắn muốn thay đổi mật khẩu không?')"
+                                                       class="gradient-button"
+                                                       id="submit4"/>
                                                 <a href="#">Hủy</a>
                                             </div>
                                             <!--//edit fields-->
                                         </td>
                                         <td><a href="#field4" class="gradient-button edit">Sửa</a></td>
                                     </tr>
-    
+
                                 </table>
                             </form>
 
@@ -297,32 +391,6 @@
 
                 </section>
                 <!--//three-fourth content-->
-
-                <!--sidebar-->
-                <aside class="one-fourth right-sidebar">
-                    <!--Need Help Booking?-->
-                    <article class="widget">
-                        <h4>Need Help Booking?</h4>
-                        <p>Call our customer services team on the number below to speak to one of our advisors who will
-                            help you with all of your holiday needs.</p>
-                        <p class="number">1- 555 - 555 - 555</p>
-                    </article>
-                    <!--//Need Help Booking?-->
-
-                    <!--Why Book with us?-->
-                    <article class="widget">
-                        <h4>Why Book with us?</h4>
-                        <h5>Low rates</h5>
-                        <p>Get the best rates, or get a refund.<br>No booking fees. Save money!</p>
-                        <h5>Largest Selection</h5>
-                        <p>140,000+ hotels worldwide<br>130+ airlines<br>Over 3 million guest reviews</p>
-                        <h5>We’re Always Here</h5>
-                        <p>Call or email us, anytime<br>Get 24-hour support before, during, and after your trip</p>
-                    </article>
-                    <!--//Why Book with us?-->
-
-                </aside>
-                <!--//sidebar-->
             </div>
             <!--//main content-->
         </div>

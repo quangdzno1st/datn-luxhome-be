@@ -2,42 +2,42 @@
 
 @section('content')
     <!--main-->
-	<main class="main">		
-		<div class="wrap">
-			<!--breadcrumbs-->
-			<nav class="breadcrumbs">
-				<!--crumbs-->
-				<ul>
-					<li><a href="#" title="Home">Home</a></li>
-					<li><a href="#" title="My Account">My Account</a></li>                                    
-				</ul>
-				<!--//crumbs-->
-			</nav>
-			<!--//breadcrumbs-->
+    <main class="main">
+        <div class="wrap">
+            <!--breadcrumbs-->
+            <nav class="breadcrumbs">
+                <!--crumbs-->
+                <ul>
+                    <li><a href="#" title="Home">Home</a></li>
+                    <li><a href="#" title="My Account">My Account</a></li>
+                </ul>
+                <!--//crumbs-->
+            </nav>
+            <!--//breadcrumbs-->
 
-			<div class="row">
-				<!--three-fourth content-->
-				<section class="three-fourth">
-				
-					<h1>Chi tiết đặt phòng</h1>
-					
-					<!--inner navigation-->
-					{{-- <nav class="inner-nav">
-						<ul>
-							<li><a href="#MyBookings" title="My Bookings">My Bookings</a></li>
-							<li><a href="#MyReviews" title="My Reviews">My Reviews</a></li>
-							<li><a href="#MySettings" title="Settings">Settings</a></li>
-						</ul>
-					</nav> --}}
-					<!--//inner navigation-->
-					
-					<!--My Bookings-->
-					<section id="MyBookings" class="tab-content">
-						<!--booking-->
-						<article class="bookings">
-							<h2>Chi Tiết Đặt Phòng</h2>
-							<div class="b-info">
-                                
+            <div class="row">
+                <!--three-fourth content-->
+                <section class="three-fourth">
+
+                    <h1>Chi tiết đặt phòng</h1>
+
+                    <!--inner navigation-->
+                    {{-- <nav class="inner-nav">
+                        <ul>
+                            <li><a href="#MyBookings" title="My Bookings">My Bookings</a></li>
+                            <li><a href="#MyReviews" title="My Reviews">My Reviews</a></li>
+                            <li><a href="#MySettings" title="Settings">Settings</a></li>
+                        </ul>
+                    </nav> --}}
+                    <!--//inner navigation-->
+
+                    <!--My Bookings-->
+                    <section id="MyBookings" class="tab-content">
+                        <!--booking-->
+                        <article class="bookings">
+                            <h2>Chi Tiết Đặt Phòng</h2>
+                            <div class="b-info">
+
 
                                 <table>
                                     <tr>
@@ -46,94 +46,119 @@
                                     </tr>
                                     <tr>
                                         <td>Tên khách sạn</td>
-                                        <td>Khách sạn ABC</td>
+                                        <td>{{ $order['hotel_name'] }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Ngày check-in</td>
-                                        <td>2024-11-18</td>
+                                        <td>Mã đơn</td>
+                                        <td>{{ $order['code'] }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Ngày check-out</td>
-                                        <td>2024-11-20</td>
+                                        <td>Ngày đặt phòng</td>
+                                        <td>{{ \Carbon\Carbon::parse($order['start_date'])->locale('vi')->isoFormat('[Ngày] D [tháng] M [năm] YYYY') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ngày trả phòng</td>
+                                        <td> {{ \Carbon\Carbon::parse($order['start_date'])->locale('vi')->isoFormat('[Ngày] D [tháng] M [năm] YYYY') }} </td>
                                     </tr>
                                     <tr>
                                         <td>Voucher</td>
-                                        <td>Giảm giá 10%</td>
+                                        <td>{{ $order['voucher_description'] }}</td>
                                     </tr>
                                 </table>
-                        
+
                                 <h3>Thông Tin Loại Phòng</h3>
+                                @php
+                                    $totalRoomAmount = 0;
+                                @endphp
                                 <table>
                                     <tr>
                                         <th>Loại Phòng</th>
                                         <th>Số Phòng</th>
                                         <th>Giá (VND)</th>
                                     </tr>
-                                    <tr>
-                                        <td>Deluxe</td>
-                                        <td>431, 432</td>
-                                        <td>1,500,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Standard</td>
-                                        <td>433</td>
-                                        <td>1,000,000</td>
-                                    </tr>
+                                    @foreach($catalogueRooms as $catalogueRoom)
+                                        @php
+                                            $totalRoomAmount += $catalogueRoom['total_price'];
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $catalogueRoom['name'] }}</td>
+                                            <td> {{ $catalogueRoom['room_names'] }}</td>
+                                            <td>{{ number_format($catalogueRoom['total_price']) . ' đ' }}</td>
+                                        </tr>
+                                    @endforeach
                                 </table>
-                        
-                                <h3>Thông Tin Dịch Vụ</h3>
-                                <table>
-                                    <tr>
-                                        <th>Dịch Vụ</th>
-                                        <th>Giá (VND)</th>
-                                    </tr>
-                                    <tr>
-                                        <td>Ăn sáng</td>
-                                        <td>200,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Đưa đón sân bay</td>
-                                        <td>300,000</td>
-                                    </tr>
-                                </table>
-                        
+
+                                @if(!empty($services))
+                                    <h3>Thông Tin Dịch Vụ</h3>
+                                    @php
+                                        $totalServiceAmount = 0;
+                                    @endphp
+                                    <table>
+                                        <tr>
+                                            <th>Dịch Vụ</th>
+                                            <th>Số lượng</th>
+                                            <th>Giá (VND)</th>
+                                        </tr>
+                                        @foreach($services as $service)
+                                            @php
+                                                $totalServiceAmount += $service['total_price'];
+                                            @endphp
+                                            <tr>
+                                                <td>{{ $service['name'] }}</td>
+                                                <td>{{ $service['service_quantity'] }}</td>
+                                                <td>{{ number_format($service['total_price']) . ' đ' }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </table>
+                                @endif
+
                                 <h3>Tổng Tiền</h3>
                                 <table>
-                                    <tr>
-                                        <td>Tổng tiền dịch vụ</td>
-                                        <td>500,000 VND</td>
-                                    </tr>
+                                    @if(!empty($service))
+                                        <tr>
+                                            <td>Tổng tiền dịch vụ</td>
+                                            <td>
+                                                {{ number_format($totalServiceAmount) . ' đ' }}
+                                            </td>
+                                        </tr>
+                                    @endif
                                     <tr>
                                         <td>Tổng tiền đặt phòng</td>
-                                        <td>2,500,000 VND</td>
+                                        <td> {{ number_format($totalRoomAmount) . ' đ' }} </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tổng tiền được giảm</td>
+                                        @php
+                                            $totalAmount = ($totalServiceAmount ?? 0) + $totalRoomAmount;
+                                        @endphp
+                                        <td> {{  number_format($totalAmount * (($order['discount_value']) ?? 0) / 100) . ' đ' }} </td>
                                     </tr>
                                     <tr>
                                         <td class="total">Tổng tiền thanh toán</td>
-                                        <td class="total">3,000,000 VND</td>
+                                        <td class="total">{{ number_format($totalAmount * (100 - (($order['discount_value']) ?? 0)) / 100 ) . ' đ'}}</td>
                                     </tr>
                                 </table>
-							</div>
-							
-							<div class="actions">
-								<a href="#" class="gradient-button">Đã đặt</a>
-								<a href="#" style="background-color: red" class="gradient-button" >Hủy phòng</a>
-							</div>
-						</article>
-						<!--//booking-->
-						
-					</section>
-					<!--//My Bookings-->
-					
-					
-				</section>
-				<!--//three-fourth content-->
-				
-				<!--sidebar-->
-				<aside class="one-fourth right-sidebar">
-					<!--Need Help Booking?-->
-					<article class="widget">
-						<h4>Đánh giá</h4>
-						<select name="" id="">
+                            </div>
+
+                            <div class="actions">
+                                <a href="{{ route('orders.index') }}" class="gradient-button">Quay lại</a>
+                            </div>
+                        </article>
+                        <!--//booking-->
+
+                    </section>
+                    <!--//My Bookings-->
+
+
+                </section>
+                <!--//three-fourth content-->
+
+                <!--sidebar-->
+                <aside class="one-fourth right-sidebar">
+                    <!--Need Help Booking?-->
+                    <article class="widget">
+                        <h4>Đánh giá</h4>
+                        <select name="" id="">
                             <option value="5">Rất tốt</option>
                             <option value="4">Tốt</option>
                             <option value="3">Tạm</option>
@@ -142,26 +167,28 @@
                         </select>
                         <label for="">Nhận xét</label>
                         <textarea name="" id="" cols="30" rows="10" placeholder="Nhận xét ý kiến của bạn"></textarea>
-					</article>
-					<!--//Need Help Booking?-->
-					
-					<!--Why Book with us?-->
-					<article class="widget">
-						<h4>Why Book with us?</h4>
-						<h5>Low rates</h5>
-						<p>Get the best rates, or get a refund.<br>No booking fees. Save money!</p>
-						<h5>Largest Selection</h5>
-						<p>140,000+ hotels worldwide<br>130+ airlines<br>Over 3 million guest reviews</p>
-						<h5>We’re Always Here</h5>
-						<p>Call or email us, anytime<br>Get 24-hour support before, during, and after your trip</p>
-					</article>
-					<!--//Why Book with us?-->
-					
-				</aside>
-				<!--//sidebar-->
-			</div>
-			<!--//main content-->
-		</div>
-	</main>
-	<!--//main-->
+                    </article>
+                    <!--//Need Help Booking?-->
+
+                    <!--Why Book with us?-->
+                    <article class="widget">
+                        <h4>Tại sao đặt chỗ với chúng tôi?</h4>
+                        <h5>Lựa chọn lớn nhất</h5>
+                        <p>Hơn 140.000 khách sạn trên toàn thế giới<br>
+                            Hơn 130 hãng hàng không<br>
+                            Hơn 3 triệu lượt đánh giá của khách</p>
+                        <h5>Chúng tôi luôn ở đây</h5>
+                        <p>Gọi điện hoặc gửi email cho chúng tôi bất cứ lúc nào
+
+                            Nhận hỗ trợ 24 giờ trước, trong và sau chuyến đi của bạn</p>
+                    </article>
+                    <!--//Why Book with us?-->
+
+                </aside>
+                <!--//sidebar-->
+            </div>
+            <!--//main content-->
+        </div>
+    </main>
+    <!--//main-->
 @endsection

@@ -108,6 +108,8 @@ Route::prefix('orders')
         Route::get('/services', 'orderService')->name('orders.services');
         Route::get('/confirm', 'confirmOrder')->name('orders.confirm');
         Route::post('/', 'store')->name('orders.store');
+        Route::get('/cancel/{id}', 'cancelOrder')->name('orders.cancel');
+        Route::get('/{id}', 'show')->name('orders.detail');
     });
 
 Route::get('/hotel/{id}', [HomeController::class, 'searchByPage'] )->name('home.hotel.detail');

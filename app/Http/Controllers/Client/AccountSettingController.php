@@ -6,9 +6,10 @@ use App\Constant\Enum\ServiceTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
 use App\Http\Requests\OrderSearchRequest;
+use App\Repositories\CatalogueRoom\CatalogueRoomRepository;
+use App\Repositories\Service\ServiceRepository;
 use App\Repositories\Voucher\VoucherRepository;
 use App\Services\HotelServiceService;
-use App\Models\User;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,17 +21,22 @@ class AccountSettingController extends Controller
     private OrderService $orderService;
     private VoucherRepository $voucherRepos;
     private HotelServiceService $hotelServiceService;
+    private ServiceRepository $serviceRepos;
 
     /**
      * @param OrderService $orderService
      */
-    public function __construct(OrderService        $orderService,
-                                VoucherRepository   $voucherRepos,
-                                HotelServiceService $hotelServiceService)
+    public function __construct(OrderService            $orderService,
+                                VoucherRepository       $voucherRepos,
+                                HotelServiceService     $hotelServiceService,
+                                CatalogueRoomRepository $catalogueRoomRepos,
+                                ServiceRepository       $serviceRepos)
     {
         $this->orderService = $orderService;
         $this->voucherRepos = $voucherRepos;
         $this->hotelServiceService = $hotelServiceService;
+        $this->catalogueRooms = $catalogueRoomRepos;
+        $this->serviceRepos = $serviceRepos;
     }
 
 
@@ -77,12 +83,13 @@ class AccountSettingController extends Controller
 
     public function orderService(Request $request)
     {
-        $roomsOrder = $this->orderService->getDataBookingOrder($request);dd(123333);
+        $roomsOrder = $this->orderService->getDataBookingOrder($request);
         $services = $this->hotelServiceService->getServicesByIdHotel($roomsOrder[0]['hotel_id'],
             new Request(['type' => ServiceTypeEnum::DICH_VU_TRA_PHI->value]));
         return view('client.bookingservice', compact('roomsOrder', 'services'));
 
     }
+
     public function changeUserInfo(Request $request)
     {
         // dd($request->all());
@@ -98,50 +105,63 @@ class AccountSettingController extends Controller
                 'phone.regex' => 'Số điện thoại không hợp lệ.'
             ];
             $validator = $request->validate([
-                'name' => ['required', 'string','max:255'],
-                'email' => ['required', 'string','email', 'unique:users,email,' . Auth::id(), 'max:255'],
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'unique:users,email,' . Auth::id(), 'max:255'],
                 'phone' => ['required', 'string', 'regex:/^(0[3|5|7|8|9])[0-9]{8}$/']
             ], $message);
-    
+
             $data = $request->all();
-    
+
             $userUpdate = Auth::user();
-    
+
             $userUpdate->update($data);
-    
+
             return back()->with('msg', 'Cập nhật thông tin thành công');
-       } catch (ValidationException $e) {
+        } catch (ValidationException $e) {
             return back()
                 ->withErrors($e->validator)
                 ->with('error', 'Cập nhật thông tin không thành công!');
-       }
+        }
 
     }
 
     public function changePassword(Request $request)
     {
-       try {
+        try {
             $message = [
                 'password.required' => 'Vui lòng nhập mật khẩu.',
                 'password.confirmed' => 'Mật khẩu xác nhận không khớp.',
                 'password.max' => 'Mật khẩu không được vượt quá :max ký tự.'
             ];
             $data = $request->validate([
-                'password' => ['required', 'string','confirmed', 'max:255']
+                'password' => ['required', 'string', 'confirmed', 'max:255']
             ], $message);
 
             $data['password'] = bcrypt($data['password']);
-            
+
             $userUpdate = Auth::user();
 
             $userUpdate->update($data);
 
             return back()->with('msg', 'Thay đổi mật khẩu thành công');
-       } catch (ValidationException $e) {
+        } catch (ValidationException $e) {
             return back()
                 ->withErrors($e->validator)
                 ->with('error', 'Đổi mật khẩu không thành công!');
-       }
+        }
     }
 
+    public function cancelOrder($orderId)
+    {
+        $this->orderService->cancelOrder($orderId);
+        return redirect()->back()->with('success', 'Yêu cầu hủy phòng thành công.');
+    }
+
+    public function show($orderId)
+    {
+        $order = $this->orderService->getOrderById($orderId);
+        $catalogueRooms = $this->catalogueRooms->getByOrderId($orderId);
+        $services = $this->serviceRepos->getByOrderId($orderId);
+        return view('client.bookingdetail', compact('catalogueRooms', 'order', 'services'));
+    }
 }
