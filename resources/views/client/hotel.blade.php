@@ -238,8 +238,9 @@
         }
 
         .rating {
-            font-size: 30px; /* Tăng kích thước sao */
+            font-size: 14px; /* Tăng kích thước sao */
             color: #FFD700; /* Màu vàng cho sao */
+            width: 50px !important;
         }
 
         .star {
@@ -311,7 +312,7 @@
                         							</span>
                         </h1>
                         <div class="address" style="width: 190px; margin-top: 10px">{{$hotel->location}}</div>
-                        <span class="rating"> 8 /10</span>
+                        <span  class="rating"> 8 /10</span>
                         <div class="description">
                             <p>{{ \Illuminate\Support\Str::limit(strip_tags(html_entity_decode($hotel->description)), 100) }}</p>
 
@@ -379,7 +380,7 @@
                     <form id="main-search" method="get" action="{{ route('home.search') }}">
                         <div class="row">
                             @php
-                                $data = session('search_data')[0] ?? [];
+                                $search_data = session('search_data')[0] ?? [];
                             @endphp
 
                             <div class="col-md-12">
@@ -389,7 +390,7 @@
                                         <input type="text" id="datepicker1" name="start_date"
                                                class="form-control"
                                                placeholder="Chọn ngày bắt đầu"
-                                               value="{{ old('start_date') ?? $data['start_date'] }}"/>
+                                               value="{{ old('start_date') ?? ($search_data['start_date'] ?? session('start_date') )}}"/>
                                         @error('start_date')
                                         <div class="text-danger">{{ $message }}</div>
                                         @else
@@ -401,7 +402,7 @@
                                         <label for="datepicker2">Ngày kết thúc</label>
                                         <input type="text" id="datepicker2" name="end_date" class="form-control"
                                                placeholder="Chọn ngày kết thúc"
-                                               value="{{ old('end_date') ?? $data['end_date'] }}"/>
+                                               value="{{ old('end_date') ?? ($search_data['end_date'] ?? session('end_date') ) }}"/>
                                         @error('end_date')
                                         <div class="text-danger">{{ $message }}</div>
                                         @else
@@ -414,7 +415,7 @@
                                         <input type="number" id="spinner2" name="number_adult"
                                                class="form-control"
                                                placeholder="Số  người lớn"
-                                               value="{{ old('number_adult') ?? $data['number_adult_search'] }}"/>
+                                               value="{{ old('number_adult') ??( $search_data['number_adult_search'] ?? null) }}"/>
                                         @error('number_adult')
                                         <div class="text-danger">{{ $message }}</div>
                                         @else
@@ -427,7 +428,7 @@
                                         <input type="number" id="spinner3" name="number_child"
                                                class="form-control"
                                                placeholder="Số trẻ em"
-                                               value="{{ old('number_child') ?? $data['number_child_search'] }}"/>
+                                               value="{{ old('number_child') ?? ($search_data['number_child_search'] ?? null) }}"/>
                                         <div class="text-danger" style="visibility: hidden;">&nbsp;</div>
                                     </div>
 

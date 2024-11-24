@@ -31,6 +31,9 @@ class HotelController extends Controller
         $hotel = Hotel::query()->findOrFail($id);
         $rates = Rate::query()->where('hotel_id',$id)->paginate(20);
         session(['hotel_id' => $hotel->id]);
+        session(['start_date' => $request->start_date]);
+        session(['end_date' => $request->end_date]);
+
         $filteredData = collect($searchData)->filter(function ($item) use ($hotel) {
             return $item['hotel_id'] === $hotel->id;
         });
