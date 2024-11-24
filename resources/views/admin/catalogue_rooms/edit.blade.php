@@ -11,7 +11,7 @@
 @endsection
 
 @section('title')
-    Thêm mới loại phòng
+    Chỉnh sửa loại phòng
 @endsection
 
 @section('content')
@@ -19,12 +19,12 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0">Thêm mới loại phòng</h4>
+                <h4 class="mb-sm-0">Chỉnh sửa loại phòng</h4>
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{route('admin.catalogue-rooms.index')}}">Loại phòng</a></li>
-                        <li class="breadcrumb-item active">Thêm mới</li>
+                        <li class="breadcrumb-item active">Chỉnh sửa</li>
                     </ol>
                 </div>
 
@@ -35,26 +35,33 @@
 
     <!-- Notification -->
     <div class="row">
+        @if (session('msg'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>{{ session('msg') }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         @if (session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>{{session('error')}}</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>{{ session('error') }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         @endif
     </div>
 
-    <form action="{{ route('admin.catalogue-rooms.store') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ route('admin.catalogue-rooms.update', $catalogueRoom->id) }}" method="post" enctype="multipart/form-data">
         @csrf
+        @method('PUT')
         <div class="row">
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
                         <div class="mb-3">
                             <label class="form-label" for="name">Tên loại phòng</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}"
-                                placeholder="Tên loại phòng">
+                            <input type="text" class="form-control" id="name" name="name"
+                                value="{{ $catalogueRoom->name }}" placeholder="Tên loại phòng">
                             @error('name')
-                                <p class="text-danger">{{$message}}</p>
+                                <p class="text-danger">{{ $message }}</p>
                             @enderror
                         </div>
 
@@ -62,46 +69,52 @@
                             <label class="form-label" for="thumbnail">Thumbnail</label>
                             <input class="form-control" id="thumbnail" type="file" name="thumbnail"
                                 accept="image/png, image/gif, image/jpeg">
-                                @error('thumbnail')
-                                <p class="text-danger">{{$message}}</p>
+                            <div class="">
+                                <img class="img-fluid img-thumbnail mt-2"
+                                    style="width: 100px; height: 100px; object-fit: cover"
+                                    src="{{ \Storage::url($catalogueRoom->thumbnail) }}" alt="">
+                            </div>
+                            @error('thumbnail')
+                                <p class="text-danger">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <div class="mb-3 row">
-                           <div class="col">
-                            <label class="form-label" for="price">Giá phòng</label>
-                            <input type="number" class="form-control" id="price" name="price" value="{{ old('price') }}"
-                                placeholder="Giá phòng">
+                            <div class="col">
+                                <label class="form-label" for="price">Giá phòng</label>
+                                <input type="number" class="form-control" id="price" name="price"
+                                    value="{{ $catalogueRoom->price }}" placeholder="Giá phòng">
                                 @error('price')
-                                <p class="text-danger">{{$message}}</p>
-                            @enderror
-                           </div>
-                           <div class="col">
-                            <label class="form-label" for="price_hour">Giá phạt checkout quá giờ</label>
-                            <input type="number" class="form-control" id="price_hour" name="price_hour" value="{{ old('price_hour') }}"
-                                placeholder="Giá phòng theo tiếng">
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="col">
+                                <label class="form-label" for="price_hour">Giá phạt checkout quá giờ</label>
+                                <input type="number" class="form-control" id="price_hour" name="price_hour"
+                                    value="{{ $catalogueRoom->price_hour }}" placeholder="Giá phòng theo tiếng">
                                 @error('price_hour')
-                                <p class="text-danger">{{$message}}</p>
-                            @enderror
-                           </div>
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
 
                         <div class="mb-3 row">
-                          <div class="col">
-                            <label class="form-label" for="view">Lượt xem</label>
-                            <input type="number" class="form-control" id="view" min="0" name="view"
-                                value="{{ old('view') }}" placeholder="Lượt xem" disabled>
-                          </div>
-                          <div class="col">
-                            <label class="form-label" for="like">Lượt thích</label>
-                            <input type="number" class="form-control" id="like" min="0" name="like"
-                                value="{{ old('like') }}" placeholder="Lượt thích" disabled>
-                          </div>
+                            <div class="col">
+                                <label class="form-label" for="view">Lượt xem</label>
+                                <input type="number" class="form-control" id="view" min="0" name="view"
+                                    value="{{ $catalogueRoom->view }}" placeholder="Lượt xem" disabled>
+                            </div>
+                            <div class="col">
+                                <label class="form-label" for="like">Lượt thích</label>
+                                <input type="number" class="form-control" id="like" min="0" name="like"
+                                    value="{{ $catalogueRoom->like }}" placeholder="Lượt thích" disabled>
+                            </div>
                         </div>
 
                         <div class="mb-2 d-flex justify-content-end">
                             <div class="form-check form-switch form-switch-success">
-                                <input class="form-check-input" type="checkbox" role="switch" name="status" id="SwitchCheck3" value="1" checked>
+                                <input class="form-check-input" type="checkbox" role="switch" name="status"
+                                    id="SwitchCheck3" value="1" @checked($catalogueRoom->status == 1)>
                                 <label class="form-check-label" for="SwitchCheck3">Hoạt động</label>
                             </div>
                         </div>
@@ -109,10 +122,10 @@
                         <div class="mb-3">
                             <label class="form-label">Mô tả</label>
                             <div>
-                                <textarea class="form-control" id="content" rows="2" name="description">{{old('description')}}</textarea>
+                                <textarea class="form-control" id="content" rows="2" name="description">{{ $catalogueRoom->description }}</textarea>
                                 @error('description')
-                                <p class="text-danger">{{$message}}</p>
-                            @enderror
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -122,7 +135,7 @@
 
                 <!-- end card -->
                 <div class="text-end mb-3">
-                    <button type="submit" class="btn btn-success w-sm">Thêm Mới</button>
+                    <button type="submit" class="btn btn-success w-sm">Cập nhật</button>
                 </div>
             </div>
             <!-- end col -->
@@ -152,10 +165,12 @@
                 @else
                     <input type="hidden" value="{{Auth::user()->org_id}}" name="hotel_id">
                 @endif --}}
-                <input type="hidden" value="{{Auth::user()->org_id}}" name="hotel_id">
+                <input type="hidden" value="{{ Auth::user()->org_id }}" name="hotel_id">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between">
                         <h5 class="card-title mb-0">Hình ảnh</h5>
+                        <a href="#" class="float-end text-decoration-underline" data-bs-toggle="modal"
+                            data-bs-target=".bs-example-modal-xl">Danh sách ảnh</a>
                     </div>
                     <div class="card-body">
                         <div class="col-lg-12 col-sm-12">
@@ -187,18 +202,20 @@
                                 <label class="form-label" for="">Sức chứa</label>
                                 <div class="row">
                                     <div class="col">
-                                        <input type="number" class="form-control" id="number_adult" value="{{old('number_adult')}}"
-                                        placeholder="Người lớn" name="number_adult">
+                                        <input type="number" class="form-control" id="number_adult"
+                                            value="{{ $catalogueRoom->number_adult }}" placeholder="Người lớn"
+                                            name="number_adult">
                                         @error('number_adult')
-                                        <p class="text-danger">{{$message}}</p>
-                                    @enderror
+                                            <p class="text-danger">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                     <div class="col">
-                                        <input type="number" class="form-control" id="number_child" value="{{old('number_child')}}"
-                                        placeholder="Trẻ em" name="number_child">
+                                        <input type="number" class="form-control" id="number_child"
+                                            value="{{ $catalogueRoom->number_child }}" placeholder="Trẻ em"
+                                            name="number_child">
                                         @error('number_child')
-                                        <p class="text-danger">{{$message}}</p>
-                                    @enderror
+                                            <p class="text-danger">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
@@ -207,10 +224,10 @@
                         <div class="mb-3">
                             <div class="mb-3">
                                 <label class="form-label" for="acreage">Diện tích</label>
-                                <input type="number" class="form-control" id="acreage" name="acreage" value="{{ old('acreage') }}"
-                                    placeholder="Diện tích">
-                                    @error('acreage')
-                                    <p class="text-danger">{{$message}}</p>
+                                <input type="number" class="form-control" id="acreage" name="acreage"
+                                    value="{{ $catalogueRoom->acreage }}" placeholder="Diện tích">
+                                @error('acreage')
+                                    <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
@@ -220,7 +237,10 @@
                             <select class="form-control" id="choices-multiple-remove-button" data-choices
                                 data-choices-removeItem name="attributes[]" multiple>
                                 @foreach ($attributes as $attribute)
-                                    <option value="{{$attribute->id}}">{{$attribute->content}}</option>
+                                    <option value="{{ $attribute->id }}"
+                                        @foreach ($catalogueRoom->attributes as $attri)
+                                        {{ $attribute->id == $attri->id ? 'selected' : '' }} @endforeach>
+                                        {{ $attribute->content }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -236,6 +256,46 @@
         <!-- end col -->
         </div>
     </form>
+
+    <!--  Extra Large modal example -->
+    <div class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <form class="modal-content" action="{{route('admin.catalogue-rooms.delete.image.multi')}}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('DELETE')
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myExtraLargeModalLabel">Danh Sách Ảnh</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                @foreach ($catalogueRoom->images as $key => $image)                                
+                                    <div class="col-2">
+                                        <div class="form-check form-check-secondary mb-3">
+                                            <input class="form-check-input" type="checkbox" id="formCheck{{$key}}" name="images_id[]" value="{{$image->id}}">
+                                            <label class="form-check-label" for="formCheck{{$key}}">
+                                                <img class="img-fluid img-thumbnail mt-2"
+                                                style="width: 100%; height: 100px; object-fit: cover"
+                                                src="{{ \Storage::url($image->path) }}" alt="ảnh">
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div><!--end col-->
+                    </div><!--end row-->
+                </div>
+                <div class="modal-footer">
+                    <a href="javascript:void(0);" class="btn btn-link link-primary fw-medium" data-bs-dismiss="modal"><i
+                            class="ri-close-line me-1 align-middle"></i> Đóng</a>
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có muốn xóa những ảnh đã chọn không!')">Xóa Ảnh</button>
+                </div>
+            </form><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 @endsection
 
 @section('script-libs')
