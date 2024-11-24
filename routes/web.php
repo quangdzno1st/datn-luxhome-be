@@ -2,16 +2,15 @@
 
 use App\Http\Controllers\Admin\CatalogueRoomController;
 use App\Http\Controllers\Admin\HotelServiceController;
-use App\Http\Controllers\Admin\ServiceController;
-use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\StatisticalController;
+use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\Client\AccountSettingController;
-use App\Http\Controllers\Client\CityController;
-use App\Http\Controllers\Client\HomeController;
-use App\Http\Controllers\Client\HotelController;
 use App\Http\Controllers\Client\Auth\ForgotPasswordController;
 use App\Http\Controllers\Client\Auth\LoginController;
 use App\Http\Controllers\Client\Auth\RegisterController;
+use App\Http\Controllers\Client\CityController;
+use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\HotelController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -34,15 +33,16 @@ Route::prefix('hotel/services')->controller(HotelServiceController::class)->grou
 });
 //voucher
 Route::prefix('admin/vouchers')->group(function () {
-    Route::get('/', [\App\Http\Controllers\Admin\VoucherController::class, 'index'])->name('vouchers.index');
-    Route::get('/create', [\App\Http\Controllers\Admin\VoucherController::class, 'create'])->name('vouchers.create');
-    Route::post('/', [\App\Http\Controllers\Admin\VoucherController::class, 'store'])->name('vouchers.store');
-    Route::get('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'edit'])->name('vouchers.edit');
-    Route::put('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'update'])->name('vouchers.update');
-    Route::delete('/delete/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'delete'])->name('vouchers.delete');
-    Route::get('/list-trash', [\App\Http\Controllers\Admin\VoucherController::class, 'list_trash'])->name('vouchers.list_trash');
-    Route::post('/restore/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'restore'])->name('vouchers.restore');
-    Route::delete('/force_delete/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'destroy'])->name('vouchers.force_delete');
+    Route::get('/', [VoucherController::class, 'index'])->name('vouchers.index');
+    Route::get('/create', [VoucherController::class, 'create'])->name('vouchers.create');
+    Route::post('/issue-voucher', [VoucherController::class, 'issueVoucher'])->name('vouchers.issue_voucher');
+    Route::post('/', [VoucherController::class, 'store'])->name('vouchers.store');
+    Route::get('/{id}', [VoucherController::class, 'edit'])->name('vouchers.edit');
+    Route::put('/{id}', [VoucherController::class, 'update'])->name('vouchers.update');
+    Route::delete('/delete/{id}', [VoucherController::class, 'delete'])->name('vouchers.delete');
+    Route::get('/list-trash', [VoucherController::class, 'list_trash'])->name('vouchers.list_trash');
+    Route::post('/restore/{id}', [VoucherController::class, 'restore'])->name('vouchers.restore');
+    Route::delete('/force_delete/{id}', [VoucherController::class, 'destroy'])->name('vouchers.force_delete');
 });
 
 Route::controller(StatisticalController::class)->group(function () {
@@ -86,7 +86,7 @@ Route::prefix('admin/orders')->group(function () {
     Route::delete('/delete/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'delete'])->name('orders.delete');
 });
 
-    Route::get('/test/theme', function () {
+Route::get('/test/theme', function () {
     return view('client.bookingdetail');
 });
 
@@ -112,14 +112,14 @@ Route::prefix('orders')
         Route::get('/{id}', 'show')->name('orders.detail');
     });
 
-Route::get('/hotel/{id}', [HomeController::class, 'searchByPage'] )->name('home.hotel.detail');
-Route::get('/hotel/booking/{id}', [HotelController::class, 'booking'] )->name('hotel.booking');
-Route::get('/payment-order/{id}',[AccountSettingController::class, 'paymentOrder'])->name('orders.payment');
-Route::get('/payment-return',[AccountSettingController::class, 'paymentReturn'])->name('orders.paymentReturn');
-Route::get('/cities/search-by-page', [CityController::class, 'searchByPage'] )->name('cities.searchByPage');
+Route::get('/hotel/{id}', [HomeController::class, 'searchByPage'])->name('home.hotel.detail');
+Route::get('/hotel/booking/{id}', [HotelController::class, 'booking'])->name('hotel.booking');
+Route::get('/payment-order/{id}', [AccountSettingController::class, 'paymentOrder'])->name('orders.payment');
+Route::get('/payment-return', [AccountSettingController::class, 'paymentReturn'])->name('orders.paymentReturn');
+Route::get('/cities/search-by-page', [CityController::class, 'searchByPage'])->name('cities.searchByPage');
 
-Route::middleware('is.login')->group(function(){
-    Route::get('/orders',[AccountSettingController::class, 'index'])->name('orders.index');
+Route::middleware('is.login')->group(function () {
+    Route::get('/orders', [AccountSettingController::class, 'index'])->name('orders.index');
     Route::post('/update/user', [AccountSettingController::class, 'changeUserInfo'])->name('client.update.user');
     Route::post('/change/password/user', [AccountSettingController::class, 'changePassword'])->name('client.change.password.user');
 });

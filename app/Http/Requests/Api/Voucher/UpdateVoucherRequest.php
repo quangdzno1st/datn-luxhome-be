@@ -29,15 +29,10 @@ class UpdateVoucherRequest extends FormRequest
             'description' => 'required|string|max:1000', // có thể bỏ trống, là chuỗi, không quá 1000 ký tự
             'status' => 'required|in:1,0', // bắt buộc, phải là một trong hai giá trị: 'active' hoặc 'inactive'
             'quantity' => 'required|integer|min:1', // bắt buộc, là số nguyên, tối thiểu là 1
-            'discount_type' => 'required|in:1,0', // bắt buộc, phải là 'percent' hoặc 'fixed'
-            'discount_value' => 'required|numeric|min:0', // bắt buộc, là số, tối thiểu là 0
+            'discount_value' => 'required|numeric|min:1|max:30', // bắt buộc, là số, tối thiểu là 0
             'start_date' => 'nullable|date', // bắt buộc, phải là ngày hợp lệ
             'end_date' => 'nullable|date|after_or_equal:start_date', // có thể bỏ trống, là ngày hợp lệ, phải lớn hơn hoặc bằng ngày bắt đầu
-            'min_price' => 'nullable|numeric|min:0', // có thể bỏ trống, là số, tối thiểu là 0
-            'max_price' => 'nullable|numeric|gte:min_price', // có thể bỏ trống, là số, phải lớn hơn hoặc bằng min_price
-            'rank_id' => 'nullable|integer|exists:ranks,id', // có thể bỏ trống, phải là số nguyên, tồn tại trong bảng ranks
-            'conditional_rank' => 'nullable|boolean', // có thể bỏ trống, phải là boolean
-            'conditional_total_amount' => 'nullable|numeric|min:0', // có thể bỏ trống, là số, tối thiểu là 0
+            'thubnail' => 'nullable|image',
         ];
     }
     public function messages()
@@ -45,6 +40,8 @@ class UpdateVoucherRequest extends FormRequest
         return [
             'description.string' => 'Mô tả phải là một chuỗi ký tự',
             'description.max' => 'Mô tả không được vượt quá 1000 ký tự',
+            'description.required' => 'Mô tả phải là bắt buộc',
+
 
             'status.required' => 'Trạng thái là bắt buộc',
             'status.in' => 'Trạng thái không hợp lệ, chỉ chấp nhận active hoặc inactive',

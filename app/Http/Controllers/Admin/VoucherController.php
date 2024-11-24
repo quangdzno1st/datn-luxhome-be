@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exceptions\RespException;
 use App\Http\Controllers\Api\Controller;
 use App\Http\Requests\Api\Voucher\CreateVoucherRequest;
 use App\Http\Requests\Api\Voucher\UpdateVoucherRequest;
 use App\Models\Voucher;
+use App\Models\Wallet;
+use App\Repositories\User\UserRepository;
+use App\Services\FileUploadService;
 use App\Services\impl\VoucherServiceImpl;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -15,12 +20,20 @@ use Illuminate\Support\Str;
 class VoucherController extends Controller
 {
 
+    private FileUploadService $fileUploadService;
+    private UserRepository $userRepos;
+
     private $voucher;
 
-    const PATH_DIRECT='admin.voucher.';
+    const PATH_DIRECT = 'admin.voucher.';
 
-    public function __construct(VoucherServiceImpl $voucher){
+    public function __construct(VoucherServiceImpl $voucher,
+                                FileUploadService  $fileUploadService,
+                                UserRepository     $userRepos)
+    {
         $this->voucher = $voucher;
+        $this->fileUploadService = $fileUploadService;
+        $this->userRepos = $userRepos;
     }
 
     public function index()
@@ -30,7 +43,7 @@ class VoucherController extends Controller
             $vouchers = $this->voucher->listVoucher();
 //            dd($vouchers);
             // Trả về dữ liệu voucher với thông điệp thành công
-            return view(self::PATH_DIRECT.__FUNCTION__, compact('vouchers'));
+            return view(self::PATH_DIRECT . __FUNCTION__, compact('vouchers'));
         } catch (\Exception $e) {
             return Redirect::back()->withErrors('msg', 'Failed to retrieve vouchers');
         }
@@ -38,41 +51,41 @@ class VoucherController extends Controller
 
     public function create()
     {
-        return view(self::PATH_DIRECT.__FUNCTION__);
+        return view(self::PATH_DIRECT . __FUNCTION__);
     }
 
     public function store(CreateVoucherRequest $request)
     {
         try {
             $data = $request->validated();
-            $data['code']=Str::upper(Str::random(10));
+            $data['code'] = Str::upper(Str::random(10));
+            $data['thumbnail'] = $this->fileUploadService->storeLocal($request->file('thumbnail'));
             $data['id'] = Str::uuid()->toString();
 
-            $voucher=$this->voucher->createVoucher($data);
+            $voucher = $this->voucher->createVoucher($data);
             return $this->index();
-        }catch (\Exception $e){
-            return Redirect::back()->withErrors(['msg' => 'Errors: '.$e->getMessage()]);
+        } catch (\Exception $e) {
+            return Redirect::back()->withErrors(['msg' => 'Errors: ' . $e->getMessage()]);
         }
     }
 
     public function show($id)
     {
         try {
-            $voucher=$this->voucher->showVoucher($id);
+            $voucher = $this->getNonNullById($id);
             return $voucher;
-        }catch (\Exception $e){
-            return Redirect::back()->withErrors(['msg' => 'Errors: '.$e->getMessage()]);
+        } catch (\Exception $e) {
+            return Redirect::back()->withErrors(['msg' => 'Errors: ' . $e->getMessage()]);
         }
     }
 
     public function edit($id)
     {
         try {
-            $voucher=$this->voucher->showVoucher($id);
-//            dd($voucher);
-            return view(self::PATH_DIRECT.__FUNCTION__, compact('voucher'));
-        }catch (\Exception $e){
-            return Redirect::back()->withErrors(['msg' => 'Errors: '.$e->getMessage()]);
+            $voucher = $this->getNonNullById($id);
+            return view(self::PATH_DIRECT . __FUNCTION__, compact('voucher'));
+        } catch (\Exception $e) {
+            return Redirect::back()->withErrors(['msg' => 'Errors: ' . $e->getMessage()]);
         }
     }
 
@@ -80,42 +93,67 @@ class VoucherController extends Controller
     {
         try {
 
-            if ($request->validated()){
+            if ($request->validated()) {
                 $data = $request->validated();
-                $data['code']=Str::upper(Str::random(10));
+
+                $voucher = $this->getNonNullById($id);
+                $data['code'] = Str::upper(Str::random(10));
                 $data['id'] = Str::uuid()->toString();
-                $voucher=$this->voucher->updateVoucher($data,$id);
+
+                if ($request->hasFile('thumbnail')) {
+                    $data['thumbnail'] = $this->fileUploadService->storeLocal($request->file('thumbnail'));
+                }
+
+                $voucher = $this->voucher->updateVoucher($data, $id);
                 return $this->index();
-            }else{
+            } else {
                 return \redirect()->back()->withErrors(['msg' => 'Errors']);
             }
-        }catch (\Exception $e){
-            return Redirect::back()->withErrors(['msg' => 'Errors: '.$e->getMessage()]);
+        } catch (\Exception $e) {
+            return Redirect::back()->withErrors(['msg' => 'Errors: ' . $e->getMessage()]);
         }
 
     }
 
+    /**
+     * @throws RespException
+     */
+    private function getNonNullById($id)
+    {
+        $voucher = $this->voucher->showVoucher($id);
+
+        if (empty($voucher)) {
+            throw new RespException('Không tìm thấy phiếu giảm giá');
+        }
+
+        return $voucher;
+    }
+
+    /**
+     * @throws RespException
+     */
     public function delete($id)
     {
         try {
             DB::beginTransaction();
 
-            $voucher = $this->voucher->deleteVoucher($id);
+            $voucher = $this->getNonNullById($id);
+            $this->voucher->deleteVoucher($voucher['id']);
 
             DB::commit();
 
             return $this->index();
 
-        } catch (Exception $exception)
-        {
-            return Redirect::back()->withErrors(['msg' => 'Errors: '.$exception->getMessage()]);
+        } catch (Exception $exception) {
+            return Redirect::back()->withErrors(['msg' => 'Errors: ' . $exception->getMessage()]);
         }
     }
 
-    public function list_trash(){
+    public function list_trash()
+    {
         $trashedVouchers = Voucher::onlyTrashed()->get();
 //        dd($trashedVouchers);
-        return view(self::PATH_DIRECT.__FUNCTION__, compact('trashedVouchers'));
+        return view(self::PATH_DIRECT . __FUNCTION__, compact('trashedVouchers'));
     }
 
     public function restore($id)
@@ -129,28 +167,30 @@ class VoucherController extends Controller
 
             return $this->index();
 
-        } catch (Exception $exception)
-        {
-            return Redirect::back()->withErrors(['msg' => 'Errors: '.$exception->getMessage()]);
+        } catch (Exception $exception) {
+            return Redirect::back()->withErrors(['msg' => 'Errors: ' . $exception->getMessage()]);
 
         }
     }
 
+    /**
+     * @throws RespException
+     */
     public function destroy($id)
     {
 
         try {
             DB::beginTransaction();
 
-            $voucher = $this->voucher->forceDeleteVoucher($id);
+            $voucher = $this->getNonNullById($id);
+            $this->voucher->forceDeleteVoucher($voucher['id']);
 
             DB::commit();
 
             return $this->index();
 
-        } catch (Exception $exception)
-        {
-            return Redirect::back()->withErrors(['msg' => 'Errors: '.$exception->getMessage()]);
+        } catch (Exception $exception) {
+            return Redirect::back()->withErrors(['msg' => 'Errors: ' . $exception->getMessage()]);
         }
     }
 
@@ -165,6 +205,77 @@ class VoucherController extends Controller
             'message' => 'No Found Data',
             'data' => []
         ], Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * @throws RespException
+     */
+    public function issueVoucher(Request $request)
+    {
+
+        $users = $this->userRepos->getByRankAndTotalAmountOrdered($request);
+        $userIds = $users->pluck('id')->toArray(); // Lấy danh sách ID
+
+
+        $voucherMapByCode = $this->voucher->getMapByCode($request->vouchers);
+
+        if (empty($voucherMapByCode->toArray())) {
+            return response()->json([
+                'message' => 'Không tìm thấy phiếu giảm giá',
+            ], 404);
+        }
+
+        $voucherIds = $voucherMapByCode->pluck('id')->toArray();
+
+        $existingRecords = Wallet::query()->select('wallets.voucher_id', 'wallets.user_id', 'vouchers.code')
+            ->join('vouchers', 'vouchers.id', '=', 'wallets.voucher_id')
+            ->whereIn('user_id', $userIds)
+            ->whereIn('vouchers.id', $voucherIds)
+            ->get()
+            ->toArray();
+
+        $existingMap = [];
+        $userVoucherSendMailMap = [];
+
+        foreach ($existingRecords as $record) {
+            $existingMap[$record['user_id']][$record['code']] = true;
+        }
+
+        $vouchers = [];
+        foreach ($users as $user) {
+            foreach ($voucherMapByCode as $voucher) {
+
+                if (!isset($voucher)) {
+                    return response()->json([
+                        'message' => 'Không tìm thấy phiếu giảm giá' . $voucher['code'],
+                    ], 404);
+                }
+
+                if (!isset($existingMap[$user['id']][$voucher['code']])) {
+                    $vouchers[] = [
+                        'id' => Str::uuid()->toString(),
+                        'user_id' => $user["id"],
+                        'voucher_id' => $voucher["id"],
+                    ];
+
+                    $userVoucherSendMailMap[$user['email']][] = $voucher;
+                }
+            }
+        }
+        if (!empty($vouchers)) {
+            Wallet::query()->insert($vouchers);
+            $this->sendMailToUser($userVoucherSendMailMap);
+        }
+
+
+        return response()->json([
+            'message' => 'Phát phiếu giảm giá thành công.',
+        ], 200);
+    }
+
+    private function sendMailToUser($userVoucherSendMailMap)
+    {
+
     }
 }
 

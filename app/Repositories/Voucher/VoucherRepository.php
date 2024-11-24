@@ -6,8 +6,6 @@ use App\Constant\Enum\ActiveStatusEnum;
 use App\Models\Voucher;
 use App\Repositories\Base\BaseRepository;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class VoucherRepository extends BaseRepository implements VoucherInterface
 {
@@ -70,5 +68,21 @@ class VoucherRepository extends BaseRepository implements VoucherInterface
             });
 
         return $query->get()->toArray();
+    }
+
+    public function getAllByCodeIn($codes)
+    {
+        $dateNow = Carbon::now()->format('Y-m-d');
+
+        $query = Voucher::query()
+            ->whereIn('code', $codes)
+            ->where('status', ActiveStatusEnum::Active->value)
+            ->where(function ($query) use ($dateNow) {
+                $query->whereRaw('DATE(vouchers.start_date) >= ?', [$dateNow])
+                    ->orWhereNull('vouchers.start_date');
+            });
+
+        return $query->get()->toArray();
+
     }
 }

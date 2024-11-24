@@ -93,7 +93,7 @@
 
                                                 </div>
                                             </div><!-- end card body -->
-                                            
+
                                         </div><!-- end card -->
                                         <div class="modal fade" id="showModal{{ $room->id }}" tabindex="-1"
                                             aria-hidden="true">

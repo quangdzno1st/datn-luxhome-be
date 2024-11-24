@@ -7,8 +7,7 @@ use App\Http\Requests\RoomRequest;
 use App\Http\Requests\RoomSearchRequest;
 use App\Services\CatalogueRoomService;
 use App\Services\RoomService;
-use Auth;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RoomController extends Controller
 {
@@ -26,7 +25,7 @@ class RoomController extends Controller
     public function index(RoomSearchRequest $request)
     {
         $hotelId = $request->hotel_id ?? Auth::user()->org_id;
-        $rooms = $this->roomService->searchByPage($request);
+        $rooms = $this->roomService->searchByPage($request, $hotelId);
         $catalogueRooms = $this->catalogueRoomService->getAllByOrgId($hotelId);
         return view('admin.rooms.index', compact('rooms', "catalogueRooms"));
     }

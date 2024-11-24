@@ -4,8 +4,18 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title mb-0">Thêm voucher</h4>
+                    <h4 class="card-title mb-0">Sửa voucher</h4>
                 </div><!-- end card header -->
+
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 <div class="card-body">
                     <div class="listjs-table" id="customerList">
@@ -13,36 +23,44 @@
                             <div class="col-sm-auto">
                                 <div class="col-sm-auto">
                                     <div>
-                                        <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal"
-                                                id="create-btn" data-bs-target="#showModal">Danh sách
-                                        </button>
+                                        <a href="{{route('vouchers.index')}}">
+                                            <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal"
+                                                    id="create-btn" data-bs-target="#showModal">Danh sách
+                                            </button>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <form class="tablelist-form" autocomplete="off"
+                        <form class="tablelist-form" autocomplete="off" enctype="multipart/form-data"
                               action="{{route('vouchers.update',$voucher->id)}}" method="POST">
                             @csrf
                             @method('PUT')
                             <div class="modal-body">
+
                                 <div class="mb-3">
-                                    <label for="discount_type" class="form-label">Loại giảm giá:</label>
-                                    <select id="discount_type" name="discount_type" class="form-control">
-                                            <option value="0" {{ $voucher->discount_type == 0 ? 'selected' : '' }}>Tiền mặt</option>
-                                            <option value="1" {{ $voucher->discount_type == 1 ? 'selected' : '' }}>%</option>
-                                    </select>
+                                    <label class="form-label" for="thumbnail">Thumbnail</label>
+                                    <input class="form-control" id="thumbnail" type="file" name="thumbnail"
+                                           {{old('thumbnail')}}
+                                           accept="image/png, image/gif, image/jpeg">
                                 </div>
+
+                                <img width="90px" height="90px" src="{{ Storage::url( $voucher['thumbnail']) }}"
+                                     alt="Image">
+
                                 <div class="mb-3">
-                                    <label for="discount_value" class="form-label">Giá trị giảm giá:</label>
+                                    <label for="discount_value" class="form-label">Giá trị giảm giá (%):</label>
                                     <input
-                                           value="{{$voucher->discount_value}}"
-                                           type="number" id="discount_value" name="discount_value" step="0.01" placeholder="Nhập giá trị giảm giá" class="form-control"/>
-{{--                                    <span class="input-group-text">đ</span>--}}
+                                            value="{{$voucher->discount_value}}"
+                                            type="number" id="discount_value" name="discount_value" step="0.01"
+                                            placeholder="Nhập giá trị giảm giá" class="form-control"/>
+                                    {{--                                    <span class="input-group-text">đ</span>--}}
                                 </div>
                                 <div class="mb-3">
                                     <label for="quantity" class="form-label">Số lượng</label>
-                                    <input type="number" id="quantity" class="form-control" value="{{$voucher->quantity}}"
+                                    <input type="number" id="quantity" class="form-control"
+                                           value="{{$voucher->quantity}}"
                                            name="quantity" placeholder="Nhập số lượng"
                                            value="{{ old('quantity') }}
                                                        "/>
@@ -52,8 +70,12 @@
                                 <div class="mb-3">
                                     <label for="status">Trạng thái</label>
                                     <select class="form-control" name="status" id="">
-                                        <option value="1" {{old('status')=='1'?'selected':''}} {{$voucher->status==1?'selected':''}}>Active</option>
-                                        <option value="0" {{old('status')=='0'?'selected':''}} {{$voucher->status==0?'selected':''}}>Inactive</option>
+                                        <option value="1" {{old('status')=='1'?'selected':''}} {{$voucher->status==1?'selected':''}}>
+                                            Hoạt động
+                                        </option>
+                                        <option value="0" {{old('status')=='0'?'selected':''}} {{$voucher->status==0?'selected':''}}>
+                                            Không hoạt động
+                                        </option>
                                     </select>
                                 </div>
 
@@ -72,7 +94,7 @@
                                     <label for="start_date"
                                            class="form-label">Ngày bắt đầu</label>
                                     <input type="date" class="form-control" name="start_date"
-                                           value="{{date('Y-m-d', strtotime($voucher->start_date))}}"
+                                           value="{{$voucher['end_date'] ? \Carbon\Carbon::parse($voucher->start_date )->format('d-m-Y') : ''}}"
                                     >
                                     <div class="invalid-feedback"></div>
                                 </div>
@@ -81,48 +103,21 @@
                                     <label for="end_date"
                                            class="form-label">Ngày kết thúc</label>
                                     <input type="date" class="form-control" name="end_date"
-                                           value="{{date('Y-m-d', strtotime($voucher->end_date))}}"
+                                           value="{{$voucher['end_date'] ? \Carbon\Carbon::parse($voucher->end_date )->format('d-m-Y') : ''}}"
                                     >
                                     <div class="invalid-feedback"></div>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="min_price"
-                                           class="form-label">Giảm thấp nhất</label>
-                                    <input type="number" class="form-control"
-                                           value="{{$voucher->min_price}}"
-                                           name="min_price"
-                                    >
-                                    <div class="invalid-feedback"></div>
+
+                                <div class="modal-footer">
+                                    <div class="hstack gap-2 justify-content-end">
+                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                                            Close
+                                        </button>
+                                        <button type="submit" class="btn btn-success" id="add-btn">
+                                            Update
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="max_price"
-                                           class="form-label">Giảm cao nhất</label>
-                                    <input type="number" class="form-control"
-                                           value="{{$voucher->max_price}}"
-                                           name="max_price"
-                                    >
-                                    <div class="invalid-feedback"></div>
-                                </div>
-{{--                                <div class="mb-3">--}}
-{{--                                    <label for="rank"--}}
-{{--                                           class="form-label">Rank</label>--}}
-{{--                                    <select class="form-control" name="rank" id="">--}}
-{{--                                        <option value="1" {{}}>Hội viên Vip</option>--}}
-{{--                                        <option value="0">Phèn</option>--}}
-{{--                                    </select>--}}
-{{--                                    <div class="invalid-feedback"></div>--}}
-{{--                                </div>--}}
-                            </div>
-                            <div class="modal-footer">
-                                <div class="hstack gap-2 justify-content-end">
-                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-                                        Close
-                                    </button>
-                                    <button type="submit" class="btn btn-success" id="add-btn">
-                                        Update
-                                    </button>
-                                </div>
-                            </div>
                         </form>
                     </div>
                 </div><!-- end card -->
@@ -134,10 +129,10 @@
 @endsection
 @section('scripts')
     <script>
-        document.getElementById('discount_type').addEventListener('change', function() {
+        document.getElementById('discount_type').addEventListener('change', function () {
             const discountValueInput = document.getElementById('discount_value');
 
-            if (this.value==1) {
+            if (this.value == 1) {
                 discountValueInput.setAttribute('max', 100);
                 discountValueInput.setAttribute('placeholder', 'Nhập % giảm giá (tối đa 100)');
             } else {
@@ -145,10 +140,10 @@
                 discountValueInput.setAttribute('placeholder', 'Nhập giá trị giảm tiền');
             }
         });
-        document.getElementById('discount_value').addEventListener('input', function() {
+        document.getElementById('discount_value').addEventListener('input', function () {
             const discountType = document.getElementById('discount_type').value;
 
-            if (discountType==1 && this.value > 100) {
+            if (discountType == 1 && this.value > 100) {
                 this.value = 100;
             }
         });
