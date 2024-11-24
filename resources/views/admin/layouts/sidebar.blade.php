@@ -160,7 +160,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarOrder" data-bs-toggle="collapse" role="button"
                        aria-expanded="false" aria-controls="sidebarCatalogueRoom">
-                        <i class="ri-coupon-2-line"></i> <span data-key="t-layouts">Order</span>
+                        <i class="ri-luggage-cart-line"></i> <span data-key="t-layouts">Đơn hàng</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarOrder">
                         <ul class="nav nav-sm flex-column">
@@ -172,21 +172,10 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarHotels" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarHotels">
-                        <i class="ri-hotel-line"></i> <span data-key="t-layouts">Khách sạn</span>
+                    <a class="nav-link menu-link" href="#" data-bs-toggle=""
+                        role="button" aria-expanded="false" aria-controls="sidebarRegion">
+                        <i class="ri-star-s-line"></i> <span data-key="t-layouts">Đánh giá</span>
                     </a>
-                    <div class="collapse menu-dropdown" id="sidebarHotels">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link" data-key="t-horizontal">Danh Sách</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link" data-key="t-detached">Thêm Mới</a>
-                            </li>
-
-                        </ul>
-                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.rooms.index') }}" data-bs-toggle=""

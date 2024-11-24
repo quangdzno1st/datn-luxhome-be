@@ -23,7 +23,7 @@ class StatisticalServiceImpl
 
         $selectTime = '';
 
-        $query = Order::query();
+        $query = Order::query()->where('net_amount', '!=', null);
 
         if (session()->has('handle_data')) {
 
@@ -42,7 +42,7 @@ class StatisticalServiceImpl
             $selectTime = $data['option_time'];
 
             if ($selectTime == 'quarter') {
-                $query->selectRaw('YEAR(created_at) AS year, QUARTER(created_at) AS quarter, SUM(total_amount) AS total_revenue, COUNT(id) AS total_order')
+                $query->selectRaw('YEAR(created_at) AS year, QUARTER(created_at) AS quarter, SUM(net_amount) AS total_revenue, COUNT(id) AS total_order')
                     ->whereBetween('created_at', [$startDate, $endDate]);
 
                 if (!empty($hotel_id)) {
@@ -54,7 +54,7 @@ class StatisticalServiceImpl
                     ->orderBy('quarter');
             }
             if ($selectTime == 'year') {
-                $query->selectRaw('YEAR(created_at) AS year, SUM(total_amount) AS total_revenue, COUNT(id) AS total_order')
+                $query->selectRaw('YEAR(created_at) AS year, SUM(net_amount) AS total_revenue, COUNT(id) AS total_order')
                     ->whereYear('created_at', '>=', $startDate)
                     ->whereYear('created_at', '<=', $endDate);
 
@@ -66,7 +66,7 @@ class StatisticalServiceImpl
                     ->orderBy('year');
             }
             if ($selectTime == 'month') {
-                $query->selectRaw('YEAR(created_at) as year, MONTH(created_at) AS month, SUM(total_amount) AS total_revenue, COUNT(id) AS total_order')
+                $query->selectRaw('YEAR(created_at) as year, MONTH(created_at) AS month, SUM(net_amount) AS total_revenue, COUNT(id) AS total_order')
                     ->where('created_at', '>=', $startDate)
                     ->where('created_at', '<=', $endDate);
 
@@ -79,7 +79,7 @@ class StatisticalServiceImpl
                     ->orderBy('month');
             }
         } else {
-            $query->selectRaw('YEAR(created_at) AS year, MONTH(created_at) AS month, SUM(total_amount) AS total_revenue, COUNT(id) AS total_order')
+            $query->selectRaw('YEAR(created_at) AS year, MONTH(created_at) AS month, SUM(net_amount) AS total_revenue, COUNT(id) AS total_order')
                 ->whereYear('created_at', $currentYear);
 
             if (!empty($hotel_id)) {
@@ -109,7 +109,7 @@ class StatisticalServiceImpl
     {
         $hotel_id = $this->checkRole();
 
-        $query = Order::query();
+        $query = Order::query()->where('status', '!=', 1);
 
         if(session()->has('handle_data')) {
             $data = session('handle_data');
@@ -174,7 +174,7 @@ class StatisticalServiceImpl
     {
         $hotel_id = $this->checkRole();
 
-        $query = Order::query();
+        $query = Order::query()->where('net_amount', '!=', null);
 
         if(session()->has('handle_data')) {
             $data = session('handle_data');
@@ -192,7 +192,7 @@ class StatisticalServiceImpl
             $selectTime = $data['option_time'];
 
             if ($selectTime == 'quarter') {
-                $query->selectRaw('SUM(total_amount) AS total_revenue')
+                $query->selectRaw('SUM(net_amount) AS total_revenue')
                     ->whereBetween('created_at', [$startDate, $endDate]);
 
                 if (!empty($hotel_id)) {
@@ -201,7 +201,7 @@ class StatisticalServiceImpl
 
             }
             if ($selectTime == 'year') {
-                $query->selectRaw('SUM(total_amount) AS total_revenue')
+                $query->selectRaw('SUM(net_amount) AS total_revenue')
                     ->whereYear('created_at', '>=', $startDate)
                     ->whereYear('created_at', '<=', $endDate);
 
@@ -211,7 +211,7 @@ class StatisticalServiceImpl
 
             }
             if ($selectTime == 'month') {
-                $query->selectRaw('SUM(total_amount) AS total_revenue')
+                $query->selectRaw('SUM(net_amount) AS total_revenue')
                     ->where('created_at', '>=', $startDate)
                     ->where('created_at', '<=', $endDate);
 
@@ -221,7 +221,7 @@ class StatisticalServiceImpl
 
             }
         } else {
-            $query->selectRaw('SUM(total_amount) AS total_revenue');
+            $query->selectRaw('SUM(net_amount) AS total_revenue');
     
             if (!empty($hotel_id)) {
                 $query->where('org_id', $hotel_id);

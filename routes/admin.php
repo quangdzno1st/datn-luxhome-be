@@ -75,12 +75,14 @@ Route::group(['middleware' => ['role']], function () {
         ->group(function () {
             Route::get('/', 'index')->name('catalogue-rooms.index');
             Route::get('/create', 'create')->name('catalogue-rooms.create');
-            Route::get('/{id}', 'show')->name('catalogue-rooms.show');
+            Route::get('/{id}', 'edit')->name('catalogue-rooms.edit');
             Route::post('/', 'store')->name('catalogue-rooms.store');
             Route::put('/{id}', 'update')->name('catalogue-rooms.update');
             Route::put('/delete/{id}', 'delete')->name('catalogue-rooms.delete');
             Route::put('/restore/{id}', 'restore')->name('catalogue-rooms.restore');
             Route::delete('/{id}', 'destroy')->name('catalogue-rooms.destroy');
+
+            Route::delete('/delete/image', 'deleteImageMulti')->name('catalogue-rooms.delete.image.multi');
         });
 
     Route::prefix('rooms')

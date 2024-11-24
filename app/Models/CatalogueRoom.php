@@ -21,7 +21,6 @@ class CatalogueRoom extends Model
         'like',
         'number_adult',
         'number_child',
-        'org_id',
         'price_hour',
         'acreage'
     ];
@@ -37,7 +36,7 @@ class CatalogueRoom extends Model
         });
     }
 
-    public function attributeValues()
+    public function attributes()
     {
         return $this->belongsToMany(Attribute::class, 'catalogue_room_attribute', 'catalogue_room_id', 'attribute_id');
     }
@@ -50,8 +49,9 @@ class CatalogueRoom extends Model
     {
         return $this->belongsTo(Hotel::class);
     }
+
     public function images()
     {
-        return $this->hasMany(Image::class,'object_id');
+        return $this->hasMany(Image::class, 'object_id', 'id');
     }
 }
