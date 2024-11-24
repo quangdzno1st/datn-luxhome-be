@@ -23,4 +23,8 @@ interface OrderService
     public function getDataBookingOrder(Request $request);
 
     public function getDataBookingForConfirm(Request $request, $hotelId);
+
+    public function cancelOrder($orderId);
+
+    public function getOrderById($orderId);
 }

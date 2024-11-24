@@ -9,9 +9,8 @@ use App\Models\Order;
 use App\Repositories\Base\BaseRepository;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 
-class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInterface
+class   CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInterface
 {
     public function model(): string
     {
@@ -73,7 +72,7 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
         $categories = $categoriesQuery->with('rooms', 'hotel')->get();
 
         $orders = Order::with('orderItem')
-            ->where('status', '<>', StatusOrderEnum::CHUA_THANH_TOAN->value)
+            ->whereIn('status', [StatusOrderEnum::DA_XAC_NHAN->value, StatusOrderEnum::YEU_CAU_HUY])
             ->where(function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('start_date', [$startDate, $endDate])
                     ->orWhereBetween('end_date', [$startDate, $endDate])
@@ -103,8 +102,8 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
                 'number_adult' => $category->number_adult,
                 'number_child' => $category->number_child,
                 'hotel_id' => $category->hotel_id,
-                'hotel_name' => $category->hotel->name,
-                'attributeValues' =>$attributeValues,
+                'hotel_name' => $category?->hotel?->name,
+                'attributeValues' => $attributeValues,
                 'images' => $category?->images,
                 'org_id' => $category->org_id,
                 'price' => $category->price,
@@ -131,5 +130,21 @@ class CatalogueRoomRepository extends BaseRepository implements CatalogueRoomInt
         return CatalogueRoom::query()->where('hotel_id', $orgId)
             ->orderBy('name')
             ->get();
+    }
+
+    public function getByOrderId($orderId)
+    {
+        $query = CatalogueRoom::query()
+            ->select('catalogue_rooms.id', 'catalogue_rooms.name', 'catalogue_rooms.price',
+                DB::raw('GROUP_CONCAT(r.code SEPARATOR ", ") as room_names')
+                , DB::raw('COUNT(r.id) as total_rooms')
+                , DB::raw('COUNT(r.id) * catalogue_rooms.price as total_price'))
+            ->join('rooms as r', 'r.catalogue_room_id', '=', 'catalogue_rooms.id')
+            ->join('order_items as ot', 'ot.room_id', '=', 'r.id')
+            ->where('ot.order_id', $orderId)
+            ->groupBy('catalogue_rooms.id')
+            ->orderBy('catalogue_rooms.name');
+
+        return $query->get();
     }
 }

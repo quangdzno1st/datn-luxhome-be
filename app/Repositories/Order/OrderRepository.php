@@ -32,7 +32,7 @@ class OrderRepository extends BaseRepository implements OrderInterface
     {
         $query = Order::query()
             ->select('orders.start_date', 'orders.end_date', 'orders.code', 'orders.total_amount', 'orders.status',
-                'h.district', 'h.name as hotel_name', 'orders.id', 'h.province',
+                'h.district', 'h.name as hotel_name', 'orders.id', 'h.province', 'orders.is_requried_cancel',
                 'h.star', 'orders.code', 'orders.name', 'orders.email', 'orders.phone', 'orders.note')
             ->join('hotels as h', 'h.id', '=', 'orders.org_id');
 
@@ -77,9 +77,44 @@ class OrderRepository extends BaseRepository implements OrderInterface
         return $query->orderByDesc('orders.code')->first();
     }
 
-    public function updateStatusById($status, $id)
+    public function updateStatusById($status, $statusPayment, $id)
     {
         Order::query()->where('id', $id)
-            ->update(['status' => $status]);
+            ->update(['status' => $status,
+                'status_payment' => $statusPayment]);
+    }
+
+    public function updateWhenRequirementCancel($status, $statusPayment, $id)
+    {
+        Order::query()->where('id', $id)
+            ->update(['status' => $status,
+                'status_payment' => $statusPayment,
+                'is_requried_cancel' => 1]);
+    }
+
+    public function getRoomIdsById($id)
+    {
+        return Order::query()
+            ->select('rooms.id')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('rooms', 'rooms.id', '=', 'order_items.room_id')
+            ->where('orders.id', $id)->get();
+    }
+
+    public function getById($orderId, $userId = null)
+    {
+        $query = Order::query()
+            ->select('orders.start_date', 'orders.end_date', 'orders.code', 'orders.total_amount', 'orders.status',
+                'h.district', 'h.name as hotel_name', 'orders.id', 'h.province', 'orders.is_requried_cancel',
+                'h.star', 'orders.code', 'orders.name', 'orders.email', 'orders.phone', 'orders.note',
+                'v.description as voucher_description', 'v.discount_value')
+            ->join('hotels as h', 'h.id', '=', 'orders.org_id')
+            ->leftJoin('vouchers as v', 'v.id', '=', 'orders.voucher_id')
+            ->where('orders.id', $orderId);
+        if (isset($userId)) {
+            $query->where('user_id', $userId);
+        }
+
+        return $query->first()->toArray();
     }
 }

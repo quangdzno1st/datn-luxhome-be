@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Ramsey\Uuid\Uuid;
 
 class Order extends Model
 {
@@ -34,7 +33,8 @@ class Order extends Model
         'incidental_costs',
         'total_amount',
         'net_amount',
-        'transaction_id'
+        'transaction_id',
+        'is_requried_cancel'
     ];
 
     protected $keyType = 'string';

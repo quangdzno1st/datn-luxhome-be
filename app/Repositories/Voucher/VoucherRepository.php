@@ -56,20 +56,13 @@ class VoucherRepository extends BaseRepository implements VoucherInterface
 
     public function getAllForOrder($orderTotalAmount, $hotelId)
     {
-
-        $userRank = Auth::user()->rank ?? 0;
         $dateNow = Carbon::now();
         $query = Voucher::query()
             ->where('vouchers.quantity', '>', 0)
             ->where(function ($query) use ($hotelId) {
-                $query->where('vouchers.org_id', $hotelId)
-                    ->orWhereNull('vouchers.org_id');
+                $query->where('vouchers.hotel_id', $hotelId)
+                    ->orWhereNull('vouchers.hotel_id');
             })
-            ->where(function ($query) use ($userRank) {
-                $query->where('vouchers.conditional_rank', '>=', $userRank)
-                    ->orWhereNull('vouchers.conditional_rank');
-            })
-            ->where('vouchers.conditional_total_amount', '<=', $orderTotalAmount)
             ->where('status', ActiveStatusEnum::Active->value)
             ->where(function ($query) use ($dateNow) {
                 $query->where('vouchers.start_date', '<=', $dateNow)

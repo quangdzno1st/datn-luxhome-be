@@ -444,20 +444,21 @@
                         </div>
                     </form>
                     @if ($errors->any() && !($errors->has('start_date') || $errors->has('end_date')|| $errors->has('number_adult')))
-                        @if(session('error'))
-                            <div class="alert alert-danger">
-                                <ul>
-                                    <li>Số lượng đặt phòng không thể để trống</li>
-                                </ul>
-                            </div>
-                        @endif
-
                         <div class="alert alert-danger">
                             <ul>
                                 <li>Số lượng đặt phòng không thể để trống</li>
                             </ul>
                         </div>
                     @endif
+
+                    @if (session('error'))
+                        <div class="alert alert-danger">
+                            <ul>
+                                <li>{{session('error')}}</li>
+                            </ul>
+                        </div>
+                    @endif
+
                     <h2>Loại phòng</h2>
                     <form action="{{route('orders.services')}}" method="GET">
                         @csrf

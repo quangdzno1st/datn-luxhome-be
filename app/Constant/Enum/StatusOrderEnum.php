@@ -4,16 +4,20 @@ namespace App\Constant\Enum;
 
 enum StatusOrderEnum: int
 {
-    case CHUA_THANH_TOAN = 1;
-    case DA_THANH_TOAN = 2;
-    case THANH_TOAN_KET_THUC = 3;
+    case DANG_CHO = 1;
+    case DA_XAC_NHAN = 2;
+    case HOAN_THANH = 3;
+    case DA_HUY = 4;
+    case YEU_CAU_HUY = 5;
 
     public function getName(): string
     {
-        return match($this) {
-            self::CHUA_THANH_TOAN => 'Chưa thanh toán',
-            self::DA_THANH_TOAN => 'Đã thanh toán',
-            self::THANH_TOAN_KET_THUC => 'Thanh toán kết thúc',
+        return match ($this) {
+            self::DANG_CHO => 'Đang chờ',
+            self::DA_XAC_NHAN => 'Đã xác nhận',
+            self::HOAN_THANH => 'Hoàn thành',
+            self::DA_HUY => 'Đã hủy',
+            self::YEU_CAU_HUY => 'Yêu cầu hủy',
         };
     }
 
@@ -22,8 +26,13 @@ enum StatusOrderEnum: int
         return self::tryFrom($value);
     }
 
-    public static function isChuaThanhToan($value): bool
+    public static function isDangCho($value): bool
     {
-        return self::tryFrom($value) === self::CHUA_THANH_TOAN;
+        return self::tryFrom($value) === self::DANG_CHO;
+    }
+
+    public static function isDaXacNhan($value): bool
+    {
+        return self::tryFrom($value) === self::DA_XAC_NHAN;
     }
 }
