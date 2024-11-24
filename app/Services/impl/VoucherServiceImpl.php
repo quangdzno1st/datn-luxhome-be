@@ -70,4 +70,12 @@ class VoucherServiceImpl implements VoucherService
         $vouchers = $this->voucherRepository->getWhere($condition);
         return $vouchers;
     }
+
+    public function getMapByCode($voucherCodes)
+    {
+        $vouchers = $this->voucherRepository->getAllByCodeIn($voucherCodes);
+        return collect($vouchers)->mapWithKeys(function ($item) {
+            return [$item['code'] => $item];
+        });
+    }
 }

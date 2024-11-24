@@ -119,7 +119,7 @@ class RoomServiceImpl implements RoomService
         $this->roomRepos->delete($room);
     }
 
-    public function searchByPage(RoomSearchRequest $request)
+    public function searchByPage(RoomSearchRequest $request, $hotelId)
     {
         $query = Room::query();
 
@@ -133,8 +133,8 @@ class RoomServiceImpl implements RoomService
         if ($request->has('catalogue_room_id')) {
             $query->where('catalogue_room_id', $request->get('catalogue_room_id'));
         }
-        if ($request->has('hotel_id')) {
-            $query->where('hotel_id', $request->get('hotel_id'));
+        if ($hotelId) {
+            $query->where('rooms.hotel_id', $hotelId);
         }
 
         $query->join("catalogue_rooms as c", "rooms.catalogue_room_id", "=", "c.id");
