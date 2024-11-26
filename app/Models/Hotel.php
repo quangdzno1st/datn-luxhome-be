@@ -59,6 +59,10 @@ class Hotel extends Model
     {
         return $this->hasMany(CatalogueRoom::class);
     }
+    public function rates()
+    {
+        return $this->hasMany(Rate::class, 'hotel_id', 'id');
+    }
 
     protected $keyType = 'string';  // Khóa chính là kiểu chuỗi
     public $incrementing = false;   // Tắt auto-increment
