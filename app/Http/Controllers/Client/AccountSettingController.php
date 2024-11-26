@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers\Client;
 
-use App\Constant\Enum\ServiceTypeEnum;
-use App\Http\Controllers\Controller;
+use App\Models\Rate;
+use Illuminate\Http\Request;
+use App\Services\OrderService;
 use App\Http\Requests\OrderRequest;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Services\HotelServiceService;
+use App\Constant\Enum\ServiceTypeEnum;
 use App\Http\Requests\OrderSearchRequest;
-use App\Repositories\CatalogueRoom\CatalogueRoomRepository;
+use Illuminate\Validation\ValidationException;
 use App\Repositories\Service\ServiceRepository;
 use App\Repositories\Voucher\VoucherRepository;
-use App\Services\HotelServiceService;
-use App\Services\OrderService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
+use App\Repositories\CatalogueRoom\CatalogueRoomRepository;
 
 class AccountSettingController extends Controller
 {
@@ -42,11 +43,15 @@ class AccountSettingController extends Controller
 
     public function index(OrderSearchRequest $request)
     {
+        $userId = Auth::user()->id;
+
+        $rates = Rate::withoutTrashed()->with('hotel')->where('user_id', $userId)->get();
+
         $orders = $this->orderService->searchByPage($request);
 
         $user = Auth::user();
 
-        return view('client.myaccount', compact('orders', 'user'));
+        return view('client.myaccount', compact('orders', 'user', 'rates'));
     }
 
     public function paymentOrder($orderId)
@@ -163,5 +168,10 @@ class AccountSettingController extends Controller
         $catalogueRooms = $this->catalogueRooms->getByOrderId($orderId);
         $services = $this->serviceRepos->getByOrderId($orderId);
         return view('client.bookingdetail', compact('catalogueRooms', 'order', 'services'));
+    }
+
+    public function rating()
+    {
+        
     }
 }

@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\StatisticalController;
 use App\Http\Controllers\Admin\HotelServiceController;
 use App\Http\Controllers\Admin\CatalogueRoomController;
+use App\Http\Controllers\Admin\RateController;
 
 Route::group(['prefix' => 'auth'], function () {
     Route::get('/login', [AuthController::class, 'login'])->name('auth.login');
@@ -163,6 +164,22 @@ Route::group(['middleware' => ['role']], function () {
         Route::delete('/{id}', [\App\Http\Controllers\Admin\HotelController::class, 'destroy'])->name('destroy');
         Route::get('/restore/{id}', [\App\Http\Controllers\Admin\HotelController::class, 'restore'])->name('restore');
         Route::delete('/force-delete/{id}', [\App\Http\Controllers\Admin\HotelController::class, 'forceDelete'])->name('forceDelete');
+    });
+
+    Route::prefix('rates')->name('rates.')->controller(RateController::class)->group(function(){
+        //route của superadmin
+        Route::get('/hotels', 'listRatesAllHotels')->name('hotels');
+        Route::get('/hotel/{hotelId}', 'listRatesOneHotel')->name('hotel');
+        Route::get('/trash/hotel/{hotelId}', 'listRatesOneHotelTrash')->name('hotel.trash');
+
+        //route của hotelier
+        Route::get('/hotelier', 'getRatesByHotelIdOfHotelier')->name('hotel.hotelier');
+        Route::get('/trash/hotelier', 'getRatesByHotelIdOfHotelierTrash')->name('hotel.trash.hotelier');
+
+        //route 2 thằng đều dùng được
+        Route::post('/hidden/{rateId}', 'rateHidden')->name('hidden');
+        Route::post('/restore/{rateId}', 'rateRestore')->name('restore');
+        Route::delete('/destroy/{rateId}', 'rateDestroy')->name('destroy');
     });
 });
 

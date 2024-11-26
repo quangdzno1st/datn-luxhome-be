@@ -171,12 +171,21 @@
                         </ul>
                     </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#" data-bs-toggle=""
-                        role="button" aria-expanded="false" aria-controls="sidebarRegion">
-                        <i class="ri-star-s-line"></i> <span data-key="t-layouts">Đánh giá</span>
-                    </a>
-                </li>
+                @if (Auth::user()->type == 2)
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="{{route('admin.rates.hotels')}}" data-bs-toggle=""
+                            role="button" aria-expanded="false" aria-controls="sidebarRegion">
+                            <i class="ri-star-s-line"></i> <span data-key="t-layouts">Đánh giá</span>
+                        </a>
+                    </li>
+                @else
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="{{route('admin.rates.hotel.hotelier')}}" data-bs-toggle=""
+                            role="button" aria-expanded="false" aria-controls="sidebarRegion">
+                            <i class="ri-star-s-line"></i> <span data-key="t-layouts">Đánh giá</span>
+                        </a>
+                    </li>
+                @endif
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.rooms.index') }}" data-bs-toggle=""
                         role="button" aria-expanded="false" aria-controls="sidebarCatalogueRoom">
