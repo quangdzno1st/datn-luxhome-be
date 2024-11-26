@@ -5,15 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Constant\Enum\StatusOrderEnum;
 use App\Http\Controllers\Controller;
 use App\Models\BookingService;
-use App\Models\CatalogueRoom;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Service;
 use App\Models\Voucher;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
+define('CHECKIN_START', '14:00');
+define('CHECKIN_END', '00:00');
+define('CHECKOUT_START', '05:00');
+define('CHECKOUT_END', '11:30');
 
 class OrderDetailController extends Controller
 {
@@ -23,12 +25,16 @@ class OrderDetailController extends Controller
     {
         $sumService=0;
         $sumOrderItem=0;
-        if($order->status == StatusOrderEnum::CHUA_THANH_TOAN->value){
-            $order->status='Chưa thanh toán';
-        }elseif ($order->status==StatusOrderEnum::DA_THANH_TOAN->value){
-            $order->status='Đã thanh toán';
-        }else{
-            $order->status='Thanh toán kết thúc';
+        if ($order->status == StatusOrderEnum::DANG_CHO->value) {
+            $order->status = 'Đang chờ';
+        } elseif ($order->status == StatusOrderEnum::DA_XAC_NHAN->value) {
+            $order->status = 'Đã xác nhận';
+        } else if ($order->status == StatusOrderEnum::HOAN_THANH->value) {
+            $order->status = 'Hoàn thành';
+        } else if ($order->status == StatusOrderEnum::YEU_CAU_HUY->value) {
+            $order->status = 'Yêu cầu hủy';
+        } else {
+            $order->status = 'Đã hủy';
         }
         $orderItemInfo=$this->orderItemInfo($order->id);
         $servicesInfo=$this->servicesInfo($order->id);
@@ -75,7 +81,7 @@ class OrderDetailController extends Controller
     public function payableMoneyRoom($idOrder){
         $order = Order::query()
             ->select('orders.booking_fee as priceBooking', 'orders.status as statusOrder')
-            ->where('orders.status', StatusOrderEnum::CHUA_THANH_TOAN->value)
+            ->where('orders.status', 1)
             ->where('orders.id', $idOrder)
             ->get();
         if($order->isEmpty())
@@ -98,7 +104,7 @@ class OrderDetailController extends Controller
                 $join->on('orders.id', '=', 'booking_services.order_id');
             })
             ->where('booking_services.status',
-                StatusOrderEnum::CHUA_THANH_TOAN->value)
+                1)
             ->where('orders.id', $idOrder)
             ->get();
         if(!$bookingServices->isEmpty())
@@ -122,17 +128,23 @@ class OrderDetailController extends Controller
     public function updateStatus($idOrder){
         $this->updateStatusGeneral('booking_services',$idOrder);
         $this->updateStatusGeneral('orders',$idOrder);
-        return redirect()->back()->with('success','Checkout thành công');
+        $order = Order::query()->where('id', $idOrder)->first();
+        $incidental_costs=$this->calculateLateCheckoutFee($order);
+        $order->update(['incidental_costs'=>$incidental_costs]);
+        return redirect()->back()->with(
+            ['success'=>'Checkout thành công',
+                'incidental_costs'=>$incidental_costs
+            ]);
     }
 
     public function updateStatusGeneral($table,$idOrder){
         if($table == 'booking_services'){
             DB::table($table)->where('order_id', $idOrder)
-                ->update(['status' => StatusOrderEnum::DA_THANH_TOAN->value]);
+                ->update(['status' => StatusOrderEnum::HOAN_THANH->value]);
         }else{
             DB::table($table)->where('id', $idOrder)
                 ->update([
-                    'status' => StatusOrderEnum::DA_THANH_TOAN->value,
+                    'status' => StatusOrderEnum::HOAN_THANH->value,
                     'check_out' => Carbon::now()
                 ]);
         }
@@ -198,4 +210,20 @@ class OrderDetailController extends Controller
             ->select('order_items.room_codes as roomCode','rooms.id as roomId')->get();
         return $result;
     }
+
+    public function calculateLateCheckoutFee($order) {
+        $checkoutEnd = Carbon::parse($order->end_date);
+        $actualCheckout = Carbon::now();
+
+        if ($actualCheckout->greaterThan($checkoutEnd)) {
+            $extraHours = $checkoutEnd->diffInHours($actualCheckout);
+
+            $extraFeePerHour = 100000;
+
+            return $extraHours * $extraFeePerHour;
+        }
+
+        return 0;
+    }
+
 }

@@ -33,16 +33,15 @@ Route::prefix('hotel/services')->controller(HotelServiceController::class)->grou
 });
 //voucher
 Route::prefix('admin/vouchers')->group(function () {
-    Route::get('/', [VoucherController::class, 'index'])->name('vouchers.index');
-    Route::get('/create', [VoucherController::class, 'create'])->name('vouchers.create');
-    Route::post('/issue-voucher', [VoucherController::class, 'issueVoucher'])->name('vouchers.issue_voucher');
-    Route::post('/', [VoucherController::class, 'store'])->name('vouchers.store');
-    Route::get('/{id}', [VoucherController::class, 'edit'])->name('vouchers.edit');
-    Route::put('/{id}', [VoucherController::class, 'update'])->name('vouchers.update');
-    Route::delete('/delete/{id}', [VoucherController::class, 'delete'])->name('vouchers.delete');
-    Route::get('/list-trash', [VoucherController::class, 'list_trash'])->name('vouchers.list_trash');
-    Route::post('/restore/{id}', [VoucherController::class, 'restore'])->name('vouchers.restore');
-    Route::delete('/force_delete/{id}', [VoucherController::class, 'destroy'])->name('vouchers.force_delete');
+    Route::get('/', [\App\Http\Controllers\Admin\VoucherController::class, 'index'])->name('vouchers.index');
+    Route::get('/create', [\App\Http\Controllers\Admin\VoucherController::class, 'create'])->name('vouchers.create');
+    Route::post('/', [\App\Http\Controllers\Admin\VoucherController::class, 'store'])->name('vouchers.store');
+    Route::get('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'edit'])->name('vouchers.edit');
+    Route::put('/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'update'])->name('vouchers.update');
+    Route::delete('/delete/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'delete'])->name('vouchers.delete');
+    Route::get('/list-trash', [\App\Http\Controllers\Admin\VoucherController::class, 'list_trash'])->name('vouchers.list_trash');
+    Route::post('/restore/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'restore'])->name('vouchers.restore');
+    Route::delete('/force_delete/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'destroy'])->name('vouchers.force_delete');
 });
 
 Route::controller(StatisticalController::class)->group(function () {
@@ -73,17 +72,6 @@ Route::prefix('rates')->group(function () {
     Route::get('/admin/rates', [\App\Http\Controllers\Admin\RateController::class, 'index'])->name('rates.index');
     Route::post('/admin/rates/{rate}/status', [\App\Http\Controllers\Admin\RateController::class, 'updateStatus'])->name('rates.updateStatus');
     Route::delete('/admin/rates/{rate}', [\App\Http\Controllers\Admin\RateController::class, 'destroy'])->name('rates.destroy');
-});
-
-//order
-Route::prefix('admin/orders')->group(function () {
-    Route::get('/page={page}', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
-    Route::post('/updateStatus/{id}', [\App\Http\Controllers\Admin\OrderDetailController::class, 'updateStatus'])->name('orders.updateStatus');
-    Route::get('/show/{order}', [\App\Http\Controllers\Admin\OrderDetailController::class, 'showOrderDetail'])->name('orders.show');
-    Route::get('/checkin/{orderId}', [\App\Http\Controllers\Admin\OrderDetailController::class, 'checkinOrder'])->name('orders.checkin');
-    Route::post('/addBookingServices/{id}', [\App\Http\Controllers\Admin\BookingServicesInOrderDetailController::class, 'addBookingServicesInOrderDetail'])->name('orders.addBookingServices');
-
-    Route::delete('/delete/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'delete'])->name('orders.delete');
 });
 
 Route::get('/test/theme', function () {

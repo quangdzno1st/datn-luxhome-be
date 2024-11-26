@@ -8,8 +8,8 @@
         </div>
         <h5 class="card-header">{{ __('Order detail') }}</h5>
         @if (session('success'))
-            <div class="card-header   alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
+            <div class="card-header  alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success')}} với chi phí phát sinh là {{number_format(session('incidental_costs'))}}VND
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
@@ -49,7 +49,7 @@
                                     </div>
                                 </div>
                             @else
-                                {{date('d-M-y', strtotime($order->check_out))}}
+                                {{date('d-M-y', strtotime($order->check_in))}}
                             @endif</td>
                         <td>
                             @if($order->check_out==null)
@@ -181,7 +181,7 @@
                 </section>
 {{--                @include('admin.orders.order_items.order_items')--}}
             @endif
-                <!-- Modal -->
+                <!-- Modal -->s
 {{--                notificate--}}
                 <div class="modal fade flip" id="checkoutOrder" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -193,7 +193,7 @@
                                     <p class="text-muted fs-15 mb-4">Bạn có muốn checkout order này không?</p>
                                     <div class="hstack gap-2 justify-content-center remove">
                                         <button class="btn btn-link link-success fw-medium text-decoration-none" id="deleteRecord-close" data-bs-dismiss="modal"><i class="ri-close-line me-1 align-middle"></i> Đóng</button>
-                                        <form method="POST" action="{{route('orders.updateStatus',$order->id)}}">
+                                        <form method="POST" action="{{route('orders.checkout',$order->id)}}">
                                             @csrf
                                             <button
                                                     class="btn btn-sm btn-success edit-item-btn"

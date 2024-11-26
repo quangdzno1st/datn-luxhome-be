@@ -69,7 +69,6 @@
                                                 </div>
                                             @endif
                                         </th>
-
                                         <td class="date">{{ $voucher['code'] }}</td>
                                         <td class="date">
                                             <img width="90px" height="90px"
