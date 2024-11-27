@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
@@ -20,6 +21,10 @@ class RedirectIfAuthenticated
     public function handle(Request $request, Closure $next, ...$guards)
     {
         $guards = empty($guards) ? [null] : $guards;
+
+        if (Auth::check() && Auth::user()->type != User::CUSTOMER){
+            return redirect("/admin");
+        }
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {

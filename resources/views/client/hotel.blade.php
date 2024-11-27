@@ -550,7 +550,8 @@
                                                       ->flatten()
                                                       ->unique()
                                             @endphp
-                                            @foreach($facilities as $facilitie)
+
+                                        @foreach($facilities as $facilitie)
                                                 <div class="text-wrap">
 
                                                     <div class="facility-list">
@@ -611,9 +612,9 @@
                     <h2>Tiện nghi</h2>
                     @php
                         $facilities =   $hotel->catalogues()
-                              ->with('attributes') // Lấy thông tin các attribute_value của các loại phòng
+                              ->with('attributeValues') // Lấy thông tin các attribute_value của các loại phòng
                               ->get()
-                              ->pluck('attributes') // Lấy tất cả các giá trị attribute_value từ các catalogue
+                              ->pluck('attributeValues') // Lấy tất cả các giá trị attribute_value từ các catalogue
                               ->flatten() // Làm phẳng các mảng để có danh sách các attribute_value
                               ->unique()
                     @endphp

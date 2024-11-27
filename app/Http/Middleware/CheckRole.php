@@ -21,13 +21,7 @@ class CheckRole
             if (Auth::user()->type === User::ADMIN || Auth::user()->type === User::HOTELIER) {
                 return $next($request);
             }
-
-            if (Auth::user()->type === User::CUSTOMER) {
-                return $next($request);
-            }
-            return redirect()->route('admin.auth.login')->withErrors([
-                'error' => 'Bạn không có quyền truy cập vào trang này.'
-            ]);
+            return redirect()->back();
         }
 
         return redirect()->route('admin.auth.login')->withErrors([

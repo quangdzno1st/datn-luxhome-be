@@ -23,12 +23,12 @@ use App\Http\Controllers\Admin\HotelServiceController;
 use App\Http\Controllers\Admin\CatalogueRoomController;
 use App\Http\Controllers\Admin\RateController;
 
-Route::group(['prefix' => 'auth'], function () {
+Route::group(['prefix' => 'auth', 'middleware' => 'guest'], function () {
     Route::get('/login', [AuthController::class, 'login'])->name('auth.login');
     Route::post('/login', [AuthController::class, 'authenticate'])->name('auth.login');
 });
 
-Route::group(['middleware' => ['role']], function () {
+Route::group(['middleware' => ['admin']], function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 //    Route::get('/profile', [AuthController::class, 'profile'])->name('auth.profile');
 //    Route::post('/auth/update', [AuthController::class, 'update'])->name('auth.update');
