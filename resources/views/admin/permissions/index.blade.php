@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="row">
+
         <!-- start page title -->
         <div class="row">
             <div class="col-12">

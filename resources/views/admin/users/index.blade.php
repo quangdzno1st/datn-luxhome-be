@@ -28,11 +28,6 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-header d-flex justify-content-between">
-                    <h5 class="card-title mb-0">Danh sách người dùng</h5>
-                    <a href="{{ route('admin.users.create') }}" class="btn btn-success">+ Thêm mới</a>
-
-                </div>
                 @if (session('toast_message'))
                     <div class="card-header   alert alert-{{ session('toast_style') }} alert-dismissible fade show" role="alert">
                         {{ session('toast_message') }}
@@ -40,23 +35,27 @@
                     </div>
                 @endif
 
-
-                <form method="GET" id="searchForm" action="{{ route('admin.users.index') }}" class="card-header d-flex justify-content-end mb-3">
-                    <div class="input-group w-auto">
-                        <!-- Tìm kiếm theo tên -->
-                        <input type="text" class="form-control" name="search" id="searchInput" placeholder="Tìm kiếm người dùng..." value="{{ request()->input('search') }}">
+                <div class="card-header d-flex justify-content-between">
+                    <div class="">
+                        <a href="{{ route('admin.users.create') }}" class="btn btn-success">+ Thêm mới</a>
                     </div>
-                    <div class="input-group w-auto ms-2">
-                        <!-- Tìm kiếm theo type (Customer/Admin) -->
-                        <select name="type" class="form-select" id="typeSelect">
-                            <option value="">Tất cả loại</option>
-                            <option value="{{ \App\Models\User::CUSTOMER }}" {{ request()->input('type') == \App\Models\User::CUSTOMER ? 'selected' : '' }}>Customer</option>
-                            <option value="{{ \App\Models\User::ADMIN }}" {{ request()->input('type') == \App\Models\User::ADMIN ? 'selected' : '' }}>Admin</option>
-                            <option value="{{ \App\Models\User::HOTELIER }}" {{ request()->input('type') == \App\Models\User::HOTELIER ? 'selected' : '' }}>Hotelier</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary ms-2">Tìm kiếm</button>
-                </form>
+                    <form method="GET" id="searchForm" action="{{ route('admin.users.index') }}" class="d-flex justify-content-end mb-3">
+                        <div class="input-group w-auto">
+                            <!-- Tìm kiếm theo tên -->
+                            <input type="text" class="form-control" name="search" id="searchInput" placeholder="Tìm kiếm người dùng..." value="{{ request()->input('search') }}">
+                        </div>
+                        <div class="input-group w-auto ms-2">
+                            <!-- Tìm kiếm theo type (Customer/Admin) -->
+                            <select name="type" class="form-select" id="typeSelect">
+                                <option value="">Tất cả loại</option>
+                                <option value="{{ \App\Models\User::CUSTOMER }}" {{ request()->input('type') == \App\Models\User::CUSTOMER ? 'selected' : '' }}>Customer</option>
+                                <option value="{{ \App\Models\User::ADMIN }}" {{ request()->input('type') == \App\Models\User::ADMIN ? 'selected' : '' }}>Admin</option>
+                                <option value="{{ \App\Models\User::HOTELIER }}" {{ request()->input('type') == \App\Models\User::HOTELIER ? 'selected' : '' }}>Hotelier</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary ms-2">Tìm kiếm</button>
+                    </form>
+                </div>
 
 
                 <div class="card-body">

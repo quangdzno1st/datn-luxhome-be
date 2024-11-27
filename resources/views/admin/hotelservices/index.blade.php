@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="row">
+
         <!-- start page title -->
         <div class="row">
             <div class="col-12">
@@ -33,15 +33,18 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             @endif
+            @error('services')
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>{{$message}}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @enderror
         </div>
 
 
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title mb-0">Dịch vụ của khách sạn {{$hotel->name}}</h4>
-                    </div><!-- end card header -->
 
                     <div class="card-body">
                         <div class="listjs-table" id="customerList">
@@ -57,16 +60,19 @@
                                     </div>
                                 </div>
                                 <div class="col-sm">
-                                    <div class="d-flex justify-content-sm-end">
-                                        <form class="search-box ms-2" method="GET" action="{{url()->full()}}">
-                                            <input type="text" name="keyword" class="form-control" placeholder="Tìm kếm...">
+                                    <form class="d-flex justify-content-sm-end" method="GET" action="{{url()->full()}}">
+                                        <div class="search-box ms-2">
+                                            <input type="text" name="keyword" class="form-control" placeholder="Điền tên, giá, mô tả..." value="{{ request()->has('keyword') ? request()->input('keyword') : '' }}">
                                             <i class="ri-search-line search-icon"></i>
-                                        </form>
-                                    </div>
+                                        </div>
+                                        <div class="ms-1">
+                                            <button class="btn btn-primary">Tìm kiếm</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
 
-                            <div class="table-responsive table-card mt-3 mb-1">
+                            <div class="card-body table-responsive table-card mt-3 mb-1">
                                 <form action="{{route('admin.hotel.service.destroyMulti')}}" method="post" id="deleteMulti">
                                     @csrf
                                     @method('DELETE')
@@ -207,7 +213,7 @@
                                             <div class="modal-body">
                                                 <div class="mb-3">
                                                     <label for="services"
-                                                           class="form-label text-muted">Chọn dịch vụ</label>
+                                                           class="form-label text-muted">Chọn dịch vụ<span class="text-danger">*</span></label>
                                                     <select class="form-control" id="services"
                                                             data-choices data-choices-removeItem
                                                             name="services[][service_id]" multiple>
@@ -224,10 +230,9 @@
                                             <div class="modal-footer">
                                                 <div class="hstack gap-2 justify-content-end">
                                                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-                                                        Close
+                                                        Đóng
                                                     </button>
-                                                    <button type="submit" class="btn btn-success" id="add-btn">Add
-                                                        service
+                                                    <button type="submit" class="btn btn-success" id="add-btn">Thêm dịch vụ
                                                     </button>
                                                 </div>
                                             </div>

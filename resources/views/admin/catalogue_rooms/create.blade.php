@@ -50,7 +50,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label" for="name">Tên loại phòng</label>
+                            <label class="form-label" for="name">Tên loại phòng<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}"
                                 placeholder="Tên loại phòng">
                             @error('name')
@@ -59,7 +59,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label" for="thumbnail">Thumbnail</label>
+                            <label class="form-label" for="thumbnail">Thumbnail<span class="text-danger">*</span></label>
                             <input class="form-control" id="thumbnail" type="file" name="thumbnail"
                                 accept="image/png, image/gif, image/jpeg">
                                 @error('thumbnail')
@@ -69,7 +69,7 @@
 
                         <div class="mb-3 row">
                            <div class="col">
-                            <label class="form-label" for="price">Giá phòng</label>
+                            <label class="form-label" for="price">Giá phòng<span class="text-danger">*</span></label>
                             <input type="number" class="form-control" id="price" name="price" value="{{ old('price') }}"
                                 placeholder="Giá phòng">
                                 @error('price')
@@ -77,9 +77,9 @@
                             @enderror
                            </div>
                            <div class="col">
-                            <label class="form-label" for="price_hour">Giá phạt checkout quá giờ</label>
+                            <label class="form-label" for="price_hour">Giá phạt checkout quá giờ<span class="text-danger">*</span></label>
                             <input type="number" class="form-control" id="price_hour" name="price_hour" value="{{ old('price_hour') }}"
-                                placeholder="Giá phòng theo tiếng">
+                                placeholder="Giá phạt">
                                 @error('price_hour')
                                 <p class="text-danger">{{$message}}</p>
                             @enderror
@@ -107,7 +107,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Mô tả</label>
+                            <label class="form-label">Mô tả<span class="text-danger">*</span></label>
                             <div>
                                 <textarea class="form-control" id="content" rows="2" name="description">{{old('description')}}</textarea>
                                 @error('description')
@@ -155,7 +155,7 @@
                 <input type="hidden" value="{{Auth::user()->org_id}}" name="hotel_id">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">Hình ảnh</h5>
+                        <h5 class="card-title mb-0">Hình ảnh<span class="text-danger">*</span></h5>
                     </div>
                     <div class="card-body">
                         <div class="col-lg-12 col-sm-12">
@@ -184,7 +184,7 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <div class="mb-3">
-                                <label class="form-label" for="">Sức chứa</label>
+                                <label class="form-label" for="">Sức chứa<span class="text-danger">*</span></label>
                                 <div class="row">
                                     <div class="col">
                                         <input type="number" class="form-control" id="number_adult" value="{{old('number_adult')}}"
@@ -206,7 +206,7 @@
 
                         <div class="mb-3">
                             <div class="mb-3">
-                                <label class="form-label" for="acreage">Diện tích</label>
+                                <label class="form-label" for="acreage">Diện tích<span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" id="acreage" name="acreage" value="{{ old('acreage') }}"
                                     placeholder="Diện tích">
                                     @error('acreage')

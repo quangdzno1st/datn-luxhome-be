@@ -5,7 +5,6 @@
 @endsection
 
 @section('content')
-    <div class="row">
         <!-- start page title -->
         <div class="row">
             <div class="col-12">
@@ -44,9 +43,6 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title mb-0">Danh sách dịch vụ</h4>
-                    </div><!-- end card header -->
 
                     <div class="card-body">
                         <div class="listjs-table" id="customerList">
@@ -62,16 +58,19 @@
                                     </div>
                                 </div>
                                 <div class="col-sm">
-                                    <div class="d-flex justify-content-sm-end">
-                                        <form class="search-box ms-2" method="GET" action="{{route('admin.services.index')}}">
-                                            <input type="text" name="keyword" class="form-control" placeholder="Tìm kiếm...">
+                                    <form class="d-flex justify-content-sm-end" method="GET" action="{{route('admin.services.index')}}">
+                                        <div class="search-box ms-2">
+                                            <input type="text" name="keyword" class="form-control" placeholder="Điền tên, giá, mô tả..." value="{{ request()->has('keyword') ? request()->input('keyword') : '' }}">
                                             <i class="ri-search-line search-icon"></i>
-                                        </form>
-                                    </div>
+                                        </div>
+                                        <div class="ms-1">
+                                            <button class="btn btn-primary">Tìm kiếm</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
 
-                            <div class="table-responsive table-card mt-3 mb-1">
+                            <div class="card-body table-responsive table-card mt-3 mb-1">
                                 <table class="table align-middle table-nowrap" id="customerTable">
                                     <thead class="table-light">
                                     <tr>
@@ -152,7 +151,7 @@
                                                         <div class="modal-body">
                                                             <div class="mb-3">
                                                                 <label for="name"
-                                                                       class="form-label">Tên dịch vụ</label>
+                                                                       class="form-label">Tên dịch vụ<span class="text-danger">*</span></label>
                                                                 <input type="text" id="name"
                                                                        class="form-control"
                                                                        placeholder="Nhập tên dịch vụ"
@@ -164,7 +163,7 @@
 
                                                             <div class="mb-3">
                                                                 <label for="price"
-                                                                       class="form-label">Giá</label>
+                                                                       class="form-label">Giá<span class="text-danger">*</span></label>
                                                                 <input type="number" id="price"
                                                                        class="form-control" name="price"
                                                                        placeholder="Nhập giá" required
@@ -176,7 +175,7 @@
 
                                                             <div class="mb-3">
                                                                 <label for="description" class="form-label">Mô
-                                                                    tả</label>
+                                                                    tả<span class="text-danger">*</span></label>
                                                                 <textarea name="description" class="form-control"
                                                                           id="description" cols="30" rows="5"
                                                                           placeholder="Nhập mô tả"
@@ -293,7 +292,7 @@
                                             @csrf
                                             <div class="modal-body">
                                                 <div class="mb-3">
-                                                    <label for="name" class="form-label">Tên dịch vụ</label>
+                                                    <label for="name" class="form-label">Tên dịch vụ<span class="text-danger">*</span></label>
                                                     <input type="text" id="name" class="form-control"
                                                            placeholder="Nhập tên dịch vụ" required name="name"/>
                                                            @error('name')
@@ -303,7 +302,7 @@
 
 
                                                 <div class="mb-3">
-                                                    <label for="price" class="form-label">Giá</label>
+                                                    <label for="price" class="form-label">Giá<span class="text-danger">*</span></label>
                                                     <input type="number" id="price" class="form-control"
                                                            name="price" placeholder="Nhập giá" required/>
                                                            @error('price')
@@ -313,7 +312,7 @@
 
                                                 <div class="mb-3">
                                                     <label for="description"
-                                                           class="form-label">Mô tả</label>
+                                                           class="form-label">Mô tả<span class="text-danger">*</span></label>
                                                     <textarea name="description" class="form-control"
                                                               id="description" cols="30" rows="5"
                                                               placeholder="Nhập mô tả" required></textarea>

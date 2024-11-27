@@ -14,7 +14,14 @@ class RateController extends Controller
 
     public function listRatesAllHotels()
     {
-        $ratesOfHotels = Hotel::with('rates')->paginate(10);
+        $query = Hotel::with('rates');
+
+        if (request()->has('keyword')) {
+            $keyword = request()->input('keyword');
+            $query->where('name', 'like', "%$keyword%");
+        }
+
+        $ratesOfHotels = $query->paginate(10);
         
         return view(self::PATH_VIEW . 'index', compact('ratesOfHotels'));
     }
@@ -22,20 +29,20 @@ class RateController extends Controller
     public function listRatesOneHotel($hotelId)
     {
         $hotel = Hotel::query()->where('id', $hotelId)->firstOrFail();
-        
+
         $query = Rate::withoutTrashed()->with('user')->where('hotel_id', $hotelId);
 
         if (request()->has('keyword')) {
             $keyword = request()->input('keyword');
 
-            $query->where(function($query) use ($keyword){
+            $query->where(function ($query) use ($keyword) {
                 $query->where('rate', 'like', "%$keyword%")
-                ->orWhere('content', 'like', "%$keyword%");
+                    ->orWhere('content', 'like', "%$keyword%");
             });
         }
 
         $rates = $query->paginate(10);
-        
+
         return view(self::PATH_VIEW . 'list-rates-one-hotel', compact('hotel', 'rates'));
     }
 
@@ -48,9 +55,9 @@ class RateController extends Controller
         if (request()->has('keyword')) {
             $keyword = request()->input('keyword');
 
-            $query->where(function($query) use ($keyword){
+            $query->where(function ($query) use ($keyword) {
                 $query->where('rate', 'like', "%$keyword%")
-                ->orWhere('content', 'like', "%$keyword%");
+                    ->orWhere('content', 'like', "%$keyword%");
             });
         }
 
@@ -70,14 +77,14 @@ class RateController extends Controller
         if (request()->has('keyword')) {
             $keyword = request()->input('keyword');
 
-            $query->where(function($query) use ($keyword){
+            $query->where(function ($query) use ($keyword) {
                 $query->where('rate', 'like', "%$keyword%")
-                ->orWhere('content', 'like', "%$keyword%");
+                    ->orWhere('content', 'like', "%$keyword%");
             });
         }
 
         $rates = $query->paginate(10);
-        
+
         return view(self::PATH_VIEW . 'list-rates-one-hotel', compact('hotel', 'rates'));
     }
 
@@ -86,15 +93,15 @@ class RateController extends Controller
         $hotelId = Auth::user()->org_id;
 
         $hotel = Hotel::query()->where('id', $hotelId)->firstOrFail();
-        
+
         $query = Rate::onlyTrashed()->with('user')->where('hotel_id', $hotelId);
 
         if (request()->has('keyword')) {
             $keyword = request()->input('keyword');
 
-            $query->where(function($query) use ($keyword){
+            $query->where(function ($query) use ($keyword) {
                 $query->where('rate', 'like', "%$keyword%")
-                ->orWhere('content', 'like', "%$keyword%");
+                    ->orWhere('content', 'like', "%$keyword%");
             });
         }
 
