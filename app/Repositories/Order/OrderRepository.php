@@ -104,7 +104,7 @@ class OrderRepository extends BaseRepository implements OrderInterface
     public function getById($orderId, $userId = null)
     {
         $query = Order::query()
-            ->select('orders.start_date', 'orders.end_date', 'orders.code', 'orders.total_amount', 'orders.status',
+            ->select('orders.org_id', 'orders.status', 'orders.status_payment', 'orders.is_rating', 'orders.start_date', 'orders.end_date', 'orders.code', 'orders.total_amount', 'orders.status',
                 'h.district', 'h.name as hotel_name', 'orders.id', 'h.province', 'orders.is_requried_cancel',
                 'h.star', 'orders.code', 'orders.name', 'orders.email', 'orders.phone', 'orders.note',
                 'v.description as voucher_description', 'v.discount_value')

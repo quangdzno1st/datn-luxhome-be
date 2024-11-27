@@ -110,6 +110,7 @@ Route::middleware('is.login')->group(function () {
     Route::get('/orders', [AccountSettingController::class, 'index'])->name('orders.index');
     Route::post('/update/user', [AccountSettingController::class, 'changeUserInfo'])->name('client.update.user');
     Route::post('/change/password/user', [AccountSettingController::class, 'changePassword'])->name('client.change.password.user');
+    Route::post('rating/{orderId}', [AccountSettingController::class, 'rating'])->name('client.rating');
 });
 
 Route::get('/login', [LoginController::class, 'index'])->name('client.login');

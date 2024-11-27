@@ -71,8 +71,10 @@
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $rate->user->name }}</td>
-                                        <td>
-                                            {{ $rate->rate }}
+                                        <td class="text-warning">
+                                            @for ($i = 0; $i < $rate->rate; $i++)
+                                                <i class="ri-star-fill"></i>
+                                            @endfor
                                         </td>
                                         <td>{{ $rate->content }}</td>
                                         <td class="d-flex gap-1">

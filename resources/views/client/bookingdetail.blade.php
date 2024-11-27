@@ -14,12 +14,10 @@
                 <!--//crumbs-->
             </nav>
             <!--//breadcrumbs-->
-
+            <h1 style="color: #19b4ac; font-size:1rem; text-align:right; padding: 24px 0">{{session('msg')}}</h1>
             <div class="row">
                 <!--three-fourth content-->
                 <section class="three-fourth">
-
-                    <h1>Chi tiết đặt phòng</h1>
 
                     <!--inner navigation-->
                     {{-- <nav class="inner-nav">
@@ -32,7 +30,7 @@
                     <!--//inner navigation-->
 
                     <!--My Bookings-->
-                    <section id="MyBookings" class="tab-content">
+                    <section id="MyBookings" class="tab-content" style="width:100%">
                         <!--booking-->
                         <article class="bookings">
                             <h2>Chi Tiết Đặt Phòng</h2>
@@ -156,18 +154,24 @@
                 <!--sidebar-->
                 <aside class="one-fourth right-sidebar">
                     <!--Need Help Booking?-->
+                    @if ($order['status'] == 3 && $order['status_payment'] == 2 && $order['is_rating'] == 2)
                     <article class="widget">
                         <h4>Đánh giá</h4>
-                        <select name="" id="">
-                            <option value="5">Rất tốt</option>
-                            <option value="4">Tốt</option>
-                            <option value="3">Tạm</option>
-                            <option value="2">Kém</option>
-                            <option value="1">Rất kém</option>
-                        </select>
-                        <label for="">Nhận xét</label>
-                        <textarea name="" id="" cols="30" rows="10" placeholder="Nhận xét ý kiến của bạn"></textarea>
+                        <form action="{{route('client.rating', $order['id'])}}" method="post">
+                            @csrf
+                            <select name="rate">
+                                <option value="5">Rất tốt</option>
+                                <option value="4">Tốt</option>
+                                <option value="3">Tạm</option>
+                                <option value="2">Kém</option>
+                                <option value="1">Rất kém</option>
+                            </select>
+                            <input type="hidden" name="hotel_id" value="{{$order['org_id']}}">
+                            <textarea style="margin-top: 10px" name="content" cols="30" rows="10" placeholder="Nhận xét ý kiến của bạn"></textarea>
+                            <button style="margin-top: 10px; border:none" type="submit">Đánh giá</button>
+                        </form>
                     </article>
+                    @endif
                     <!--//Need Help Booking?-->
 
                     <!--Why Book with us?-->

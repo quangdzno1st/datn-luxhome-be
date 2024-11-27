@@ -29,7 +29,7 @@
 					@enderror
 				</div>
 				<div class="f-item checkbox full-width" style="float: unset">
-					<input type="checkbox" id="remember_me" name="checkbox" />
+					<input type="checkbox" id="remember_me" name="remember" />
 					<label for="remember_me">Ghi nhớ mật khẩu</label>
 				</div>
 				<div class="f-item full-width" style="float: unset">

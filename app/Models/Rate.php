@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Rate extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes;
 
     public $incrementing = false;
     protected $keyType = 'string';
@@ -20,6 +21,11 @@ class Rate extends Model
         'rate',
         'content',
     ];
+
+    protected $casts = [
+        'id' => 'string',
+    ];
+
     // Quan hệ với bảng users
     public function user()
     {
