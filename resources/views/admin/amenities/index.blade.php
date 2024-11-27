@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="row">
+
         <!-- start page title -->
         <div class="row">
             <div class="col-12">
@@ -44,9 +44,9 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
-                    <div class="card-header">
+                    {{-- <div class="card-header">
                         <h4 class="card-title mb-0">Danh sách tiện nghi</h4>
-                    </div><!-- end card header -->
+                    </div><!-- end card header --> --}}
 
                     <div class="card-body">
                         <div class="listjs-table" id="customerList">
@@ -62,16 +62,19 @@
                                     </div>
                                 </div>
                                 <div class="col-sm">
-                                    <div class="d-flex justify-content-sm-end">
-                                        <form class="search-box ms-2" method="GET" action="{{route('admin.amenities.index')}}">
-                                            <input type="text" name="content" class="form-control" placeholder="Tìm kiếm...">
+                                    <form class="d-flex justify-content-sm-end" method="GET" action="{{route('admin.amenities.index')}}">
+                                        <div class="search-box ms-2">
+                                            <input type="text" name="content" class="form-control" placeholder="Tìm kiếm..." value="{{ request()->has('content') ? request()->input('content') : '' }}">
                                             <i class="ri-search-line search-icon"></i>
-                                        </form>
-                                    </div>
+                                        </div>
+                                        <div class="ms-1">
+                                            <button class="btn btn-primary">Tìm kiếm</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
 
-                            <div class="table-responsive table-card mt-3 mb-1">
+                            <div class="table-responsive table-card mt-3 mb-1 card-body">
                                 <table class="table align-middle table-nowrap" id="customerTable">
                                     <thead class="table-light">
                                     <tr>
@@ -81,7 +84,7 @@
                                                        value="option">
                                             </div>
                                         </th> --}}
-                                        <th class="text-center">STT</th>
+                                        <th class="">STT</th>
                                         <th>Tên tiện nghi</th>
                                         <th></th>
                                     </tr>
@@ -99,7 +102,7 @@
                                             <td class="id" style="display:none;"><a href="javascript:void(0);"
                                                                                     class="fw-medium link-primary"></a>
                                             </td>
-                                            <td class="text-center">{{ $index + 1 }}</td>
+                                            <td class="">{{ $index + 1 }}</td>
                                             <td class="">{{ $amenitie->content }}</td>
 
                                             <td>

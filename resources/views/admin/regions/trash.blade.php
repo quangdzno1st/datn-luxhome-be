@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="row">
+
         <!-- start page title -->
         <div class="row">
             <div class="col-12">
@@ -15,7 +15,7 @@
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="javascript: void(0);">Miền</a></li>
-                            <li class="breadcrumb-item active">Danh sách</li>
+                            <li class="breadcrumb-item active">Thùng rác</li>
                         </ol>
                     </div>
 
@@ -26,9 +26,9 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
-                    <div class="card-header">
+                    {{-- <div class="card-header">
                         <h4 class="card-title mb-0">Danh sách miền</h4>
-                    </div>
+                    </div> --}}
 
                     <div class="card-body">
                         <div class="listjs-table" id="customerList">
@@ -37,8 +37,6 @@
                                     <div>
                                         <a href="{{ route('admin.regions.index') }}" class="btn btn-primary bg-gradient waves-effect waves-primary">
                                             <i class="ri-arrow-left-s-line"></i> Danh sách </a>
-                                        <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i
-                                                    class="ri-delete-bin-2-line"></i></button>
                                     </div>
                                 </div>
                                 <div class="col-sm">
@@ -51,32 +49,34 @@
                                 </div>
                             </div>
 
-                            <div class="table-responsive table-card mt-3 mb-1">
+                            <div class="card-body table-responsive table-card mt-3 mb-1">
                                 <table class="table align-middle table-nowrap" id="customerTable">
                                     <thead class="table-light">
                                     <tr>
-                                        <th scope="col" style="width: 50px;">
+                                        {{-- <th scope="col" style="width: 50px;">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" id="checkAll"
                                                        value="option">
                                             </div>
-                                        </th>
-                                        <th class="sort" data-sort="name">Tên</th>
-                                        <th>Action</th>
+                                        </th> --}}
+                                        <th>STT</th>
+                                        <th>Tên</th>
+                                        <th>###</th>
                                     </tr>
                                     </thead>
                                     <tbody class="list form-check-all">
-                                    @foreach ($data as $region)
+                                    @foreach ($data as $index => $region)
                                         <tr>
-                                            <th scope="row">
+                                            {{-- <th scope="row">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="chk_child"
                                                            value="option1">
                                                 </div>
-                                            </th>
+                                            </th> --}}
                                             <td class="id" style="display:none;"><a href="javascript:void(0);"
                                                                                     class="fw-medium link-primary"></a>
                                             </td>
+                                            <td>{{$index + 1}}</td>
                                             <td class="name">{{ $region->name }}</td>
                                             <td>
                                                 <div class="d-flex gap-2">

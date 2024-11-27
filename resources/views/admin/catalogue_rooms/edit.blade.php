@@ -57,7 +57,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label" for="name">Tên loại phòng</label>
+                            <label class="form-label" for="name">Tên loại phòng<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="name" name="name"
                                 value="{{ $catalogueRoom->name }}" placeholder="Tên loại phòng">
                             @error('name')
@@ -81,7 +81,7 @@
 
                         <div class="mb-3 row">
                             <div class="col">
-                                <label class="form-label" for="price">Giá phòng</label>
+                                <label class="form-label" for="price">Giá phòng<span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" id="price" name="price"
                                     value="{{ $catalogueRoom->price }}" placeholder="Giá phòng">
                                 @error('price')
@@ -89,9 +89,9 @@
                                 @enderror
                             </div>
                             <div class="col">
-                                <label class="form-label" for="price_hour">Giá phạt checkout quá giờ</label>
+                                <label class="form-label" for="price_hour">Giá phạt checkout quá giờ<span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" id="price_hour" name="price_hour"
-                                    value="{{ $catalogueRoom->price_hour }}" placeholder="Giá phòng theo tiếng">
+                                    value="{{ $catalogueRoom->price_hour }}" placeholder="Giá phạt">
                                 @error('price_hour')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -120,7 +120,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Mô tả</label>
+                            <label class="form-label">Mô tả<span class="text-danger">*</span></label>
                             <div>
                                 <textarea class="form-control" id="content" rows="2" name="description">{{ $catalogueRoom->description }}</textarea>
                                 @error('description')
@@ -199,7 +199,7 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <div class="mb-3">
-                                <label class="form-label" for="">Sức chứa</label>
+                                <label class="form-label" for="">Sức chứa<span class="text-danger">*</span></label>
                                 <div class="row">
                                     <div class="col">
                                         <input type="number" class="form-control" id="number_adult"
@@ -223,7 +223,7 @@
 
                         <div class="mb-3">
                             <div class="mb-3">
-                                <label class="form-label" for="acreage">Diện tích</label>
+                                <label class="form-label" for="acreage">Diện tích<span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" id="acreage" name="acreage"
                                     value="{{ $catalogueRoom->acreage }}" placeholder="Diện tích">
                                 @error('acreage')

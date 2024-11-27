@@ -61,6 +61,10 @@ class HotelServiceController extends Controller
 
     public function store(Request $request ,string $idHotel = null)
     {
+        $validator =$request->validate([
+            'services' => 'required'
+        ], ['services.required' => 'Chọn ít nhất 1 dịch vụ']);
+
         if (empty($idHotel) && Auth::user()->type == RoleEnum::Admin->value) {
             $idHotel = Auth::user()->org_id;
         }

@@ -45,15 +45,15 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <a href="{{route('admin.catalogue-rooms.create')}}" class="btn btn-success">+ Thêm mới</a>
-                    <form action="" method="get">
-                        <div class="d-flex justify-content-sm-end">
+                        <form class="d-flex justify-content-sm-end" action="" method="get">
                             <div class="search-box ms-2">
-                                <input type="text" class="form-control " placeholder="Search..."
-                                    name="keyword">
+                                <input type="text" class="form-control " placeholder="Tìm kiếm..." name="keyword" value="{{ request()->has('keyword') ? request()->input('keyword') : '' }}">
                                 <i class="ri-search-line search-icon"></i>
                             </div>
-                        </div>
-                    </form>
+                            <div class="ms-1">
+                                <button class="btn btn-primary">Tìm kiếm</button>
+                            </div>
+                        </form>
                 </div>
                 <div class="card-body">
                     <div class="row">
