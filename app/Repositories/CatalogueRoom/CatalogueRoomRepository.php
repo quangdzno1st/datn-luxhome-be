@@ -93,7 +93,7 @@ class   CatalogueRoomRepository extends BaseRepository implements CatalogueRoomI
         return $categories->map(function ($category) use ($roomIds, $startDate, $endDate, $numberChild, $numberAdult) {
             $filteredRooms = $category->rooms()->whereNotIn('id', $roomIds)
                 ->where('rooms.status', RoomStatusEnum::SAN_SANG_SU_DUNG->value)->get();
-            $attributeValues = $category->attributeValues;
+            $attributes = $category->attributes;
             return [
                 'id' => $category->id,
                 'name' => $category->name,
@@ -103,7 +103,7 @@ class   CatalogueRoomRepository extends BaseRepository implements CatalogueRoomI
                 'number_child' => $category->number_child,
                 'hotel_id' => $category->hotel_id,
                 'hotel_name' => $category?->hotel?->name,
-                'attributeValues' => $attributeValues,
+                'attributes' => $attributes,
                 'images' => $category?->images,
                 'org_id' => $category->org_id,
                 'price' => $category->price,

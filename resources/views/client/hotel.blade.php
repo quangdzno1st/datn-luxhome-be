@@ -322,9 +322,9 @@
                             <ul>
                                 @php
                                     $facilities =   $hotel->catalogues()
-                                          ->with('attributeValues') // Lấy thông tin các attribute_value của các loại phòng
+                                          ->with('attributes') // Lấy thông tin các attribute_value của các loại phòng
                                           ->get()
-                                          ->pluck('attributeValues') // Lấy tất cả các giá trị attribute_value từ các catalogue
+                                          ->pluck('attributes') // Lấy tất cả các giá trị attribute_value từ các catalogue
                                           ->flatten() // Làm phẳng các mảng để có danh sách các attribute_value
                                           ->unique()
                                 @endphp
@@ -546,7 +546,7 @@
                                             <div style="margin-bottom: 10px"><strong>+ Tiện
                                                     nghi</strong></div>
                                             @php
-                                                $facilities =  $data['attributeValues']
+                                                $facilities =  $data['attributes']
                                                       ->flatten()
                                                       ->unique()
                                             @endphp
@@ -611,9 +611,9 @@
                     <h2>Tiện nghi</h2>
                     @php
                         $facilities =   $hotel->catalogues()
-                              ->with('attributeValues') // Lấy thông tin các attribute_value của các loại phòng
+                              ->with('attributes') // Lấy thông tin các attribute_value của các loại phòng
                               ->get()
-                              ->pluck('attributeValues') // Lấy tất cả các giá trị attribute_value từ các catalogue
+                              ->pluck('attributes') // Lấy tất cả các giá trị attribute_value từ các catalogue
                               ->flatten() // Làm phẳng các mảng để có danh sách các attribute_value
                               ->unique()
                     @endphp

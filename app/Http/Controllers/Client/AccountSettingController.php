@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\HotelServiceService;
 use App\Constant\Enum\ServiceTypeEnum;
 use App\Http\Requests\OrderSearchRequest;
+use App\Models\Order;
 use Illuminate\Validation\ValidationException;
 use App\Repositories\Service\ServiceRepository;
 use App\Repositories\Voucher\VoucherRepository;
@@ -170,8 +171,22 @@ class AccountSettingController extends Controller
         return view('client.bookingdetail', compact('catalogueRooms', 'order', 'services'));
     }
 
-    public function rating()
+    public function rating(Request $request, $orderId)
     {
-        
+        $validator = $request->validate([
+            'rate' => 'required'
+        ], ['rate.required' => 'Bạn chưa chọn điểm đánh giá']);
+
+        $data = $request->all();
+
+        $data['user_id'] = Auth::user()->id;
+
+        $rate = Rate::query()->create($data);
+
+        $order = Order::query()->where('id', $orderId)->firstOrFail();
+
+        $order->update(['is_rating' => 1]);
+
+        return back()->with('msg', 'Đánh giá thành công!');
     }
 }

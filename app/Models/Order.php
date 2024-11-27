@@ -10,6 +10,11 @@ class Order extends Model
 {
     use HasFactory,SoftDeletes;
 
+    const RATING_STATUS = [
+        '1' => 'Đã đánh giá',
+        '2' => 'Chưa đánh giá'
+    ];
+
     protected $casts = [
         'id' => 'string',
     ];
@@ -34,7 +39,8 @@ class Order extends Model
         'total_amount',
         'net_amount',
         'transaction_id',
-        'is_requried_cancel'
+        'is_requried_cancel',
+        'is_rating'
     ];
 
     protected $keyType = 'string';
