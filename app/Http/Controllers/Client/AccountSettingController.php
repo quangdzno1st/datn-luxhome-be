@@ -16,6 +16,9 @@ use Illuminate\Validation\ValidationException;
 use App\Repositories\Service\ServiceRepository;
 use App\Repositories\Voucher\VoucherRepository;
 use App\Repositories\CatalogueRoom\CatalogueRoomRepository;
+use Exception;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class AccountSettingController extends Controller
 {
@@ -46,7 +49,7 @@ class AccountSettingController extends Controller
     {
         $userId = Auth::user()->id;
 
-        $rates = Rate::withoutTrashed()->with('hotel')->where('user_id', $userId)->get();
+        $rates = Rate::withoutTrashed()->with('hotel', 'comment')->where('user_id', $userId)->get();
 
         $orders = $this->orderService->searchByPage($request);
 
@@ -99,61 +102,91 @@ class AccountSettingController extends Controller
     public function changeUserInfo(Request $request)
     {
         // dd($request->all());
+        $message = [
+            'name.required' => 'Vui lòng nhập tên tài khoản.',
+            'name.max' => 'Tên tài khoản không được vượt quá :max ký tự.',
+            'email.required' => 'Vui lòng nhập email.',
+            'email.email' => 'Sai định dạng email.',
+            'email.max' => 'Email không được vượt quá :max ký tự.',
+            'email.unique' => 'Email này đã được sử dụng.',
+            'phone.required' => 'Vui lòng nhập số điện thoại.',
+            'phone.regex' => 'Số điện thoại không hợp lệ.'
+        ];
+        $validator = Validator::make($request->all(),[
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'unique:users,email,' . Auth::id(), 'max:255'],
+            'phone' => ['required', 'string', 'regex:/^(0[3|5|7|8|9])[0-9]{8}$/']
+        ], $message);
+
+        if ($validator->fails()) {
+            // Xử lý lỗi validate
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Cập nhật thông tin không thành công!');
+        }
+
         try {
-            $message = [
-                'name.required' => 'Vui lòng nhập tên tài khoản.',
-                'name.max' => 'Tên tài khoản không được vượt quá :max ký tự.',
-                'email.required' => 'Vui lòng nhập email.',
-                'email.email' => 'Sai định dạng email.',
-                'email.max' => 'Email không được vượt quá :max ký tự.',
-                'email.unique' => 'Email này đã được sử dụng.',
-                'phone.required' => 'Vui lòng nhập số điện thoại.',
-                'phone.regex' => 'Số điện thoại không hợp lệ.'
-            ];
-            $validator = $request->validate([
-                'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'email', 'unique:users,email,' . Auth::id(), 'max:255'],
-                'phone' => ['required', 'string', 'regex:/^(0[3|5|7|8|9])[0-9]{8}$/']
-            ], $message);
 
             $data = $request->all();
 
+            if ($request->has('avatar')) {
+                $data['avatar'] = Storage::put('users', $data['avatar']);
+            }
+            
             $userUpdate = Auth::user();
+
+            $oldAvatar = $userUpdate->avatar;
 
             $userUpdate->update($data);
 
+           if ($request->has('avatar')) {
+            if (!empty($oldAvatar) && Storage::exists($oldAvatar)) {
+                Storage::delete($oldAvatar);
+            }
+           }
+
             return back()->with('msg', 'Cập nhật thông tin thành công');
-        } catch (ValidationException $e) {
-            return back()
-                ->withErrors($e->validator)
-                ->with('error', 'Cập nhật thông tin không thành công!');
+        } catch (Exception $e) {
+            if ($request->has('avatar')) {
+                Storage::delete($data['avatar']);
+            }
+            return back()->with('error', $e->getMessage());
         }
 
     }
 
     public function changePassword(Request $request)
     {
-        try {
-            $message = [
-                'password.required' => 'Vui lòng nhập mật khẩu.',
-                'password.confirmed' => 'Mật khẩu xác nhận không khớp.',
-                'password.max' => 'Mật khẩu không được vượt quá :max ký tự.'
-            ];
-            $data = $request->validate([
-                'password' => ['required', 'string', 'confirmed', 'max:255']
-            ], $message);
+        $message = [
+            'password.required' => 'Vui lòng nhập mật khẩu.',
+            'password.confirmed' => 'Mật khẩu xác nhận không khớp.',
+            'password.max' => 'Mật khẩu không được vượt quá :max ký tự.'
+        ];
+        $validator = Validator::make($request->all(), [
+            'password' => ['required', 'string', 'confirmed', 'max:255']
+        ], $message);
 
-            $data['password'] = bcrypt($data['password']);
+        if ($validator->fails()) {
+            // Xử lý lỗi validate
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Đổi mật khẩu không thành công!');
+        }
+
+        try {
+            $data = [];
+
+            $data['password'] = bcrypt($request->input('password'));
 
             $userUpdate = Auth::user();
-
+            
             $userUpdate->update($data);
 
             return back()->with('msg', 'Thay đổi mật khẩu thành công');
-        } catch (ValidationException $e) {
-            return back()
-                ->withErrors($e->validator)
-                ->with('error', 'Đổi mật khẩu không thành công!');
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
     }
 

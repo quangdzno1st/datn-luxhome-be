@@ -30,7 +30,7 @@ class RateController extends Controller
     {
         $hotel = Hotel::query()->where('id', $hotelId)->firstOrFail();
 
-        $query = Rate::withoutTrashed()->with('user')->where('hotel_id', $hotelId);
+        $query = Rate::withoutTrashed()->with('user', 'comment')->where('hotel_id', $hotelId);
 
         if (request()->has('keyword')) {
             $keyword = request()->input('keyword');
@@ -42,6 +42,7 @@ class RateController extends Controller
         }
 
         $rates = $query->paginate(10);
+        // dd($rates->toArray());
 
         return view(self::PATH_VIEW . 'list-rates-one-hotel', compact('hotel', 'rates'));
     }
@@ -50,7 +51,7 @@ class RateController extends Controller
     {
         $hotel = Hotel::query()->where('id', $hotelId)->firstOrFail();
 
-        $query = Rate::onlyTrashed()->with('user')->where('hotel_id', $hotelId);
+        $query = Rate::onlyTrashed()->with('user', 'comment')->where('hotel_id', $hotelId);
 
         if (request()->has('keyword')) {
             $keyword = request()->input('keyword');
@@ -72,7 +73,7 @@ class RateController extends Controller
 
         $hotel = Hotel::query()->where('id', $hotelId)->firstOrFail();
 
-        $query = Rate::withoutTrashed()->with('user')->where('hotel_id', $hotelId);
+        $query = Rate::withoutTrashed()->with('user', 'comment')->where('hotel_id', $hotelId);
 
         if (request()->has('keyword')) {
             $keyword = request()->input('keyword');
@@ -94,7 +95,7 @@ class RateController extends Controller
 
         $hotel = Hotel::query()->where('id', $hotelId)->firstOrFail();
 
-        $query = Rate::onlyTrashed()->with('user')->where('hotel_id', $hotelId);
+        $query = Rate::onlyTrashed()->with('user', 'comment')->where('hotel_id', $hotelId);
 
         if (request()->has('keyword')) {
             $keyword = request()->input('keyword');
