@@ -30,18 +30,38 @@ class AuthServiceProvider extends ServiceProvider
         $modulesList = Module::all();
         if ($modulesList->count() > 0) {
             foreach ($modulesList as $module) {
-                Gate::define($module->name, function (User $user) use ($module) {
-                    {
-                        if ($user->type == User::ADMIN) {
-                            return true;
-                        }
+                Gate::define("view-{$module->name}", function (User $user) use ($module) {
+                    return $this->checkPermission($user, 'view', $module);
+                });
 
-                        $roleJson = $user?->group?->permissions ?? [];
-                        $roleArr = json_decode($roleJson, true);
-                        return isRole($roleArr, $module->name);
-                    }
+                // Quyền tạo module
+                Gate::define("create-{$module->name}", function (User $user) use ($module) {
+                    return $this->checkPermission($user, 'create', $module);
+                });
+
+                // Quyền cập nhật module
+                Gate::define("update-{$module->name}", function (User $user) use ($module) {
+                    return $this->checkPermission($user, 'update', $module);
+                });
+
+                // Quyền xóa module
+                Gate::define("delete-{$module->name}", function (User $user) use ($module) {
+                    return $this->checkPermission($user, 'delete', $module);
                 });
             }
         }
+    }
+    protected function checkPermission(User $user, $action, Module $module)
+    {
+        // Kiểm tra nếu là admin
+        if ($user->type == User::ADMIN) {
+            return true;
+        }
+
+        $roleJson = $user?->group?->permissions ?? [];
+        $roleArr = json_decode($roleJson, true);
+
+        // Kiểm tra quyền theo module và hành động
+        return in_array("{$action}_{$module->name}", $roleArr);
     }
 }
