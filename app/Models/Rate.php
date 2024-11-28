@@ -12,6 +12,7 @@ class Rate extends Model
     use HasFactory, HasUuids, SoftDeletes;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [
@@ -35,5 +36,9 @@ class Rate extends Model
     public function hotel()
     {
         return $this->belongsTo(Hotel::class, 'hotel_id', 'id');
+    }
+    public function comment()
+    {
+        return $this->hasOne(Comment::class, 'rate_id', 'id');
     }
 }

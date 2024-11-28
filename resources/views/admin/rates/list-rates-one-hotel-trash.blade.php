@@ -78,6 +78,7 @@
                                     <th scope="col">Khách hàng</th>
                                     <th scope="col">Điểm</th>
                                     <th scope="col">Nội dung</th>
+                                    <th scope="col">Ngày đánh giá</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -92,6 +93,7 @@
                                             @endfor
                                         </td>
                                         <td>{{ $rate->content }}</td>
+                                        <td>{{ Carbon\Carbon::parse($rate->created_at)->format('H:i:s d-m-Y'); }}</td>
                                         <td class="d-flex gap-1">
                                             <form action="{{ route('admin.rates.restore', $rate->id) }}" method="post">
                                                 @csrf

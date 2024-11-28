@@ -184,12 +184,12 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex">
-                        <div style="width: 100%; max-width: 50%">
+                        <div style="width: 100%; max-width: 100%">
                             <canvas id="revenueChart" style="width:100%"></canvas>
                         </div>
-                        <div style="width: 100%; max-width: 50%">
+                        {{-- <div style="width: 100%; max-width: 50%">
                             <canvas id="orderChart" style="width:100%"></canvas>
-                        </div>
+                        </div> --}}
                     </div>
                 </div><!-- end card -->
             </div>
@@ -204,6 +204,107 @@
 
 @section('scripts')
     <script>
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+
+        let xValues = [
+            @if (isset($thongke[0]->month))
+                @foreach ($thongke as $value)
+                    "{{ "$value->month/$value->year" }}",
+                @endforeach
+            @elseif (isset($thongke[0]->quarter))
+                @foreach ($thongke as $value)
+                    "{{ "Q$value->quarter/$value->year" }}",
+                @endforeach
+            @else
+                @foreach ($thongke as $value)
+                    "{{ $value->year }}",
+                @endforeach
+            @endif
+        ];
+
+        let yValuesRevenue = [
+            @foreach ($thongke as $value)
+                "{{ $value->total_revenue }}",
+            @endforeach
+        ];
+
+        let yValuesOrder = [
+            @foreach ($thongke as $value)
+                {{ $value->total_order }},
+            @endforeach
+        ];
+
+        const data = {
+            labels: xValues, // Nhãn trục x
+            datasets: [{
+                    label: 'Số đơn đặt', // Nhãn cho số booking
+                    data: yValuesOrder, // Dữ liệu số booking
+                    borderColor: 'blue',
+                    backgroundColor: 'blue',
+                    yAxisID: 'y1', // Liên kết với trục y đầu tiên
+                    fill: false,
+                    tension: 0.3 // Độ cong của đường
+                },
+                {
+                    label: 'Doanh thu', // Nhãn cho doanh thu
+                    data: yValuesRevenue, // Dữ liệu doanh thu
+                    borderColor: 'green',
+                    backgroundColor: 'green',
+                    yAxisID: 'y2', // Liên kết với trục y thứ hai
+                    fill: false,
+                    tension: 0.3
+                }
+            ]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top', // Vị trí của chú thích
+                    },
+                },
+                scales: {
+                    y1: {
+                        type: 'linear', // Trục y cho số booking
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Số đơn đặt',
+                        },
+                        ticks: {
+                            stepSize: 2
+                        }
+                    },
+                    y2: {
+                        type: 'linear', // Trục y cho doanh thu
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: 'Doanh thu',
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString() + ' VNĐ'; // Hiển thị đơn vị VND
+                            }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            // text: 'Địa điểm',
+                        },
+                    }
+                }
+            }
+        };
+
+        new Chart(ctx, config);
+    </script>
+    {{-- <script>
         let xValues = [
             @if (isset($thongke[0]->month))
                 @foreach ($thongke as $value)
@@ -291,21 +392,21 @@
         }
       }
         });
-    </script>
+    </script> --}}
 @endsection
 
 @section('script-libs')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- apexcharts -->
-    <script src="{{asset('theme/admin/assets/libs/apexcharts/apexcharts.min.js')}}"></script>
+    <script src="{{ asset('theme/admin/assets/libs/apexcharts/apexcharts.min.js') }}"></script>
 
     <!-- Vector map-->
-    <script src="{{asset('theme/admin/assets/libs/jsvectormap/js/jsvectormap.min.js')}}"></script>
-    <script src="{{asset('theme/admin/assets/libs/jsvectormap/maps/world-merc.js')}}"></script>
+    <script src="{{ asset('theme/admin/assets/libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
+    <script src="{{ asset('theme/admin/assets/libs/jsvectormap/maps/world-merc.js') }}"></script>
 
     <!--Swiper slider js-->
-    <script src="{{asset('theme/admin/assets/libs/swiper/swiper-bundle.min.js')}}"></script>
+    <script src="{{ asset('theme/admin/assets/libs/swiper/swiper-bundle.min.js') }}"></script>
 
     <!-- Dashboard init -->
-    <script src="{{asset('theme/admin/assets/js/pages/dashboard-ecommerce.init.js')}}"></script>
+    <script src="{{ asset('theme/admin/assets/js/pages/dashboard-ecommerce.init.js') }}"></script>
 @endsection

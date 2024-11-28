@@ -1,22 +1,22 @@
 @extends('admin.layouts.master')
 @section('content')
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 class="mb-sm-0">Đánh giá của khách sạn: {{ $hotel->name }}</h4>
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">Đánh giá của khách sạn: {{ $hotel->name }}</h4>
 
-            <div class="page-title-right">
-                <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Đánh giá</a></li>
-                    <li class="breadcrumb-item active">Danh sách</li>
-                </ol>
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Đánh giá</a></li>
+                        <li class="breadcrumb-item active">Danh sách</li>
+                    </ol>
+                </div>
+
             </div>
-
         </div>
     </div>
-</div>
 
-<!-- end page title -->
+    <!-- end page title -->
 
     <!-- Notification -->
     <div class="row">
@@ -78,6 +78,8 @@
                                     <th scope="col">Khách hàng</th>
                                     <th scope="col">Điểm</th>
                                     <th scope="col">Nội dung</th>
+                                    <th scope="col">Ngày đánh giá</th>
+                                    <th scope="col">Trạng thái</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -92,8 +94,19 @@
                                             @endfor
                                         </td>
                                         <td>{{ $rate->content }}</td>
+                                        <td>{{ Carbon\Carbon::parse($rate->created_at)->format('H:i:s d-m-Y'); }}</td>
                                         <td>
-
+                                            @if (!empty($rate->comment))
+                                                <span class="badge bg-success">Đã trả lời</span>
+                                            @else
+                                                <span class="badge bg-warning">Chưa trả lời</span>
+                                            @endif
+                                        </td>
+                                        <td class="d-flex gap-1">
+                                            <div class="">
+                                                <button class="btn btn-sm btn-soft-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#showModal{{ $rate->id }}">Trả lời</button>
+                                            </div>
                                             <div class="remove">
                                                 <button class="btn btn-sm btn-soft-danger remove-item-btn"
                                                     data-bs-toggle="modal"
@@ -101,9 +114,132 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    <!-- Modal -->
-                                    <div class="modal fade zoomIn" id="deleteRecordModal{{ $rate->id }}" tabindex="-1"
-                                        aria-hidden="true">
+
+                                    <!-- Modal comment-->
+                                    @if (!empty($rate->comment))
+                                        <div class="modal fade" id="showModal{{ $rate->id }}" tabindex="-1"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header bg-light p-3">
+                                                        <h5 class="modal-title">Bình luận</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close" id="close-modal"></button>
+                                                    </div>
+                                                    <form class="tablelist-form" autocomplete="off"
+                                                        action="{{ route('admin.comments.update', $rate->comment->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label for="" class="form-label">Đánh giá của khách
+                                                                    hàng
+                                                                    {{ $rate->user->name }}:</label>
+                                                                <div>{{ $rate->content }}</div>
+                                                                <div class="text-warning">
+                                                                    @for ($i = 0; $i < $rate->rate; $i++)
+                                                                        <i class="ri-star-fill"></i>
+                                                                    @endfor
+                                                                </div>
+                                                            </div>
+
+                                                            <input type="hidden" name="user_id"
+                                                                value="{{ Auth::user()->id }}">
+                                                            <input type="hidden" name="rate_id"
+                                                                value="{{ $rate->id }}">
+
+                                                            <div class="mb-3">
+                                                                <label for="content" class="form-label">Trả lời<span
+                                                                        class="text-danger">*</span></label>
+                                                                <textarea name="content" class="form-control" id="content" cols="30" rows="5"
+                                                                    placeholder="Nhập nội dung" required>{{$rate->comment->content}}</textarea>
+                                                                @error('content')
+                                                                    <p class="text-danger">{{ $message }}</p>
+                                                                @enderror
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="modal-footer justify-content-between">
+                                                            <div class="">
+                                                                <a href="{{route('admin.comments.delete', $rate->comment->id)}}" class="btn btn-danger" onclick="return confirm('Bạn có muốn xóa bình luận này không?')">
+                                                                    Xóa bình luận
+                                                                </a>
+                                                            </div>
+                                                            <div class="hstack gap-2 justify-content-end">
+                                                                <button type="button" class="btn btn-light"
+                                                                    data-bs-dismiss="modal">Đóng
+                                                                </button>
+                                                                <button type="submit" class="btn btn-warning"
+                                                                    id="add-btn">Cập nhật bình luận
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="modal fade" id="showModal{{ $rate->id }}" tabindex="-1"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header bg-light p-3">
+                                                        <h5 class="modal-title">Bình luận</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close" id="close-modal"></button>
+                                                    </div>
+                                                    <form class="tablelist-form" autocomplete="off"
+                                                        action="{{ route('admin.comments.store') }}" method="POST">
+                                                        @csrf
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label for="" class="form-label">Đánh giá của
+                                                                    khách
+                                                                    hàng
+                                                                    {{ $rate->user->name }}:</label>
+                                                                <div>{{ $rate->content }}</div>
+                                                                <div class="text-warning">
+                                                                    @for ($i = 0; $i < $rate->rate; $i++)
+                                                                        <i class="ri-star-fill"></i>
+                                                                    @endfor
+                                                                </div>
+                                                            </div>
+
+                                                            <input type="hidden" name="user_id"
+                                                                value="{{ Auth::user()->id }}">
+                                                            <input type="hidden" name="rate_id"
+                                                                value="{{ $rate->id }}">
+
+                                                            <div class="mb-3">
+                                                                <label for="content" class="form-label">Trả lời<span
+                                                                        class="text-danger">*</span></label>
+                                                                <textarea name="content" class="form-control" id="content" cols="30" rows="5"
+                                                                    placeholder="Nhập nội dung" required></textarea>
+                                                                @error('content')
+                                                                    <p class="text-danger">{{ $message }}</p>
+                                                                @enderror
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <div class="hstack gap-2 justify-content-end">
+                                                                <button type="button" class="btn btn-light"
+                                                                    data-bs-dismiss="modal">Đóng
+                                                                </button>
+                                                                <button type="submit" class="btn btn-success"
+                                                                    id="add-btn">Trả lời
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    <!-- Modal xóa-->
+                                    <div class="modal fade zoomIn" id="deleteRecordModal{{ $rate->id }}"
+                                        tabindex="-1" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -117,7 +253,8 @@
                                                             style="width:100px;height:100px"></lord-icon>
                                                         <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
                                                             <h4>Bạn chắc chắn ?</h4>
-                                                            <p class="text-muted mx-4 mb-0">Bạn có chắc muốn ẩn đánh giá này
+                                                            <p class="text-muted mx-4 mb-0">Bạn có chắc muốn ẩn đánh giá
+                                                                này
                                                                 ?</p>
                                                         </div>
                                                     </div>
@@ -125,8 +262,8 @@
                                                         <form action="{{ route('admin.rates.hidden', $rate->id) }}"
                                                             method="post">
                                                             @csrf
-                                                            <button type="button" type="button" class="btn w-sm btn-light"
-                                                                data-bs-dismiss="modal">Đóng
+                                                            <button type="button" type="button"
+                                                                class="btn w-sm btn-light" data-bs-dismiss="modal">Đóng
                                                             </button>
                                                             <button type="submit" class="btn w-sm btn-danger "
                                                                 id="delete-record">Chắc chắn!
@@ -155,7 +292,8 @@
 
 @section('style-libs')
     <!-- Sweet Alert css-->
-    <link href="{{ asset('theme/admin/assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('theme/admin/assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet"
+        type="text/css" />
 @endsection
 
 @section('script-libs')

@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\StatisticalController;
 use App\Http\Controllers\Admin\HotelServiceController;
 use App\Http\Controllers\Admin\CatalogueRoomController;
+use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\RateController;
 
 Route::group(['prefix' => 'auth'], function () {
@@ -180,6 +181,12 @@ Route::group(['middleware' => ['role']], function () {
         Route::post('/hidden/{rateId}', 'rateHidden')->name('hidden');
         Route::post('/restore/{rateId}', 'rateRestore')->name('restore');
         Route::delete('/destroy/{rateId}', 'rateDestroy')->name('destroy');
+    });
+
+    Route::prefix('comments')->name('comments.')->controller(CommentController::class)->group(function(){
+        Route::post('/store', 'store')->name('store');
+        Route::put('/update/{id}', 'update')->name('update');
+        Route::get('/delete/{id}', 'delete')->name('delete');
     });
 });
 
