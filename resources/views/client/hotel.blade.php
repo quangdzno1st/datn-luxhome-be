@@ -300,19 +300,18 @@
                 <aside class="one-fourth right-sidebar">
                     <!--hotel details-->
                     <article class="hotel-details">
-                        <h1>{{$hotel->name}}
-                            <span class="stars" style="margin-top: 5px">
-                        							  @for ($i = 1; $i <= 5; $i++)
+                        <h1>{{$hotel->name}}</h1>
+                            <div class="" style="margin-top: 5px ">
+                                @for ($i = 1; $i <= 5; $i++)
                                     @if ($i <= $hotel->star)
-                                        <i class="fa fa-star star-full"></i>
+                                        <i style="color: #FFC904" class="fa fa-star star-full"></i>
                                     @else
-                                        <i class="fa fa-star-o star-empty"></i>
+                                        <i style="color: #FFC904" class="fa fa-star-o star-empty"></i>
                                     @endif
                                 @endfor
-                        							</span>
-                        </h1>
+                            </div>
                         <div class="address" style="width: 190px; margin-top: 10px">{{$hotel->location}}</div>
-                        <span  class="rating"> 8 /10</span>
+{{--                        <span class="rating"> 8 /10</span>--}}
                         <div class="description">
                             <p>{{ \Illuminate\Support\Str::limit(strip_tags(html_entity_decode($hotel->description)), 100) }}</p>
 
@@ -415,7 +414,7 @@
                                         <input type="number" id="spinner2" name="number_adult"
                                                class="form-control"
                                                placeholder="Số  người lớn"
-                                               value="{{ old('number_adult') ??( $search_data['number_adult_search'] ?? null) }}"/>
+                                               value="{{ old('number_adult') ?? ( $search_data['number_adult_search'] ??  2) }}"/>
                                         @error('number_adult')
                                         <div class="text-danger">{{ $message }}</div>
                                         @else
@@ -551,7 +550,7 @@
                                                       ->unique()
                                             @endphp
 
-                                        @foreach($facilities as $facilitie)
+                                            @foreach($facilities as $facilitie)
                                                 <div class="text-wrap">
 
                                                     <div class="facility-list">
@@ -612,9 +611,9 @@
                     <h2>Tiện nghi</h2>
                     @php
                         $facilities =   $hotel->catalogues()
-                              ->with('attributeValues') // Lấy thông tin các attribute_value của các loại phòng
+                              ->with('attributes') // Lấy thông tin các attribute_value của các loại phòng
                               ->get()
-                              ->pluck('attributeValues') // Lấy tất cả các giá trị attribute_value từ các catalogue
+                              ->pluck('attributes') // Lấy tất cả các giá trị attribute_value từ các catalogue
                               ->flatten() // Làm phẳng các mảng để có danh sách các attribute_value
                               ->unique()
                     @endphp

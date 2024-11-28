@@ -25,7 +25,7 @@
 
 
 
-    <form action="{{route('admin.permissions.update',$group->id)}}" method="post" enctype="multipart/form-data">
+    <form action="{{ route('admin.permissions.update', $group->id) }}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <div class="col-lg-12">
@@ -37,20 +37,54 @@
                                 <div class="row mt-3">
                                     @foreach($modules as $module)
                                         <div class="col-4">
+                                            <!-- Quyền "Xem" -->
                                             <div class="form-check form-switch">
-                                                <input type="checkbox" class="form-check-input" id="module{{$loop->index}}"
-                                                       name="permissions[]" value="{{$module->name}}"
-                                                       @if(is_array(json_decode($group->permissions, true)) && in_array($module->name, json_decode($group->permissions, true)))
+                                                <input type="checkbox" class="form-check-input" id="view{{$loop->index}}"
+                                                       name="permissions[]" value="view_{{$module->name}}"
+                                                       @if(is_array(json_decode($group->permissions, true)) && in_array("view_{$module->name}", json_decode($group->permissions, true)))
                                                            checked
                                                         @endif
-
                                                 >
-                                                <label class="form-check-label" for="module{{$loop->index}}">{{$module->title}}</label>
+                                                <label class="form-check-label" for="view{{$loop->index}}">Xem {{$module->title}}</label>
+                                            </div>
+
+                                            <!-- Quyền "Thêm" -->
+                                            <div class="form-check form-switch">
+                                                <input type="checkbox" class="form-check-input" id="create{{$loop->index}}"
+                                                       name="permissions[]" value="create_{{$module->name}}"
+                                                       @if(is_array(json_decode($group->permissions, true)) && in_array("create_{$module->name}", json_decode($group->permissions, true)))
+                                                           checked
+                                                        @endif
+                                                >
+                                                <label class="form-check-label" for="create{{$loop->index}}">Thêm {{$module->title}}</label>
+                                            </div>
+
+                                            <!-- Quyền "Sửa" -->
+                                            <div class="form-check form-switch">
+                                                <input type="checkbox" class="form-check-input" id="edit{{$loop->index}}"
+                                                       name="permissions[]" value="edit_{{$module->name}}"
+                                                       @if(is_array(json_decode($group->permissions, true)) && in_array("edit_{$module->name}", json_decode($group->permissions, true)))
+                                                           checked
+                                                        @endif
+                                                >
+                                                <label class="form-check-label" for="edit{{$loop->index}}">Sửa {{$module->title}}</label>
+                                            </div>
+
+                                            <!-- Quyền "Xóa" -->
+                                            <div class="form-check form-switch">
+                                                <input type="checkbox" class="form-check-input" id="delete{{$loop->index}}"
+                                                       name="permissions[]" value="delete_{{$module->name}}"
+                                                       @if(is_array(json_decode($group->permissions, true)) && in_array("delete_{$module->name}", json_decode($group->permissions, true)))
+                                                           checked
+                                                        @endif
+                                                >
+                                                <label class="form-check-label" for="delete{{$loop->index}}">Xóa {{$module->title}}</label>
                                             </div>
                                         </div>
                                     @endforeach
                                 </div>
                             </div>
+
                             <!-- Nút Cập nhật -->
                             <div class="mt-4">
                                 <button type="submit" class="btn btn-success">Cập nhật</button>
@@ -62,6 +96,7 @@
             </div>
         </div>
     </form>
+
 
 @endsection
 

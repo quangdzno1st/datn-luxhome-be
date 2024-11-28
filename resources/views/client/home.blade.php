@@ -2,6 +2,8 @@
 
 @section('content')
     <!--slider-->
+
+    <style></style>
     <div class="slider">
         <ul id="hero-gallery" class="cS-hidden">
             <li data-thumb="{{asset('theme/client/images/uploads/slider7.jpg')}}">
@@ -81,7 +83,7 @@
                                     <div class="f-item one-third spinner">
                                         <label for="spinner2">Người lớn</label>
                                         <input type="number" placeholder="" id="spinner2" name="number_adult"
-                                               value="{{ old('number_adult') }}"/>
+                                               value="{{ old('number_adult')  ?? 2}}"/>
                                         @error('number_adult')
                                         <div class="text-danger" style="color:red">{{ $message }}</div>
                                         @enderror

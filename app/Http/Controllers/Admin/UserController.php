@@ -125,6 +125,6 @@ class UserController extends Controller
         $group = Group::query()->findOrFail($id);
         $group->permissions = json_encode($request->permissions) ?? [];
         $group->save();
-        return redirect()->route('admin.permissions')->with(['toast_message' => 'Cập nhật thành công', 'toast_style' => 'success']);
+        return redirect()->route('admin.permissions.edit',$id)->with(['toast_message' => 'Cập nhật thành công', 'toast_style' => 'success']);
     }
 }
