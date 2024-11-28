@@ -24,7 +24,6 @@ class   CatalogueRoomRepository extends BaseRepository implements CatalogueRoomI
 
     public function searchByPage($request)
     {
-
         $now = Carbon::now();
         $startDateSearch = $request->has('start_date')
             ? Carbon::createFromFormat('Y-m-d', $request->input('start_date'))
