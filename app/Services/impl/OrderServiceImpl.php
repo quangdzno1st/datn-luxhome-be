@@ -194,7 +194,7 @@ class OrderServiceImpl implements OrderService
         $order->status = StatusOrderEnum::DANG_CHO->value;
         $order->status_payment = StatusPaymentOrderEnum::CHUA_THANH_TOAN->value;
         $order->start_date = Carbon::createFromFormat('Y-m-d', session('start_date'))->setTime(14, 00);
-        $order->end_date = Carbon::createFromFormat('Y-m-d', session('end_date'))->setTime(11, 30);
+        $order->end_date = Carbon::createFromFormat('Y-m-d', session('end_date'))->setTime(12, 00);
         $order->note = $data['note'];
         $order->incidental_costs = 0;
     }
@@ -532,11 +532,10 @@ class OrderServiceImpl implements OrderService
     private function handleBookingData(&$searchData, array $bookingsData)
     {
         $dataResp = [];
-        foreach ($searchData as $key => &$item) {
+        foreach ($searchData as $item) {
 
             $roomQty = $bookingsData[$item['id']] ?? null;
             if (is_null($roomQty)) {
-                unset($searchData[$key]);
                 continue;
             }
 
@@ -544,8 +543,8 @@ class OrderServiceImpl implements OrderService
                 throw new RespException(__('Số lượng phòng còn trống không đủ ' . $roomQty . ' phòng'));
             }
 
-            $item['available_rooms'] = array_slice($item['available_rooms'], 0, $roomQty);
-            $this->buildRoomBookingResp($dataResp, $item['available_rooms'], $item);
+            $roomBooking = array_slice($item['available_rooms'], 0, $roomQty);
+            $this->buildRoomBookingResp($dataResp, $roomBooking, $item);
         }
 
         if (!empty($dataResp)) {
@@ -557,7 +556,7 @@ class OrderServiceImpl implements OrderService
 
     private function buildRoomBookingResp(&$dataResp, $roomsBooking, $catalogueInformation)
     {
-        foreach ($roomsBooking as $key => $item) {
+        foreach ($roomsBooking as $item) {
             $dataResp[] = [
                 'room_id' => $item['room_id'],
                 'code' => $item['code'],
