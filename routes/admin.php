@@ -239,12 +239,13 @@ Route::prefix('admin/vouchers')->group(function () {
 
 //order
 Route::prefix('admin/orders')->group(function () {
-    Route::get('/page={page}', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index')->middleware('can:view_orders');
+    Route::get('/search-by-page', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index')->middleware('can:view_orders');
     Route::post('/checkout/{id}', [\App\Http\Controllers\Admin\OrderDetailController::class, 'updateStatus'])->name('orders.checkout')->middleware('can:edit_orders');;
     Route::get('/show/{order}', [\App\Http\Controllers\Admin\OrderDetailController::class, 'showOrderDetail'])->name('orders.show')->middleware('can:edit_orders');;
     Route::post('/checkin/{orderId}', [\App\Http\Controllers\Admin\OrderDetailController::class, 'checkinOrder'])->name('orders.checkin')->middleware('can:edit_orders');;
     Route::post('/addBookingServices/{id}', [\App\Http\Controllers\Admin\BookingServicesInOrderDetailController::class, 'addBookingServicesInOrderDetail'])->name('orders.addBookingServices')->middleware('can:edit_orders');;
     //update status payment and order
-    Route::post('/not_accepted_cancel/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'not_accepted_cancel'])->name('orders.not_accepted_cancel')->middleware('can:edit_orders');;
-    Route::post('/accepted_cancel/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'accepted_cancel'])->name('orders.accepted_cancel')->middleware('can:edit_orders');;
+    Route::post('/not_accepted_cancel/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'not_accepted_cancel'])->name('orders.not_accepted_cancel')->middleware('can:edit_orders');
+    Route::post('/accepted_cancel/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'accepted_cancel'])->name('orders.accepted_cancel')->middleware('can:edit_orders');
+    Route::post('/refunded-money/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'refundMoney'])->name('orders.refunded-money')->middleware('can:edit_orders');
 });

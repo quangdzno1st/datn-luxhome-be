@@ -35,4 +35,19 @@ enum StatusOrderEnum: int
     {
         return self::tryFrom($value) === self::DA_XAC_NHAN;
     }
+
+    public static function isHoanThanh($value): bool
+    {
+        return self::tryFrom($value) === self::HOAN_THANH;
+    }
+
+    public static function isYeuCauHuy($value): bool
+    {
+        return self::tryFrom($value) === self::YEU_CAU_HUY;
+    }
+
+    public static function isDaHuy($value): bool
+    {
+        return self::tryFrom($value) === self::DA_HUY;
+    }
 }

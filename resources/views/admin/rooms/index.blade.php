@@ -43,10 +43,25 @@
                             <form method="get" action="{{ route('admin.rooms.index') }}">
                                 @csrf
                                 <div class="d-flex justify-content-sm-end">
+                                    <div class="col-3">
+                                        <select name="catalogue_room_id" id="option" class="form-select">
+                                            <option value="0">Chọn loại phòng</option>
+
+                                            @foreach ($catalogueRooms as $catalogueRoom)
+                                                <option {{ request()->input('catalogue_room_id') == $catalogueRoom->id ? 'selected' : '' }} value="{{ $catalogueRoom->id }}">
+                                                    {{ $catalogueRoom->name }}
+                                                </option>
+
+                                            @endforeach
+                                        </select>
+                                    </div>
                                     <div class="search-box ms-2">
                                         <input type="text" class="form-control " placeholder="Search..."
                                                name="keyword">
                                         <i class="ri-search-line search-icon"></i>
+                                    </div>
+                                    <div class="ms-1">
+                                        <button class="btn btn-primary">Tìm kiếm</button>
                                     </div>
                                 </div>
                             </form>
@@ -473,4 +488,4 @@
 
     <!-- Sweet Alerts js -->
     <script src="{{ asset('theme/admin/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
-    @endsection
+@endsection

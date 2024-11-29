@@ -13,7 +13,7 @@
                             <div class="col-sm-auto">
                                 <div class="col-sm-auto">
                                     <div>
-                                        <a href="{{route('vouchers.create')}}">
+                                        <a href="{{route('admin.vouchers.create')}}">
                                             <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal"
                                                     id="create-btn"><i
                                                         class="ri-add-line align-bottom me-1"></i> Thêm voucher
@@ -45,6 +45,11 @@
                             <table class="table align-middle table-nowrap" id="customerTable">
                                 <thead class="table-light">
                                 <tr>
+                                    <th class="" data-sort="customer_name">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="" value="">
+                                        </div>
+                                    </th>
                                     <th class="" data-sort="customer_name">Mã voucher</th>
                                     <th class="" data-sort="customer_name">Thumbnail</th>
                                     <th class="" data-sort="customer_name">Mô tả</th>
@@ -59,7 +64,7 @@
                                 <tbody class="list form-check-all">
                                 @foreach($vouchers as $voucher)
                                     <tr>
-                                        <th scope="row">
+                                        <td scope="row">
                                             @if((is_null($voucher['start_date']) ||
                                                 \Carbon\Carbon::parse($voucher['start_date'])->format('Y-m-d') >= \Carbon\Carbon::today()->format('Y-m-d')) &&
                                                 \App\Constant\Enum\ActiveStatusEnum::isActive($voucher['status']))
@@ -68,7 +73,7 @@
                                                            value="{{ $voucher['code'] }}">
                                                 </div>
                                             @endif
-                                        </th>
+                                        </td>
                                         <td class="date">{{ $voucher['code'] }}</td>
                                         <td class="date">
                                             <img width="90px" height="90px"
@@ -92,7 +97,7 @@
                                         <td>
                                             <div class="d-flex gap-2">
                                                 <div class="edit">
-                                                    <a href="{{route('vouchers.edit',$voucher->id)}}">
+                                                    <a href="{{route('admin.vouchers.edit',$voucher->id)}}">
                                                         <button class="btn btn-sm btn-success edit-item-btn"
                                                                 data-bs-toggle="modal" data-bs-target="">Sửa
                                                         </button>
@@ -131,7 +136,7 @@
                                                                 </div>
                                                                 <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
                                                                     <form
-                                                                            action="{{ route('vouchers.delete', $voucher['id']) }}"
+                                                                            action="{{ route('admin.vouchers.delete', $voucher['id']) }}"
                                                                             method="post">
                                                                         @csrf
                                                                         @method('DELETE')
@@ -333,7 +338,7 @@
 
                 console.log(selectedVouchers)
                 $.ajax({
-                    url: '{{ route('vouchers.issue_voucher') }}',
+                    url: '{{ route('admin.vouchers.issue_voucher') }}',
                     method: 'POST', // Sử dụng phương thức POST thay vì GET để gửi dữ liệu
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}' // Laravel CSRF Token

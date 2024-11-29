@@ -11,19 +11,14 @@
                 <div class="card-body">
                     <div class="listjs-table" id="customerList">
                         <div class="card-body">
-                            @if (session('result'))
-                                <div class="card-header   alert alert-{{session('color')}} alert-dismissible fade show" role="alert">
-                                    {{ session('success') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            @endif
                             <table id="example" class="table table-bordered dt-responsive nowrap align-middle"
                                    style="width:100%">
                                 <thead>
                                 <tr>
                                     <th scope="col" style="width: 50px;">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="checkAll" value="option">
+                                            <input class="form-check-input" type="checkbox" id="checkAll"
+                                                   value="option">
                                         </div>
                                     </th>
                                     <th>Email</th>
@@ -45,7 +40,8 @@
                                     <tr>
                                         <th scope="row">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="chk_child" value="option1">
+                                                <input class="form-check-input" type="checkbox" name="chk_child"
+                                                       value="option1">
                                             </div>
                                         </th>
                                         <td>{{$order->email}}</td>
@@ -61,44 +57,54 @@
                                         <td>{{number_format($order->incidental_costs)}}VND</td>
                                         <td>
                                             <div class="btn-group">
-                                                @if($order->status=='Yêu cầu hủy')
-                                                    <a class="btn btn-sm btn-danger edit-item-btn" data-bs-toggle="modal" href="#cancelOrder">
+                                                @if(\App\Constant\Enum\StatusOrderEnum::isYeuCauHuy($order['status']))
+                                                    <a class="btn btn-sm btn-danger edit-item-btn"
+                                                       data-bs-toggle="modal" href="#{{ $order['id'] }}">
                                                         Yêu cầu hủy
                                                     </a>
-                                                @elseif($order->status=='Đã xác nhận'||$order->status=='Hoàn thành')
-                                                    <button class="btn btn-sm btn-success">{{$order->status}}</button>
+                                                @elseif(\App\Constant\Enum\StatusOrderEnum::isDaXacNhan($order['status'])
+                                                    || \App\Constant\Enum\StatusOrderEnum::isHoanThanh($order['status']))
+                                                    <button class="btn btn-sm btn-success">{{ \App\Constant\Enum\StatusOrderEnum::parse($order['status'])->getName() }}</button>
                                                 @else
-                                                    <button class="btn btn-sm btn-warning">{{$order->status}}</button>
+                                                    <button class="btn btn-sm btn-warning">{{\App\Constant\Enum\StatusOrderEnum::parse($order['status'])->getName() }}</button>
                                                 @endif
                                             </div>
                                         </td>
                                         <td>
                                             <div class="btn-group">
-                                                @if($order->status_payment=='Chưa hoàn tiền'&&$order->status=='Đã hủy')
-                                                    <form method="post" action="{{route}}">
-                                                        <button type="submit" class="btn btn-sm btn-danger">Hoàn tiền</button>
-                                                    </form>
-                                                @elseif($order->status_payment=='Chưa thanh toán')
-                                                    <button class="btn btn-sm btn-warning">{{$order->status_payment}}</button>
+                                                @if(\App\Constant\Enum\StatusPaymentOrderEnum::isChuaHoanTien($order['status_payment'])
+                                                       && \App\Constant\Enum\StatusOrderEnum::isDaHuy($order['status']))
+
+                                                        <a class="btn btn-sm btn-danger edit-item-btn"
+                                                           data-bs-toggle="modal" href="#ht{{ $order['id'] }}">
+                                                            {{ \App\Constant\Enum\StatusPaymentOrderEnum::parse($order['status_payment'])->getName() }}
+                                                        </a>
+
+                                                @elseif(\App\Constant\Enum\StatusPaymentOrderEnum::isChuaThanhToan($order['status_payment']))
+                                                    <button class="btn btn-sm btn-warning">{{ \App\Constant\Enum\StatusPaymentOrderEnum::parse($order['status_payment'])->getName() }}</button>
                                                 @else
-                                                    <button class="btn btn-sm btn-success">{{$order->status_payment}}</button>
+                                                    <button class="btn btn-sm btn-success">{{ \App\Constant\Enum\StatusPaymentOrderEnum::parse($order['status_payment'])->getName() }}</button>
                                                 @endif
                                             </div>
                                         </td>
                                         <td>
                                             <div class="dropdown d-inline-block">
-                                                <button class="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
+                                                        data-bs-toggle="dropdown" aria-expanded="false">
                                                     <i class="ri-more-fill align-middle"></i>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-end">
                                                     <li>
-                                                        <a href="{{route('orders.show',$order)}}" class="dropdown-item">
-                                                            <i class="ri-eye-fill align-bottom me-2 text-muted"></i> Chi tiết</a>
+                                                        <a href="{{route('admin.orders.show',$order)}}"
+                                                           class="dropdown-item">
+                                                            <i class="ri-eye-fill align-bottom me-2 text-muted"></i> Chi
+                                                            tiết</a>
                                                     </li>
                                                     <li>
                                                         <form>
                                                             <button type="button" class="dropdown-item remove-item-btn">
-                                                                <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Xóa
+                                                                <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                                                                Xóa
                                                             </button>
                                                         </form>
                                                     </li>
@@ -106,24 +112,64 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    <div class="modal fade flip" id="cancelOrder" tabindex="-1" aria-hidden="true">
+                                    <div class="modal fade flip" id="{{ $order['id'] }}" tabindex="-1"
+                                         aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-body p-5 text-center">
                                                     <i class="fa-solid fa-money-bill-wave"></i>
                                                     <div class="mt-4 text-center">
                                                         <h4>Hủy order!</h4>
-                                                        <p class="text-muted fs-15 mb-4">Bạn có muốn hủy order này không?</p>
+                                                        <p class="text-muted fs-15 mb-4">Bạn có muốn hủy
+                                                            order {{ $order['code'] }} này
+                                                            không?</p>
                                                         <div class="hstack gap-2 justify-content-center remove">
-                                                            <form method="POST" action="{{route('orders.not_accepted_cancel',$order)}}">
+                                                            <form method="POST"
+                                                                  action="{{route('admin.orders.not_accepted_cancel',$order['id'])}}">
                                                                 @csrf
                                                                 <button class="btn btn-link link-success fw-medium text-decoration-none"
                                                                         type="submit"
                                                                         id="deleteRecord-close"
                                                                         data-bs-dismiss="modal">
-                                                                    <i class="ri-close-line me-1 align-middle"></i>Hủy</button>
+                                                                    <i class="ri-close-line me-1 align-middle"></i>Hủy
+                                                                </button>
                                                             </form>
-                                                            <form method="POST" action="{{route('orders.accepted_cancel',$order)}}">
+                                                            <form method="POST"
+                                                                  action="{{route('admin.orders.accepted_cancel',$order['id'])}}">
+                                                                @csrf
+                                                                <button
+                                                                        class="btn btn-sm btn-danger edit-item-btn"
+                                                                        type="submit"
+                                                                >
+                                                                    Xác nhận
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal fade flip" id="ht{{ $order['id'] }}" tabindex="-1"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-body p-5 text-center">
+                                                    <i class="fa-solid fa-money-bill-wave"></i>
+                                                    <div class="mt-4 text-center">
+                                                        <h4>Hoàn tiền đặt phòng!</h4>
+                                                        <p class="text-muted fs-15 mb-4">Đơn đặt
+                                                            phòng {{ $order['code'] }} đã được hoàn tiền?</p>
+                                                        <div class="hstack gap-2 justify-content-center remove">
+                                                            <button class="btn btn-link link-success fw-medium text-decoration-none"
+                                                                    type="submit"
+                                                                    id="deleteRecord-close"
+                                                                    data-bs-dismiss="modal">
+                                                                <i class="ri-close-line me-1 align-middle"></i>Đóng
+                                                            </button>
+
+                                                            <form method="post" action="{{ route('admin.orders.refunded-money', $order['id']) }}">
                                                                 @csrf
                                                                 <button
                                                                         class="btn btn-sm btn-danger edit-item-btn"
@@ -143,6 +189,12 @@
                             </table>
                         </div>
                     </div>
+
+                    <div class="d-flex justify-content-end">
+                        <div class="pagination-wrap hstack gap-2">
+                            {{ $orders->links() }}
+                        </div>
+                    </div>
                 </div><!-- end card -->
             </div>
             <!-- end col -->
@@ -152,13 +204,15 @@
 @endsection
 @section('style-libs')
     <!--datatable css-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css"/>
     <!--datatable responsive css-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css"/>
 
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
     <link href="{{ asset('theme/admin/assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet"
           type="text/css"/>
+    <script src="{{ asset('theme/admin/assets/libs/list.pagination.js/list.pagination.min.js') }}"></script>
+
 @endsection
 @section('script-libs')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -177,5 +231,11 @@
     <script src="{{asset('theme/admin/assets/js/pages/datatables.init.js')}}"></script>
     <!-- App js -->
     <script src="{{asset('theme/admin/assets/js/app.js')}}"></script>
-
+    <script>
+        $('#example').DataTable({
+            paging: false, // Tắt phân trang
+            info: false,   // Tắt thông tin
+            searching: false, // Tắt tìm kiếm
+        });
+    </script>
 @endsection

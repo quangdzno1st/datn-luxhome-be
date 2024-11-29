@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Hotel;
 use App\Models\Image;
 use App\Models\Attribute;
+use App\Repositories\CatalogueRoom\CatalogueRoomRepository;
 use Illuminate\Http\Request;
 use App\Models\CatalogueRoom;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +18,18 @@ use App\Http\Requests\Admin\CatalogueRoom\UpdateRequest;
 
 class CatalogueRoomController extends Controller
 {
+    private CatalogueRoomRepository $catalogueRoomRepos;
+
+
     const PATH_VIEW = 'admin.catalogue_rooms.';
+
+    /**
+     * @param CatalogueRoomRepository $catalogueRoomRepos
+     */
+    public function __construct(CatalogueRoomRepository $catalogueRoomRepos)
+    {
+        $this->catalogueRoomRepos = $catalogueRoomRepos;
+    }
 
     public function index()
     {
@@ -30,8 +42,9 @@ class CatalogueRoomController extends Controller
         if (request()->has('keyword') && !empty(request()->input('keyword'))) {
             $catalogueRooms = CatalogueRoom::query()->with('hotel', 'attributes', 'images')->where('name', request()->input('keyword'))->where('hotel_id', $hotelID)->paginate(10);
         }
-        // dd($catalogueRooms->toArray());
-        return view(self::PATH_VIEW . __FUNCTION__, compact('catalogueRooms', 'hotel'));
+
+        $roomBookedQtyMapBy = $this->catalogueRoomRepos->getRoomBookedQtyToday($hotelID);
+        return view(self::PATH_VIEW . __FUNCTION__, compact('catalogueRooms', 'hotel', 'roomBookedQtyMapBy'));
     }
 
 
