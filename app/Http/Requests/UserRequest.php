@@ -16,10 +16,11 @@ class UserRequest extends FormRequest
 
     public function rules()
     {
-        // Lấy ID của người dùng nếu có
         $userId = $this->route('user');
         $userType = $this->input('type');
+        $userEdit = User::find($userId);
 
+        $user = auth()->user();
         $rules = [
             'name' => 'required|string|max:255',
             'phone' => [
@@ -39,7 +40,10 @@ class UserRequest extends FormRequest
             $rules['org_id'] = 'prohibited';
         }
 
-        // Nếu không phải là cập nhật, thêm quy tắc cho mật khẩu
+        if ($userEdit->id != $user->id && $userType != User::CUSTOMER) {
+            abort(403);
+        }
+
         if (!$userId) {
             $rules['password'] = 'required|string|min:6'; // Mật khẩu là bắt buộc khi thêm mới
         } else {

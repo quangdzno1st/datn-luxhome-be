@@ -10,6 +10,7 @@ use App\Helpers\Constant;
 use App\Http\Requests\RoomRequest;
 use App\Http\Requests\RoomSearchRequest;
 use App\Models\Room;
+use App\Models\User;
 use App\Repositories\Room\RoomRepository;
 use App\Repositories\User\UserRepository;
 use App\Services\CatalogueRoomService;
@@ -18,6 +19,7 @@ use App\Services\RoomService;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UserServiceImpl implements UserService
 {
@@ -46,7 +48,17 @@ class UserServiceImpl implements UserService
     {
         $data = $request->all();
         $data["password"] = Hash::make($data["password"]);
-        $data["group_id"] = $data["type"];
+        $data["group_id"] = $data["type"] ?? User::CUSTOMER;
+        $data["type"] = $data["type"] ?? User::CUSTOMER;
+        $data["total_amount_ordered"] = 0;
+
+        if ($request->hasFile('avatar')) {
+            $file = $request->file('avatar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('public/avatars', $filename);
+            $data['avatar'] = str_replace('public/', 'storage/', $filePath);
+        }
+
         $this->userRepository->create($data);
     }
 
@@ -54,8 +66,19 @@ class UserServiceImpl implements UserService
     public function update($id, $request)
     {
         $data = $request->all();
+        $data["type"] = $data["type"] ?? auth()->user()->type;
         $data["group_id"] = $data["type"];
         $user = $this->detail($id);
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar) {
+                Storage::delete('public/' . str_replace('storage/', '', $user->avatar));
+            }
+
+            $file = $request->file('avatar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('public/avatars', $filename);
+            $data['avatar'] = str_replace('public/', 'storage/', $filePath);
+        }
         return $this->userRepository->edit($user, $data);
     }
 

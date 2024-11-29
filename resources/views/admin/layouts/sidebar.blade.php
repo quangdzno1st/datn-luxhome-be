@@ -74,7 +74,7 @@
                     </a>
                 </li> <!-- end Dashboard Menu -->
 
-                @can('view-users')
+                @can('view_users')
                     <li class="nav-item">
                         <a class="nav-link menu-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
                            href="#sidebarUsers" data-bs-toggle="collapse" role="button" aria-expanded="false"
@@ -99,7 +99,7 @@
                     </li>
 
                 @endcan
-                  @can('view-services')
+                  @can('view_services')
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->routeIs('admin.amenities.*') ? 'active' : '' }}"
                        href="#sidebarAmenities" data-bs-toggle="collapse" role="button" aria-expanded="false"
@@ -124,7 +124,7 @@
                 </li>
 
                 @endcan
-                  @can('view-categories')
+                  @can('view_categories')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarCatalogueRooms" data-bs-toggle="collapse" role="button"
                        aria-expanded="false" aria-controls="sidebarUsers">
@@ -147,7 +147,7 @@
 @endcan
                 {{--                voucher --}}
 
-                  @can('view-vouchers')
+                  @can('view_vouchers')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarVoucher" data-bs-toggle="collapse" role="button"
                        aria-expanded="false" aria-controls="sidebarCatalogueRoom">
@@ -164,7 +164,7 @@
                 </li>
                 @endcan
 
-                 @can('view-orders')
+                 @can('view_orders')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarOrder" data-bs-toggle="collapse" role="button"
                        aria-expanded="false" aria-controls="sidebarCatalogueRoom">
@@ -181,7 +181,7 @@
                 </li>
                 @endcan
 
-                 @can('view-reviews')
+                 @can('view_reviews')
                 @if (Auth::user()->type == 2)
                     <li class="nav-item">
                         <a class="nav-link menu-link" href="{{route('admin.rates.hotels')}}" data-bs-toggle=""
@@ -199,7 +199,7 @@
                 @endif
                 @endcan
 
-                  @can('view-rooms')
+                  @can('view_rooms')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.rooms.index') }}" data-bs-toggle=""
                        role="button" aria-expanded="false" aria-controls="sidebarCatalogueRoom">
@@ -210,7 +210,7 @@
 
 
 
-                   @can('view-hotel')
+                   @can('view_hotel')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarHotel" data-bs-toggle="collapse" role="button"
                        aria-expanded="false" aria-controls="sidebarHotel">
@@ -231,7 +231,7 @@
                 </li>
                    @endcan
 
-                   @can('view-region')
+                   @can('view_region')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.regions.index') }}" data-bs-toggle=""
                        role="button" aria-expanded="false" aria-controls="sidebarRegion">
@@ -240,7 +240,7 @@
                 </li>
                    @endcan
 
-                   @can('view-city')
+                   @can('view_city')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.cities.index') }}" data-bs-toggle=""
                        role="button" aria-expanded="false" aria-controls="sidebarRegion">

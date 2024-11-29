@@ -36,7 +36,7 @@
                             <div class="row gy-4">
                                 <div class="col-7">
                                     <div class="mb-3">
-                                        <label for="name" class="form-label">Name:</label>
+                                        <label for="name" class="form-label">Tên<span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="name" placeholder="Enter name"
                                             name="name" value="{{ $user->name }}">
                                         @error('name')
@@ -44,7 +44,7 @@
                                         @enderror
                                     </div>
                                     <div class="mb-3">
-                                        <label for="email" class="form-label">Email:</label>
+                                        <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
                                         <input type="email" class="form-control" id="email" placeholder="Enter email"
                                             name="email" value="{{ $user->email }}">
                                         @error('email')
@@ -57,7 +57,7 @@
                                             name="password" value="{{$user->password}}">
                                     </div> --}}
                                     <div class="mb-3">
-                                        <label for="phone" class="form-label">Phone number:</label>
+                                        <label for="phone" class="form-label">Số điện thoại<span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="phone" placeholder="Enter phone"
                                             name="phone" value="{{$user->phone}}">
                                         @error('phone')
@@ -66,14 +66,14 @@
                                     </div>
                                     <div class="mb-3">
 
-                                        <label for="address" class="form-label">Address:</label>
+                                        <label for="address" class="form-label">Địa chỉ</label>
                                         <input type="text" class="form-control" id="address" placeholder="Enter address"
                                             name="address" value="{{$user->address}}">
                                         @error('address')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                         @enderror
                                     </div>
-
+                                    @if(auth()->user()->type == \App\Models\User::ADMIN)
                                     <div class="mb-3">
                                         <label for="hotel" class="form-label">Chọn Khách Sạn:</label>
                                         <select class="form-control @error('hotel') is-invalid @enderror"
@@ -88,6 +88,7 @@
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                         @enderror
                                     </div>
+                                    @endif
                                 </div>
                                 <div class="col-5">
 {{--                                    <div class="mb-3">--}}
@@ -95,6 +96,7 @@
 {{--                                        <input type="file" class="form-control" id="avatar" name="avatar">--}}
 {{--                                        <img src="{{ \Storage::url($user->avatar) }}" alt="" width="100px">--}}
 {{--                                    </div>--}}
+                                    @if(auth()->user()->type == \App\Models\User::ADMIN)
                                     <div class="mb-3 d-flex">
                                         <div class="form-check form-radio-danger mb-3 me-3">
                                             <input class="form-check-input" type="radio" name="type" id="admin"
@@ -118,14 +120,26 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="mb-3 form-check">
+                                    @endif
+                                    <div class="mb-3 form-check" style="margin-top:{{ auth()->user()->type == \App\Models\User::ADMIN ?'45px' :'26px' }}">
                                         <!-- Input hidden để trả về giá trị 0 khi checkbox không được chọn -->
                                         <input type="hidden" name="is_active" value="0">
 
                                         <!-- Checkbox thực tế -->
                                         <input type="checkbox" class="form-check-input" id="exampleCheck1" value="1"
                                                name="is_active" {{ $user->is_active == '1' ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="exampleCheck1">Is active</label>
+                                        <label class="form-check-label" for="exampleCheck1">Trạng thái</label>
+                                    </div>
+
+                                    <div class="mb-3" style="margin-top: 36px">
+                                        <label class="form-label" for="avatar">Ảnh đại diện</label>
+                                        <input class="form-control" id="avatar" type="file" name="avatar"
+                                               accept="image/png, image/gif, image/jpeg">
+                                        <img id="avatarPreview" src="{{ asset($user->avatar) }}" alt="Preview"
+                                             style="margin-top: 10px; max-width: 200px;"/>
+                                        @error('avatar')
+                                        <p class="text-danger">{{$message}}</p>
+                                        @enderror
                                     </div>
 
                                 </div>
@@ -146,7 +160,20 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        // Hàm kiểm tra khi thay đổi radio button
+
+        $('#avatar').on('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#avatarPreview')
+                        .attr('src', e.target.result)
+                        .css('display', 'block');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
         $('input[name="type"]').on('change', function () {
             if ($('#member').is(':checked')) {
                 $('#hotelSelect').prop('disabled', true); // Vô hiệu hóa trường chọn khách sạn
