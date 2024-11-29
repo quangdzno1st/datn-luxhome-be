@@ -164,20 +164,12 @@
                 </li>
                 @endcan
 
-                 @can('view_orders')
+                 @can('view_orders')    
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarOrder" data-bs-toggle="collapse" role="button"
-                       aria-expanded="false" aria-controls="sidebarCatalogueRoom">
-                        <i class="ri-luggage-cart-line"></i> <span data-key="t-layouts">Đơn hàng</span>
+                    <a class="nav-link menu-link" href="{{ route('admin.orders.index') }}" data-bs-toggle=""
+                       role="button" aria-expanded="false" aria-controls="sidebarCatalogueRoom">
+                        <i class="ri-hotel-bed-line"></i> <span data-key="t-layouts">Đơn hàng</span>
                     </a>
-                    <div class="collapse menu-dropdown" id="sidebarOrder">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="{{ route('orders.index',1) }}" target="_self" class="nav-link"
-                                   data-key="t-horizontal">Danh sách</a>
-                            </li>
-                        </ul>
-                    </div>
                 </li>
                 @endcan
 

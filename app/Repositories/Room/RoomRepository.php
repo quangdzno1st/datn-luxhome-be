@@ -52,7 +52,7 @@ class RoomRepository extends BaseRepository implements RoomInterface
         return Room::query()
             ->join("catalogue_rooms as c", "rooms.catalogue_room_id", "=", "c.id")
             ->where("c.hotel_id", "=", $orgId)
-            ->where('rooms.status', RoomStatusEnum::SAN_SANG_SU_DUNG->value)
+            ->whereIn('rooms.status', [RoomStatusEnum::SAN_SANG_SU_DUNG->value, RoomStatusEnum::DANG_DON_DEP])
             ->whereNotIn("rooms.id", $roomBookedIds)
             ->whereIn("rooms.id", $ids)
             ->select("rooms.id", "c.id as catalogue_room_id ", "c.name as catalogue_room_name", "c.price")
@@ -98,4 +98,5 @@ class RoomRepository extends BaseRepository implements RoomInterface
             });
         })->unique()->values()->toArray();
     }
+
 }

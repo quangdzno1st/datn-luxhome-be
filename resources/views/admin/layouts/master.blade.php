@@ -101,5 +101,33 @@
 
     @yield('scripts')
 </body>
+<script>
+    function showToast(message, bgc) {
+        console.log(bgc)
 
+        Toastify({
+            text: message, // Nội dung thông báo
+            gravity: "top", // Vị trí: top/bottom
+            position: "right", // Vị trí cụ thể: left/center/right
+            duration: 5000, // Thời gian hiển thị (ms)
+            close: true, // Hiển thị nút đóng
+            style: {
+                background: bgc, // Màu xanh lục giống hình
+                color: "#fff", // Màu chữ trắng
+                borderRadius: "5px", // Tùy chỉnh bo góc
+                padding: "10px 20px", // Khoảng cách trong thông báo
+            },
+        }).showToast();
+    }
+
+    @if(session('success'))
+    document.addEventListener('DOMContentLoaded', function () {
+        showToast("{{ session('success') }}", '#20c997');
+    });
+    @elseif(session('error'))
+    document.addEventListener('DOMContentLoaded', function () {
+        showToast("{{ session('error') }}", '#ff6b6b');
+    });
+    @endif
+</script>
 </html>

@@ -71,6 +71,10 @@
                                     <p class="card-text">Sức chứa người lớn: {{$catalogueRoom->number_adult}}</p>
                                     <p class="card-text">Sức chứa trẻ em: {{$catalogueRoom->number_child}}</p>
                                     <p class="card-text">Giá: {{number_format($catalogueRoom->price, 0, ',', '.')}} VNĐ</p>
+                                    <p class="card-text">Phòng đang đặt: {{ $roomBookedQtyMapBy[$catalogueRoom['id']]['booked_room_qty'] . ' / ' . $roomBookedQtyMapBy[$catalogueRoom['id']]['total_rooms'] . ' phòng' }}
+                                     @if($roomBookedQtyMapBy[$catalogueRoom['id']]['booked_room_qty'] == $roomBookedQtyMapBy[$catalogueRoom['id']]['total_rooms'])
+                                            <span class="badge bg-warning">Hết phòng</span>
+                                     @endif</p>
                                     <div class="text-end">
                                         <a href="{{route('admin.catalogue-rooms.edit', $catalogueRoom->id)}}" class="btn btn-soft-secondary">Chi tiết</a>
                                     </div>
@@ -88,3 +92,5 @@
     </div><!--end row-->
 
 @endsection
+
+

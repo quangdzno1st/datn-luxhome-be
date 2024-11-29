@@ -3,19 +3,16 @@
 namespace App\Services\impl;
 
 use App\Constant\Enum\RoomStatusEnum;
-use App\Constant\Enum\StatusOrderEnum;
 use App\Constant\Enum\TypeCodeEnum;
 use App\Exceptions\RespException;
 use App\Helpers\Constant;
 use App\Http\Requests\RoomRequest;
 use App\Http\Requests\RoomSearchRequest;
-use App\Models\Order;
 use App\Models\Room;
 use App\Repositories\Room\RoomRepository;
 use App\Services\CatalogueRoomService;
 use App\Services\CommonKeyCodeService;
 use App\Services\RoomService;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class RoomServiceImpl implements RoomService
@@ -106,7 +103,7 @@ class RoomServiceImpl implements RoomService
     {
         $room = $this->roomRepos->getById($id);
         if (is_null($room)) {
-            throw new RespException(__('message.room_not_found'));
+            throw new RespException(__('messages.room_not_found'));
         }
 
         return $room;
@@ -126,13 +123,16 @@ class RoomServiceImpl implements RoomService
         $query = Room::query();
 
         if ($request->has('keyword')) {
-            $query->where('code', 'like', '%' . $request->get('keyword') . '%')
-                ->orWhere("c.name", "like", "%" . $request->get('keyword') . "%");
+            $query->where(function ($query) use ($request) {
+                $query->where('code', 'like', '%' . $request->get('keyword') . '%')
+                    ->orWhere("c.name", "like", "%" . $request->get('keyword') . "%");
+            });
         }
+
         if ($request->has('status')) {
             $query->where('status', $request->get('status'));
         }
-        if ($request->has('catalogue_room_id')) {
+        if ($request->has('catalogue_room_id') && $request->get('catalogue_room_id') != "0") {
             $query->where('catalogue_room_id', $request->get('catalogue_room_id'));
         }
         if ($hotelId) {
@@ -154,9 +154,8 @@ class RoomServiceImpl implements RoomService
 
     public function getRoomIdsNotAvailable($hotelId)
     {
-       return $this->roomRepos->getRoomBookedIdToday($hotelId);
+        return $this->roomRepos->getRoomBookedIdToday($hotelId);
     }
-
 
 
 }

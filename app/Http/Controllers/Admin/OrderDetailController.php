@@ -158,7 +158,6 @@ class OrderDetailController extends Controller
     public function servicesInfo($orderId)
     {
         try {
-            $convertStatus=new OrderController();
             $result = Order::where('orders.id', $orderId)
                     ->join('booking_services', 'booking_services.order_id', '=', 'orders.id')
                     ->join('services', 'services.id', '=', 'booking_services.service_id')
@@ -169,7 +168,6 @@ class OrderDetailController extends Controller
                     'booking_services.status as status',
                 )
                 ->get();
-            $convertStatus->convertStatus($result);
             return $result;
         }catch (\Exception $exception){
             return $exception->getMessage();
@@ -198,7 +196,7 @@ class OrderDetailController extends Controller
     }
     public function VoucherOrder($voucherId){
         $voucher=Voucher::query()->where('vouchers.id', $voucherId)
-            ->select('vouchers.description','vouchers.discount_type',
+            ->select('vouchers.description',
                 'vouchers.discount_value')->get()
         ;
         return $voucher;

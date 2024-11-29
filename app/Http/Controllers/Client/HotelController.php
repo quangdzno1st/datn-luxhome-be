@@ -27,9 +27,9 @@ class HotelController extends Controller
 
     public function show(Request $request, $id)
     {
-        $searchData = !$request->check ? session('search_data') : $this->catalogueRoomRepository->searchByPage($request);
-//      dd( $searchData);
         $hotel = Hotel::query()->findOrFail($id);
+        $searchData = !$request->check ? session('search_data') : $this->catalogueRoomRepository->searchByPage($request, $hotel['id']);
+//      dd( $searchData);
         $rates = Rate::query()->where('hotel_id', $id)->paginate(20);
         session(['hotel_id' => $hotel->id]);
         session([

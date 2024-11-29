@@ -3,123 +3,155 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Constant\Enum\StatusOrderEnum;
-use App\Constant\Enum\StatusOrderPaymentEnum;
+use App\Constant\Enum\StatusPaymentOrderEnum;
+use App\Exceptions\RespException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BaseSearchRequest;
 use App\Models\Order;
-use Illuminate\Http\Request;
+use App\Repositories\Order\OrderRepository;
 use Illuminate\Support\Carbon;
 
 class OrderController extends Controller
 {
+
+    private OrderRepository $orderRepos;
+
     const PATH_VIEW = 'admin.orders.';
 
-    public function index(Request $request, $payable = null)
+    /**
+     * @param OrderRepository $orderRepos
+     */
+    public function __construct(OrderRepository $orderRepos)
     {
-        $page = $request->query('page', 1);
-        $perPage = 10;
+        $this->orderRepos = $orderRepos;
+    }
 
+
+    public function index(BaseSearchRequest $request, $payable = null)
+    {
         $orders = Order::query()
-            ->paginate($perPage, ['*'], 'order', $page);
-        $orders = $this->convertStatus($orders);
-        $orders = $this->convertStatusPayment($orders);
+            ->orderByDesc('orders.code')
+            ->paginate($request->getPerPage(), ['*'], 'order', $request->order);
         return view(self::PATH_VIEW . __FUNCTION__, compact('orders', 'payable'));
     }
 
-    public function convertStatus($items)
-    {
-        foreach ($items as $item) {
-            if ($item->status == StatusOrderEnum::DANG_CHO->value) {
-                $item->status = 'Đang chờ';
-            } elseif ($item->status == StatusOrderEnum::DA_XAC_NHAN->value) {
-                $item->status = 'Đã xác nhận';
-            } else if ($item->status == StatusOrderEnum::HOAN_THANH->value) {
-                $item->status = 'Hoàn thành';
-            } else if ($item->status == StatusOrderEnum::YEU_CAU_HUY->value) {
-                $item->status = 'Yêu cầu hủy';
-            } else {
-                $item->status = 'Đã hủy';
-            }
-        }
-        return $items;
-    }
-    public function convertStatusPayment($items)
-    {
-        foreach ($items as $item) {
-            if ($item->status_payment == StatusOrderPaymentEnum::CHUA_THANH_TOAN->value) {
-                $item->status_payment = 'Chưa thanh toán';
-            } elseif ($item->status_payment == StatusOrderPaymentEnum::DA_THANH_TOAN->value) {
-                $item->status_payment = 'Đã thanh toán';
-            } else if ($item->status_payment == StatusOrderPaymentEnum::DA_HOAN_TIEN->value) {
-                $item->status_payment = 'Đã hoàn tiền';
-            } else {
-                $item->status_payment = 'Chưa hoàn tiền';
-            }
-        }
-        return $items;
-    }
-    public function not_accepted_cancel(Order $order)
+    public function not_accepted_cancel($orderId)
     {
         try {
-            $order->update([
-                'status'=>StatusOrderEnum::DA_XAC_NHAN->value,//
-                'status_payment'=>StatusOrderPaymentEnum::DA_THANH_TOAN->value
+            $order = $this->getNonNullById($orderId);
+            $this->validateBeforeRequirementCancel($order);
+            $this->orderRepos->updateWhenRequirementCancel(StatusOrderEnum::DA_XAC_NHAN->value,
+                StatusPaymentOrderEnum::DA_THANH_TOAN, $orderId);
+
+            return redirect()->back()->with(['result' => 'Thành công',
+                'success' => 'Xác nhận không hủy thành công!',
+                'color' => 'danger'
             ]);
-            return redirect()->back()->with(['result'=>'Thanhf coong',
-                'success'=>'Huy khong thanh cong',
-                'color'=>'danger'
-            ]);
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
-    public function accepted_cancel(Order $order)
+
+    /**
+     * @throws RespException
+     */
+    public function validateBeforeRequirementCancel($order): void
     {
-        $order->update([
-            'status'=>StatusOrderEnum::DA_HUY->value,
-            'status_payment'=>StatusOrderPaymentEnum::CHUA_HOAN_TIEN->value
-        ]);
-        return redirect()->back()->with(['result'=>'Thanhf coong',
-            'success'=>'Huy order thanh cong',
-            'color'=>'success'
-        ]);
-    }
-    public function net_amount(Order $order)
-    {
-        $order_status=$order->status;
-        $order_status_payment=$order->status_payment;
-        $net_amount=0;
-        if ($order_status == StatusOrderEnum::DA_XAC_NHAN->value &&
-        $order_status_payment==StatusOrderPaymentEnum::DA_THANH_TOAN->value
-        ) {
-            $net_amount=$order->total_amount;
+        if (!StatusOrderEnum::isYeuCauHuy($order['status'])) {
+            throw new RespException('Đơn đặt ở trạng thái không thể hủy.');
         }
 
+        if (isset($order['check_in'])) {
+            throw new RespException('Không thể hủy đơn khi đã sử dụng phòng');
+        }
+
+        if ($order['start_date'] <= Carbon::now()->addDay()->setTime(14, 00)) {
+            throw new RespException('Không thể hủy đơn trong quá khứ.');
+        }
     }
 
-    public function calculateRefundCancel(Order $order) {
+    /**
+     * @throws RespException
+     */
+    private
+    function getNonNullById($orderId)
+    {
+        $order = Order::query()->where('id', $orderId)->first();
+        if (is_null($order)) {
+            throw new RespException(__('messages.order_not_found'));
+        }
+
+        return $order;
+    }
+
+    /**
+     * @throws RespException
+     */
+    public
+    function accepted_cancel($orderId)
+    {
+        $order = $this->getNonNullById($orderId);
+        $this->validateBeforeRequirementCancel($order);
+        $this->orderRepos->updateWhenRequirementCancel(StatusOrderEnum::DA_HUY->value,
+            StatusPaymentOrderEnum::CHUA_HOAN_TIEN, $orderId);
+
+        return redirect()->back()->with(['result' => 'Thanhf coong',
+            'success' => 'Hủy đơn đặt thành công',
+            'color' => 'success'
+        ]);
+    }
+
+    public
+    function delete($order)
+    {
+        if ($order->status == 'Chưa thanh toán') {
+            Order::query()->find($order)->delete();
+            return redirect()->back() - with([
+                    'result' => 'Xóa thành công',
+                    'color' => 'success'
+                ]);
+        } else {
+            return redirect()->back() - with([
+                    'result' => 'Xóa không thành công',
+                    'color' => 'danger'
+                ]);
+        }
+    }
+
+    /**
+     * @throws RespException
+     */
+    public function refundMoney($orderId)
+    {
+        $order = $this->getNonNullById($orderId);
+        $this->validateBeforeRefundMoney($order);
+
         $now = Carbon::now();
         $startDate = Carbon::parse($order->start_date);
+        $net_amount = 0;
 
-        if ($now->diffInDays($startDate, false) >= 1) {
-            $order->update('net_amount',$order->total_amount*0.25);
-            return $order->total_amount * 0.75;
+        if ($now->diffInDays($startDate, false) >= 3) {
+            $net_amount = $order->total_amount * 0.25 ;
+        } else if ($now->diffInDays($startDate, false) >= 1) {
+            $net_amount = $order->total_amount * 0.75;
         }
 
-        return 0;
+        $order->net_amount = $net_amount;
+        $order->status_payment = StatusPaymentOrderEnum::DA_HOAN_TIEN->value;
+        $order->save();
+
+        return redirect()->back()->with([
+            'success' => "Đã thực hiện hoàn tiền thành công cho hóa đơn " . $order['code']
+        ]);
     }
 
-    public function delete($order){
-        if ($order->status=='Chưa thanh toán'){
-            Order::query()->find($order)->delete();
-            return redirect()->back()-with([
-                'result'=>'Xóa thành công',
-                'color'=>'success'
-                ]);
-        }else{
-            return redirect()->back()-with([
-                'result'=>'Xóa không thành công',
-                'color'=>'danger'
-                ]);
+    /**
+     * @throws RespException
+     */
+    private function validateBeforeRefundMoney($order): void
+    {
+        if (!StatusOrderEnum::isDaHuy($order['status']) || !StatusPaymentOrderEnum::isChuaHoanTien($order['status_payment'])) {
+            throw new RespException("Đơn đặt chưa thanh toán hoặc ở trạng thái không thể hoàn tiền.");
         }
     }
 }

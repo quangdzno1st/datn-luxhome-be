@@ -22,7 +22,7 @@ class   CatalogueRoomRepository extends BaseRepository implements CatalogueRoomI
         return CatalogueRoom::query()->where('id', $id)->exists();
     }
 
-    public function searchByPage($request)
+    public function searchByPage($request, $hotelId = null)
     {
         $now = Carbon::now();
         $startDateSearch = $request->has('start_date')
@@ -68,7 +68,8 @@ class   CatalogueRoomRepository extends BaseRepository implements CatalogueRoomI
         if ($numberChild) {
             $categoriesQuery->where('number_child', $numberChild);
         }
-        $categories = $categoriesQuery->with('rooms', 'hotel')->get();
+        $categories = $categoriesQuery->with('rooms', 'hotel')
+            ->get();
 
         $orders = Order::with('orderItem')
             ->whereIn('status', [StatusOrderEnum::DA_XAC_NHAN->value, StatusOrderEnum::YEU_CAU_HUY])
@@ -91,7 +92,7 @@ class   CatalogueRoomRepository extends BaseRepository implements CatalogueRoomI
 
         return $categories->map(function ($category) use ($roomIds, $startDate, $endDate, $numberChild, $numberAdult) {
             $filteredRooms = $category->rooms()->whereNotIn('id', $roomIds)
-                ->where('rooms.status', RoomStatusEnum::SAN_SANG_SU_DUNG->value)->get();
+                ->whereIn('rooms.status', [RoomStatusEnum::SAN_SANG_SU_DUNG->value, RoomStatusEnum::DANG_DON_DEP])->get();
             $attributes = $category->attributes;
             return [
                 'id' => $category->id,
@@ -118,6 +119,7 @@ class   CatalogueRoomRepository extends BaseRepository implements CatalogueRoomI
                     return [
                         'room_id' => $room->id,
                         'code' => $room->code,
+                        'hotel_id' => $room->hotel_id
                     ];
                 })->toArray(),
             ];
@@ -145,5 +147,36 @@ class   CatalogueRoomRepository extends BaseRepository implements CatalogueRoomI
             ->orderBy('catalogue_rooms.name');
 
         return $query->get();
+    }
+
+    public function getRoomBookedQtyToday($orgId)
+    {
+        $startDate = Carbon::now()->setTime(14, 0);
+        $endDate = Carbon::now()->addDay()->setTime(12, 0);
+
+        $bookedRoomIds = Order::query()
+            ->join('order_items as ot', 'ot.order_id', '=', 'orders.id')
+            ->join('rooms as r', 'r.id', '=', 'ot.room_id')
+            ->whereIn('orders.status', [StatusOrderEnum::DA_XAC_NHAN->value, StatusOrderEnum::YEU_CAU_HUY])
+            ->where('orders.org_id', $orgId)
+            ->where('orders.start_date', '<', $endDate)
+            ->where('orders.start_date', '>=', $startDate)
+            ->select('ot.room_id');
+
+        return CatalogueRoom::query()
+            ->join('rooms as r', 'r.catalogue_room_id', '=', 'catalogue_rooms.id')
+            ->leftJoinSub(
+                $bookedRoomIds,
+                'booked_rooms',
+                function ($join) {
+                    $join->on('r.id', '=', 'booked_rooms.room_id');
+                }
+            )
+            ->where('r.hotel_id', $orgId)
+            ->groupBy('catalogue_rooms.id')
+            ->select('catalogue_rooms.id', DB::raw('count(r.id) as total_rooms, sum(IF(booked_rooms.room_id is null, 0, 1)) as booked_room_qty'))
+            ->get()
+            ->keyBy('id')
+            ->toArray();
     }
 }

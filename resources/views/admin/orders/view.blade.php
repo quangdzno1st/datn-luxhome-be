@@ -137,7 +137,7 @@
                                         <tr>
                                             <td>{{ $service->serviceName }}</td>
                                             <td>{{$service->serviceQuantity}}</td>
-                                            <td>{{$service->status}}</td>
+                                            <td>{{ \App\Constant\Enum\StatusOrderEnum::parse($service['status'])->getName() }}</td>
                                             <td>{{$service->servicePrice}}</td>
                                         </tr>
                                         @endforeach
@@ -181,7 +181,7 @@
                 </section>
 {{--                @include('admin.orders.order_items.order_items')--}}
             @endif
-                <!-- Modal -->s
+                <!-- Modal -->
 {{--                notificate--}}
                 <div class="modal fade flip" id="checkoutOrder" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -193,7 +193,7 @@
                                     <p class="text-muted fs-15 mb-4">Bạn có muốn checkout order này không?</p>
                                     <div class="hstack gap-2 justify-content-center remove">
                                         <button class="btn btn-link link-success fw-medium text-decoration-none" id="deleteRecord-close" data-bs-dismiss="modal"><i class="ri-close-line me-1 align-middle"></i> Đóng</button>
-                                        <form method="POST" action="{{route('orders.checkout',$order->id)}}">
+                                        <form method="POST" action="{{route('admin.orders.checkout',$order->id)}}">
                                             @csrf
                                             <button
                                                     class="btn btn-sm btn-success edit-item-btn"
@@ -218,7 +218,7 @@
                                     <p class="text-muted fs-15 mb-4">Khi checkin sẽ tính thời gian từ thời điểm hiện tại!</p>
                                     <div class="hstack gap-2 justify-content-center remove">
                                         <button class="btn btn-link link-success fw-medium text-decoration-none" id="deleteRecord-close" data-bs-dismiss="modal"><i class="ri-close-line me-1 align-middle"></i> Đóng</button>
-                                        <form method="POST" action="{{route('orders.checkin',$order->id)}}">
+                                        <form method="POST" action="{{route('admin.orders.checkin',$order->id)}}">
                                             @csrf
                                             <button
                                                     class="btn btn-sm btn-success edit-item-btn"
@@ -244,7 +244,7 @@
                                         aria-label="Close" id="close-modal"></button>
                             </div>
                             <form class="tablelist-form" autocomplete="off"
-                                  action="{{route('orders.addBookingServices',$order->id)}}"
+                                  action="{{route('admin.orders.addBookingServices',$order->id)}}"
                                   method="POST">
                                 @csrf
                                 <div class="modal-body">
