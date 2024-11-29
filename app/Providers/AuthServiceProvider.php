@@ -30,22 +30,22 @@ class AuthServiceProvider extends ServiceProvider
         $modulesList = Module::all();
         if ($modulesList->count() > 0) {
             foreach ($modulesList as $module) {
-                Gate::define("view-{$module->name}", function (User $user) use ($module) {
+                Gate::define("view_{$module->name}", function (User $user) use ($module) {
                     return $this->checkPermission($user, 'view', $module);
                 });
 
                 // Quyền tạo module
-                Gate::define("create-{$module->name}", function (User $user) use ($module) {
+                Gate::define("create_{$module->name}", function (User $user) use ($module) {
                     return $this->checkPermission($user, 'create', $module);
                 });
 
                 // Quyền cập nhật module
-                Gate::define("update-{$module->name}", function (User $user) use ($module) {
-                    return $this->checkPermission($user, 'update', $module);
+                Gate::define("edit_{$module->name}", function (User $user) use ($module) {
+                    return $this->checkPermission($user, 'edit', $module);
                 });
 
                 // Quyền xóa module
-                Gate::define("delete-{$module->name}", function (User $user) use ($module) {
+                Gate::define("delete_{$module->name}", function (User $user) use ($module) {
                     return $this->checkPermission($user, 'delete', $module);
                 });
             }

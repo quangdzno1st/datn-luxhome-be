@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use \Illuminate\Support\Facades\Auth;
 
@@ -16,7 +17,7 @@ class IsAdmin
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::check() && (Auth::user()->vai_tro == 'admin' || Auth::user()->vai_tro == 'staff')  ) {
+        if (Auth::check() && (Auth::user()->type == User::ADMIN)  ) {
             return $next($request);
         }
         else{
