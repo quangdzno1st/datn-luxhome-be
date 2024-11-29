@@ -15,9 +15,8 @@ class UserRepository extends BaseRepository implements UserInterface
 
     public function getAll($request)
     {
-
+        $user = auth()->user();
         $query = $this->model::query();
-
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -26,6 +25,14 @@ class UserRepository extends BaseRepository implements UserInterface
                     ->orWhere('email', 'like', '%' . $search . '%');
             });
         }
+
+        if ($user->type != User::ADMIN) {
+            $query->where(function ($q) use ($user) {
+                $q->where('id', $user->id)
+                ->orWhere('type', User::CUSTOMER);
+            });
+        }
+
 
         if ($request->has('type') && !empty($request->input('type'))) {
             $query->where('type', $request->input('type'));

@@ -30,6 +30,7 @@ class User extends Authenticatable
         'address',
         'org_id',
         'group_id',
+        'total_amount_ordered',
         'password',
         'cccd',
         'is_active',

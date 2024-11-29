@@ -64,23 +64,23 @@
                         <thead>
                             <tr>
                                 <th>STT</th>
-{{--                                <th>Avatar</th>--}}
-                                <th>Name</th>
+                                <th>Ảnh đại diện</th>
+                                <th>Tên</th>
                                 <th>Email</th>
-                                <th>Phone</th>
-                                <th>Type</th>
+                                <th>Số điện thoại</th>
+                                <th>Loại tài khoản</th>
 
-                                <th>Is Active</th>
-                                <th>Action</th>
+                                <th>Trạng thái</th>
+                                <th>Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($users as $key => $user)
                                 <tr>
                                     <td>{{ $key+1 }}</td>
-{{--                                    <td>--}}
-{{--                                        <img src="{{\Storage::url($user->avatar)}}" alt="" width="50px">--}}
-{{--                                    </td>--}}
+                                    <td>
+                                        <img src="{{ asset($user->avatar) }}" alt="Avatar" style="width: 50px;  object-fit: cover;">
+                                    </td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->phone }}</td>

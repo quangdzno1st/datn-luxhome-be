@@ -186,7 +186,7 @@ Route::group(['middleware' => ['admin']], function () {
 
     Route::prefix('hotels')
     ->name('hotels.')
-    ->middleware('role')
+//    ->middleware('role')
     ->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\HotelController::class, 'index'])->name('index')->middleware('can:view_hotel');
         Route::get('/create', [\App\Http\Controllers\Admin\HotelController::class, 'create'])->name('create')->middleware('can:create_hotel');

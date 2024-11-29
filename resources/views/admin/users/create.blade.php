@@ -34,7 +34,7 @@
                                 <div class="col-7">
                                     <div class="mb-3">
 
-                                        <label for="name" class="form-label">Name:</label>
+                                        <label for="name" class="form-label">Tên<span class="text-danger">*</span></label>
                                         <input type="text" class="form-control @error('name') is-invalid @enderror"
                                                id="name" placeholder="Enter name" name="name" value="{{ old('name') }}">
                                         @error('name')
@@ -42,7 +42,7 @@
                                         @enderror
                                     </div>
                                     <div class="mb-3">
-                                        <label for="text" class="form-label">Email:</label>
+                                        <label for="text" class="form-label">Email<span class="text-danger">*</span></label>
                                         <input type="text" class="form-control @error('email') is-invalid @enderror"
                                                id="email" placeholder="Enter email" name="email"
                                                value="{{ old('email') }}">
@@ -51,7 +51,7 @@
                                         @enderror
                                     </div>
                                     <div class="mb-3 position-relative">
-                                        <label for="password" class="form-label">Password:</label>
+                                        <label for="password" class="form-label">Mật khẩu<span class="text-danger">*</span></label>
                                         <input type="password"
                                                class="form-control @error('password') is-invalid @enderror"
                                                id="password"
@@ -69,7 +69,7 @@
 
 
                                     <div class="mb-3">
-                                        <label for="phone" class="form-label">Phone number:</label>
+                                        <label for="phone" class="form-label">Số điện thoại<span class="text-danger">*</span></label>
                                         <input type="text" class="form-control @error('phone') is-invalid @enderror"
                                                id="phone" placeholder="Enter phone" name="phone"
                                                value="{{ old('phone') }}">
@@ -78,7 +78,7 @@
                                         @enderror
                                     </div>
                                     <div class="mb-3">
-                                        <label for="address" class="form-label">Address:</label>
+                                        <label for="address" class="form-label">Địa chỉ:</label>
                                         <input type="text" class="form-control @error('address') is-invalid @enderror"
                                                id="address" placeholder="Enter address" name="address"
                                                value="{{ old('address') }}">
@@ -86,7 +86,7 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
-
+                                    @if(auth()->user()->type == \App\Models\User::ADMIN)
                                     <div class="mb-3">
                                         <label for="hotel" class="form-label">Chọn Khách Sạn:</label>
                                         <select class="form-control @error('hotel') is-invalid @enderror"
@@ -101,37 +101,53 @@
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                         @enderror
                                     </div>
+                                    @endif
 
                                 </div>
                                 <div class="col-5">
-                                    <div class="mb-3 d-flex">
-                                        <div class="form-check form-radio-danger mb-3 me-3">
-                                            <input class="form-check-input" type="radio" name="type" id="admin"
-                                                   value="{{ \App\Models\User::ADMIN }}">
-                                            <label class="form-check-label" for="admin">
-                                                Admin
-                                            </label>
+
+                                    @if(auth()->user()->type == \App\Models\User::ADMIN)
+                                        <div class="mb-3 d-flex" style="margin-top: 26px">
+                                            <div class="form-check form-radio-danger mb-3 me-3">
+                                                <input class="form-check-input" type="radio" name="type" id="admin"
+                                                       value="{{ \App\Models\User::ADMIN }}">
+                                                <label class="form-check-label" for="admin">
+                                                    Admin
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-radio-danger mb-3 me-3">
+                                                <input class="form-check-input" type="radio" name="type" id="hotelier"
+                                                       value="{{ \App\Models\User::HOTELIER }}">
+                                                <label class="form-check-label" for="admin">
+                                                    Hotelier
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-radio-success mb-3">
+                                                <input class="form-check-input" type="radio" name="type" id="member"
+                                                       value="{{ \App\Models\User::CUSTOMER }}" checked>
+                                                <label class="form-check-label" for="member">
+                                                    Customer
+                                                </label>
+                                            </div>
                                         </div>
-                                        <div class="form-check form-radio-danger mb-3 me-3">
-                                            <input class="form-check-input" type="radio" name="type" id="hotelier"
-                                                   value="{{ \App\Models\User::HOTELIER }}">
-                                            <label class="form-check-label" for="admin">
-                                                Hotelier
-                                            </label>
-                                        </div>
-                                        <div class="form-check form-radio-success mb-3">
-                                            <input class="form-check-input" type="radio" name="type" id="member"
-                                                   value="{{ \App\Models\User::CUSTOMER }}" checked>
-                                            <label class="form-check-label" for="member">
-                                                Customer
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3 form-check">
+                                    @endif
+
+                                    <div class="mb-3 form-check" style="margin-top:{{ auth()->user()->type == \App\Models\User::ADMIN ?'45px' :'26px' }}">
                                         <input type="hidden" name="is_active" value="0">
                                         <input type="checkbox" class="form-check-input" id="exampleCheck1" value="1"
                                                name="is_active" checked>
-                                        <label class="form-check-label" for="exampleCheck1">Is active</label>
+                                        <label class="form-check-label" for="exampleCheck1">Trạng thái</label>
+                                    </div>
+
+                                    <div class="mb-3" style="margin-top: 36px">
+                                        <label class="form-label" for="avatar">Ảnh đại diện</label>
+                                        <input class="form-control" id="avatar" type="file" name="avatar"
+                                               accept="image/png, image/gif, image/jpeg">
+                                        <img id="avatarPreview" src="#" alt="Preview"
+                                             style="display: none; margin-top: 10px; max-width: 200px;"/>
+                                        @error('avatar')
+                                        <p class="text-danger">{{$message}}</p>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="card-header align-items-center d-flex">
@@ -150,6 +166,20 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
+        $('#avatar').on('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#avatarPreview')
+                        .attr('src', e.target.result)
+                        .css('display', 'block');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                $('#avatarPreview').css('display', 'none');
+            }
+        });
         // Hàm kiểm tra khi thay đổi radio button
         $('input[name="type"]').on('change', function () {
             if ($('#member').is(':checked')) {
@@ -159,7 +189,7 @@
             }
         });
 
-        $('#togglePassword').click(function() {
+        $('#togglePassword').click(function () {
             // Get the input field and toggle the type
             const passwordField = $('#password');
             const passwordFieldType = passwordField.attr('type');
