@@ -63,6 +63,7 @@
 								<div class="f-item one-half">
 									<label for="confirm_email">Mã Phiếu Giảm Giá (Nếu Có)</label>
 										<select class="select" name="voucher_id">
+											<option value="0" >Vui lòng chọn</option>
 											@foreach($vouchers as $voucher)
 												<option value="{{ $voucher['id'] }}" >
 													<div>Giảm giá tối đa </div>

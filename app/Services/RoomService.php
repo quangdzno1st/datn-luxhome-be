@@ -16,4 +16,7 @@ interface RoomService
     public function delete($id);
 
     public function searchByPage(RoomSearchRequest $request, $hotelId);
+
+    public function getRoomIdsNotAvailable($hotelId);
+
 }

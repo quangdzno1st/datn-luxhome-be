@@ -7,6 +7,7 @@ use App\Constant\Enum\StatusOrderEnum;
 use App\Models\Order;
 use App\Models\Room;
 use App\Repositories\Base\BaseRepository;
+use Illuminate\Support\Carbon;
 
 class RoomRepository extends BaseRepository implements RoomInterface
 {
@@ -76,5 +77,25 @@ class RoomRepository extends BaseRepository implements RoomInterface
                 return in_array($item->room_id, $ids);
             })->pluck('room_id');
         });
+    }
+
+    public function getRoomBookedIdToday($orgId)
+    {
+        $startDate = Carbon::now()->setTime(14, 0);
+        $endDate = Carbon::now()->addDay()->setTime(12, 0);
+
+        $orders = Order::with('orderItem')
+            ->whereIn('status', [StatusOrderEnum::DA_XAC_NHAN->value, StatusOrderEnum::YEU_CAU_HUY])
+            ->where('org_id', $orgId)
+            ->where('start_date', '<', $endDate)
+            ->where('start_date', '>=', $startDate)
+            ->get();
+
+        return $orders->flatMap(function ($order) {
+
+            return $order->orderItem->flatMap(function ($item) {
+                return $item->room_id ? [$item->room_id] : [];
+            });
+        })->unique()->values()->toArray();
     }
 }

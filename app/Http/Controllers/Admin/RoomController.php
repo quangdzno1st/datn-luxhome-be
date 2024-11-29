@@ -26,8 +26,9 @@ class RoomController extends Controller
     {
         $hotelId = $request->hotel_id ?? Auth::user()->org_id;
         $rooms = $this->roomService->searchByPage($request, $hotelId);
+        $roomBookedIds = $this->roomService->getRoomIdsNotAvailable($hotelId);
         $catalogueRooms = $this->catalogueRoomService->getAllByOrgId($hotelId);
-        return view('admin.rooms.index', compact('rooms', "catalogueRooms"));
+        return view('admin.rooms.index', compact('rooms', "catalogueRooms", 'roomBookedIds'));
     }
 
 
