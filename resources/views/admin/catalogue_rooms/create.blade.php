@@ -59,7 +59,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label" for="thumbnail">Thumbnail<span class="text-danger">*</span></label>
+                            <label class="form-label" for="thumbnail">Ảnh đại diện<span class="text-danger">*</span></label>
                             <input class="form-control" id="thumbnail" type="file" name="thumbnail"
                                 accept="image/png, image/gif, image/jpeg">
                                 @error('thumbnail')

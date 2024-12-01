@@ -5,66 +5,79 @@
 @endsection
 
 @section('content')
+    <!-- start page title -->
     <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">Tổng quan</h4>
+
+            </div>
+        </div>
+    </div>
+    {{-- <div class="row">
         <div class="col-12">
             <div class="flex-grow-1 mb-3">
                 <h4 class="fs-16 mb-1">Tổng quan thống kê</h4>
                 <p class="text-muted mb-0">Theo dõi tổng quan thống kê số liệu website</p>
             </div>
         </div>
-    </div>
+    </div> --}}
     <div class="row">
-        <div class="col-xl-3 col-md-6">
+        <div class="col-xl-2 col-md-6">
             <!-- card -->
             <div class="card card-animate">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1 overflow-hidden">
-                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Tổng doanh thu</p>
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Doanh thu</p>
                         </div>
                     </div>
-                    <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div class="mt-3">
                         <div>
-                            <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value"
+                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
                                     data-target="{{ $totalRevenue->total_revenue }}">0</span><sup>đ</sup> </h4>
-                            <span href="javascript:void(0)" class="text-decoration-underline" style="color: white">.</span>
                         </div>
-                        <div class="avatar-sm flex-shrink-0">
-                            <span class="avatar-title bg-success-subtle rounded fs-3">
-                                <i class="bx bx-dollar-circle text-success"></i>
-                            </span>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span href="javascript:void(0)" class="text-decoration-underline" style="color: white"></span>
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-success-subtle rounded fs-3">
+                                    <i class="bx bx-dollar-circle text-success"></i>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div><!-- end card body -->
             </div><!-- end card -->
         </div><!-- end col -->
 
-        <div class="col-xl-3 col-md-6">
+        <div class="col-xl-2 col-md-6">
             <!-- card -->
             <div class="card card-animate">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1 overflow-hidden">
-                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Tổng đơn đặt</p>
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Đơn đặt</p>
                         </div>
                     </div>
-                    <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div class="mt-3">
                         <div>
-                            <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value"
+                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
                                     data-target="{{ $totalOrder->total_order }}">0</span></h4>
-                            <a href="javascript:void(0)" class="text-decoration-underline">Xem tất cả các đơn</a>
                         </div>
-                        <div class="avatar-sm flex-shrink-0">
-                            <span class="avatar-title bg-danger rounded fs-3">
-                                <i class="ri-building-4-line"></i>
-                            </span>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="javascript:void(0)" class="text-decoration-underline">Xem chi tiết</a>
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-danger rounded fs-3">
+                                    <i class="ri-building-4-line"></i>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div><!-- end card body -->
             </div><!-- end card -->
         </div><!-- end col -->
 
-        <div class="col-xl-3 col-md-6">
+        <div class="col-xl-2 col-md-6">
             <!-- card -->
             <div class="card card-animate">
                 <div class="card-body">
@@ -73,23 +86,25 @@
                             <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Khách hàng</p>
                         </div>
                     </div>
-                    <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div class="mt-3">
                         <div>
-                            <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value"
+                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
                                     data-target="{{ $totalUser }}">0</span></h4>
-                            <a href="{{ route('admin.users.index') }}" class="text-decoration-underline">Xem chi tiết</a>
                         </div>
-                        <div class="avatar-sm flex-shrink-0">
-                            <span class="avatar-title bg-warning-subtle rounded fs-3">
-                                <i class="bx bx-user-circle text-warning"></i>
-                            </span>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ route('admin.users.index') }}" class="text-decoration-underline">Xem chi tiết</a>
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-warning-subtle rounded fs-3">
+                                    <i class="bx bx-user-circle text-warning"></i>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div><!-- end card body -->
             </div><!-- end card -->
         </div><!-- end col -->
 
-        <div class="col-xl-3 col-md-6">
+        <div class="col-xl-2 col-md-6">
             <!-- card -->
             <div class="card card-animate">
                 <div class="card-body">
@@ -98,16 +113,70 @@
                             <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Đánh giá</p>
                         </div>
                     </div>
-                    <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div class="mt-3">
                         <div>
-                            <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value"
+                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
                                     data-target="{{ $totalRating->total_rating }}">0</span> </h4>
-                            <a href="javascript:void(0)" class="text-decoration-underline">Xem chi tiết</a>
                         </div>
-                        <div class="avatar-sm flex-shrink-0">
-                            <span class="avatar-title bg-primary-subtle rounded fs-3">
-                                <i class="ri-message-2-line text-primary"></i>
-                            </span>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ route('admin.rates.hotels') }}" class="text-decoration-underline">Xem chi tiết</a>
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-primary-subtle rounded fs-3">
+                                    <i class="ri-message-2-line text-primary"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
+        <div class="col-xl-2 col-md-6">
+            <!-- card -->
+            <div class="card card-animate">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Tổng số phòng</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div>
+                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
+                                    data-target="{{ $thongkeTotalRoom }}">0</span> </h4>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ route('admin.rooms.index') }}" class="text-decoration-underline">Xem chi tiết</a>
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-info-subtle rounded fs-3">
+                                    <i class="las la-door-closed text-info"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
+        <div class="col-xl-2 col-md-6">
+            <!-- card -->
+            <div class="card card-animate">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Phòng đang đặt</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div>
+                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
+                                    data-target="{{ $thongkeTotalRoomBeingBooked }}">0</span> </h4>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ route('admin.rooms.index') }}" class="text-decoration-underline">Xem chi tiết</a>
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-warning-subtle rounded fs-3">
+                                    <i class="las la-door-open text-warning"></i>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div><!-- end card body -->
@@ -184,12 +253,12 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex">
-                        <div style="width: 100%; max-width: 100%">
+                        <div style="width: 100%; max-width: 60%">
                             <canvas id="revenueChart" style="width:100%"></canvas>
                         </div>
-                        {{-- <div style="width: 100%; max-width: 50%">
+                        <div style="width: 100%; max-width: 30%; margin: 0 auto; color:rgb(69, 66, 66)">
                             <canvas id="orderChart" style="width:100%"></canvas>
-                        </div> --}}
+                        </div>
                     </div>
                 </div><!-- end card -->
             </div>
@@ -295,7 +364,16 @@
                     x: {
                         title: {
                             display: true,
-                            // text: 'Địa điểm',
+                            text: 'Thống kê doanh thu và đơn đặt',
+                            font: {
+                                size: 12, // Kích thước chữ
+                                weight: 'bold' // Độ đậm của chữ
+                            },
+                            padding: {
+                                top: 10, // Khoảng cách phía trên
+                                bottom: 10 // Khoảng cách phía dưới
+                            },
+                            color: '#333' // Màu chữ
                         },
                     }
                 }
@@ -303,6 +381,77 @@
         };
 
         new Chart(ctx, config);
+    </script>
+    <script>
+        const orderChart = document.getElementById('orderChart').getContext('2d');
+
+        let dataOrderStatus = [
+            @foreach ($thongkeOrderByStatus as $value)
+                {{ $value->quantity_order }},
+            @endforeach
+        ];
+
+        const dataChart = {
+            labels: ['Đang chờ', 'Đã xác nhận', 'Hoàn thành', 'Đã hủy', 'Yêu cầu hủy'], // Các trạng thái đơn hàng
+            datasets: [{
+                label: 'Thống kê đơn hàng',
+                data: dataOrderStatus, // Số lượng đơn hàng theo từng trạng thái
+                backgroundColor: [
+                    'rgba(255, 205, 86, 0.6)', // Màu cho "Đang chờ"
+                    'rgba(54, 162, 235, 0.6)', // Màu cho "Đã xác nhận"
+                    'rgba(75, 192, 192, 0.6)', // Màu cho "Hoàn thành"
+                    'rgba(236, 27, 27, 0.6)', // Màu cho "Đã hủy"
+                    'rgba(69, 66, 66, 0.6)', // Màu cho "Yêu cầu hủy"
+                ],
+                borderColor: [
+                    'rgba(255, 205, 86, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(236, 27, 27, 1)',
+                    'rgba(69, 66, 66, 1)',
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        const configChart = {
+            type: 'pie', // Loại biểu đồ
+            data: dataChart,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top', // Hiển thị chú thích ở trên
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                const total = dataChart.datasets[0].data.reduce((a, b) => a + b, 0);
+                                const value = dataChart.datasets[0].data[tooltipItem.dataIndex];
+                                const percentage = ((value / total) * 100).toFixed(2);
+                                return `${dataChart.labels[tooltipItem.dataIndex]}: ${value} đơn hàng (${percentage}%)`;
+                            }
+                        }
+                    },
+                    title: {
+                        display: true, // Bật tiêu đề
+                        text: 'Thống kê trạng thái đơn hàng', // Nội dung tiêu đề
+                        font: {
+                            size: 12, // Kích thước chữ
+                            weight: 'bold' // Độ đậm của chữ
+                        },
+                        padding: {
+                            top: 10, // Khoảng cách phía trên
+                            bottom: 10 // Khoảng cách phía dưới
+                        },
+                        color: '#333' // Màu chữ
+                    }
+
+                }
+            }
+        };
+
+        new Chart(orderChart, configChart);
     </script>
     {{-- <script>
         let xValues = [
@@ -393,6 +542,15 @@
       }
         });
     </script> --}}
+@endsection
+
+@section('styles')
+    <style>
+        .avatar-sm {
+            width: 2rem;
+            height: 2rem;
+        }
+    </style>
 @endsection
 
 @section('script-libs')
