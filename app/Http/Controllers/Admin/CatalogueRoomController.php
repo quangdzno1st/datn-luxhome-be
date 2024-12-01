@@ -208,7 +208,32 @@ class CatalogueRoomController extends Controller
 
     public function destroy($id)
     {
-        //
+        $catalogueRoom = CatalogueRoom::query()->where('id', $id)->firstOrFail();
+
+        try {
+            DB::beginTransaction();
+
+            $catalogueRoom->delete();
+
+            CatalogueRoomAttribute::query()->where('catalogue_room_id', $id)->delete();
+
+            $images = Image::query()->where('object_id', $id)->get();
+
+            Image::query()->where('object_id', $id)->delete();
+            
+            DB::commit();
+
+            Storage::delete($catalogueRoom->thumbnail);
+
+            foreach ($images as $image) {
+                Storage::delete($image->path);
+            }
+
+            return redirect()->route('admin.catalogue-rooms.index')->with('msg', 'Xóa loại phòng thành công!');
+
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     public function deleteImageMulti(Request $request)

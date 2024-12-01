@@ -66,7 +66,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label" for="thumbnail">Thumbnail</label>
+                            <label class="form-label" for="thumbnail">Ảnh đại diện</label>
                             <input class="form-control" id="thumbnail" type="file" name="thumbnail"
                                 accept="image/png, image/gif, image/jpeg">
                             <div class="">
@@ -134,7 +134,9 @@
                 <!-- end card -->
 
                 <!-- end card -->
-                <div class="text-end mb-3">
+                <div class="d-flex justify-content-between mb-3">
+                    <a class="btn btn-danger w-sm" data-bs-toggle="modal"
+                    data-bs-target="#deleteRecordModal1">Xóa</a>
                     <button type="submit" class="btn btn-success w-sm">Cập nhật</button>
                 </div>
             </div>
@@ -256,6 +258,47 @@
         <!-- end col -->
         </div>
     </form>
+
+    <!-- Modal -->
+    <div class="modal fade zoomIn" id="deleteRecordModal1"
+        tabindex="-1" aria-hidden="true">
+       <div class="modal-dialog modal-dialog-centered">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <button type="button" class="btn-close" data-bs-dismiss="modal"
+                           aria-label="Close" id="btn-close"></button>
+               </div>
+               <div class="modal-body">
+                   <div class="mt-2 text-center">
+                       <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json"
+                                  trigger="loop"
+                                  colors="primary:#f7b84b,secondary:#f06548"
+                                  style="width:100px;height:100px"></lord-icon>
+                       <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+                           <h4>Bạn chắc chắn ?</h4>
+                           <p class="text-muted mx-4 mb-0">Bạn có chắc muốn xóa loại phòng này không ?</p>
+                       </div>
+                   </div>
+                   <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                       <form
+                               action="{{route('admin.catalogue-rooms.destroy', $catalogueRoom->id)}}"
+                               method="post">
+                           @csrf
+                           @method('DELETE')
+                           <button type="button" type="button"
+                                   class="btn w-sm btn-light"
+                                   data-bs-dismiss="modal">Đóng
+                           </button>
+                           <button type="submit" class="btn w-sm btn-danger "
+                                   id="delete-record">Chắc chắn!
+                           </button>
+                       </form>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+   <!--end modal -->
 
     <!--  Extra Large modal example -->
     <div class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"

@@ -5,6 +5,7 @@ namespace App\Services\impl;
 use App\Constant\Enum\RoleEnum;
 use App\Models\Order;
 use App\Models\Rate;
+use App\Models\Room;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -95,13 +96,23 @@ class StatisticalServiceImpl
 
         $data = $query->get();
 
+        $orders = $this->thongKeOrderByStatus();
+        // dd($orders->toArray());
+        // $this->totalRoom();
+
+        // $this->totalRoomBeingBooked();
+
         $arrayData = [
             'start_date' => $startDate,
             'end_date' => $endDate,
             'select_time' => $selectTime,
             'data_statistical' => $data,
-            'hotel_id' => $hotel_id
+            'hotel_id' => $hotel_id,
+            'orders' => $orders,
+            'total_room' => $this->totalRoom(),
+            'total_room_being_booked' => $this->totalRoomBeingBooked(),
         ];
+
         return $arrayData;
     }
 
@@ -109,7 +120,7 @@ class StatisticalServiceImpl
     {
         $hotel_id = $this->checkRole();
 
-        $query = Order::query()->where('status', '!=', 1);
+        $query = Order::query()->where('net_amount', '!=', null);
 
         if(session()->has('handle_data')) {
             $data = session('handle_data');
@@ -262,9 +273,55 @@ class StatisticalServiceImpl
     public function checkRole()
     {
         $hotel_id = '';
-        if (Auth::check() && Auth::user()->type == RoleEnum::Admin->value) {
-            $hotel_id = Auth::user()->org_id;
+        if (Auth::check() && Auth::user()->type == RoleEnum::SupperAdmin->value) {
+            return $hotel_id;
         }
+        $hotel_id = Auth::user()->org_id;
         return $hotel_id;
+    }
+
+    public function thongKeOrderByStatus()
+    {
+        $hotel_id = $this->checkRole();
+
+        $query = Order::query();
+        
+        if (!empty($hotel_id)) {
+            $orders = $query->where('org_id', $hotel_id)->selectRaw('status, COUNT(status) as quantity_order')->groupBy('status')->orderBy('status')->get();
+        } else {
+            $orders = $query->selectRaw('status, COUNT(status) as quantity_order')->groupBy('status')->orderBy('status')->get();
+        }
+        return $orders;
+    }
+    
+    public function totalRoom() {
+        $hotel_id = $this->checkRole();
+
+        $query = Room::query();
+
+        if (!empty($hotel_id)) {
+            $totalRoom = $query->where('hotel_id', $hotel_id)->count();
+        } else {
+            $totalRoom = $query->count();
+        }
+
+        // dd($totalRoom->toArray());
+        return $totalRoom;
+    }
+
+    public function totalRoomBeingBooked()
+    {
+        $hotel_id = $this->checkRole();
+
+        $query = Order::query();
+
+        if (!empty($hotel_id)) {
+            $totalRoomBeingBooked = $query->where('org_id', $hotel_id)->whereIn('status', [1, 2])->count();
+        } else {
+            $totalRoomBeingBooked = $query->whereIn('status', [1, 2])->count();
+        }
+
+        // dd($totalRoomBeingBooked);
+        return $totalRoomBeingBooked;
     }
 }

@@ -89,12 +89,12 @@
                                             <td class="name">{{ $region->name }}</td>
                                             <td>
                                                 <div class="d-flex gap-2">
-                                                    <div class="show">
+                                                    {{-- <div class="show">
                                                         <button class="btn btn-sm btn-soft-warning edit-item-btn"
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#detailModal{{ $region->id }}">
                                                             <i class="ri-eye-line"></i></button>
-                                                    </div>
+                                                    </div> --}}
                                                     <div class="edit">
                                                         <button class="btn btn-sm btn-soft-warning edit-item-btn"
                                                                 data-bs-toggle="modal"

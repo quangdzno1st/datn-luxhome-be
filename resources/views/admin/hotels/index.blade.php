@@ -48,9 +48,6 @@
                                                class="btn btn-success add-btn">
                                                 <i class="ri-add-line align-bottom me-1"></i> Thêm mới</a>
                                         @endif
-
-                                        {{-- <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i
-                                                    class="ri-delete-bin-2-line"></i></button> --}}
                                     </div>
                                 </div>
                                 <div class="col-sm">
@@ -64,33 +61,19 @@
                                 </div>
                             </div>
 
-                            <div class="table-responsive table-card mt-3 mb-1">
-                                <table class="table align-middle table-nowrap" id="customerTable">
+                            <div class="card-body table-responsive table-card mt-3 mb-1">
+                                <table class="table align-middle table-nowrap" id="customerTable" style="width:100%">
                                     <thead class="table-light">
                                     <tr>
-                                        {{-- <th scope="col" style="width: 50px;">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="checkAll"
-                                                       value="option">
-                                            </div>
-                                        </th> --}}
                                         <th>STT</th>
                                         <th>Tên</th>
                                         <th>Ảnh đại diện</th>
-                                        <th>Ảnh</th>
                                         <th>Địa chỉ</th>
                                         <th>Số phòng</th>
                                         <th>Số sao</th>
-                                        <th>Thành phố</th>
                                         <th>Số điện thoại</th>
                                         <th>Email</th>
                                         <th>Số tầng</th>
-                                        <th>Tỉnh</th>
-                                        <th>Huyện</th>
-                                        <th>Xã</th>
-                                        <th>Vĩ độ</th>
-                                        <th>Kinh độ</th>
-                                        <th>Mô tả</th>
                                         <th>Trạng thái</th>
                                         <th>###</th>
                                     </tr>
@@ -98,12 +81,6 @@
                                     <tbody class="list form-check-all">
                                     @foreach ($data as $key => $hotel)
                                         <tr>
-                                            {{-- <th scope="row">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="chk_child"
-                                                           value="option1">
-                                                </div>
-                                            </th> --}}
                                             <td class="id" style="display:none;"><a href="javascript:void(0);"
                                                                                     class="fw-medium link-primary"></a>
                                             </td>
@@ -118,44 +95,33 @@
                                                 </div>
                                             </td>
 
-                                            <td>
-                                                <div class="hotel-image-wrapper">
-                                                    @foreach ($hotel->images as $image)
-                                                        <img src="{{ \Storage::url($image->path) }}"
-                                                             alt="{{ $image->alt }}">
-                                                    @endforeach
-                                                </div>
-                                            </td>
-
                                             <td>{{ $hotel->location }}</td>
                                             <td>{{ $hotel->quantity_of_room }}</td>
                                             <td>{{ $hotel->star }}</td>
-                                            <td>{{ $hotel->city->name }}</td>
                                             <td>{{ $hotel->phone }}</td>
                                             <td>{{ $hotel->email }}</td>
                                             <td>{{ $hotel->quantity_floor }}</td>
-                                            <td>{{ $hotel->province }}</td>
-                                            <td>{{ $hotel->district }}</td>
-                                            <td>{{ $hotel->commune }}</td>
-                                            <td>{{ $hotel->latitude }}</td>
-                                            <td>{{ $hotel->longitude }}</td>
-                                            <td>{!! $hotel->description !!}</td>
                                             <td>{!! $hotel->status
                                                     ? '<span class="badge rounded-pill border border-success text-success">Hoạt động</span>'
                                                     : '<span class="badge rounded-pill border border-danger text-danger">Không hoạt động</span>' !!}
                                             </td>
                                             <td>
                                                 <div class="d-flex gap-2">
-                                                    <div class="edit">
+                                                    {{-- <div class="edit">
                                                         <a href="{{ route('admin.hotels.show', $hotel->id) }}"
                                                            class="btn btn-sm btn-soft-primary edit-item-btn">
                                                             <i class="ri-eye-line"></i>
                                                         </a>
-                                                    </div>
+                                                    </div> --}}
 
+                                                    <div class="service">
+                                                        <a href="{{route('admin.hotel.service.index', $hotel->id)}}"
+                                                           class="btn btn-sm btn-soft-primary"><i
+                                                                class="ri-customer-service-line"></i></a>
+                                                    </div>
                                                     <div class="edit">
                                                         <a href="{{route('admin.hotels.edit', $hotel->id)}}"
-                                                           class="btn btn-sm btn-soft-warning edit-item-btn""><i
+                                                           class="btn btn-sm btn-soft-warning edit-item-btn"><i
                                                                 class="ri-edit-2-line"></i></a>
                                                     </div>
 
