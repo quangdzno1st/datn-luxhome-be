@@ -20,93 +20,77 @@
     <!--//slider-->
 
     <!--search-->
-    <div class="main-search">
+    <div class="main-search" style="background-color: #f9f9f9; padding: 20px; border-radius: 10px;">
         <div class="wrap">
-            <form id="main-search" style="height: 200px" method="get" action="{{ route('home.search') }}">
+            <form id="main-search" method="get" action="{{ route('home.search') }}" style="max-width: 1300px; margin: auto;">
                 <div class="row">
-
-                    <div class="four-fourth">
-                        <!--form hotel-->
-                        <div class="form row" id="form1">
-
-                            <!--column-->
-                            <div class="column one-third">
-                                <h5><span>01</span> Điểm đến - Khách sạn</h5>
-                                <div class="row">
-                                    <div class="full-width">
-                                        <label for="destination1">Thành phố mà bạn muốn đến</label>
-                                        <select class="select" name="city_id">
-                                            @foreach($cities as $city)
-                                                <option value="{{ $city->id }}">{{ $city->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--//column-->
-
-                            <!--column-->
-                            <div class="column  one-third">
-                                <h5><span>02</span> Bạn đến khi nào?</h5>
-                                <div class="row">
-                                    <div class="f-item one-half datepicker">
-                                        <label for="datepicker1">Ngày bắt đầu</label>
-                                        <div class="datepicker-wrap">
-                                            <input type="text" placeholder="" id="datepicker1" name="start_date"
-                                                   value="{{ old('start_date') ?? \Carbon\Carbon::now()->format('Y-m-d') }}"/>
-                                            <img src="https://www.themeenergy.com/themes/html/book-your-travel/images/ico/calendar.png"
-                                                 class="ui-datepicker-trigger">
-                                        </div>
-                                        @error('start_date')
-                                        <div class="text-danger" style="color:red">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="f-item one-half datepicker">
-                                        <label for="datepicker2">Ngày kết thúc</label>
-                                        <div class="datepicker-wrap">
-                                            <input type="text" placeholder="" id="datepicker2" name="end_date"
-                                                   value="{{ old('end_date') ?? \Carbon\Carbon::tomorrow()->format('Y-m-d') }}"/>
-                                            <img src="https://www.themeenergy.com/themes/html/book-your-travel/images/ico/calendar.png"
-                                                 class="ui-datepicker-trigger">
-                                        </div>
-                                        @error('end_date')
-                                        <div class="text-danger" style="color:red">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Số người lớn -->
-                            <div class="column one-third">
-                                <h5><span>03</span> Thông tin</h5>
-                                <div class="row">
-                                    <div class="f-item one-third spinner">
-                                        <label for="spinner2">Người lớn</label>
-                                        <input type="number" placeholder="" id="spinner2" name="number_adult"
-                                               value="{{ old('number_adult')  ?? 2}}"/>
-                                        @error('number_adult')
-                                        <div class="text-danger" style="color:red">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="f-item one-third spinner">
-                                        <label for="spinner3">Trẻ em</label>
-                                        <input type="number" placeholder="" id="spinner3" name="number_child"
-                                               value="{{ old('number_child') }}"/>
-                                    </div>
-                                </div>
-
-                                <span class="text-center">*Trẻ em: Từ 2 - dưới 12 tuổi</span>
-                            </div>
-                            <!--//column-->
+                    <!-- Điểm đến -->
+                    <div class="column one-third" style="padding: 10px;">
+                        <h5 style="font-size: 1.2rem; font-weight: bold; color: #333;"><span>01</span> Điểm đến - Khách sạn</h5>
+                        <div class="full-width">
+                            <label for="destination1" style="font-weight: bold; margin-bottom: 5px; display: block;">Thành phố mà bạn muốn đến</label>
+                            <select class="select" name="city_id" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                @foreach($cities as $city)
+                                    <option value="{{ $city->id }}">{{ $city->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
-                        <!--//form hotel-->
                     </div>
-                    <input type="submit" value="Tìm kiếm" class="gradient-button search-submit"
-                           id="search-submit"/>
+
+                    <!-- Ngày đến -->
+                    <div class="column one-third" style="padding: 10px;">
+                        <h5 style="font-size: 1.2rem; font-weight: bold; color: #333;"><span>02</span> Bạn đến khi nào?</h5>
+                        <div class="row">
+                            <div class="f-item one-half datepicker" style="padding-right: 10px;">
+                                <label for="datepicker1" style="font-weight: bold; margin-bottom: 5px; display: block;">Ngày bắt đầu</label>
+                                <input type="text" id="datepicker1" name="start_date" value="{{ old('start_date') ?? \Carbon\Carbon::now()->format('Y-m-d') }}"
+                                       style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                @error('start_date')
+                                <div class="text-danger" style="color: red;">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="f-item one-half datepicker">
+                                <label for="datepicker2" style="font-weight: bold; margin-bottom: 5px; display: block;">Ngày kết thúc</label>
+                                <input type="text" id="datepicker2" name="end_date" value="{{ old('end_date') ?? \Carbon\Carbon::tomorrow()->format('Y-m-d') }}"
+                                       style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                @error('end_date')
+                                <div class="text-danger" style="color: red;">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thông tin người -->
+                    <div class="column one-third" style="padding: 10px;">
+                        <h5 style="font-size: 1.2rem; font-weight: bold; color: #333;"><span>03</span> Thông tin</h5>
+                        <div class="row">
+                            <div class="f-item one-half spinner" style="padding-right: 10px;">
+                                <label for="spinner2" style="font-weight: bold; margin-bottom: 5px; display: block;">Người lớn</label>
+                                <input type="number" id="spinner2" name="number_adult" value="{{ old('number_adult') ?? 2 }}"
+                                       style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                @error('number_adult')
+                                <div class="text-danger" style="color: red;">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="f-item one-half spinner">
+                                <label for="spinner3" style="font-weight: bold; margin-bottom: 5px; display: block;">Trẻ em</label>
+                                <input type="number" id="spinner3" name="number_child" value="{{ old('number_child') }}"
+                                       style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                            </div>
+                        </div>
+                        <p style="font-size: 0.9rem; color: #666; text-align: center; margin-top: 10px;">*Trẻ em: Từ 2 - dưới 12 tuổi</p>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div style="text-align: center;">
+                    <input type="submit" value="Tìm kiếm"
+                           style="background: linear-gradient(90deg, #36d1dc, #5b86e5); color: #fff; padding: 10px 20px; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer;">
                 </div>
             </form>
         </div>
     </div>
+
     <!--//search-->
 
     <!--main-->

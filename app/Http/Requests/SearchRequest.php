@@ -27,7 +27,7 @@ class SearchRequest extends FormRequest
                 'sometimes',
                 'required',
                 'date_format:Y-m-d',
-//                'after_or_equal:' . Carbon::now()->format('Y-m-d'),
+                'after_or_equal:' . Carbon::now()->format('Y-m-d'),
                 'before_or_equal:end_date',
             ],
 
@@ -35,9 +35,10 @@ class SearchRequest extends FormRequest
                 'sometimes',
                 'required',
                 'date_format:Y-m-d',
-                'after_or_equal:start_date',
-//                'after_or_equal:' . Carbon::now()->format('Y-m-d'),
+                'after:start_date', // Dùng 'after' thay vì 'after_or_equal' để end_date phải lớn hơn start_date
+                'after:' . Carbon::now()->format('Y-m-d'),
             ],
+
 
             'city_id' => $this->isHomePage() ? 'sometimes|required|exists:cities,id' : 'nullable',
         ];
@@ -50,6 +51,7 @@ class SearchRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'end_date.after' => 'Ngày kết thúc phải sau ngày bắt đầu và ngày hiện tại.',
             'number_adult.required' => 'Người lớn là bắt buộc.',
             'number_adult.integer' => 'Người lớn phải là số.',
             'number_adult.min' => 'Người lớn phải ít nhất là 1.',
