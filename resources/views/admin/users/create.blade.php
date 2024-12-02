@@ -119,14 +119,21 @@
                                                 <input class="form-check-input" type="radio" name="type" id="hotelier"
                                                        value="{{ \App\Models\User::HOTELIER }}">
                                                 <label class="form-check-label" for="admin">
-                                                    Hotelier
+                                                    Chủ khách sạn
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-radio-danger mb-3 me-3">
+                                                <input class="form-check-input" type="radio" name="type" id="staff"
+                                                       value="{{ \App\Models\User::STAFF }}">
+                                                <label class="form-check-label" for="admin">
+                                                   Nhân viên
                                                 </label>
                                             </div>
                                             <div class="form-check form-radio-success mb-3">
                                                 <input class="form-check-input" type="radio" name="type" id="member"
                                                        value="{{ \App\Models\User::CUSTOMER }}" checked>
                                                 <label class="form-check-label" for="member">
-                                                    Customer
+                                                    Người dùng
                                                 </label>
                                             </div>
                                         </div>
@@ -183,9 +190,9 @@
         // Hàm kiểm tra khi thay đổi radio button
         $('input[name="type"]').on('change', function () {
             if ($('#member').is(':checked')) {
-                $('#hotelSelect').prop('disabled', true); // Vô hiệu hóa trường chọn khách sạn
+                $('#hotelSelect').prop('disabled', true);
             } else {
-                $('#hotelSelect').prop('disabled', false); // Bật lại trường chọn khách sạn
+                $('#hotelSelect').prop('disabled', false);
             }
         });
 

@@ -106,17 +106,24 @@
                                             </label>
                                         </div>
                                         <div class="form-check form-radio-success mb-3">
-                                            <input class="form-check-input" type="radio" name="type" id="member"
-                                                value="{{\App\Models\User::CUSTOMER}}" {{ $user->type == \App\Models\User::CUSTOMER ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="member">
-                                                Member
-                                            </label>
-                                        </div>
-                                        <div class="form-check form-radio-success mb-3">
                                             <input class="form-check-input" type="radio" name="type" id="hotelier"
                                                 value="{{ \App\Models\User::HOTELIER }}" {{ $user->type == \App\Models\User::HOTELIER ? 'checked' : '' }}>
                                             <label class="form-check-label" for="member">
-                                                Hotelier
+                                                Chủ khách sạn
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-radio-success mb-3">
+                                            <input class="form-check-input" type="radio" name="type" id="staff"
+                                                value="{{ \App\Models\User::STAFF }}" {{ $user->type == \App\Models\User::STAFF ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="member">
+                                                Nhân viên
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-radio-success mb-3">
+                                            <input class="form-check-input" type="radio" name="type" id="member"
+                                                value="{{\App\Models\User::CUSTOMER}}" {{ $user->type == \App\Models\User::CUSTOMER ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="member">
+                                                Người dùng
                                             </label>
                                         </div>
                                     </div>

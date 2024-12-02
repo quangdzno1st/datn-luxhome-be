@@ -39,7 +39,7 @@ class AuthController extends Controller
         ]);
 
         if (auth()->attempt(['phone' => $request->phone, 'password' => $request->password])) {
-            if (auth()->user()->type === User::ADMIN || auth()->user()->type === User::HOTELIER ) {
+            if (auth()->user()->type != User::CUSTOMER) {
                 $request->session()->regenerate();
                 return redirect()->intended(route('statistical.index'));
             }

@@ -42,6 +42,7 @@ class User extends Authenticatable
     const CUSTOMER = 1;
     const ADMIN = 2;
     const HOTELIER = 3;
+    const STAFF = 4;
     const ACTIVE = 1;
     const INACTIVE = 2;
     /**
