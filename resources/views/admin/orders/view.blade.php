@@ -6,7 +6,7 @@
 {{--                @include('backend.layouts.notification')--}}
             </div>
         </div>
-        <h5 class="card-header">{{ __('Order detail') }}</h5>
+        <h5 class="card-header">{{ __('Thông tin chi tiết đơn đặt') }}</h5>
         @if (session('success'))
             <div class="card-header  alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success')}} với chi phí phát sinh là {{number_format(session('incidental_costs'))}}VND
@@ -18,10 +18,10 @@
                 <table class="table table-striped table-hover">
                     <thead>
                     <tr>
-                        <th>{{ __("Name") }}</th>
+                        <th>{{ __("Tên") }}</th>
                         <th>{{ __("Email") }}</th>
-                        <th>{{ __("Voucher") }}</th>
-                        <th>{{ __("Status") }}</th>
+                        <th>{{ __("Mã giảm giá") }}</th>
+                        <th>{{ __("Trạng thái") }}</th>
                         <th>{{ __("Phí phòng") }}</th>
                         <th>{{ __("Tổng tiền") }}</th>
                         <th>{{ __("Ngày checkin") }}</th>
@@ -33,14 +33,16 @@
                     <tr>
                         <td>{{$order->name}}</td>
                         <td>{{$order->email}}</td>
-                        <td>{{$order->quantity}}</td>
+                        <td>{{$order->voucher_id}}</td>
                         <td>
                             {{$order->status}}
                         </td>
                         <td>{{number_format($order->booking_fee)}}VND</td>
                         <td>{{number_format($order->total_amount)}}VND</td>
                         <td>
-                            @if($order->check_in==null)
+                            @if($order->status=='Đã hủy')
+                                <span>Đã hủy</span>
+                            @elseif($order->check_in==null)
                                 <div class="d-flex gap-2">
                                     <div class="edit" id="check_out">
                                         <a class="btn btn-sm btn-info edit-item-btn" data-bs-toggle="modal" href="#checkinOrder">
@@ -52,7 +54,9 @@
                                 {{date('d-M-y', strtotime($order->check_in))}}
                             @endif</td>
                         <td>
-                            @if($order->check_out==null)
+                            @if($order->status=='Đã hủy')
+                                <span>Đã hủy</span>
+                            @elseif($order->check_out==null)
                             <div class="d-flex gap-2">
                                 <div class="edit" id="check_out">
                                     <a class="btn btn-sm btn-success edit-item-btn" data-bs-toggle="modal" href="#checkoutOrder">
@@ -60,6 +64,14 @@
                                     </a>
                                 </div>
                             </div>
+                            @elseif($order->check_out==null&&$order->check_in==null)
+                                <div class="d-flex gap-2">
+                                    <div class="edit" id="check_out">
+                                        <a class="btn btn-sm btn-success edit-item-btn" data-bs-toggle="modal" href="#checkoutOrderHaventCheckin">
+                                            Check-out
+                                        </a>
+                                    </div>
+                                </div>
                             @else
                                 {{date('d-M-y', strtotime($order->check_out))}}
                             @endif
@@ -76,7 +88,7 @@
                         <div class="row justify-content-between">
                             <div class="col-lg-6 col-lx-4 mb-3"  style="background-color: rgba(0, 0, 0, .05);flex: 0 0 49%;  ">
                                 <div class="order-info">
-                                    <h4 class="text-center pb-4">{{ __('Thông tin order items') }}</h4>
+                                    <h4 class="text-center pb-4">{{ __('Thông tin từng phòng') }}</h4>
                                     <table class="table">
                                         <tr>
                                             <td>Loại phòng</td>
@@ -87,13 +99,13 @@
                                         <tr class="">
                                             <td>{{ $orderItem->catalogueName }}</td>
                                             <td>{{ $orderItem->orderItemQuantity }}</td>
-                                            <td>{{ $orderItem->cataloguePrice }}</td>
+                                            <td>{{ number_format($orderItem->cataloguePrice) }}VND</td>
                                         </tr>
                                         @endforeach
                                             <tr>
                                                 <td>Tổng</td>
                                                 <td></td>
-                                                <td>{{$sumOrderItem}}</td>
+                                                <td>{{number_format($sumOrderItem)}}VND</td>
                                             </tr>
                                     </table>
                                 </div>
@@ -104,7 +116,7 @@
                                     <h4 class="text-center pb-4">{{ __("Thông tin khách hàng") }}</h4>
                                     <table class="table">
                                         <tr>
-                                            <td>{{ __('Name') }}</td>
+                                            <td>{{ __('Tên') }}</td>
                                             <td> : {{$order->name}}</td>
                                         </tr>
                                         <tr>
@@ -112,40 +124,41 @@
                                             <td> : {{$order->email}}</td>
                                         </tr>
                                         <tr>
-                                            <td>{{ __('Phone No.') }}</td>
+                                            <td>{{ __('Số điện thoại') }}</td>
                                             <td> : {{$order->phone}}</td>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
-
                             <div class="col-lg-6 col-lx-4"  style="background-color: rgba(0, 0, 0, .05);flex: 0 0 49%;">
                                 <div class="shipping-info">
-                                    <h4 class="text-center pb-4">{{ __("Thông tin services") }}</h4>
+                                    <h4 class="text-center pb-4">{{ __("Thông tin dịch vụ") }}</h4>
+                                    @if($order->status!='Đã hủy')
                                     <button class="btn btn-info btn-sm"
                                             data-bs-toggle="modal"
                                             id="create-btn" data-bs-target="#showModal"
                                     >Thêm service</button>
+                                    @endif
                                     <table class="table">
                                         <tr>
                                             <td>Tên dịch vụ</td>
-                                            <td>Số lượng</td>
+{{--                                            <td>Số lượng</td>--}}
                                             <td>Trạng thái</td>
                                             <td>Giá dịch vụ</td>
                                         </tr>
                                         @foreach($servicesInfo as $service)
                                         <tr>
                                             <td>{{ $service->serviceName }}</td>
-                                            <td>{{$service->serviceQuantity}}</td>
-                                            <td>{{ \App\Constant\Enum\StatusOrderEnum::parse($service['status'])->getName() }}</td>
-                                            <td>{{$service->servicePrice}}</td>
+{{--                                            <td>{{$service->serviceQuantity}}</td>--}}
+                                            <td>{{$service->status}}</td>
+                                            <td>{{number_format($service->servicePrice)}}VND</td>
                                         </tr>
                                         @endforeach
                                         <tr>
                                             <td>Tổng</td>
+{{--                                            <td></td>--}}
                                             <td></td>
-                                            <td></td>
-                                            <td>{{$sumService}}</td>
+                                            <td>{{number_format($sumService)}}VND</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -153,7 +166,7 @@
                             @if($voucher!=null)
                                 <div class="col-lg-6 col-lx-4"  style="background-color: rgba(0, 0, 0, .05);flex: 0 0 49%;">
                                     <div class="shipping-info">
-                                        <h4 class="text-center pb-4">{{ __("Thông tin voucher") }}</h4>
+                                        <h4 class="text-center pb-4">{{ __("Thông tin mã giảm giá") }}</h4>
                                         <table class="table">
                                             <tr>
                                                 <td>Loại giảm giá</td>
@@ -181,7 +194,7 @@
                 </section>
 {{--                @include('admin.orders.order_items.order_items')--}}
             @endif
-                <!-- Modal -->
+                <!-- Modal -->s
 {{--                notificate--}}
                 <div class="modal fade flip" id="checkoutOrder" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -208,6 +221,27 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal fade flip" id="checkoutOrderHaventCheckin" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-body p-5 text-center">
+                                <i class="fa-solid fa-money-bill-wave"></i>
+                                <div class="mt-4 text-center">
+                                    <div class="modal-content">
+                                        <div class="modal-body p-5 text-center">
+                                            <i class="fa-solid fa-money-bill-wave"></i>
+                                            <div class="mt-4 text-center">
+                                                <h4>Bạn có phải checkin trước mới checkout được!</h4>
+                                                <p class="text-muted fs-15 mb-4">Khi checkin sẽ tính thời gian từ thời điểm hiện tại!</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="modal fade flip" id="checkinOrder" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
@@ -244,39 +278,47 @@
                                         aria-label="Close" id="close-modal"></button>
                             </div>
                             <form class="tablelist-form" autocomplete="off"
-                                  action="{{route('admin.orders.addBookingServices',$order->id)}}"
+                                  action="{{ route('admin.orders.addBookingServices', $order->id) }}"
                                   method="POST">
                                 @csrf
                                 <div class="modal-body">
+                                    <!-- Chọn dịch vụ -->
                                     <div class="mb-3">
-                                        <div class="custom-control custom-checkbox">
-                                            <label>Chọn dịch vụ</label><br>
+                                        <label class="form-label fw-bold">Chọn dịch vụ</label>
+                                        <div class="border p-3 rounded bg-light">
                                             @foreach($services as $service)
-                                                <input
-                                                        type="checkbox"
-                                                        class="custom-control-input"
-                                                        id="customCheck{{ $service->id }}"
-                                                        name="services[]"
-                                                        value="{{ $service->id }}"
-                                                        {{ in_array($service->id, old('services', [])) ? 'checked' : '' }}>
-                                                <label class="custom-control-label" for="customCheck{{ $service->id }}">
-                                                    {{ $service->name }}
-                                                </label>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input"
+                                                           id="service{{ $service->id }}"
+                                                           name="services[]"
+                                                           value="{{ $service->id }}"
+                                                            {{ in_array($service->id, old('services', [])) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="service{{ $service->id }}">
+                                                        {{ $service->name }}
+                                                    </label>
+                                                </div>
                                             @endforeach
                                         </div>
                                     </div>
+
+{{--                                    <!-- Số lượng -->--}}
+{{--                                    <div class="mb-3">--}}
+{{--                                        <label for="quantity" class="form-label fw-bold">Số lượng</label>--}}
+{{--                                        <input name="quantity" type="number" class="form-control"--}}
+{{--                                               id="quantity" placeholder="Nhập số lượng dịch vụ">--}}
+{{--                                    </div>--}}
+
+                                    <!-- Phòng -->
                                     <div class="mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Số lượng</label>
-                                        <input name="quantity" type="text" class="form-control" id="exampleFormControlInput1" placeholder="Nhập số lượng dịch vụ">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Phòng</label>
-                                        <select class="form-select" aria-label="Default select example" name="roomId">
+                                        <label for="roomId" class="form-label fw-bold">Phòng</label>
+                                        <select class="form-select" id="roomId" name="roomId">
                                             @foreach($roomCode as $room)
-                                                <option value="{{$room->roomId}}">{{$room->roomCode}}</option>
+                                                <option value="{{ $room->roomId }}">{{ $room->roomCode }}</option>
                                             @endforeach
                                         </select>
                                     </div>
+
+                                    <!-- Trạng thái -->
                                     <div class="mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Trạng thái</label>
                                         <select class="form-select" aria-label="Default select example" name="status">
@@ -285,15 +327,11 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                <!-- Footer -->
                                 <div class="modal-footer">
-                                    <div class="hstack gap-2 justify-content-end">
-                                        <button type="button" class="btn btn-light"
-                                                data-bs-dismiss="modal">Đóng
-                                        </button>
-                                        <button type="submit" class="btn btn-success"
-                                                id="add-btn">Cập Nhật Dịch Vụ
-                                        </button>
-                                    </div>
+                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
+                                    <button type="submit" class="btn btn-success">Cập Nhật Dịch Vụ</button>
                                 </div>
                             </form>
                         </div>

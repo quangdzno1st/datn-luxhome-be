@@ -8,6 +8,7 @@ use App\Models\BookingService;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Service;
+use App\Models\User;
 use App\Models\Voucher;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +26,7 @@ class OrderDetailController extends Controller
     {
         $sumService=0;
         $sumOrderItem=0;
+
         if ($order->status == StatusOrderEnum::DANG_CHO->value) {
             $order->status = 'Đang chờ';
         } elseif ($order->status == StatusOrderEnum::DA_XAC_NHAN->value) {
@@ -42,19 +44,20 @@ class OrderDetailController extends Controller
             $sumOrderItem+=$item->orderItemQuantity*$item->cataloguePrice;
         }
         foreach ($servicesInfo as $item){
-            $sumService+=$item->serviceQuantity*$item->servicePrice;
+            $sumService+=$item->servicePrice;
         }
+//        dd($order);
         if ($order->voucher_id!=null){
             $voucher=$this->VoucherOrder($order->voucher_id);
+//            dd($voucher);
+            $order['total_amount']=($sumService+$sumOrderItem)-$voucher['discount_value'];
         }else{
             $voucher=null;
+        $order['total_amount']=($sumService+$sumOrderItem);
         }
-//        dd($voucher);
         $payable=$this->checkPayableOrTotal($order->id);
         $roomCode=$this->roomCode($order->id);
-//        dd($roomCode);
         $services=Service::all();
-//        dd($services);
         return view(self::PATH_VIEW, compact('order',
             'orderItemInfo','servicesInfo','sumService',
             'sumOrderItem','payable','voucher','services',
@@ -126,15 +129,25 @@ class OrderDetailController extends Controller
     }
 
     public function updateStatus($idOrder){
-        $this->updateStatusGeneral('booking_services',$idOrder);
-        $this->updateStatusGeneral('orders',$idOrder);
         $order = Order::query()->where('id', $idOrder)->first();
-        $incidental_costs=$this->calculateLateCheckoutFee($order);
-        $order->update(['incidental_costs'=>$incidental_costs]);
-        return redirect()->back()->with(
-            ['success'=>'Checkout thành công',
-                'incidental_costs'=>$incidental_costs
+        $isCheckout=$this->isCheckout($order);
+        if ($isCheckout['is_valid_checkout']){
+            $this->updateStatusGeneral('booking_services',$idOrder);
+            $this->updateStatusGeneral('orders',$idOrder);
+            $user=User::query()->update([
+                'rank'=>1,
+                'total_amount_ordered'=>$order->total_amount,
             ]);
+            $incidental_costs=$this->calculateLateCheckoutFee($order);
+            $order->update(['incidental_costs'=>$incidental_costs]);
+            return redirect()->back()->with(
+                ['success'=>'Checkout thành công',
+                    'incidental_costs'=>$incidental_costs
+                ]);
+        }else{
+            return redirect()->back()->with(
+                ['error'=>'Không trong thời gian checkout (5:00 đến 11:30)',]);
+        }
     }
 
     public function updateStatusGeneral($table,$idOrder){
@@ -191,8 +204,14 @@ class OrderDetailController extends Controller
     }
     public function checkinOrder($orderId)
     {
-        Order::query()->where('id', $orderId)->update(['check_in' => Carbon::now()]);
-        return redirect()->back()->with('success','Checkin thành công');
+        $order=Order::query()->where('id', $orderId)->first();
+        $isCheckin=$this->isCheckin($order);
+        if ($isCheckin['is_valid_checkin']){
+            Order::query()->where('id', $orderId)->update(['check_in' => Carbon::now()]);
+            return redirect()->back()->with('success','Checkin thành công');
+        }else{
+            return redirect()->back()->with('error','Checkin thất bại(không trong thời gian 14:00 đến 00:00)');
+        }
     }
     public function VoucherOrder($voucherId){
         $voucher=Voucher::query()->where('vouchers.id', $voucherId)
@@ -205,7 +224,7 @@ class OrderDetailController extends Controller
     {
         $result=OrderItem::query()->where('order_id', $orderId)
             ->join('rooms', 'rooms.id', '=', 'order_items.room_id')
-            ->select('order_items.room_codes as roomCode','rooms.id as roomId')->get();
+            ->select('rooms.code as roomCode','rooms.id as roomId')->get();
         return $result;
     }
 
@@ -222,6 +241,48 @@ class OrderDetailController extends Controller
         }
 
         return 0;
+    }
+
+    public function isCheckin($order)
+    {
+        $currentTime = Carbon::now(); // Thời gian hiện tại
+
+        // Lấy thời gian check-in dự kiến
+        $checkinStartTime = Carbon::createFromTimeString(CHECKIN_START); // 14:00
+        $checkinEndTime = Carbon::createFromTimeString(CHECKIN_END); // 00:00
+
+        // Nếu thời gian kết thúc nhỏ hơn thời gian bắt đầu, nghĩa là khoảng thời gian qua ngày
+        if ($checkinEndTime->lt($checkinStartTime)) {
+            $isValidCheckinTime = $currentTime->between($checkinStartTime, Carbon::createFromTime(23, 59, 59)) ||
+                $currentTime->between(Carbon::createFromTime(0, 0, 0), $checkinEndTime);
+        } else {
+            // Xử lý bình thường nếu không qua ngày
+            $isValidCheckinTime = $currentTime->between($checkinStartTime, $checkinEndTime);
+        }
+
+        // Lưu kết quả kiểm tra cho order
+        return [
+            'order_id' => $order->id,
+            'is_valid_checkin' => $isValidCheckinTime,
+        ];
+    }
+
+    public function isCheckout($order)
+    {
+        $currentTime = Carbon::now(); // Thời gian hiện tại
+
+        // Lấy thời gian checkout dự kiến
+        $checkoutStartTime = Carbon::createFromTimeString(CHECKOUT_START); // 05:00
+        $checkoutEndTime = Carbon::createFromTimeString(CHECKOUT_END); // 11:30
+
+        // Kiểm tra nếu thời gian hiện tại nằm trong khoảng checkout
+        $isValidCheckoutTime = $currentTime->between($checkoutStartTime, $checkoutEndTime);
+
+        // Lưu kết quả kiểm tra cho order
+        return [
+            'order_id' => $order->id,
+            'is_valid_checkout' => $isValidCheckoutTime,
+        ];
     }
 
 }

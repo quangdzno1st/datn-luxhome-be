@@ -97,6 +97,7 @@
                             </ul>
                         </div>
                     </li>
+
                 @endcan
                 @can('view_services')
                     <li class="nav-item">
@@ -146,7 +147,7 @@
 
                 @can('view_vouchers')
                     <li class="nav-item">
-                        <a class="nav-link menu-link" href="{{ route('vouchers.index') }}" data-bs-toggle=""
+                        <a class="nav-link menu-link" href="{{ route('admin.vouchers.index') }}" data-bs-toggle=""
                             role="button" aria-expanded="false" aria-controls="sidebarRegion">
                             <i class="ri-coupon-2-line"></i> <span data-key="t-layouts">Phiếu giảm giá</span>
                         </a>

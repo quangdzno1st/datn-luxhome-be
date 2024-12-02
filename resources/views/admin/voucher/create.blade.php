@@ -24,7 +24,7 @@
                         </div>
 
                         <form class="tablelist-form" autocomplete="off" enctype="multipart/form-data"
-                            action="{{ route('vouchers.store') }}" method="POST">
+                            action="{{ route('admin.vouchers.store') }}" method="POST">
                             @csrf
                             {{-- @if ($errors->any())
                                 <div class="alert alert-danger">
@@ -135,7 +135,7 @@
                                             <option value="2">Người dùng hạng hai</option>
                                             <option value="3">Người dùng hạng ba</option>
                                         </select>
-                                        
+
                                     </div> --}}
                                     <div class="mb-3 col-6">
                                         <label for="" class="form-label">Tổng tiền đơn đặt có thể sử dụng</label>
