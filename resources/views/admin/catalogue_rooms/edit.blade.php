@@ -34,7 +34,7 @@
     <!-- end page title -->
 
     <!-- Notification -->
-    <div class="row">
+    {{-- <div class="row">
         @if (session('msg'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <strong>{{ session('msg') }}</strong>
@@ -47,7 +47,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-    </div>
+    </div> --}}
 
     <form action="{{ route('admin.catalogue-rooms.update', $catalogueRoom->id) }}" method="post" enctype="multipart/form-data">
         @csrf
@@ -98,7 +98,7 @@
                             </div>
                         </div>
 
-                        <div class="mb-3 row">
+                        {{-- <div class="mb-3 row">
                             <div class="col">
                                 <label class="form-label" for="view">Lượt xem</label>
                                 <input type="number" class="form-control" id="view" min="0" name="view"
@@ -109,7 +109,7 @@
                                 <input type="number" class="form-control" id="like" min="0" name="like"
                                     value="{{ $catalogueRoom->like }}" placeholder="Lượt thích" disabled>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="mb-2 d-flex justify-content-end">
                             <div class="form-check form-switch form-switch-success">
@@ -135,9 +135,9 @@
 
                 <!-- end card -->
                 <div class="d-flex justify-content-between mb-3">
-                    <a class="btn btn-danger w-sm" data-bs-toggle="modal"
-                    data-bs-target="#deleteRecordModal1">Xóa</a>
-                    <button type="submit" class="btn btn-success w-sm">Cập nhật</button>
+                    <a class="btn btn-outline-danger w-sm" data-bs-toggle="modal"
+                    data-bs-target="#deleteRecordModal1">Xóa loại phòng</a>
+                    <button type="submit" class="btn btn-warning w-sm">Cập nhật</button>
                 </div>
             </div>
             <!-- end col -->

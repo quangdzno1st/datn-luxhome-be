@@ -29,10 +29,13 @@ class UpdateVoucherRequest extends FormRequest
             'description' => 'required|string|max:1000', // có thể bỏ trống, là chuỗi, không quá 1000 ký tự
             'status' => 'required|in:1,0', // bắt buộc, phải là một trong hai giá trị: 'active' hoặc 'inactive'
             'quantity' => 'required|integer|min:1', // bắt buộc, là số nguyên, tối thiểu là 1
-            'discount_value' => 'required|numeric|min:1|max:30', // bắt buộc, là số, tối thiểu là 0
+            'discount_value' => 'required|numeric|min:1', // bắt buộc, là số, tối thiểu là 0
             'start_date' => 'nullable|date', // bắt buộc, phải là ngày hợp lệ
             'end_date' => 'nullable|date|after_or_equal:start_date', // có thể bỏ trống, là ngày hợp lệ, phải lớn hơn hoặc bằng ngày bắt đầu
-            'thubnail' => 'nullable|image',
+            'thumbnail' => 'nullable|image',
+            'discount_type' => 'required|in:1,0',
+            'max_price' => 'numeric|min:1',
+            'conditional_total_amount' => 'numeric|min:1'
         ];
     }
     public function messages()
@@ -67,6 +70,7 @@ class UpdateVoucherRequest extends FormRequest
 
             'max_price.numeric' => 'Giá tối đa phải là một số',
             'max_price.gte' => 'Giá tối đa phải lớn hơn hoặc bằng giá tối thiểu',
+            'max_price.min' => 'Giá giảm tối đa phải lớn hơn hoặc bằng 0',
 
             'rank_id.integer' => 'Rank phải là số nguyên',
             'rank_id.exists' => 'Rank không tồn tại trong hệ thống',
@@ -78,13 +82,13 @@ class UpdateVoucherRequest extends FormRequest
         ];
     }
 
-    protected function failedValidation(Validator $validator)
-    {
-        $json = [
-            'status' => false,
-            'message' => $validator->errors()->first()
-        ];
-        $response = response( $json, 422 );
-        throw (new ValidationException($validator, $response))->status(422);
-    }
+    // protected function failedValidation(Validator $validator)
+    // {
+    //     $json = [
+    //         'status' => false,
+    //         'message' => $validator->errors()->first()
+    //     ];
+    //     $response = response( $json, 422 );
+    //     throw (new ValidationException($validator, $response))->status(422);
+    // }
 }

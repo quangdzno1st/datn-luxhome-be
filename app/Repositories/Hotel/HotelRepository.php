@@ -18,7 +18,7 @@ class HotelRepository extends BaseRepository implements HotelInterface
         return $this->model
             ->select('id', 'name', 'location', 'quantity_of_room', 'star', 'city_id',
                 'phone', 'email', 'status', 'quantity_floor', 'thumbnail', 'description', 'province',
-                'district', 'commune', 'latitude', 'longitude')
+                'district', 'commune', 'latitude', 'longitude', 'view')
             ->latest('id')
             ->with(['city', 'images'])
             ->paginate(10);
@@ -31,7 +31,7 @@ class HotelRepository extends BaseRepository implements HotelInterface
         $hotels = $this->model
             ->select('id', 'name', 'location', 'quantity_of_room', 'star', 'city_id',
                 'phone', 'email', 'status', 'quantity_floor', 'thumbnail', 'description', 'province',
-                'district', 'commune', 'latitude', 'longitude')
+                'district', 'commune', 'latitude', 'longitude', 'view')
             ->latest('id')
             ->where('id', $user->org_id)
             ->with(['city', 'images'])

@@ -27,10 +27,11 @@ class VoucherController extends Controller
 
     const PATH_DIRECT = 'admin.voucher.';
 
-    public function __construct(VoucherServiceImpl $voucher,
-                                FileUploadService  $fileUploadService,
-                                UserRepository     $userRepos)
-    {
+    public function __construct(
+        VoucherServiceImpl $voucher,
+        FileUploadService  $fileUploadService,
+        UserRepository     $userRepos
+    ) {
         $this->voucher = $voucher;
         $this->fileUploadService = $fileUploadService;
         $this->userRepos = $userRepos;
@@ -41,11 +42,11 @@ class VoucherController extends Controller
         try {
             // Truy xuất tất cả voucher
             $vouchers = $this->voucher->listVoucher();
-//            dd($vouchers);
+            //            dd($vouchers);
             // Trả về dữ liệu voucher với thông điệp thành công
             return view(self::PATH_DIRECT . __FUNCTION__, compact('vouchers'));
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors('msg', 'Failed to retrieve vouchers');
+            return Redirect::back()->with('error', 'Failed to retrieve vouchers');
         }
     }
 
@@ -57,25 +58,15 @@ class VoucherController extends Controller
     public function store(CreateVoucherRequest $request)
     {
         try {
-            $data = $request->validated();
+            $data = $request->all();
             $data['code'] = Str::upper(Str::random(10));
             $data['thumbnail'] = $this->fileUploadService->storeLocal($request->file('thumbnail'));
             $data['id'] = Str::uuid()->toString();
 
             $voucher = $this->voucher->createVoucher($data);
-            return $this->index();
+            return redirect()->route('vouchers.index')->with('success', 'Thêm mã giảm giá thành công!');
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['msg' => 'Errors: ' . $e->getMessage()]);
-        }
-    }
-
-    public function show($id)
-    {
-        try {
-            $voucher = $this->getNonNullById($id);
-            return $voucher;
-        } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['msg' => 'Errors: ' . $e->getMessage()]);
+            return Redirect::back()->with('error', 'Errors: ' . $e->getMessage());
         }
     }
 
@@ -83,9 +74,11 @@ class VoucherController extends Controller
     {
         try {
             $voucher = $this->getNonNullById($id);
+
+            // dd($voucher->toArray());
             return view(self::PATH_DIRECT . __FUNCTION__, compact('voucher'));
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['msg' => 'Errors: ' . $e->getMessage()]);
+            return Redirect::back()->with('error', 'Errors: ' . $e->getMessage());
         }
     }
 
@@ -93,26 +86,30 @@ class VoucherController extends Controller
     {
         try {
 
-            if ($request->validated()) {
-                $data = $request->validated();
+            // if ($request->validated()) {
+            $data = $request->all();
+            // dd($data);
+            DB::beginTransaction();
 
-                $voucher = $this->getNonNullById($id);
-                $data['code'] = Str::upper(Str::random(10));
-                $data['id'] = Str::uuid()->toString();
+            $voucher = $this->getNonNullById($id);
+            // $data['code'] = Str::upper(Str::random(10));
+            // $data['id'] = Str::uuid()->toString();
 
-                if ($request->hasFile('thumbnail')) {
-                    $data['thumbnail'] = $this->fileUploadService->storeLocal($request->file('thumbnail'));
-                }
-
-                $voucher = $this->voucher->updateVoucher($data, $id);
-                return $this->index();
-            } else {
-                return \redirect()->back()->withErrors(['msg' => 'Errors']);
+            if ($request->hasFile('thumbnail')) {
+                $data['thumbnail'] = $this->fileUploadService->storeLocal($request->file('thumbnail'));
             }
-        } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['msg' => 'Errors: ' . $e->getMessage()]);
-        }
 
+            $voucher = $this->voucher->updateVoucher($data, $id);
+
+            DB::commit();
+
+            return back()->with('success', 'Cập nhật mã giảm giá thành công!');
+            // } else {
+            //     return \redirect()->back()->with('error' , 'Errors');
+            // }
+        } catch (\Exception $e) {
+            return Redirect::back()->with('error', 'Errors: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -143,16 +140,15 @@ class VoucherController extends Controller
             DB::commit();
 
             return $this->index();
-
-        } catch (Exception $exception) {
-            return Redirect::back()->withErrors(['msg' => 'Errors: ' . $exception->getMessage()]);
+        } catch (\Exception $exception) {
+            return Redirect::back()->with('error', 'Errors: ' . $exception->getMessage());
         }
     }
 
     public function list_trash()
     {
         $trashedVouchers = Voucher::onlyTrashed()->get();
-//        dd($trashedVouchers);
+        //        dd($trashedVouchers);
         return view(self::PATH_DIRECT . __FUNCTION__, compact('trashedVouchers'));
     }
 
@@ -166,10 +162,8 @@ class VoucherController extends Controller
             DB::commit();
 
             return $this->index();
-
-        } catch (Exception $exception) {
-            return Redirect::back()->withErrors(['msg' => 'Errors: ' . $exception->getMessage()]);
-
+        } catch (\Exception $exception) {
+            return Redirect::back()->with('error', 'Errors: ' . $exception->getMessage());
         }
     }
 
@@ -188,9 +182,8 @@ class VoucherController extends Controller
             DB::commit();
 
             return $this->index();
-
-        } catch (Exception $exception) {
-            return Redirect::back()->withErrors(['msg' => 'Errors: ' . $exception->getMessage()]);
+        } catch (\Exception $exception) {
+            return Redirect::back()->with('error', 'Errors: ' . $exception->getMessage());
         }
     }
 
@@ -273,9 +266,5 @@ class VoucherController extends Controller
         ], 200);
     }
 
-    private function sendMailToUser($userVoucherSendMailMap)
-    {
-
-    }
+    private function sendMailToUser($userVoucherSendMailMap) {}
 }
-

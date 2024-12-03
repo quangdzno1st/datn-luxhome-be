@@ -6,6 +6,8 @@ use App\Http\Middleware\CheckPermissions;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsLogin;
 use App\Http\Middleware\IsSale;
+use App\Http\Middleware\IsStaffAndAdmin;
+use App\Http\Middleware\IsSuperAdmin;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -60,6 +62,8 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $routeMiddleware = [
+        'is.staff.and.admin' => IsStaffAndAdmin::class,
+        'is.super.admin' => IsSuperAdmin::class,
         'is.login' => IsLogin::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'admin' => \App\Http\Middleware\CheckRole::class,

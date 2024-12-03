@@ -55,7 +55,7 @@
                                     <th class="" data-sort="customer_name">Mô tả</th>
                                     <th class="" data-sort="email">Trạng thái</th>
                                     <th class="" data-sort="phone">Số lượng</th>
-                                    <th class="" data-sort="status">Giá trị giảm giá (%)</th>
+                                    <th class="" data-sort="status">Giá trị giảm giá</th>
                                     <th class="" data-sort="action">Ngày bắt đầu</th>
                                     <th class="" data-sort="action">Ngày kết thúc</th>
                                     <th class="" data-sort="action">Hành động</th>
@@ -91,7 +91,7 @@
                                             </td>
                                         @endif
                                         <td class="number">{{ $voucher['quantity'] }}</td>
-                                        <td class="number">{{ $voucher['discount_value'] }}</td>
+                                        <td class="number">{{ $voucher['discount_type'] == 1 ? $voucher['discount_value'] . "%" : $voucher['discount_value'] }}</td>
                                         <td class="date">{{$voucher['start_date'] ? \Carbon\Carbon::parse($voucher->start_date)->format('d-m-Y') : ''}}</td>
                                         <td class="date">{{$voucher['end_date'] ? \Carbon\Carbon::parse($voucher->end_date )->format('d-m-Y') : ''}}</td>
                                         <td>
@@ -173,19 +173,6 @@
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-end">
-                            <div class="pagination-wrap hstack gap-2">
-                                <a class="page-item pagination-prev disabled" href="javascript:void(0);">
-                                    Previous
-                                </a>
-                                <ul class="pagination listjs-pagination mb-0"></ul>
-                                <a class="page-item pagination-next" href="javascript:void(0);">
-                                    Next
-                                </a>
-                            </div>
-                        </div>
-
-
                         <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                              aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
@@ -249,6 +236,11 @@
 
 
                     </div>
+
+                    <div class="d-flex justify-content-end">
+                        {{$vouchers->links()}}
+                    </div>
+                    
                 </div><!-- end card -->
             </div>
             <!-- end col -->

@@ -73,7 +73,7 @@
                                         <th>Số sao</th>
                                         <th>Số điện thoại</th>
                                         <th>Email</th>
-                                        <th>Số tầng</th>
+                                        <th>Lượt xem</th>
                                         <th>Trạng thái</th>
                                         <th>###</th>
                                     </tr>
@@ -100,7 +100,7 @@
                                             <td>{{ $hotel->star }}</td>
                                             <td>{{ $hotel->phone }}</td>
                                             <td>{{ $hotel->email }}</td>
-                                            <td>{{ $hotel->quantity_floor }}</td>
+                                            <td>{{ $hotel->view }}</td>
                                             <td>{!! $hotel->status
                                                     ? '<span class="badge rounded-pill border border-success text-success">Hoạt động</span>'
                                                     : '<span class="badge rounded-pill border border-danger text-danger">Không hoạt động</span>' !!}

@@ -33,6 +33,9 @@ class CreateVoucherRequest extends FormRequest
             'discount_value' => 'required|numeric|min:1', // bắt buộc, là số, tối thiểu là 1
             'start_date' => 'nullable|date', // bắt buộc, phải là ngày hợp lệ
             'end_date' => 'nullable|date|after_or_equal:start_date', // có thể bỏ trống, là ngày hợp lệ, phải lớn hơn hoặc bằng ngày bắt đầu
+            'discount_type' => 'required|in:1,0',
+            'max_price' => 'numeric|min:1',
+            'conditional_total_amount' => 'numeric|min:1'
         ];
     }
     public function messages()
@@ -72,6 +75,7 @@ class CreateVoucherRequest extends FormRequest
 
             'max_price.numeric' => 'Giá tối đa phải là một số',
             'max_price.gte' => 'Giá tối đa phải lớn hơn hoặc bằng giá tối thiểu',
+            'max_price.min' => 'Giá giảm tối đa phải lớn hơn hoặc bằng 0',
 
             'rank_id.integer' => 'Rank phải là số nguyên',
             'rank_id.exists' => 'Rank không tồn tại trong hệ thống',
