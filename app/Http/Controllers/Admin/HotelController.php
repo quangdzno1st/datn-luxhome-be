@@ -82,7 +82,7 @@ class HotelController extends Controller
             $data['status'] = $request->status ? 1 : 0;
             $this->hotelService->updateHotel($data, $id);
 
-            return redirect()->route('admin.hotels.index')->with('success', 'Sửa khách sạn thành công');
+            return redirect()->back()->with('success', 'Sửa khách sạn thành công');
         } catch (\Exception $e) {
             // dd($e->getMessage());
             return back()->with('errors', $e->getMessage());

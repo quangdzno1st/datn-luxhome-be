@@ -65,8 +65,6 @@ class CatalogueRoomController extends Controller
             'price' => $request->price,
             'price_hour' => $request->price_hour,
             'status' => $request->status ?? 2,
-            'view' => 0,
-            'like' => 0,
             'description' => $request->description,
             'hotel_id' => $request->hotel_id,
             "number_adult" => $request->number_adult,
@@ -103,7 +101,7 @@ class CatalogueRoomController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.catalogue-rooms.index')->with('msg', 'Thêm loại phòng thành công!');
+            return redirect()->route('admin.catalogue-rooms.index')->with('success', 'Thêm loại phòng thành công!');
         } catch (\Exception $e) {
 
             Storage::delete($data['thumbnail']);
@@ -190,7 +188,7 @@ class CatalogueRoomController extends Controller
                 Storage::delete($oldThumbnail);
             }
 
-            return redirect()->back()->with('msg', 'Sửa loại phòng thành công!');
+            return redirect()->back()->with('success', 'Sửa loại phòng thành công!');
         } catch (\Exception $e) {
 
             if ($request->has('thumbnail')) {
@@ -229,7 +227,7 @@ class CatalogueRoomController extends Controller
                 Storage::delete($image->path);
             }
 
-            return redirect()->route('admin.catalogue-rooms.index')->with('msg', 'Xóa loại phòng thành công!');
+            return redirect()->route('admin.catalogue-rooms.index')->with('success', 'Xóa loại phòng thành công!');
 
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
@@ -246,12 +244,14 @@ class CatalogueRoomController extends Controller
 
         foreach ($data as $id) {
             $image = Image::query()->where('id', $id)->first();
-            Storage::delete($image->path);
+            if ($image->path && Storage::exists($image->path)) {
+                Storage::delete($image->path);
+            }
         }
         
         $images = Image::whereIn('id', $data)->delete();
 
-        return back()->with('msg', "Bạn đã xóa $images ảnh!");
+        return back()->with('success', "Bạn đã xóa $images ảnh!");
     }
 
     public function storeImage(Request $request) {}

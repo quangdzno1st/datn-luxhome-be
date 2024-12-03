@@ -17,8 +17,6 @@ class CatalogueRoom extends Model
         'status',
         'description',
         'thumbnail',
-        'view',
-        'like',
         'number_adult',
         'number_child',
         'price_hour',

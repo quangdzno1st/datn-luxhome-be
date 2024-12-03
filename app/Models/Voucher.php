@@ -8,18 +8,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 // use Ramsey\Uuid\Uuid;
 class Voucher extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory;
     protected $fillable=[
         'id',
         'code',
         'description',
         'status',
         'quantity',
+        'discount_type',
         'discount_value',
         'start_date',
         'end_date',
         'hotel_id',
-        'thumbnail'
+        'thumbnail',
+        'max_price',
+        'conditional_total_amount'
     ];
     public function rank()
     {

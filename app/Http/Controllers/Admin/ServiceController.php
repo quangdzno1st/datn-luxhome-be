@@ -41,10 +41,10 @@ class ServiceController extends Controller
 
             DB::commit();
 
-            return back()->with('msg', 'Thêm mới thành công');
+            return back()->with('success', 'Thêm mới thành công');
 
         } catch (\Exception $exception) {
-            return back()->withErrors(['error' => $exception->getMessage()]);
+            return back()->with('error' , $exception->getMessage());
         }
     }
 
@@ -58,10 +58,10 @@ class ServiceController extends Controller
 
             DB::commit();
 
-            return back()->with('msg', 'Cập nhật thành công');
+            return back()->with('success', 'Cập nhật thành công');
 
         } catch (\Exception $exception) {
-            return back()->withErrors(['error' => $exception->getMessage()]);
+            return back()->with('error', $exception->getMessage());
         }
     }
 
@@ -74,10 +74,10 @@ class ServiceController extends Controller
             
             DB::commit();
 
-            return back()->with('msg', 'Xóa thành công');
+            return back()->with('success', 'Xóa thành công');
 
         } catch (\Exception $exception) {
-            return back()->withErrors(['error' => $exception->getMessage()]);
+            return back()->with('error', $exception->getMessage());
         }
 
     }

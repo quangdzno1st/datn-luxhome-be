@@ -2,6 +2,7 @@
 
 namespace App\Services\impl;
 
+use App\Models\Voucher;
 use App\Repositories\Voucher\VoucherRepository;
 use App\Services\VoucherService;
 
@@ -16,7 +17,7 @@ class VoucherServiceImpl implements VoucherService
 
     public function listVoucher()
     {
-        $services = $this->voucherRepository->all();
+        $services = Voucher::query()->latest('created_at')->paginate(10);
         return $services;
     }
 

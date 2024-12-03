@@ -65,7 +65,7 @@ class OrderController extends Controller
             throw new RespException('Không thể hủy đơn khi đã sử dụng phòng');
         }
 
-        if ($order['start_date'] <= Carbon::now()->addDay()->setTime(14, 00)) {
+        if ($order['start_date'] <= Carbon::now()->setTime(14, 00)) {
             throw new RespException('Không thể hủy đơn trong quá khứ.');
         }
     }

@@ -146,7 +146,7 @@ class AccountSettingController extends Controller
             }
            }
 
-            return back()->with('msg', 'Cập nhật thông tin thành công');
+            return back()->with('success', 'Cập nhật thông tin thành công');
         } catch (Exception $e) {
             if ($request->has('avatar')) {
                 Storage::delete($data['avatar']);
@@ -184,7 +184,7 @@ class AccountSettingController extends Controller
             
             $userUpdate->update($data);
 
-            return back()->with('msg', 'Thay đổi mật khẩu thành công');
+            return back()->with('success', 'Thay đổi mật khẩu thành công');
         } catch (Exception $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -220,6 +220,6 @@ class AccountSettingController extends Controller
 
         $order->update(['is_rating' => 1]);
 
-        return back()->with('msg', 'Đánh giá thành công!');
+        return back()->with('success', 'Đánh giá thành công!');
     }
 }

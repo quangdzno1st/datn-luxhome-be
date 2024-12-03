@@ -202,13 +202,17 @@ Route::group(['middleware' => ['admin']], function () {
 
     Route::prefix('rates')->name('rates.')->controller(RateController::class)->group(function(){
         //route của superadmin
-        Route::get('/hotels', 'listRatesAllHotels')->name('hotels');
-        Route::get('/hotel/{hotelId}', 'listRatesOneHotel')->name('hotel');
-        Route::get('/trash/hotel/{hotelId}', 'listRatesOneHotelTrash')->name('hotel.trash');
+        Route::middleware('is.super.admin')->group(function() {
+            Route::get('/hotels', 'listRatesAllHotels')->name('hotels');
+            Route::get('/hotel/{hotelId}', 'listRatesOneHotel')->name('hotel');
+            Route::get('/trash/hotel/{hotelId}', 'listRatesOneHotelTrash')->name('hotel.trash');
+        });
 
         //route của hotelier
-        Route::get('/hotelier', 'getRatesByHotelIdOfHotelier')->name('hotel.hotelier');
-        Route::get('/trash/hotelier', 'getRatesByHotelIdOfHotelierTrash')->name('hotel.trash.hotelier');
+        Route::middleware('is.staff.and.admin')->group(function() {
+            Route::get('/hotelier', 'getRatesByHotelIdOfHotelier')->name('hotel.hotelier');
+            Route::get('/trash/hotelier', 'getRatesByHotelIdOfHotelierTrash')->name('hotel.trash.hotelier');
+        });
 
         //route 2 thằng đều dùng được
         Route::post('/hidden/{rateId}', 'rateHidden')->name('hidden');
@@ -249,3 +253,7 @@ Route::prefix('admin/orders')->group(function () {
     Route::post('/accepted_cancel/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'accepted_cancel'])->name('orders.accepted_cancel')->middleware('can:edit_orders');
     Route::post('/refunded-money/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'refundMoney'])->name('orders.refunded-money')->middleware('can:edit_orders');
 });
+
+Route::get('/404', function () {
+    return view('admin.errors.404');
+})->name('error.404');

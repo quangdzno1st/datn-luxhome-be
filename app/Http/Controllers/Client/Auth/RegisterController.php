@@ -49,6 +49,6 @@ class RegisterController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->route('client.login')->with('msg', 'Đăng ký tài khoản thành công!');
+        return redirect()->route('client.login')->with('success', 'Đăng ký tài khoản thành công!');
     }
 }

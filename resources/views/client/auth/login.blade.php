@@ -2,8 +2,8 @@
 
 @section('content')
 <div class="" style="display:block; margin: 150px 0 50px 0">
-	@if (session('msg'))
-		<p style="color: #19b4ac; font-weight:bold; font-size:1rem; text-align:center">{{session('msg')}}</p>
+	@if (session('success'))
+		<p style="color: #19b4ac; font-weight:bold; font-size:1rem; text-align:center">{{session('success')}}</p>
 	@endif
 	@if (session('error'))
 		<p style="color: red; font-weight:bold; font-size:1rem; text-align:center">{{session('error')}}</p>

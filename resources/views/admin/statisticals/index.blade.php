@@ -35,7 +35,7 @@
                     <div class="mt-3">
                         <div>
                             <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
-                                    data-target="{{ $totalRevenue->total_revenue }}">0</span><sup>đ</sup> </h4>
+                                    data-target="{{ (int)$totalRevenue->total_revenue }}">0</span><sup>đ</sup> </h4>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
                             <span href="javascript:void(0)" class="text-decoration-underline" style="color: white"></span>
@@ -65,7 +65,7 @@
                                     data-target="{{ $totalOrder->total_order }}">0</span></h4>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
-                            <a href="javascript:void(0)" class="text-decoration-underline">Xem chi tiết</a>
+                            <a href="{{route('admin.orders.index')}}" class="text-decoration-underline">Xem chi tiết</a>
                             <div class="avatar-sm flex-shrink-0">
                                 <span class="avatar-title bg-danger rounded fs-3">
                                     <i class="ri-building-4-line"></i>
@@ -293,7 +293,7 @@
 
         let yValuesRevenue = [
             @foreach ($thongke as $value)
-                "{{ $value->total_revenue }}",
+                "{{ (int)$value->total_revenue }}",
             @endforeach
         ];
 

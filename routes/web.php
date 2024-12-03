@@ -2,8 +2,6 @@
 
 use App\Http\Controllers\Admin\CatalogueRoomController;
 use App\Http\Controllers\Admin\HotelServiceController;
-use App\Http\Controllers\Admin\StatisticalController;
-use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\Client\AccountSettingController;
 use App\Http\Controllers\Client\Auth\ForgotPasswordController;
 use App\Http\Controllers\Client\Auth\LoginController;
@@ -44,14 +42,6 @@ Route::prefix('admin/vouchers')->group(function () {
     Route::delete('/force_delete/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'destroy'])->name('vouchers.force_delete');
 });
 
-Route::controller(StatisticalController::class)->group(function () {
-    Route::get('/statistical', 'index')->name('statistical.index');
-    Route::post('/statistical', 'handleStatistical')->name('handle.statistical');
-});
-
-Route::get('/404', function () {
-    return view('admin.errors.404');
-})->name('error.404');
 ////rate
 //Route::prefix('rates')->group(function () {
 //    Route::get('/', [\App\Http\Controllers\Admin\RateController::class, 'index'])->name('rates.index');
@@ -92,7 +82,7 @@ Route::get('/cities/search-by-page', [CityController::class, 'searchByPage'])->n
 Route::prefix('orders')
     ->controller(AccountSettingController::class)
     ->group(function () {
-        Route::get('/', 'index')->name('orders.index');
+        // Route::get('/', 'index')->name('orders.index');
         Route::get('/services', 'orderService')->name('orders.services');
         Route::get('/confirm', 'confirmOrder')->name('orders.confirm');
         Route::post('/', 'store')->name('orders.store');
