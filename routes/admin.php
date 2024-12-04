@@ -15,6 +15,7 @@
 use App\Http\Controllers\Admin\AmenitiesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ServiceController;
@@ -224,6 +225,14 @@ Route::group(['middleware' => ['admin']], function () {
         Route::post('/store', 'store')->name('store');
         Route::put('/update/{id}', 'update')->name('update');
         Route::get('/delete/{id}', 'delete')->name('delete');
+    });
+
+    Route::prefix('banners')->middleware('is.super.admin')->name('banners.')->controller(BannerController::class)->group(function() {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/store', 'store')->name('store');
+        Route::get('/update{id}', 'update')->name('update');
+        Route::delete('/destroy{id}', 'destroy')->name('destroy');
     });
 });
 

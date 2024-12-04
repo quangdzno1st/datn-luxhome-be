@@ -2,6 +2,7 @@
 
 namespace App\Services\impl;
 
+use App\Models\HotelService;
 use App\Repositories\HotelService\HotelServiceRepository;
 use App\Services\HotelServiceService;
 use Illuminate\Http\Request;
@@ -18,17 +19,37 @@ class HotelServiceServiceImpl implements HotelServiceService
 
     public function getServicesByIdHotel($idHotel, Request $request)
     {
-        $type = null;
+        $query = HotelService::query()->with('service');
 
-        $keyword = null;
-
-        if ($request->has('type') && ($request->input('type') == 1 || $request->input('type') == 2)) {
-            $type = $request->input('type');
-        }
-        if ($request->has('keyword')) {
+        if ($request->filled('keyword')) {
             $keyword = $request->input('keyword');
+            $query->whereHas('service', function ($query) use ($keyword) {
+                $query->where('name', 'like', '%' . $keyword . '%')
+                    ->orWhere('description', 'like', "%" . $keyword . "%");
+            });
         }
-        $hotelServices = $this->hotelServiceRepository->getAll($idHotel, $type, $keyword);
+
+        if ($request->filled('min_price')) {
+            $minPrice = $request->min_price;
+            $query->whereHas('service', function($query) use ($minPrice) {
+                $query->where('price', '>=', $minPrice);
+            });
+        }
+    
+        if ($request->filled('max_price')) {
+            $maxPrice = $request->max_price;
+            $query->whereHas('service', function($query) use ($maxPrice) {
+                $query->where('price', '<=', $maxPrice);
+            });
+        }
+
+        if ($request->filled('type')) {
+            $type = $request->input('type');
+            $query->whereHas('service', function($query) use ($type) {
+                $query->where('type', $type);
+            });
+        }
+        $hotelServices = $query->orderBy('created_at')->paginate(10);
         return $hotelServices;
     }
 

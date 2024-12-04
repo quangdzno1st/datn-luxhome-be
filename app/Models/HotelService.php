@@ -22,4 +22,9 @@ class HotelService extends Model
         'hotel_id' => 'string',
         'service_id' => 'string',
     ];
+
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'service_id', 'id');
+    }
 }

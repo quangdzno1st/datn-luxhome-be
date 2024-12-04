@@ -36,8 +36,8 @@
                                     <div>
                                         <a href="{{ route('admin.hotels.index') }}" class="btn btn-primary bg-gradient waves-effect waves-primary">
                                             <i class="ri-arrow-left-s-line"></i> Danh sách</a>
-                                        <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i
-                                                    class="ri-delete-bin-2-line"></i></button>
+                                        {{-- <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i
+                                                    class="ri-delete-bin-2-line"></i></button> --}}
                                     </div>
                                 </div>
                                 <div class="col-sm">

@@ -24,7 +24,7 @@
         </div>
 
          <!-- Notification -->
-         <div class="row">
+         {{-- <div class="row">
             @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <strong>{{session('success')}}</strong>
@@ -37,7 +37,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             @endif
-        </div>
+        </div> --}}
 
         <div class="row">
             <div class="col-lg-12">
@@ -63,12 +63,18 @@
                                     </div>
                                 </div>
                                 <div class="col-sm">
-                                    <div class="d-flex justify-content-sm-end">
+                                    <form class="d-flex justify-content-sm-end" action="" method="get">
                                         <div class="search-box ms-2">
-                                            <input type="text" class="form-control" placeholder="Search...">
+                                            <input type="text" value="{{request()->input('city')}}" class="form-control" name="city" placeholder="Điền tên thành phố">
                                             <i class="ri-search-line search-icon"></i>
                                         </div>
-                                    </div>
+                                        <div class="ms-2">
+                                            <input type="text" value="{{request()->input('region')}}" class="form-control" name="region" placeholder="Điền tên miền">
+                                        </div>
+                                        <div class="ms-2">
+                                            <button class="btn btn-primary" type="submit">Tìm</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
 

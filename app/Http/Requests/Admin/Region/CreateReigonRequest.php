@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin\Region;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 
 class CreateReigonRequest extends FormRequest
 {
@@ -34,5 +35,12 @@ class CreateReigonRequest extends FormRequest
             'name.required' => 'Tên miền đang trống',
             'name.unique' => 'Tên miền đã tồn tại'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        session()->flash('error', 'Thêm miền không thành công.');
+
+        parent::failedValidation($validator);
     }
 }
