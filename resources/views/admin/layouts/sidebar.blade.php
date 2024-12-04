@@ -62,17 +62,28 @@
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span data-key="t-menu">Mục lục</span></li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('admin.statistical.index') }}">
+                    <a class="nav-link menu-link {{ request()->routeIs('admin.statistical.index') ? 'active' : '' }}"
+                        href="{{ route('admin.statistical.index') }}">
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Tổng Quan</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
 
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('admin.services.index') }}">
+                    <a class="nav-link menu-link {{ request()->routeIs('admin.services.index') ? 'active' : '' }}"
+                        href="{{ route('admin.services.index') }}">
                         <i class="ri-customer-service-line"></i> <span data-key="t-layouts">Dịch vụ</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
+
+                @if (Auth::user()->type == \App\Models\User::ADMIN)
+                    <li class="nav-item">
+                        <a class="nav-link menu-link {{ request()->routeIs('admin.banners.index') ? 'active' : '' }}"
+                            href="{{ route('admin.banners.index') }}">
+                            <i class="ri-image-fill"></i> <span data-key="t-layouts">Ảnh Banner</span>
+                        </a>
+                    </li> <!-- end Dashboard Menu -->
+                @endif
 
                 @can('view_users')
                     <li class="nav-item">
@@ -125,24 +136,12 @@
                 @endcan
                 @can('view_categories')
                     <li class="nav-item">
-                        <a class="nav-link menu-link" href="#sidebarCatalogueRooms" data-bs-toggle="collapse"
-                            role="button" aria-expanded="false" aria-controls="sidebarUsers">
+                        <a class="nav-link menu-link {{ request()->routeIs('admin.catalogue-rooms.index') ? 'active' : '' }}"
+                            href="{{ route('admin.catalogue-rooms.index') }}" data-bs-toggle="" role="button"
+                            aria-expanded="false" aria-controls="sidebarRegion">
                             <i class="ri-layout-3-line"></i> <span data-key="t-layouts">Loại phòng</span>
                         </a>
-                        <div class="collapse menu-dropdown" id="sidebarCatalogueRooms">
-                            <ul class="nav nav-sm flex-column">
-                                <li class="nav-item">
-                                    <a href="{{ route('admin.catalogue-rooms.index') }}" target="" class="nav-link"
-                                        data-key="t-horizontal">Danh Sách</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('admin.catalogue-rooms.create') }}" target=""
-                                        class="nav-link" data-key="t-detached">Thêm Mới</a>
-                                </li>
-
-                            </ul>
-                        </div>
-                    </li> <!-- end Catalogue Room Menu -->
+                    </li>
                 @endcan
 
                 @can('view_vouchers')
@@ -170,8 +169,9 @@
 
                 @can('view_orders')
                     <li class="nav-item">
-                        <a class="nav-link menu-link" href="{{ route('admin.orders.index') }}" data-bs-toggle=""
-                            role="button" aria-expanded="false" aria-controls="sidebarCatalogueRoom">
+                        <a class="nav-link menu-link {{ request()->routeIs('admin.orders.index') ? 'active' : '' }}"
+                            href="{{ route('admin.orders.index') }}" data-bs-toggle="" role="button"
+                            aria-expanded="false" aria-controls="sidebarCatalogueRoom">
                             <i class="ri-hotel-bed-line"></i> <span data-key="t-layouts">Đơn hàng</span>
                         </a>
                     </li>
@@ -180,15 +180,17 @@
                 @can('view_reviews')
                     @if (Auth::user()->type == 2)
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="{{ route('admin.rates.hotels') }}" data-bs-toggle=""
-                                role="button" aria-expanded="false" aria-controls="sidebarRegion">
+                            <a class="nav-link menu-link {{ request()->routeIs('admin.rates.hotels') ? 'active' : '' }}"
+                                href="{{ route('admin.rates.hotels') }}" data-bs-toggle="" role="button"
+                                aria-expanded="false" aria-controls="sidebarRegion">
                                 <i class="ri-star-s-line"></i> <span data-key="t-layouts">Đánh giá</span>
                             </a>
                         </li>
                     @else
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="{{ route('admin.rates.hotel.hotelier') }}"
-                                data-bs-toggle="" role="button" aria-expanded="false" aria-controls="sidebarRegion">
+                            <a class="nav-link menu-link {{ request()->routeIs('admin.rates.hotel.hotelier') ? 'active' : '' }}"
+                                href="{{ route('admin.rates.hotel.hotelier') }}" data-bs-toggle="" role="button"
+                                aria-expanded="false" aria-controls="sidebarRegion">
                                 <i class="ri-star-s-line"></i> <span data-key="t-layouts">Đánh giá</span>
                             </a>
                         </li>
@@ -197,8 +199,9 @@
 
                 @can('view_rooms')
                     <li class="nav-item">
-                        <a class="nav-link menu-link" href="{{ route('admin.rooms.index') }}" data-bs-toggle=""
-                            role="button" aria-expanded="false" aria-controls="sidebarCatalogueRoom">
+                        <a class="nav-link menu-link {{ request()->routeIs('admin.rooms.index') ? 'active' : '' }}"
+                            href="{{ route('admin.rooms.index') }}" data-bs-toggle="" role="button"
+                            aria-expanded="false" aria-controls="sidebarCatalogueRoom">
                             <i class="ri-hotel-bed-line"></i> <span data-key="t-layouts">Phòng</span>
                         </a>
                     </li>
@@ -208,8 +211,9 @@
 
                 @can('view_hotel')
                     <li class="nav-item">
-                        <a class="nav-link menu-link" href="{{ route('admin.hotels.index') }}" data-bs-toggle=""
-                            role="button" aria-expanded="false" aria-controls="sidebarRegion">
+                        <a class="nav-link menu-link {{ request()->routeIs('admin.hotels.index') ? 'active' : '' }}"
+                            href="{{ route('admin.hotels.index') }}" data-bs-toggle="" role="button"
+                            aria-expanded="false" aria-controls="sidebarRegion">
                             <i class="ri-hotel-line"></i> <span data-key="t-layouts">Khách sạn</span>
                         </a>
                     </li>
@@ -233,23 +237,27 @@
                 </li> --}}
                 @endcan
 
-                @can('view_region')
-                    <li class="nav-item">
-                        <a class="nav-link menu-link" href="{{ route('admin.regions.index') }}" data-bs-toggle=""
-                            role="button" aria-expanded="false" aria-controls="sidebarRegion">
-                            <i class="ri-pin-distance-fill"></i> <span data-key="t-layouts">Miền</span>
-                        </a>
-                    </li>
-                @endcan
+                @if (Auth::user()->type == \App\Models\User::ADMIN)
+                    @can('view_region')
+                        <li class="nav-item">
+                            <a class="nav-link menu-link {{ request()->routeIs('admin.regions.index') ? 'active' : '' }}"
+                                href="{{ route('admin.regions.index') }}" data-bs-toggle="" role="button"
+                                aria-expanded="false" aria-controls="sidebarRegion">
+                                <i class="ri-pin-distance-fill"></i> <span data-key="t-layouts">Miền</span>
+                            </a>
+                        </li>
+                    @endcan
 
-                @can('view_city')
-                    <li class="nav-item">
-                        <a class="nav-link menu-link" href="{{ route('admin.cities.index') }}" data-bs-toggle=""
-                            role="button" aria-expanded="false" aria-controls="sidebarRegion">
-                            <i class="bx bxs-city"></i> <span data-key="t-layouts">Thành phố</span>
-                        </a>
-                    </li>
-                @endcan
+                    @can('view_city')
+                        <li class="nav-item">
+                            <a class="nav-link menu-link {{ request()->routeIs('admin.cities.index') ? 'active' : '' }}"
+                                href="{{ route('admin.cities.index') }}" data-bs-toggle="" role="button"
+                                aria-expanded="false" aria-controls="sidebarRegion">
+                                <i class="bx bxs-city"></i> <span data-key="t-layouts">Thành phố</span>
+                            </a>
+                        </li>
+                    @endcan
+                @endif
 
                 @if (Auth::user()->type == \App\Models\User::ADMIN)
                     <li class="nav-item">

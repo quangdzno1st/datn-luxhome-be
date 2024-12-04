@@ -47,12 +47,15 @@
                                     </div>
                                 </div>
                                 <div class="col-sm">
-                                    <div class="d-flex justify-content-sm-end">
+                                    <form action="" method="GET" class="d-flex justify-content-sm-end">
                                         <div class="search-box ms-2">
-                                            <input type="text" class="form-control" placeholder="Search...">
+                                            <input type="text" value="{{request()->input('keyword')}}" class="form-control" name="keyword" placeholder="Điền tên miền">
                                             <i class="ri-search-line search-icon"></i>
                                         </div>
-                                    </div>
+                                        <div class="ms-2">
+                                            <button class="btn btn-primary" type="submit">Tìm</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
 

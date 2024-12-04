@@ -32,13 +32,30 @@ class RateController extends Controller
 
         $query = Rate::withoutTrashed()->with('user', 'comment')->where('hotel_id', $hotelId);
 
-        if (request()->has('keyword')) {
-            $keyword = request()->input('keyword');
+        if (request()->filled('content')) {
+            $content = request()->input('content');
+            $query->where('content', 'like', "%$content%");
+        }
 
-            $query->where(function ($query) use ($keyword) {
-                $query->where('rate', 'like', "%$keyword%")
-                    ->orWhere('content', 'like', "%$keyword%");
+        if (request()->filled('name')) {
+            $name = request()->input('name');
+            $query->whereHas('user', function($query) use ($name) {
+                $query->where('name', 'like', "%$name%");
             });
+        }
+
+        if (request()->filled('rate')) {
+            $rate = request()->input('rate');
+            $query->where('rate', $rate);
+        }
+
+        if (request()->filled('status')) {
+            $status = request()->input('status');
+            if ($status == 1) {
+                $query->has('comment');
+            } else {
+                $query->doesntHave('comment');
+            }
         }
 
         $rates = $query->paginate(10);
@@ -53,14 +70,31 @@ class RateController extends Controller
 
         $query = Rate::onlyTrashed()->with('user', 'comment')->where('hotel_id', $hotelId);
 
-        if (request()->has('keyword')) {
-            $keyword = request()->input('keyword');
+        if (request()->filled('content')) {
+            $content = request()->input('content');
+            $query->where('content', 'like', "%$content%");
+        }
 
-            $query->where(function ($query) use ($keyword) {
-                $query->where('rate', 'like', "%$keyword%")
-                    ->orWhere('content', 'like', "%$keyword%");
+        if (request()->filled('name')) {
+            $name = request()->input('name');
+            $query->whereHas('user', function($query) use ($name) {
+                $query->where('name', 'like', "%$name%");
             });
         }
+
+        if (request()->filled('rate')) {
+            $rate = request()->input('rate');
+            $query->where('rate', $rate);
+        }
+
+        // if (request()->filled('status')) {
+        //     $status = request()->input('status');
+        //     if ($status == 1) {
+        //         $query->has('comment');
+        //     } else {
+        //         $query->doesntHave('comment');
+        //     }
+        // }
 
         $rates = $query->paginate(10);
 
@@ -75,13 +109,30 @@ class RateController extends Controller
 
         $query = Rate::withoutTrashed()->with('user', 'comment')->where('hotel_id', $hotelId);
 
-        if (request()->has('keyword')) {
-            $keyword = request()->input('keyword');
+        if (request()->filled('content')) {
+            $content = request()->input('content');
+            $query->where('content', 'like', "%$content%");
+        }
 
-            $query->where(function ($query) use ($keyword) {
-                $query->where('rate', 'like', "%$keyword%")
-                    ->orWhere('content', 'like', "%$keyword%");
+        if (request()->filled('name')) {
+            $name = request()->input('name');
+            $query->whereHas('user', function($query) use ($name) {
+                $query->where('name', 'like', "%$name%");
             });
+        }
+
+        if (request()->filled('rate')) {
+            $rate = request()->input('rate');
+            $query->where('rate', $rate);
+        }
+
+        if (request()->filled('status')) {
+            $status = request()->input('status');
+            if ($status == 1) {
+                $query->has('comment');
+            } else {
+                $query->doesntHave('comment');
+            }
         }
 
         $rates = $query->paginate(10);
@@ -97,14 +148,31 @@ class RateController extends Controller
 
         $query = Rate::onlyTrashed()->with('user', 'comment')->where('hotel_id', $hotelId);
 
-        if (request()->has('keyword')) {
-            $keyword = request()->input('keyword');
+        if (request()->filled('content')) {
+            $content = request()->input('content');
+            $query->where('content', 'like', "%$content%");
+        }
 
-            $query->where(function ($query) use ($keyword) {
-                $query->where('rate', 'like', "%$keyword%")
-                    ->orWhere('content', 'like', "%$keyword%");
+        if (request()->filled('name')) {
+            $name = request()->input('name');
+            $query->whereHas('user', function($query) use ($name) {
+                $query->where('name', 'like', "%$name%");
             });
         }
+
+        if (request()->filled('rate')) {
+            $rate = request()->input('rate');
+            $query->where('rate', $rate);
+        }
+
+        // if (request()->filled('status')) {
+        //     $status = request()->input('status');
+        //     if ($status == 1) {
+        //         $query->has('comment');
+        //     } else {
+        //         $query->doesntHave('comment');
+        //     }
+        // }
 
         $rates = $query->paginate(10);
 

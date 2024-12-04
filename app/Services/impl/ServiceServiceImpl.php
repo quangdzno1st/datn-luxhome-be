@@ -21,20 +21,27 @@ class ServiceServiceImpl implements ServiceService
         $query = Service::query();
 
         if ($request->has('keyword')) {
-            $query->where('name', 'like', '%' . $request->get('keyword') . '%')
-                ->orWhere('price', 'like', "%$request->get('keyword')%")
-                ->orWhere('description', 'like', "%$request->get('keyword')%");
+            $keyword = $request->input('keyword');
+            $query->where(function ($query) use ($keyword) {
+                $query->where('name', 'like', '%' . $keyword . '%')
+                    ->orWhere('description', 'like', "%" . $keyword . "%");
+            });
         }
 
-        if ($request->has('name')) {
-            $query->where('name', 'like', '%' . $request->get('name') . '%');
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
         }
-        
-        if ($request->has('price')) {
-            $query->where('price', 'like', '%' . $request->get('price') . '%');
+    
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
         }
 
-        $services = $query->paginate(10);
+        if ($request->filled('type')) {
+            $type = $request->input('type');
+            $query->where('type', $type);
+        }
+
+        $services = $query->orderBy('created_at')->paginate(10);
 
         return $services;
     }

@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\Region\CreateReigonRequest;
 use App\Http\Requests\Admin\Region\UpdateRegionRequest;
 use App\Http\Resources\RegionCollection;
 use App\Http\Resources\RegionResource;
+use App\Models\Region;
 use App\Repositories\Reigion\RegionRepository;
 use App\Services\impl\RegionServiceImpl;
 use Illuminate\Http\Response;
@@ -24,7 +25,14 @@ class RegionController extends Controller
 
     public function index()
     {
-        $data = $this->regionRepository->getAllRegion();
+        $query = Region::query();
+
+        if (request()->filled('keyword')) {
+            $keyword = request()->input('keyword');
+            $query->where('name', 'like', '%' . $keyword . '%');
+        }
+
+        $data = $query->paginate(10);
 
         return view(self::PATH_VIEW . __FUNCTION__, compact('data'));
     }

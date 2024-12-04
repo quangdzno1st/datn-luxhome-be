@@ -58,10 +58,32 @@
                             <div class="col-sm">
                                 <form class="d-flex justify-content-sm-end">
                                     <div class="search-box ms-2">
-                                        <input type="text" class="form-control search" name="keyword"
-                                            placeholder="Điền điểm, nội dung, ..."
-                                            value="{{ request()->has('keyword') ? request()->input('keyword') : '' }}">
+                                        <input type="text" class="form-control search" name="content"
+                                            placeholder="Điền nội dung"
+                                            value="{{ request()->has('content') ? request()->input('content') : '' }}">
                                         <i class="ri-search-line search-icon"></i>
+                                    </div>
+                                    <div class="ms-2">
+                                        <input type="text" class="form-control search" name="name"
+                                            placeholder="Điền tên khách"
+                                            value="{{ request()->has('name') ? request()->input('name') : '' }}">
+                                    </div>
+                                    <div class="ms-2">
+                                        <select name="rate" id="" class="form-select">
+                                            <option value="">Chọn tất cả</option>
+                                            <option value="5" @selected(request()->input('rate') == 5)>Rất tốt</option>
+                                            <option value="4" @selected(request()->input('rate') == 4)>Tốt</option>
+                                            <option value="3" @selected(request()->input('rate') == 3)>Tạm</option>
+                                            <option value="2" @selected(request()->input('rate') == 2)>Kém</option>
+                                            <option value="1" @selected(request()->input('rate') == 1)>Rất kém</option>
+                                        </select>
+                                    </div>
+                                    <div class="ms-2">
+                                        <select name="status" id="" class="form-select">
+                                            <option value="">Chọn tất cả</option>
+                                            <option value="1" @selected(request()->input('status') == 1)>Đã trả lời</option>
+                                            <option value="2" @selected(request()->input('status') == 2)>Chưa trả lời</option>
+                                        </select>
                                     </div>
                                     <div class="ms-1">
                                         <button class="btn btn-primary">Tìm kiếm</button>
@@ -94,7 +116,7 @@
                                             @endfor
                                         </td>
                                         <td>{{ $rate->content }}</td>
-                                        <td>{{ Carbon\Carbon::parse($rate->created_at)->format('H:i:s d-m-Y'); }}</td>
+                                        <td>{{ Carbon\Carbon::parse($rate->created_at)->format('H:i:s d-m-Y') }}</td>
                                         <td>
                                             @if (!empty($rate->comment))
                                                 <span class="badge bg-success">Đã trả lời</span>
@@ -127,7 +149,8 @@
                                                             aria-label="Close" id="close-modal"></button>
                                                     </div>
                                                     <form class="tablelist-form" autocomplete="off"
-                                                        action="{{ route('admin.comments.update', $rate->comment->id) }}" method="POST">
+                                                        action="{{ route('admin.comments.update', $rate->comment->id) }}"
+                                                        method="POST">
                                                         @csrf
                                                         @method('PUT')
                                                         <div class="modal-body">
@@ -152,7 +175,7 @@
                                                                 <label for="content" class="form-label">Trả lời<span
                                                                         class="text-danger">*</span></label>
                                                                 <textarea name="content" class="form-control" id="content" cols="30" rows="5"
-                                                                    placeholder="Nhập nội dung" required>{{$rate->comment->content}}</textarea>
+                                                                    placeholder="Nhập nội dung" required>{{ $rate->comment->content }}</textarea>
                                                                 @error('content')
                                                                     <p class="text-danger">{{ $message }}</p>
                                                                 @enderror
@@ -161,7 +184,9 @@
                                                         </div>
                                                         <div class="modal-footer justify-content-between">
                                                             <div class="">
-                                                                <a href="{{route('admin.comments.delete', $rate->comment->id)}}" class="btn btn-danger" onclick="return confirm('Bạn có muốn xóa bình luận này không?')">
+                                                                <a href="{{ route('admin.comments.delete', $rate->comment->id) }}"
+                                                                    class="btn btn-danger"
+                                                                    onclick="return confirm('Bạn có muốn xóa bình luận này không?')">
                                                                     Xóa bình luận
                                                                 </a>
                                                             </div>

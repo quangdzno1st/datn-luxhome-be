@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\City\CreateCityRequest;
 use App\Http\Requests\Admin\City\UpdateCityRequest;
 use App\Http\Resources\CityCollection;
 use App\Http\Resources\CityResource;
+use App\Models\City;
 use App\Repositories\City\CityRepository;
 use App\Repositories\Reigion\RegionRepository;
 use App\Services\impl\CityServiceImpl;
@@ -29,7 +30,21 @@ class CityController extends Controller
 
     public function index()
     {
-        $data = $this->cityRepository->getAllCity();
+        $query = City::query()->with('region');
+
+        if (request()->filled('city')) {
+            $city = request()->input('city');
+            $query->where('name', 'like', '%' . $city . '%');
+        }
+
+        if (request()->filled('region')) {
+            $region = request()->input('region');
+            $query->whereHas('region', function($query) use ($region) {
+                $query->where('name', 'like', '%' . $region . '%');
+            });
+        }
+        
+        $data = $query->orderBy('name')->paginate(10);
         // dd($data->toArray());
         $regions = $this->regionRepository->getAllRegion();
 
