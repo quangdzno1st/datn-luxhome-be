@@ -37,11 +37,25 @@ class CatalogueRoomController extends Controller
 
         $hotel = Hotel::query()->where('id', $hotelID)->firstOrFail();
 
-        $catalogueRooms = CatalogueRoom::query()->with('hotel', 'attributes', 'images')->where('hotel_id', $hotelID)->paginate(10);
+        $query = CatalogueRoom::query()->with('hotel', 'attributes', 'images')->where('hotel_id', $hotelID);
         
-        if (request()->has('keyword') && !empty(request()->input('keyword'))) {
-            $catalogueRooms = CatalogueRoom::query()->with('hotel', 'attributes', 'images')->where('name', request()->input('keyword'))->where('hotel_id', $hotelID)->paginate(10);
+        if (request()->filled('name')) {
+            $name = request()->input('name');
+            $query->where('name', 'like', '%' . $name . '%');
         }
+
+        if (request()->filled('price')) {
+            $price = request()->input('price');
+            $query->where('price', '>=',  $price - ($price/5))
+                ->where('price', '<=',  $price + ($price/5));
+        }
+
+        if (request()->filled('status')) {
+            $status = request()->input('status');
+            $query->where('status', $status);
+        }
+
+        $catalogueRooms = $query->latest('created_at')->paginate(10);
 
         $roomBookedQtyMapBy = $this->catalogueRoomRepos->getRoomBookedQtyToday($hotelID);
         return view(self::PATH_VIEW . __FUNCTION__, compact('catalogueRooms', 'hotel', 'roomBookedQtyMapBy'));

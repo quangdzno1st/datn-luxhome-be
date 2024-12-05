@@ -51,16 +51,16 @@
                                     </div>
                                 </div>
                                 <div class="col-sm">
-                                    <div class="d-flex justify-content-sm-end">
+                                    <form class="d-flex justify-content-sm-end" action="" method="GET">
                                         <div class="search-box ms-2">
-                                            <input type="text" class="form-control search" name="keyword" id="nameSearch"
-                                                   placeholder="Tìm kiếm...">
+                                            <input type="text" class="form-control" name="keyword" value="{{request()->input('keyword')}}"
+                                                   placeholder="Tìm tên, địa chỉ khách sạn">
                                             <i class="ri-search-line search-icon"></i>
                                         </div>
                                         <div class="ms-1">
                                             <button class="btn btn-primary">Tìm kiếm</button>
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
 

@@ -48,6 +48,8 @@ class StatisticalController extends Controller
 
         $thongkeOrderByStatus = $data['orders'];
 
+        // dd($thongkeOrderByStatus->toArray());
+
         $thongkeTotalRoom = $data['total_room'];
 
         $thongkeTotalRoomBeingBooked = $data['total_room_being_booked'];
@@ -58,9 +60,9 @@ class StatisticalController extends Controller
         return view('admin.statisticals.index', compact('thongkeTotalRoom', 'thongkeTotalRoomBeingBooked', 'thongkeOrderByStatus','totalRevenue', 'totalOrder', 'totalRating', 'totalUser', 'thongke', 'hotels', 'hotel_id', 'optionTime', 'startDate', 'endDate', 'selectTime'));
     }
 
-    public function handleStatistical(AdminStatisticalRequest $request)
+    public function handleStatistical()
     {
-        session()->put('handle_data', $request->except('_token'));
+        session()->put('handle_data', request()->except('_token'));
 
         return back();
     }

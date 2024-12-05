@@ -47,8 +47,18 @@
                     <a href="{{route('admin.catalogue-rooms.create')}}" class="btn btn-success">+ Thêm mới</a>
                         <form class="d-flex justify-content-sm-end" action="" method="get">
                             <div class="search-box ms-2">
-                                <input type="text" class="form-control " placeholder="Tìm kiếm..." name="keyword" value="{{ request()->has('keyword') ? request()->input('keyword') : '' }}">
+                                <input type="text" class="form-control " placeholder="Điền tên loại" name="name" value="{{ request()->has('name') ? request()->input('name') : '' }}">
                                 <i class="ri-search-line search-icon"></i>
+                            </div>
+                            <div class="ms-2">
+                                <input type="text" class="form-control " placeholder="Điền giá" name="price" value="{{ request()->has('price') ? request()->input('price') : '' }}">
+                            </div>
+                            <div class="ms-2">
+                                <select name="status" id="" class="form-select">
+                                    <option value="">Chọn tất cả</option>
+                                    <option value="1" @selected(request()->input('status') == 1)>Hoạt động</option>
+                                    <option value="2" @selected(request()->input('status') == 2)>Không hoạt động</option>
+                                </select>
                             </div>
                             <div class="ms-1">
                                 <button class="btn btn-primary">Tìm kiếm</button>

@@ -35,7 +35,7 @@
                     <div class="mt-3">
                         <div>
                             <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
-                                    data-target="{{ (int)$totalRevenue->total_revenue }}">0</span><sup>đ</sup> </h4>
+                                    data-target="{{ (int) $totalRevenue->total_revenue }}">0</span><sup>đ</sup> </h4>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
                             <span href="javascript:void(0)" class="text-decoration-underline" style="color: white"></span>
@@ -65,7 +65,7 @@
                                     data-target="{{ $totalOrder->total_order }}">0</span></h4>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
-                            <a href="{{route('admin.orders.index')}}" class="text-decoration-underline">Xem chi tiết</a>
+                            <a href="{{ route('admin.orders.index') }}" class="text-decoration-underline">Xem chi tiết</a>
                             <div class="avatar-sm flex-shrink-0">
                                 <span class="avatar-title bg-danger rounded fs-3">
                                     <i class="ri-building-4-line"></i>
@@ -83,19 +83,46 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1 overflow-hidden">
-                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Khách hàng</p>
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Tổng số phòng</p>
                         </div>
                     </div>
                     <div class="mt-3">
                         <div>
                             <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
-                                    data-target="{{ $totalUser }}">0</span></h4>
+                                    data-target="{{ $thongkeTotalRoom }}">0</span> </h4>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
-                            <a href="{{ route('admin.users.index') }}" class="text-decoration-underline">Xem chi tiết</a>
+                            <a href="{{ route('admin.rooms.index') }}" class="text-decoration-underline">Xem chi tiết</a>
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-info-subtle rounded fs-3">
+                                    <i class="las la-door-closed text-info"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
+
+        <div class="col-xl-2 col-md-6">
+            <!-- card -->
+            <div class="card card-animate">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Phòng đang đặt</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div>
+                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
+                                    data-target="{{ $thongkeTotalRoomBeingBooked }}">0</span> </h4>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="#" class="text-decoration-underline text-white">.</a>
                             <div class="avatar-sm flex-shrink-0">
                                 <span class="avatar-title bg-warning-subtle rounded fs-3">
-                                    <i class="bx bx-user-circle text-warning"></i>
+                                    <i class="las la-door-open text-warning"></i>
                                 </span>
                             </div>
                         </div>
@@ -130,51 +157,26 @@
                 </div><!-- end card body -->
             </div><!-- end card -->
         </div><!-- end col -->
+
         <div class="col-xl-2 col-md-6">
             <!-- card -->
             <div class="card card-animate">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1 overflow-hidden">
-                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Tổng số phòng</p>
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Người dùng</p>
                         </div>
                     </div>
                     <div class="mt-3">
                         <div>
                             <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
-                                    data-target="{{ $thongkeTotalRoom }}">0</span> </h4>
+                                    data-target="{{ $totalUser }}">0</span></h4>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
-                            <a href="{{ route('admin.rooms.index') }}" class="text-decoration-underline">Xem chi tiết</a>
-                            <div class="avatar-sm flex-shrink-0">
-                                <span class="avatar-title bg-info-subtle rounded fs-3">
-                                    <i class="las la-door-closed text-info"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- end card body -->
-            </div><!-- end card -->
-        </div><!-- end col -->
-        <div class="col-xl-2 col-md-6">
-            <!-- card -->
-            <div class="card card-animate">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1 overflow-hidden">
-                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Phòng đang đặt</p>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <div>
-                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
-                                    data-target="{{ $thongkeTotalRoomBeingBooked }}">0</span> </h4>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a href="{{ route('admin.rooms.index') }}" class="text-decoration-underline">Xem chi tiết</a>
+                            <a href="{{ route('admin.users.index') }}" class="text-decoration-underline">Xem chi tiết</a>
                             <div class="avatar-sm flex-shrink-0">
                                 <span class="avatar-title bg-warning-subtle rounded fs-3">
-                                    <i class="las la-door-open text-warning"></i>
+                                    <i class="bx bx-user-circle text-warning"></i>
                                 </span>
                             </div>
                         </div>
@@ -293,7 +295,7 @@
 
         let yValuesRevenue = [
             @foreach ($thongke as $value)
-                "{{ (int)$value->total_revenue }}",
+                "{{ (int) $value->total_revenue }}",
             @endforeach
         ];
 
@@ -357,7 +359,7 @@
                         },
                         ticks: {
                             callback: function(value) {
-                                return value.toLocaleString() + ' VNĐ'; // Hiển thị đơn vị VND
+                                return value.toLocaleString() + ' đ'; // Hiển thị đơn vị VND
                             }
                         }
                     },
@@ -391,25 +393,47 @@
             @endforeach
         ];
 
+        let backgroundColorArr = [];
+
+        let borderColorArr = [];
+
+        let labelsPie = [];
+
+        @foreach ($thongkeOrderByStatus as $value)
+            @if ($value->status == 1)
+                labelsPie.push('Đang chờ');
+                backgroundColorArr.push('rgba(255, 205, 86, 0.6)');
+                borderColorArr.push('rgba(255, 205, 86, 1)');
+            @endif
+            @if ($value->status == 2)
+                labelsPie.push('Đã xác nhận');
+                backgroundColorArr.push('rgba(54, 162, 235, 0.6)');
+                borderColorArr.push('rgba(54, 162, 235, 1)');
+            @endif
+            @if ($value->status == 3)
+                labelsPie.push('Hoàn thành');
+                backgroundColorArr.push('rgba(75, 192, 192, 0.6)');
+                borderColorArr.push('rgba(75, 192, 192, 1)');
+            @endif
+            @if ($value->status == 4)
+                labelsPie.push('Đã hủy');
+                backgroundColorArr.push('rgba(236, 27, 27, 0.6)');
+                borderColorArr.push('rgba(236, 27, 27, 1)');
+            @endif
+            @if ($value->status == 5)
+                labelsPie.push('Yêu cầu hủy');
+                backgroundColorArr.push('rgba(69, 66, 66, 0.6)');
+                borderColorArr.push('rgba(69, 66, 66, 1)');
+            @endif
+        @endforeach
+
         const dataChart = {
-            labels: ['Đang chờ', 'Đã xác nhận', 'Hoàn thành', 'Đã hủy', 'Yêu cầu hủy'], // Các trạng thái đơn hàng
+            labels: labelsPie, // Các trạng thái đơn hàng
             datasets: [{
                 label: 'Thống kê đơn hàng',
                 data: dataOrderStatus, // Số lượng đơn hàng theo từng trạng thái
-                backgroundColor: [
-                    'rgba(255, 205, 86, 0.6)', // Màu cho "Đang chờ"
-                    'rgba(54, 162, 235, 0.6)', // Màu cho "Đã xác nhận"
-                    'rgba(75, 192, 192, 0.6)', // Màu cho "Hoàn thành"
-                    'rgba(236, 27, 27, 0.6)', // Màu cho "Đã hủy"
-                    'rgba(69, 66, 66, 0.6)', // Màu cho "Yêu cầu hủy"
-                ],
-                borderColor: [
-                    'rgba(255, 205, 86, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(236, 27, 27, 1)',
-                    'rgba(69, 66, 66, 1)',
-                ],
+                backgroundColor: backgroundColorArr,
+                borderColor: borderColorArr,
                 borderWidth: 1
             }]
         };
