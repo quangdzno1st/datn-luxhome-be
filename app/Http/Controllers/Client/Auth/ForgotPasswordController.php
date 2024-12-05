@@ -27,7 +27,7 @@ class ForgotPasswordController extends Controller
 
         $user->notify(new SendMailForgotPassword($token));
 
-        return back()->with('msg', "Chúng tôi đã gửi cho bạn liên kết đặt lại mật khẩu qua email.");
+        return back()->with('success', "Chúng tôi đã gửi cho bạn liên kết đặt lại mật khẩu qua email.");
     }
 
     public function showFormResetPassword($token) {
@@ -63,6 +63,6 @@ class ForgotPasswordController extends Controller
 
         request()->session()->regenerate();
 
-        return redirect()->route('client.login')->with('msg', 'Thay đổi mật khẩu thành công, mời bạn đăng nhập!');
+        return redirect()->route('client.login')->with('success', 'Thay đổi mật khẩu thành công, mời bạn đăng nhập!');
     }
 }

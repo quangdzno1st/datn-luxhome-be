@@ -12,8 +12,8 @@ class Service extends Model
     use HasFactory, HasUuids, softDeletes;
 
     const TYPE_SERVICE = [
-        '1' => 'Ngoài khách sạn',
-        '2' => 'Trong khách sạn'
+        '1' => 'Dịch vụ đi kèm',
+        '2' => 'Dịch vụ mất phí'
     ];
 
     protected $keyType = 'string';

@@ -27,7 +27,7 @@ class HotelServiceController extends Controller
     {
 
         if (!empty($idHotel) && Auth::user()->type == RoleEnum::Admin->value && Auth::user()->org_id != $idHotel) {
-            return  redirect()->route('error.404');
+            return  redirect()->route('admin.error.404');
         }
 
         if (empty($idHotel) && isset(Auth::user()->org_id) && Auth::user()->type == RoleEnum::Admin->value) {
@@ -47,7 +47,7 @@ class HotelServiceController extends Controller
         $hotel = Hotel::query()->where('id', $idHotel)->first();
 
         if (!isset($hotel)) {
-            return  redirect()->route('error.404');
+            return  redirect()->route('admin.error.404');
         }
 
         $services = Service::all();
@@ -71,18 +71,18 @@ class HotelServiceController extends Controller
         
         $this->hotelService->create($idHotel, $request);
         
-        return back()->with('msg', 'Thêm dịch vụ thành công!');
+        return back()->with('success', 'Thêm dịch vụ thành công!');
     }
 
     public function destroy(string $id)
     {
         $this->hotelService->delete($id);
-        return back()->with('msg', 'Xóa dịch vụ thành công!');
+        return back()->with('success', 'Xóa dịch vụ thành công!');
     }
 
     public function destroyMulti(Request $request)
     {
         $this->hotelService->deleteMulti($request);
-        return back()->with('msg', 'Xóa dịch vụ thành công!');
+        return back()->with('success', 'Xóa dịch vụ thành công!');
     }
 }

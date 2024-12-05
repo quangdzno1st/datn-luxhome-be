@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Hotel\CreateHotelRequest;
 use App\Http\Requests\Api\Hotel\UpdateHotelRequest;
+use App\Models\Hotel;
 use App\Models\User;
 use App\Repositories\Hotel\HotelRepository;
 use App\Repositories\Reigion\RegionRepository;
@@ -34,7 +35,13 @@ class HotelController extends Controller
         if($user->type == User::HOTELIER){
             $data = $this->hotelRepository->getAllForHotelier();
         }else if($user->type == User::ADMIN){
-            $data = $this->hotelRepository->getAllForAdmin();
+            $query = Hotel::query();
+            if (request()->filled('keyword')) {
+                $keyword = request()->input('keyword');
+                $query->where('name', 'like', '%' . $keyword . '%')
+                    ->orWhere('location', 'like', '%' . $keyword . '%');
+            }
+            $data = $query->latest('created_at')->paginate(10);
         }
 
         return view(self::PATH_VIEW . __FUNCTION__, compact('data'));
@@ -56,8 +63,8 @@ class HotelController extends Controller
 
             return redirect()->route('admin.hotels.index')->with('success', 'Thêm mới khách sạn thành công');
         } catch (\Exception $e) {
-//             dd($e->getMessage());
-            return back()->withErrors(['msg' => $e->getMessage()]);
+            // dd($e->getMessage());
+            return back()->with('error' , $e->getMessage());
         }
     }
 
@@ -82,10 +89,10 @@ class HotelController extends Controller
             $data['status'] = $request->status ? 1 : 0;
             $this->hotelService->updateHotel($data, $id);
 
-            return redirect()->route('admin.hotels.index')->with('success', 'Sửa khách sạn thành công');
+            return redirect()->back()->with('success', 'Sửa khách sạn thành công');
         } catch (\Exception $e) {
             // dd($e->getMessage());
-            return back()->with('errors', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -97,7 +104,7 @@ class HotelController extends Controller
             return redirect()->route('admin.hotels.index')->with('success', 'Xóa khách sạn thành công');
         } catch (\Exception $e) {
             // dd($e->getMessage());
-            return back()->with('errors', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -118,7 +125,7 @@ class HotelController extends Controller
             return redirect()->route('admin.hotels.index')->with('success', 'Khôi phục khách sạn thành công');
         } catch (\Exception $e) {
             // dd($e->getMessage());
-            return back()->with('errors', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -129,7 +136,7 @@ class HotelController extends Controller
             return redirect()->route('admin.hotels.index')->with('success', 'Xóa vĩnh viễn khách sạn thành công');
         } catch (\Exception $e) {
             // dd($e->getMessage());
-            return back()->with('errors', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 }

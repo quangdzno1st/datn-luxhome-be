@@ -28,11 +28,13 @@ class LoginController extends Controller
             'password' => ['required', 'string'],
         ], $message);
 
-        if (Auth::attempt($credentials, $request->remember)) {
+        $remember = $request->has('remember');
+
+        if (Auth::attempt($credentials, $remember)) {
 
             $request->session()->regenerate();
 
-            return redirect()->route('orders.index')->with('msg', 'Đăng nhập thành công!');
+            return redirect()->route('home.index')->with('success', 'Đăng nhập thành công!');
         }
 
         return back()->withErrors([
@@ -46,6 +48,6 @@ class LoginController extends Controller
 
         $request->session()->invalidate();
 
-        return redirect()->route('client.login')->with('msg', 'Đăng xuất tài khoản thành công!');
+        return redirect()->route('client.login')->with('success', 'Đăng xuất tài khoản thành công!');
     }
 }

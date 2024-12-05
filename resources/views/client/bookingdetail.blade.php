@@ -8,13 +8,20 @@
             <nav class="breadcrumbs">
                 <!--crumbs-->
                 <ul>
-                    <li><a href="#" title="Home">Home</a></li>
-                    <li><a href="#" title="My Account">My Account</a></li>
+                    <li><a href="{{route('home.index')}}" title="Home">Trang chủ</a></li>
+                    <li><a href="{{route('orders.index')}}" title="My Account">Tài khoản của tôi</a></li>
+                    <li><a href="#" title="My Account">Chi tiết đơn hàng</a></li>
                 </ul>
                 <!--//crumbs-->
             </nav>
             <!--//breadcrumbs-->
-            <h1 style="color: #19b4ac; font-size:1rem; text-align:right; padding: 24px 0">{{session('msg')}}</h1>
+            @if (session('success'))
+                <div class="alert alert-success" style="display: flex;">
+                    <ul>
+                        <li>{{session('success')}}</li>
+                    </ul>
+                </div>
+            @endif
             <div class="row">
                 <!--three-fourth content-->
                 <section class="three-fourth">
@@ -52,11 +59,13 @@
                                     </tr>
                                     <tr>
                                         <td>Ngày đặt phòng</td>
-                                        <td>{{ \Carbon\Carbon::parse($order['start_date'])->locale('vi')->isoFormat('[Ngày] D [tháng] M [năm] YYYY') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($order['start_date'])->locale('vi')->isoFormat('[Ngày] D [tháng] M [năm] YYYY') }}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Ngày trả phòng</td>
-                                        <td> {{ \Carbon\Carbon::parse($order['start_date'])->locale('vi')->isoFormat('[Ngày] D [tháng] M [năm] YYYY') }} </td>
+                                        <td> {{ \Carbon\Carbon::parse($order['start_date'])->locale('vi')->isoFormat('[Ngày] D [tháng] M [năm] YYYY') }}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Voucher</td>
@@ -74,7 +83,7 @@
                                         <th>Số Phòng</th>
                                         <th>Giá (VND)</th>
                                     </tr>
-                                    @foreach($catalogueRooms as $catalogueRoom)
+                                    @foreach ($catalogueRooms as $catalogueRoom)
                                         @php
                                             $totalRoomAmount += $catalogueRoom['total_price'];
                                         @endphp
@@ -86,7 +95,7 @@
                                     @endforeach
                                 </table>
 
-                                @if(!empty($services))
+                                @if (!empty($services))
                                     <h3>Thông Tin Dịch Vụ</h3>
                                     @php
                                         $totalServiceAmount = 0;
@@ -97,7 +106,7 @@
                                             <th>Số lượng</th>
                                             <th>Giá (VND)</th>
                                         </tr>
-                                        @foreach($services as $service)
+                                        @foreach ($services as $service)
                                             @php
                                                 $totalServiceAmount += $service['total_price'];
                                             @endphp
@@ -112,7 +121,7 @@
 
                                 <h3>Tổng Tiền</h3>
                                 <table>
-                                    @if(!empty($service))
+                                    @if (!empty($service))
                                         <tr>
                                             <td>Tổng tiền dịch vụ</td>
                                             <td>
@@ -129,11 +138,14 @@
                                         @php
                                             $totalAmount = ($totalServiceAmount ?? 0) + $totalRoomAmount;
                                         @endphp
-                                        <td> {{  number_format($totalAmount * (($order['discount_value']) ?? 0) / 100) . ' đ' }} </td>
+                                        <td> {{ number_format(($totalAmount * ($order['discount_value'] ?? 0)) / 100) . ' đ' }}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td class="total">Tổng tiền thanh toán</td>
-                                        <td class="total">{{ number_format($totalAmount * (100 - (($order['discount_value']) ?? 0)) / 100 ) . ' đ'}}</td>
+                                        <td class="total">
+                                            {{ number_format(($totalAmount * (100 - ($order['discount_value'] ?? 0))) / 100) . ' đ' }}
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
@@ -155,22 +167,22 @@
                 <aside class="one-fourth right-sidebar">
                     <!--Need Help Booking?-->
                     @if ($order['status'] == 3 && $order['status_payment'] == 2 && $order['is_rating'] == 2)
-                    <article class="widget">
-                        <h4>Đánh giá</h4>
-                        <form action="{{route('client.rating', $order['id'])}}" method="post">
-                            @csrf
-                            <select name="rate">
-                                <option value="5">Rất tốt</option>
-                                <option value="4">Tốt</option>
-                                <option value="3">Tạm</option>
-                                <option value="2">Kém</option>
-                                <option value="1">Rất kém</option>
-                            </select>
-                            <input type="hidden" name="hotel_id" value="{{$order['org_id']}}">
-                            <textarea style="margin-top: 10px" name="content" cols="30" rows="10" placeholder="Nhận xét ý kiến của bạn"></textarea>
-                            <button style="margin-top: 10px; border:none" type="submit">Đánh giá</button>
-                        </form>
-                    </article>
+                        <article class="widget">
+                            <h4>Đánh giá</h4>
+                            <form action="{{ route('client.rating', $order['id']) }}" method="post">
+                                @csrf
+                                <select name="rate">
+                                    <option value="5">Rất tốt</option>
+                                    <option value="4">Tốt</option>
+                                    <option value="3">Tạm</option>
+                                    <option value="2">Kém</option>
+                                    <option value="1">Rất kém</option>
+                                </select>
+                                <input type="hidden" name="hotel_id" value="{{ $order['org_id'] }}">
+                                <textarea style="margin-top: 10px" name="content" cols="30" rows="10" placeholder="Nhận xét ý kiến của bạn"></textarea>
+                                <button style="margin-top: 10px; border:none" type="submit">Đánh giá</button>
+                            </form>
+                        </article>
                     @endif
                     <!--//Need Help Booking?-->
 

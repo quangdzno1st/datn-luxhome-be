@@ -51,13 +51,16 @@
                                     </div>
                                 </div>
                                 <div class="col-sm">
-                                    <div class="d-flex justify-content-sm-end">
+                                    <form class="d-flex justify-content-sm-end" action="" method="GET">
                                         <div class="search-box ms-2">
-                                            <input type="text" class="form-control search" id="nameSearch"
-                                                   placeholder="Tìm kiếm...">
+                                            <input type="text" class="form-control" name="keyword" value="{{request()->input('keyword')}}"
+                                                   placeholder="Tìm tên, địa chỉ khách sạn">
                                             <i class="ri-search-line search-icon"></i>
                                         </div>
-                                    </div>
+                                        <div class="ms-1">
+                                            <button class="btn btn-primary">Tìm kiếm</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
 
@@ -73,7 +76,7 @@
                                         <th>Số sao</th>
                                         <th>Số điện thoại</th>
                                         <th>Email</th>
-                                        <th>Số tầng</th>
+                                        <th>Lượt xem</th>
                                         <th>Trạng thái</th>
                                         <th>###</th>
                                     </tr>
@@ -100,7 +103,7 @@
                                             <td>{{ $hotel->star }}</td>
                                             <td>{{ $hotel->phone }}</td>
                                             <td>{{ $hotel->email }}</td>
-                                            <td>{{ $hotel->quantity_floor }}</td>
+                                            <td>{{ $hotel->view }}</td>
                                             <td>{!! $hotel->status
                                                     ? '<span class="badge rounded-pill border border-success text-success">Hoạt động</span>'
                                                     : '<span class="badge rounded-pill border border-danger text-danger">Không hoạt động</span>' !!}

@@ -19,7 +19,7 @@
     <!-- end page title -->
     
     <!-- Notification -->
-    <div class="row">
+    {{-- <div class="row">
         @if (session('msg'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <strong>{{ session('msg') }}</strong>
@@ -32,7 +32,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-    </div>
+    </div> --}}
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -58,11 +58,33 @@
                             <div class="col-sm">
                                 <form class="d-flex justify-content-sm-end">
                                     <div class="search-box ms-2">
-                                        <input type="text" class="form-control search" name="keyword"
-                                            placeholder="Điền điểm, nội dung, ..."
-                                            value="{{ request()->has('keyword') ? request()->input('keyword') : '' }}">
+                                        <input type="text" class="form-control search" name="content"
+                                            placeholder="Điền nội dung"
+                                            value="{{ request()->has('content') ? request()->input('content') : '' }}">
                                         <i class="ri-search-line search-icon"></i>
                                     </div>
+                                    <div class="ms-2">
+                                        <input type="text" class="form-control search" name="name"
+                                            placeholder="Điền tên khách"
+                                            value="{{ request()->has('name') ? request()->input('name') : '' }}">
+                                    </div>
+                                    <div class="ms-2">
+                                        <select name="rate" id="" class="form-select">
+                                            <option value="">Chọn tất cả</option>
+                                            <option value="5" @selected(request()->input('rate') == 5)>Rất tốt</option>
+                                            <option value="4" @selected(request()->input('rate') == 4)>Tốt</option>
+                                            <option value="3" @selected(request()->input('rate') == 3)>Tạm</option>
+                                            <option value="2" @selected(request()->input('rate') == 2)>Kém</option>
+                                            <option value="1" @selected(request()->input('rate') == 1)>Rất kém</option>
+                                        </select>
+                                    </div>
+                                    {{-- <div class="ms-2">
+                                        <select name="status" id="" class="form-select">
+                                            <option value="">Chọn tất cả</option>
+                                            <option value="1" @selected(request()->input('status') == 1)>Đã trả lời</option>
+                                            <option value="2" @selected(request()->input('status') == 2)>Chưa trả lời</option>
+                                        </select>
+                                    </div> --}}
                                     <div class="ms-1">
                                         <button class="btn btn-primary">Tìm kiếm</button>
                                     </div>
@@ -100,15 +122,15 @@
                                                 <button type="submit" class="btn btn-sm btn-soft-success">Khôi
                                                     phục</button>
                                             </form>
-                                            <div class="remove">
+                                            {{-- <div class="remove">
                                                 <button class="btn btn-sm btn-soft-danger remove-item-btn"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#deleteRecordModal{{ $rate->id }}">Xóa</button>
-                                            </div>
+                                            </div> --}}
                                         </td>
                                     </tr>
                                     <!-- Modal -->
-                                    <div class="modal fade zoomIn" id="deleteRecordModal{{ $rate->id }}" tabindex="-1"
+                                    {{-- <div class="modal fade zoomIn" id="deleteRecordModal{{ $rate->id }}" tabindex="-1"
                                         aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
@@ -143,7 +165,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 @endforeach
                             </tbody>
                         </table>

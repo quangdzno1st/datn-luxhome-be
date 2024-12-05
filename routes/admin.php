@@ -15,6 +15,7 @@
 use App\Http\Controllers\Admin\AmenitiesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ServiceController;
@@ -202,13 +203,17 @@ Route::group(['middleware' => ['admin']], function () {
 
     Route::prefix('rates')->name('rates.')->controller(RateController::class)->group(function(){
         //route của superadmin
-        Route::get('/hotels', 'listRatesAllHotels')->name('hotels');
-        Route::get('/hotel/{hotelId}', 'listRatesOneHotel')->name('hotel');
-        Route::get('/trash/hotel/{hotelId}', 'listRatesOneHotelTrash')->name('hotel.trash');
+        Route::middleware('is.super.admin')->group(function() {
+            Route::get('/hotels', 'listRatesAllHotels')->name('hotels');
+            Route::get('/hotel/{hotelId}', 'listRatesOneHotel')->name('hotel');
+            Route::get('/trash/hotel/{hotelId}', 'listRatesOneHotelTrash')->name('hotel.trash');
+        });
 
         //route của hotelier
-        Route::get('/hotelier', 'getRatesByHotelIdOfHotelier')->name('hotel.hotelier');
-        Route::get('/trash/hotelier', 'getRatesByHotelIdOfHotelierTrash')->name('hotel.trash.hotelier');
+        Route::middleware('is.staff.and.admin')->group(function() {
+            Route::get('/hotelier', 'getRatesByHotelIdOfHotelier')->name('hotel.hotelier');
+            Route::get('/trash/hotelier', 'getRatesByHotelIdOfHotelierTrash')->name('hotel.trash.hotelier');
+        });
 
         //route 2 thằng đều dùng được
         Route::post('/hidden/{rateId}', 'rateHidden')->name('hidden');
@@ -221,10 +226,18 @@ Route::group(['middleware' => ['admin']], function () {
         Route::put('/update/{id}', 'update')->name('update');
         Route::get('/delete/{id}', 'delete')->name('delete');
     });
+
+    Route::prefix('banners')->middleware('is.super.admin')->name('banners.')->controller(BannerController::class)->group(function() {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/store', 'store')->name('store');
+        Route::get('/update{id}', 'update')->name('update');
+        Route::delete('/destroy{id}', 'destroy')->name('destroy');
+    });
 });
 
 //voucher
-Route::prefix('admin/vouchers')->group(function () {
+Route::prefix('vouchers')->group(function () {
     Route::get('/', [\App\Http\Controllers\Admin\VoucherController::class, 'index'])->name('vouchers.index')->middleware('can:view_vouchers');
     Route::get('/create', [\App\Http\Controllers\Admin\VoucherController::class, 'create'])->name('vouchers.create')->middleware('can:create_vouchers');
     Route::post('/issue-voucher', [\App\Http\Controllers\Admin\VoucherController::class, 'issueVoucher'])->name('vouchers.issue_voucher');
@@ -238,7 +251,7 @@ Route::prefix('admin/vouchers')->group(function () {
 });
 
 //order
-Route::prefix('admin/orders')->group(function () {
+Route::prefix('orders')->group(function () {
     Route::get('/search-by-page', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index')->middleware('can:view_orders');
     Route::post('/checkout/{id}', [\App\Http\Controllers\Admin\OrderDetailController::class, 'updateStatus'])->name('orders.checkout')->middleware('can:edit_orders');;
     Route::get('/show/{order}', [\App\Http\Controllers\Admin\OrderDetailController::class, 'showOrderDetail'])->name('orders.show')->middleware('can:edit_orders');;
@@ -248,4 +261,10 @@ Route::prefix('admin/orders')->group(function () {
     Route::post('/not_accepted_cancel/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'not_accepted_cancel'])->name('orders.not_accepted_cancel')->middleware('can:edit_orders');
     Route::post('/accepted_cancel/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'accepted_cancel'])->name('orders.accepted_cancel')->middleware('can:edit_orders');
     Route::post('/refunded-money/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'refundMoney'])->name('orders.refunded-money')->middleware('can:edit_orders');
+// search
+    Route::get('/search_order', [\App\Http\Controllers\Admin\OrderController::class, 'search'])->name('orders.search')->middleware('can:edit_orders');
 });
+
+Route::get('/404', function () {
+    return view('admin.errors.404');
+})->name('error.404');

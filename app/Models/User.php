@@ -34,7 +34,7 @@ class User extends Authenticatable
         'password',
         'cccd',
         'is_active',
-        'rank_id',
+        'rank',
         'type',
         'avatar'
     ];

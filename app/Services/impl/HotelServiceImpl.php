@@ -73,14 +73,14 @@ class HotelServiceImpl implements HotelService
             if (isset($data['images']) && is_array($data['images'])) {
                 $dataImage = [];
 
-                if ($hotel->images) {
-                    foreach ($hotel->images as $image) {
-                        if (!empty($image->path)) {
-                            Storage::disk('public')->delete($image->path);
-                        }
-                        $image->delete();
-                    }
-                }
+                // if ($hotel->images) {
+                //     foreach ($hotel->images as $image) {
+                //         if (!empty($image->path)) {
+                //             Storage::disk('public')->delete($image->path);
+                //         }
+                //         $image->delete();
+                //     }
+                // }
 
 
                 foreach ($data['images'] as $image) {

@@ -48,7 +48,7 @@ class Order extends Model
 
     public function attributeValues()
     {
-        return $this->belongsToMany(AttributeValue::class, 'catalogue_room_attribute', 'catalogue_room_id', 'attribute_value_id');
+        return $this->belongsToMany(Attribute::class, 'catalogue_room_attribute', 'catalogue_room_id', 'attribute_value_id');
     }
     public function orderItem()
     {

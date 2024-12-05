@@ -153,6 +153,12 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="mb-3">
+                            <label class="form-label" for="view">Lượt xem</label>
+                            <input type="text" class="form-control" id="view"
+                                   value="{{ $data->view }}" placeholder="Lượt xem" disabled>
+                        </div>
+
+                        <div class="mb-3">
                             <label class="form-label" for="star">Số sao<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="star" name="star"
                                    value="{{ $data->star }}" placeholder="Số sao">
@@ -323,7 +329,7 @@
         </div>
 
         <div class="text-end mb-4">
-            <button type="submit" class="btn btn-warning w-sm">Sửa</button>
+            <button type="submit" class="btn btn-warning w-sm">Cập nhật</button>
         </div>
     </form>
 

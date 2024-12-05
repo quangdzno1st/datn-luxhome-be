@@ -24,7 +24,7 @@ class CommentController extends Controller
 
         $comment = Comment::query()->create($data);
 
-        return back()->with('msg', 'Bình luận thành công!');
+        return back()->with('success', 'Bình luận thành công!');
     }
 
     public function update(Request $request, $id)
@@ -46,7 +46,7 @@ class CommentController extends Controller
             'content' => $data['content']
         ]);
 
-        return back()->with('msg', 'Cập nhật bình luận thành công!');
+        return back()->with('success', 'Cập nhật bình luận thành công!');
     }
 
     public function delete($id)
@@ -55,6 +55,6 @@ class CommentController extends Controller
 
         $comment->delete();
 
-        return back()->with('msg', 'Xóa bình luận thành công!');
+        return back()->with('success', 'Xóa bình luận thành công!');
     }
 }

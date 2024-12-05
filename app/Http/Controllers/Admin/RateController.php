@@ -32,16 +32,33 @@ class RateController extends Controller
 
         $query = Rate::withoutTrashed()->with('user', 'comment')->where('hotel_id', $hotelId);
 
-        if (request()->has('keyword')) {
-            $keyword = request()->input('keyword');
+        if (request()->filled('content')) {
+            $content = request()->input('content');
+            $query->where('content', 'like', "%$content%");
+        }
 
-            $query->where(function ($query) use ($keyword) {
-                $query->where('rate', 'like', "%$keyword%")
-                    ->orWhere('content', 'like', "%$keyword%");
+        if (request()->filled('name')) {
+            $name = request()->input('name');
+            $query->whereHas('user', function($query) use ($name) {
+                $query->where('name', 'like', "%$name%");
             });
         }
 
-        $rates = $query->paginate(10);
+        if (request()->filled('rate')) {
+            $rate = request()->input('rate');
+            $query->where('rate', $rate);
+        }
+
+        if (request()->filled('status')) {
+            $status = request()->input('status');
+            if ($status == 1) {
+                $query->has('comment');
+            } else {
+                $query->doesntHave('comment');
+            }
+        }
+
+        $rates = $query->latest('created_at')->paginate(10);
         // dd($rates->toArray());
 
         return view(self::PATH_VIEW . 'list-rates-one-hotel', compact('hotel', 'rates'));
@@ -53,16 +70,33 @@ class RateController extends Controller
 
         $query = Rate::onlyTrashed()->with('user', 'comment')->where('hotel_id', $hotelId);
 
-        if (request()->has('keyword')) {
-            $keyword = request()->input('keyword');
+        if (request()->filled('content')) {
+            $content = request()->input('content');
+            $query->where('content', 'like', "%$content%");
+        }
 
-            $query->where(function ($query) use ($keyword) {
-                $query->where('rate', 'like', "%$keyword%")
-                    ->orWhere('content', 'like', "%$keyword%");
+        if (request()->filled('name')) {
+            $name = request()->input('name');
+            $query->whereHas('user', function($query) use ($name) {
+                $query->where('name', 'like', "%$name%");
             });
         }
 
-        $rates = $query->paginate(10);
+        if (request()->filled('rate')) {
+            $rate = request()->input('rate');
+            $query->where('rate', $rate);
+        }
+
+        // if (request()->filled('status')) {
+        //     $status = request()->input('status');
+        //     if ($status == 1) {
+        //         $query->has('comment');
+        //     } else {
+        //         $query->doesntHave('comment');
+        //     }
+        // }
+
+        $rates = $query->latest('created_at')->paginate(10);
 
         return view(self::PATH_VIEW . 'list-rates-one-hotel-trash', compact('hotel', 'rates'));
     }
@@ -75,16 +109,33 @@ class RateController extends Controller
 
         $query = Rate::withoutTrashed()->with('user', 'comment')->where('hotel_id', $hotelId);
 
-        if (request()->has('keyword')) {
-            $keyword = request()->input('keyword');
+        if (request()->filled('content')) {
+            $content = request()->input('content');
+            $query->where('content', 'like', "%$content%");
+        }
 
-            $query->where(function ($query) use ($keyword) {
-                $query->where('rate', 'like', "%$keyword%")
-                    ->orWhere('content', 'like', "%$keyword%");
+        if (request()->filled('name')) {
+            $name = request()->input('name');
+            $query->whereHas('user', function($query) use ($name) {
+                $query->where('name', 'like', "%$name%");
             });
         }
 
-        $rates = $query->paginate(10);
+        if (request()->filled('rate')) {
+            $rate = request()->input('rate');
+            $query->where('rate', $rate);
+        }
+
+        if (request()->filled('status')) {
+            $status = request()->input('status');
+            if ($status == 1) {
+                $query->has('comment');
+            } else {
+                $query->doesntHave('comment');
+            }
+        }
+
+        $rates = $query->latest('created_at')->paginate(10);
 
         return view(self::PATH_VIEW . 'list-rates-one-hotel', compact('hotel', 'rates'));
     }
@@ -97,16 +148,33 @@ class RateController extends Controller
 
         $query = Rate::onlyTrashed()->with('user', 'comment')->where('hotel_id', $hotelId);
 
-        if (request()->has('keyword')) {
-            $keyword = request()->input('keyword');
+        if (request()->filled('content')) {
+            $content = request()->input('content');
+            $query->where('content', 'like', "%$content%");
+        }
 
-            $query->where(function ($query) use ($keyword) {
-                $query->where('rate', 'like', "%$keyword%")
-                    ->orWhere('content', 'like', "%$keyword%");
+        if (request()->filled('name')) {
+            $name = request()->input('name');
+            $query->whereHas('user', function($query) use ($name) {
+                $query->where('name', 'like', "%$name%");
             });
         }
 
-        $rates = $query->paginate(10);
+        if (request()->filled('rate')) {
+            $rate = request()->input('rate');
+            $query->where('rate', $rate);
+        }
+
+        // if (request()->filled('status')) {
+        //     $status = request()->input('status');
+        //     if ($status == 1) {
+        //         $query->has('comment');
+        //     } else {
+        //         $query->doesntHave('comment');
+        //     }
+        // }
+
+        $rates = $query->latest('created_at')->paginate(10);
 
         return view(self::PATH_VIEW . 'list-rates-one-hotel-trash', compact('hotel', 'rates'));
     }
@@ -115,20 +183,20 @@ class RateController extends Controller
     {
         $rate = Rate::withoutTrashed()->where('id', $rateId)->firstOrFail();
         $rate->delete();
-        return back()->with('msg', 'Bạn đã ẩn 1 đánh giá');
+        return back()->with('success', 'Bạn đã ẩn 1 đánh giá');
     }
 
     public function rateRestore($rateId)
     {
         $rate = Rate::onlyTrashed()->where('id', $rateId)->firstOrFail();
         $rate->restore();
-        return back()->with('msg', 'Bạn đã khôi phục 1 đánh giá');
+        return back()->with('success', 'Bạn đã khôi phục 1 đánh giá');
     }
 
     public function rateDestroy($rateId)
     {
         $rate = Rate::withTrashed()->where('id', $rateId)->firstOrFail();
         $rate->forceDelete();
-        return back()->with('msg', 'Bạn đã xóa vĩnh viễn 1 đánh giá');
+        return back()->with('success', 'Bạn đã xóa vĩnh viễn 1 đánh giá');
     }
 }

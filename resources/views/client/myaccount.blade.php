@@ -69,7 +69,7 @@
             <nav class="breadcrumbs">
                 <!--crumbs-->
                 <ul>
-                    <li><a href="#" title="Home">Trang chủ</a></li>
+                    <li><a href="{{route('home.index')}}" title="Home">Trang chủ</a></li>
                     <li><a href="#" title="My Account">Tài khoản của tôi</a></li>
                 </ul>
                 <!--//crumbs-->
@@ -82,13 +82,6 @@
 
                     <div style="display: flex; justify-content:space-between">
                         <h1>Tài khoản của tôi</h1>
-                        @if (session('msg'))
-                            <div class="alert alert-success">
-                                <ul>
-                                    <li>{{session('msg')}}</li>
-                                </ul>
-                            </div>
-                        @endif
                         @if (session('error'))
                             <div class="alert alert-danger">
                                 <ul>
@@ -241,7 +234,7 @@
 
                     <!--MyReviews-->
                     <section id="MyReviews" class="tab-content">
-                        @foreach ($rates as $rate)     
+                        @forelse ($rates as $rate)     
 
                         <article class="myreviews">
                             <h2>Đánh giá về khách sạn {{$rate->hotel->name}}</h2>
@@ -269,7 +262,11 @@
                             @endif
                         </article>
 
-                        @endforeach
+                        @empty
+                            <article class="myreviews">
+                                <h3 style="text-align: center">Bạn chưa có đánh giá nào!</h3>
+                            </article>
+                        @endforelse
                     </section>
                     <!--//MyReviews-->
 

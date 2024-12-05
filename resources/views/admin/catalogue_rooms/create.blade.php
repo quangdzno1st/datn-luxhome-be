@@ -34,14 +34,14 @@
     <!-- end page title -->
 
     <!-- Notification -->
-    <div class="row">
+    {{-- <div class="row">
         @if (session('error'))
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>{{session('error')}}</strong>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         @endif
-    </div>
+    </div> --}}
 
     <form action="{{ route('admin.catalogue-rooms.store') }}" method="post" enctype="multipart/form-data">
         @csrf
@@ -84,19 +84,6 @@
                                 <p class="text-danger">{{$message}}</p>
                             @enderror
                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                          <div class="col">
-                            <label class="form-label" for="view">Lượt xem</label>
-                            <input type="number" class="form-control" id="view" min="0" name="view"
-                                value="{{ old('view') }}" placeholder="Lượt xem" disabled>
-                          </div>
-                          <div class="col">
-                            <label class="form-label" for="like">Lượt thích</label>
-                            <input type="number" class="form-control" id="like" min="0" name="like"
-                                value="{{ old('like') }}" placeholder="Lượt thích" disabled>
-                          </div>
                         </div>
 
                         <div class="mb-2 d-flex justify-content-end">

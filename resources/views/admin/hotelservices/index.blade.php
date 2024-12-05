@@ -26,7 +26,7 @@
         <!-- end page title -->
 
          <!-- Notification -->
-        <div class="row">
+        {{-- <div class="row">
             @if (session('msg'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <strong>{{session('msg')}}</strong>
@@ -39,7 +39,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             @enderror
-        </div>
+        </div> --}}
 
 
         <div class="row">
@@ -61,6 +61,21 @@
                                 </div>
                                 <div class="col-sm">
                                     <form class="d-flex justify-content-sm-end" method="GET" action="{{url()->full()}}">
+                                        <div class="ms-2">
+                                            <select name="type" id="" class="form-select">
+                                                <option value="">Chọn tất cả</option>
+                                                <option value="1" @selected(request()->input('type') == 1)>Dịch vụ đi kèm</option>
+                                                <option value="2" @selected(request()->input('type') == 2)>Dịch vụ mất phí</option>
+                                            </select>
+                                        </div>
+                                        <div class="ms-2">
+                                            <input type="number" name="min_price" class="form-control" placeholder="Giá thấp nhất"
+                                                value="{{ request('min_price') }}">
+                                        </div>
+                                        <div class="ms-2">
+                                            <input type="number" name="max_price" class="form-control" placeholder="Giá cao nhất"
+                                                value="{{ request('max_price') }}">
+                                        </div>
                                         <div class="search-box ms-2">
                                             <input type="text" name="keyword" class="form-control" placeholder="Điền tên, giá, mô tả..." value="{{ request()->has('keyword') ? request()->input('keyword') : '' }}">
                                             <i class="ri-search-line search-icon"></i>
@@ -90,7 +105,7 @@
                                         <th>Giá</th>
                                         <th>Mô tả</th>
                                         <th>Loại dịch vụ</th>
-                                        <th></th>
+                                        <th>Hành động</th>
                                     </tr>
                                     </thead>
                                     <tbody class="list form-check-all">
@@ -109,17 +124,17 @@
                                                                                         class="fw-medium link-primary"></a>
                                                 </td>
                                                 <td class="">{{ $index + 1 }}</td>
-                                                <td class="">{{ $hotelService->service_name }}</td>
-                                                <td class="">{{ $hotelService->service_price }}</td>
-                                                <td class="">{{ $hotelService->service_description }}</td>
+                                                <td class="">{{ $hotelService->service->name }}</td>
+                                                <td class="">{{ number_format($hotelService->service->price, 0, ',', '.') }} VND</td>
+                                                <td class="">{{ $hotelService->service->description }}</td>
                                                 <td class="">
                                                     @php
                                                         $bgColor = 'bg-light text-dark';
-                                                        if ($hotelService->service_type == 1) {
+                                                        if ($hotelService->service->type == 1) {
                                                             $bgColor = 'bg-info';
                                                         }
                                                     @endphp
-                                                    <span class="badge {{$bgColor}}">{{ App\Models\Service::TYPE_SERVICE["$hotelService->service_type"]}}</span>
+                                                    <span class="badge {{$bgColor}}">{{ App\Models\Service::TYPE_SERVICE[$hotelService->service->type]}}</span>
                                                 </td>
                                                 <td>
                                                     <div class="d-flex gap-2">
