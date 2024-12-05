@@ -97,7 +97,7 @@
 {{--                                        <img src="{{ \Storage::url($user->avatar) }}" alt="" width="100px">--}}
 {{--                                    </div>--}}
                                     @if(auth()->user()->type == \App\Models\User::ADMIN)
-                                    <div class="mb-3 d-flex">
+                                    <div class="mb-3 d-flex gap-2" style="margin-top:26px ">
                                         <div class="form-check form-radio-danger mb-3 me-3">
                                             <input class="form-check-input" type="radio" name="type" id="admin"
                                                 value="{{\App\Models\User::ADMIN}}" {{ $user->type == \App\Models\User::ADMIN ? 'checked' : '' }}>

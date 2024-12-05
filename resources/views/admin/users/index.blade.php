@@ -86,9 +86,11 @@
                                     <td>{{ $user->phone }}</td>
                                     <td>
                                         @if ($user->type === \App\Models\User::CUSTOMER)
-                                        <span class="badge bg-info">Customer</span>
+                                        <span class="badge bg-info">Người dùng</span>
                                         @elseif($user->type === \App\Models\User::HOTELIER)
-                                        <span class="badge bg-danger">Hotelier</span>
+                                        <span class="badge bg-danger">Chủ khách sạn</span>
+                                        @elseif($user->type === \App\Models\User::STAFF)
+                                        <span class="badge bg-success">Nhân viên</span>
                                         @else
                                             <span class="badge bg-warning">Admin</span>
                                     @endif
@@ -103,11 +105,11 @@
                                     <td class="d-flex justify-content-center">
                                         <a href="{{route('admin.users.edit', $user)}}" class="btn btn-soft-warning me-2"><i
                                             class="ri-edit-2-line"></i></a>
-                                        <form action="{{route('admin.users.destroy', $user)}}" method="post">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-soft-danger" onclick="return confirm('Bạn có muốn xóa không?')"><i class="ri-delete-bin-line"></i></button>
-                                        </form>
+{{--                                        <form action="{{route('admin.users.destroy', $user)}}" method="post">--}}
+{{--                                            @csrf--}}
+{{--                                            @method('DELETE')--}}
+{{--                                            <button type="submit" class="btn btn-soft-danger" onclick="return confirm('Bạn có muốn xóa không?')"><i class="ri-delete-bin-line"></i></button>--}}
+{{--                                        </form>--}}
                                     </td>
                                 </tr>
                             @endforeach

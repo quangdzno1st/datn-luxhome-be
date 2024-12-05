@@ -39,8 +39,8 @@ class UserRequest extends FormRequest
         if ($userType == User::CUSTOMER) {
             $rules['org_id'] = 'prohibited';
         }
-
-        if ($userEdit->id != $user->id && $userType != User::CUSTOMER) {
+//dd($userEdit->id != $user->id && $user->user_type == User::ADMIN);
+        if ($userEdit->id != $user->id && $user->user_type == User::ADMIN && $userType != User::CUSTOMER) {
             abort(403);
         }
 

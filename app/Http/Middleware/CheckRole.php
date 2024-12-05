@@ -18,7 +18,7 @@ class CheckRole
     public function handle(Request $request, Closure $next,...$type): Response
     {
         if (Auth::check()) {
-            if (Auth::user()->type === User::ADMIN || Auth::user()->type === User::HOTELIER) {
+            if (Auth::user()->type != User::CUSTOMER) {
                 return $next($request);
             }
             return redirect()->back();

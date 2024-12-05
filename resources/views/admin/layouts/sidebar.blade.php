@@ -61,29 +61,21 @@
             </div>
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span data-key="t-menu">Mục lục</span></li>
+                @can('view_overview')
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->routeIs('admin.statistical.index') ? 'active' : '' }}"
                         href="{{ route('admin.statistical.index') }}">
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Tổng Quan</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
-
-
-                <li class="nav-item">
-                    <a class="nav-link menu-link {{ request()->routeIs('admin.services.index') ? 'active' : '' }}"
-                        href="{{ route('admin.services.index') }}">
-                        <i class="ri-customer-service-line"></i> <span data-key="t-layouts">Dịch vụ</span>
-                    </a>
-                </li> <!-- end Dashboard Menu -->
-
-                @if (Auth::user()->type == \App\Models\User::ADMIN)
+                @endcan
+                @can('view_services')
                     <li class="nav-item">
-                        <a class="nav-link menu-link {{ request()->routeIs('admin.banners.index') ? 'active' : '' }}"
-                            href="{{ route('admin.banners.index') }}">
-                            <i class="ri-image-fill"></i> <span data-key="t-layouts">Ảnh Banner</span>
+                        <a class="nav-link menu-link" href="{{ route('admin.services.index') }}">
+                            <i class="ri-customer-service-line"></i> <span data-key="t-layouts">Dịch vụ</span>
                         </a>
                     </li> <!-- end Dashboard Menu -->
-                @endif
+                @endcan
 
                 @can('view_users')
                     <li class="nav-item">
@@ -110,29 +102,30 @@
                     </li>
 
                 @endcan
-                @can('view_services')
+                @can('view_amenities')
                     <li class="nav-item">
                         <a class="nav-link menu-link {{ request()->routeIs('admin.amenities.*') ? 'active' : '' }}"
-                            href="#sidebarAmenities" data-bs-toggle="collapse" role="button" aria-expanded="false"
-                            aria-controls="sidebarAmenities">
+                           href="#sidebarAmenities" data-bs-toggle="collapse" role="button" aria-expanded="false"
+                           aria-controls="sidebarAmenities">
                             <i class="ri-customer-service-line"></i> <span data-key="t-layouts">Tiện nghi</span>
                         </a>
                         <div class="collapse menu-dropdown {{ request()->routeIs('admin.amenities.*') ? 'show' : '' }}"
-                            id="sidebarAmenities">
+                             id="sidebarAmenities">
                             <ul class="nav nav-sm flex-column">
                                 <li class="nav-item">
                                     <a href="{{ route('admin.amenities.index') }}"
-                                        class="nav-link {{ request()->routeIs('admin.amenities.index') ? 'active' : '' }}"
-                                        data-key="t-horizontal">Danh Sách</a>
+                                       class="nav-link {{ request()->routeIs('admin.amenities.index') ? 'active' : '' }}"
+                                       data-key="t-horizontal">Danh Sách</a>
                                 </li>
-                                {{--                            <li class="nav-item"> --}}
-                                {{--                                <a href="{{ route('admin.amenities.create') }}" --}}
-                                {{--                                    class="nav-link {{ request()->routeIs('admin.amenities.create') ? 'active' : '' }}" --}}
-                                {{--                                    data-key="t-detached">Thêm Mới</a> --}}
-                                {{--                            </li> --}}
+                                {{--                            <li class="nav-item">--}}
+                                {{--                                <a href="{{ route('admin.amenities.create') }}"--}}
+                                {{--                                    class="nav-link {{ request()->routeIs('admin.amenities.create') ? 'active' : '' }}"--}}
+                                {{--                                    data-key="t-detached">Thêm Mới</a>--}}
+                                {{--                            </li>--}}
                             </ul>
                         </div>
                     </li>
+
                 @endcan
                 @can('view_categories')
                     <li class="nav-item">

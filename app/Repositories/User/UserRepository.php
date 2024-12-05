@@ -30,12 +30,11 @@ class UserRepository extends BaseRepository implements UserInterface
             $query->where(function ($q) use ($user) {
                 $q->where('id', $user->id);
                 if ($user->type == User::HOTELIER) {
-                    $q->orWhere('org_id', $user->org_id);
+                    $q->orWhere('org_id', $user->org_id)->where('type',"!=",User::ADMIN);
                 }
                 $q->orWhere('type', User::CUSTOMER);
             });
         }
-
 
         if ($request->has('type') && !empty($request->input('type'))) {
             $query->where('type', $request->input('type'));

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Models\Rate;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\OrderService;
 use App\Http\Requests\OrderRequest;
@@ -48,14 +49,14 @@ class AccountSettingController extends Controller
     public function index(OrderSearchRequest $request)
     {
         $userId = Auth::user()->id;
-
+        $vouchers = User::query()->find($userId)->vouchers;
         $rates = Rate::withoutTrashed()->with('hotel', 'comment')->where('user_id', $userId)->get();
 
         $orders = $this->orderService->searchByPage($request);
 
         $user = Auth::user();
 
-        return view('client.myaccount', compact('orders', 'user', 'rates'));
+        return view('client.myaccount', compact('orders', 'user', 'rates','vouchers'));
     }
 
     public function paymentOrder($orderId)

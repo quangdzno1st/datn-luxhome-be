@@ -55,7 +55,7 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $this->userServices->create($request);
-        return redirect()->route('admin.users.index')->with(['toast_message' => 'Thêm mới thành công', 'toast_style' => 'success']);
+        return redirect()->route('admin.users.index')->with('success', 'Thao tác  thành công!');
     }
 
     /**
@@ -92,7 +92,7 @@ class UserController extends Controller
     public function update(UserRequest $request, $id)
     {
         $this->userServices->update($id, $request);
-        return redirect()->route('admin.users.index')->with(['toast_message' => 'Cập nhật thành công', 'toast_style' => 'success']);
+        return redirect()->route('admin.users.index')->with('success', 'Thao tác thành công!');;
     }
 
     /**
@@ -106,7 +106,7 @@ class UserController extends Controller
         $data = $this->userRepository->find($id);
         $this->userRepository->delete($data);
 
-        return redirect()->back()->with(['toast_message' => 'Xóa thành công', 'toast_style' => 'success']);
+        return redirect()->back()->with('success', 'Thao tác  thành công!');;
     }
 
     public function permissionsList()
@@ -125,6 +125,6 @@ class UserController extends Controller
         $group = Group::query()->findOrFail($id);
         $group->permissions = json_encode($request->permissions) ?? [];
         $group->save();
-        return redirect()->route('admin.permissions.edit',$id)->with(['toast_message' => 'Cập nhật thành công', 'toast_style' => 'success']);
+        return redirect()->route('admin.permissions.edit',$id)->with('success', 'Thao tác  thành công!');;
     }
 }
