@@ -7,6 +7,58 @@
         background-color: inherit; /* Không thay đổi màu nền */
         text-decoration: none; /* Xóa gạch chân nếu cần */
     }
+
+    .voucher-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px auto;
+        background: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .voucher-table thead tr {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .voucher-table th, .voucher-table td {
+        text-align: center;
+        padding: 15px;
+        border: 1px solid #ddd;
+    }
+
+    .voucher-table tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .voucher-table tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .voucher-thumbnail {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .status {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .status.active {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .status.expired {
+        background-color: #dc3545;
+        color: #fff;
+    }
 </style>
 
 @section('content')
@@ -59,6 +111,7 @@
                             <li><a href="#MyBookings" title="My Bookings">Lịch sử đặt phòng</a></li>
                             <li><a href="#MyReviews" title="My Reviews">Lịch sử review</a></li>
                             <li><a href="#MySettings" title="Settings">Cài đặt thông tin</a></li>
+                            <li><a href="#MyVouchers" title="Voucher">Tất cả voucher của bạn</a></li>
                             <li><a href="#ChangePassword" title="Change Password">Đổi mật khẩu</a></li>
                         </ul>
                     </nav>
@@ -352,6 +405,45 @@
 
                         </article>
                     </section>
+                    <section id="MyVouchers" class="tab-content">
+                        <article class="mysettings">
+                            <h2>Danh sách Voucher của tôi</h2>
+                            <table class="voucher-table">
+                                <thead>
+                                <tr>
+                                    <th>Hình ảnh</th>
+                                    <th>Mã Voucher</th>
+                                    <th>Mô tả</th>
+                                    <th>Hiệu lực đến</th>
+                                    <th >Trạng thái</th>
+                                    <th>Giảm giá</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($vouchers as $voucher)
+                                    <tr>
+                                        <td>
+                                            <img src="{{ $voucher->thumbnail ? \Storage::url($voucher->thumbnail) : asset('theme/client/images/default-thumbnail.jpg') }}"
+                                                 alt="Voucher Thumbnail" class="voucher-thumbnail">
+                                        </td>
+                                        <td>{{ $voucher->code }}</td>
+                                        <td>{{ $voucher->description }}</td>
+
+                                        <td> {{ $voucher->end_date }}</td>
+                                        <td>
+                        <span class="status {{ $voucher->status ? 'active' : 'expired' }}">
+                            {{ $voucher->status ? 'Còn hiệu lực' : 'Hết hạn' }}
+                        </span>
+                                        </td>
+                                        <td>{{ $voucher->discount_value }}%</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </article>
+                    </section>
+
                     <!--//MySettings-->
 
                     <!--MyPassword-->

@@ -61,19 +61,21 @@
             </div>
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span data-key="t-menu">Mục lục</span></li>
+                @can('view_overview')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.statistical.index') }}">
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Tổng Quan</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
-
-
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('admin.services.index') }}">
-                        <i class="ri-customer-service-line"></i> <span data-key="t-layouts">Dịch vụ</span>
-                    </a>
-                </li> <!-- end Dashboard Menu -->
-
+                @endcan
+                @can('view_services')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="{{ route('admin.services.index') }}">
+                            <i class="ri-customer-service-line"></i> <span data-key="t-layouts">Dịch vụ</span>
+                        </a>
+                    </li> <!-- end Dashboard Menu -->
+                @endcan
+                
                 @can('view_users')
                     <li class="nav-item">
                         <a class="nav-link menu-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
@@ -99,147 +101,149 @@
                     </li>
 
                 @endcan
-                  @can('view_services')
-                <li class="nav-item">
-                    <a class="nav-link menu-link {{ request()->routeIs('admin.amenities.*') ? 'active' : '' }}"
-                       href="#sidebarAmenities" data-bs-toggle="collapse" role="button" aria-expanded="false"
-                       aria-controls="sidebarAmenities">
-                        <i class="ri-customer-service-line"></i> <span data-key="t-layouts">Tiện nghi</span>
-                    </a>
-                    <div class="collapse menu-dropdown {{ request()->routeIs('admin.amenities.*') ? 'show' : '' }}"
-                         id="sidebarAmenities">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="{{ route('admin.amenities.index') }}"
-                                   class="nav-link {{ request()->routeIs('admin.amenities.index') ? 'active' : '' }}"
-                                   data-key="t-horizontal">Danh Sách</a>
-                            </li>
-                            {{--                            <li class="nav-item">--}}
-                            {{--                                <a href="{{ route('admin.amenities.create') }}"--}}
-                            {{--                                    class="nav-link {{ request()->routeIs('admin.amenities.create') ? 'active' : '' }}"--}}
-                            {{--                                    data-key="t-detached">Thêm Mới</a>--}}
-                            {{--                            </li>--}}
-                        </ul>
-                    </div>
-                </li>
+                @can('view_amenities')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link {{ request()->routeIs('admin.amenities.*') ? 'active' : '' }}"
+                           href="#sidebarAmenities" data-bs-toggle="collapse" role="button" aria-expanded="false"
+                           aria-controls="sidebarAmenities">
+                            <i class="ri-customer-service-line"></i> <span data-key="t-layouts">Tiện nghi</span>
+                        </a>
+                        <div class="collapse menu-dropdown {{ request()->routeIs('admin.amenities.*') ? 'show' : '' }}"
+                             id="sidebarAmenities">
+                            <ul class="nav nav-sm flex-column">
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.amenities.index') }}"
+                                       class="nav-link {{ request()->routeIs('admin.amenities.index') ? 'active' : '' }}"
+                                       data-key="t-horizontal">Danh Sách</a>
+                                </li>
+                                {{--                            <li class="nav-item">--}}
+                                {{--                                <a href="{{ route('admin.amenities.create') }}"--}}
+                                {{--                                    class="nav-link {{ request()->routeIs('admin.amenities.create') ? 'active' : '' }}"--}}
+                                {{--                                    data-key="t-detached">Thêm Mới</a>--}}
+                                {{--                            </li>--}}
+                            </ul>
+                        </div>
+                    </li>
 
                 @endcan
-                  @can('view_categories')
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarCatalogueRooms" data-bs-toggle="collapse" role="button"
-                       aria-expanded="false" aria-controls="sidebarUsers">
-                        <i class="ri-layout-3-line"></i> <span data-key="t-layouts">Loại phòng</span>
-                    </a>
-                    <div class="collapse menu-dropdown" id="sidebarCatalogueRooms">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="{{ route('admin.catalogue-rooms.index') }}" target="" class="nav-link"
-                                   data-key="t-horizontal">Danh Sách</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('admin.catalogue-rooms.create') }}" target=""
-                                   class="nav-link" data-key="t-detached">Thêm Mới</a>
-                            </li>
+                @can('view_categories')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="#sidebarCatalogueRooms" data-bs-toggle="collapse"
+                           role="button"
+                           aria-expanded="false" aria-controls="sidebarUsers">
+                            <i class="ri-layout-3-line"></i> <span data-key="t-layouts">Loại phòng</span>
+                        </a>
+                        <div class="collapse menu-dropdown" id="sidebarCatalogueRooms">
+                            <ul class="nav nav-sm flex-column">
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.catalogue-rooms.index') }}" target="" class="nav-link"
+                                       data-key="t-horizontal">Danh Sách</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.catalogue-rooms.create') }}" target=""
+                                       class="nav-link" data-key="t-detached">Thêm Mới</a>
+                                </li>
 
-                        </ul>
-                    </div>
-                </li> <!-- end Catalogue Room Menu -->
-@endcan
+                            </ul>
+                        </div>
+                    </li> <!-- end Catalogue Room Menu -->
+                @endcan
                 {{--                voucher --}}
 
-                  @can('view_vouchers')
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarVoucher" data-bs-toggle="collapse" role="button"
-                       aria-expanded="false" aria-controls="sidebarCatalogueRoom">
-                        <i class="ri-coupon-2-line"></i> <span data-key="t-layouts">Voucher</span>
-                    </a>
-                    <div class="collapse menu-dropdown" id="sidebarVoucher">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="{{ route('vouchers.index') }}" target="_self" class="nav-link"
-                                   data-key="t-horizontal">Danh sách</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                @endcan
-
-                 @can('view_orders')    
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('admin.orders.index') }}" data-bs-toggle=""
-                       role="button" aria-expanded="false" aria-controls="sidebarCatalogueRoom">
-                        <i class="ri-hotel-bed-line"></i> <span data-key="t-layouts">Đơn hàng</span>
-                    </a>
-                </li>
-                @endcan
-
-                 @can('view_reviews')
-                @if (Auth::user()->type == 2)
+                @can('view_vouchers')
                     <li class="nav-item">
-                        <a class="nav-link menu-link" href="{{route('admin.rates.hotels')}}" data-bs-toggle=""
-                           role="button" aria-expanded="false" aria-controls="sidebarRegion">
-                            <i class="ri-star-s-line"></i> <span data-key="t-layouts">Đánh giá</span>
+                        <a class="nav-link menu-link" href="#sidebarVoucher" data-bs-toggle="collapse" role="button"
+                           aria-expanded="false" aria-controls="sidebarCatalogueRoom">
+                            <i class="ri-coupon-2-line"></i> <span data-key="t-layouts">Voucher</span>
+                        </a>
+                        <div class="collapse menu-dropdown" id="sidebarVoucher">
+                            <ul class="nav nav-sm flex-column">
+                                <li class="nav-item">
+                                    <a href="{{ route('vouchers.index') }}" target="_self" class="nav-link"
+                                       data-key="t-horizontal">Danh sách</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                @endcan
+
+                @can('view_orders')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="{{ route('admin.orders.index') }}" data-bs-toggle=""
+                           role="button" aria-expanded="false" aria-controls="sidebarCatalogueRoom">
+                            <i class="ri-hotel-bed-line"></i> <span data-key="t-layouts">Đơn hàng</span>
                         </a>
                     </li>
-                @else
-                    <li class="nav-item">
-                        <a class="nav-link menu-link" href="{{route('admin.rates.hotel.hotelier')}}" data-bs-toggle=""
-                           role="button" aria-expanded="false" aria-controls="sidebarRegion">
-                            <i class="ri-star-s-line"></i> <span data-key="t-layouts">Đánh giá</span>
-                        </a>
-                    </li>
-                @endif
                 @endcan
 
-                  @can('view_rooms')
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('admin.rooms.index') }}" data-bs-toggle=""
-                       role="button" aria-expanded="false" aria-controls="sidebarCatalogueRoom">
-                        <i class="ri-hotel-bed-line"></i> <span data-key="t-layouts">Phòng</span>
-                    </a>
-                </li>
-                  @endcan
+                @can('view_reviews')
+                    @if (Auth::user()->type == 2)
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="{{route('admin.rates.hotels')}}" data-bs-toggle=""
+                               role="button" aria-expanded="false" aria-controls="sidebarRegion">
+                                <i class="ri-star-s-line"></i> <span data-key="t-layouts">Đánh giá</span>
+                            </a>
+                        </li>
+                    @else
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="{{route('admin.rates.hotel.hotelier')}}"
+                               data-bs-toggle=""
+                               role="button" aria-expanded="false" aria-controls="sidebarRegion">
+                                <i class="ri-star-s-line"></i> <span data-key="t-layouts">Đánh giá</span>
+                            </a>
+                        </li>
+                    @endif
+                @endcan
+
+                @can('view_rooms')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="{{ route('admin.rooms.index') }}" data-bs-toggle=""
+                           role="button" aria-expanded="false" aria-controls="sidebarCatalogueRoom">
+                            <i class="ri-hotel-bed-line"></i> <span data-key="t-layouts">Phòng</span>
+                        </a>
+                    </li>
+                @endcan
 
 
 
-                   @can('view_hotel')
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarHotel" data-bs-toggle="collapse" role="button"
-                       aria-expanded="false" aria-controls="sidebarHotel">
-                        <i class="ri-hotel-line"></i> <span data-key="t-layouts">Khách sạn</span>
-                    </a>
-                    <div class="collapse menu-dropdown" id="sidebarHotel">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="{{ route('admin.hotels.index') }}" target="_self" class="nav-link"
-                                   data-key="t-horizontal">Danh sách</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('admin.hotels.create') }}" target="_self" class="nav-link"
-                                   data-key="t-horizontal">Thêm mới</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                   @endcan
+                @can('view_hotel')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="#sidebarHotel" data-bs-toggle="collapse" role="button"
+                           aria-expanded="false" aria-controls="sidebarHotel">
+                            <i class="ri-hotel-line"></i> <span data-key="t-layouts">Khách sạn</span>
+                        </a>
+                        <div class="collapse menu-dropdown" id="sidebarHotel">
+                            <ul class="nav nav-sm flex-column">
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.hotels.index') }}" target="_self" class="nav-link"
+                                       data-key="t-horizontal">Danh sách</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.hotels.create') }}" target="_self" class="nav-link"
+                                       data-key="t-horizontal">Thêm mới</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                @endcan
 
-                   @can('view_region')
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('admin.regions.index') }}" data-bs-toggle=""
-                       role="button" aria-expanded="false" aria-controls="sidebarRegion">
-                        <i class="ri-pin-distance-fill"></i> <span data-key="t-layouts">Miền</span>
-                    </a>
-                </li>
-                   @endcan
+                @can('view_region')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="{{ route('admin.regions.index') }}" data-bs-toggle=""
+                           role="button" aria-expanded="false" aria-controls="sidebarRegion">
+                            <i class="ri-pin-distance-fill"></i> <span data-key="t-layouts">Miền</span>
+                        </a>
+                    </li>
+                @endcan
 
-                   @can('view_city')
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('admin.cities.index') }}" data-bs-toggle=""
-                       role="button" aria-expanded="false" aria-controls="sidebarRegion">
-                        <i class="bx bxs-city"></i> <span data-key="t-layouts">Thành phố</span>
-                    </a>
-                </li>
-   @endcan
+                @can('view_city')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="{{ route('admin.cities.index') }}" data-bs-toggle=""
+                           role="button" aria-expanded="false" aria-controls="sidebarRegion">
+                            <i class="bx bxs-city"></i> <span data-key="t-layouts">Thành phố</span>
+                        </a>
+                    </li>
+                @endcan
 
                 @if (Auth::user()->type == \App\Models\User::ADMIN)
 

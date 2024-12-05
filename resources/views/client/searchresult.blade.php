@@ -84,7 +84,7 @@
                             <form action="" method="GET">
                                 <!-- Khoảng giá -->
                                 <dt>Khoảng Giá</dt>
-                                <dd>
+                                <div>
                                     <input type="hidden" name="city_id" value="{{ request()->get('city_id', '') }}">
                                     <input type="hidden" name="start_date"
                                            value="{{ request()->get('start_date', '') }}">
@@ -113,11 +113,11 @@
                                                 {{ in_array('8000000', request()->get('price', [])) ? 'checked' : '' }} />
                                         <label for="ch10">8,000,000 VND+</label>
                                     </div>
-                                </dd>
+                                </div>
 
                                 <!-- Xếp hạng sao -->
-                                <dt>Xếp hạng sao</dt>
-                                <dd>
+                                <dt class="mt-4">Xếp hạng sao</dt>
+                                <div class="mb-1 mt-2">
                                     <div class="checkbox">
                                         <input type="checkbox" id="ch1_star" name="star[]" value="5"
                                                 {{ in_array('5', request()->get('star', [])) ? 'checked' : '' }} />
@@ -163,7 +163,9 @@
                                             <i class="material-icons">&#xE838;</i>
                                         </label>
                                     </div>
-                                </dd>
+                                </div>
+                                <hr style="border: none; height: 1px; background-color: black;">
+
 
                                 <!-- Nút Submit -->
                                 <button type="submit">Tìm kiếm</button>

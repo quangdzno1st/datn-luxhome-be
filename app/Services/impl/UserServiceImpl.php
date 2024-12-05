@@ -48,8 +48,8 @@ class UserServiceImpl implements UserService
     {
         $data = $request->all();
         $data["password"] = Hash::make($data["password"]);
-        $data["group_id"] = $data["type"] ?? User::CUSTOMER;
         $data["type"] = $data["type"] ?? User::CUSTOMER;
+        $data["group_id"] = $data["type"] ;
         $data["total_amount_ordered"] = 0;
 
         if ($request->hasFile('avatar')) {

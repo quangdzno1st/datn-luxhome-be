@@ -54,13 +54,12 @@ class AuthServiceProvider extends ServiceProvider
     protected function checkPermission(User $user, $action, Module $module)
     {
         // Kiểm tra nếu là admin
-        if ($user->type == User::ADMIN) {
-            return true;
-        }
+//        if ($user->type == User::ADMIN) {
+//            return true;
+//        }
 
         $roleJson = $user?->group?->permissions ?? [];
         $roleArr = json_decode($roleJson, true);
-
         // Kiểm tra quyền theo module và hành động
         return in_array("{$action}_{$module->name}", $roleArr);
     }

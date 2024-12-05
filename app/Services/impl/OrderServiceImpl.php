@@ -490,6 +490,7 @@ class OrderServiceImpl implements OrderService
 
         $bookingData = $this->validateOrderQtyRequest($request);
         $dataSearch = session('search_data');
+
         if (empty([[$dataSearch]])) {
             return redirect()->back()->with('error', 'Thông tin đặt phòng trống');
         }
