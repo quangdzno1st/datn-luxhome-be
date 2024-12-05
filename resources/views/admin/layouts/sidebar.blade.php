@@ -68,11 +68,20 @@
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Tổng Quan</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
-                @endcan
-                @can('view_services')
+
+   @can('view_services')
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('admin.services.index') ? 'active' : '' }}"
+                        href="{{ route('admin.services.index') }}">
+                        <i class="ri-customer-service-line"></i> <span data-key="t-layouts">Dịch vụ</span>
+                    </a>
+                </li> <!-- end Dashboard Menu -->
+  @endcan
+                @if (Auth::user()->type == \App\Models\User::ADMIN)
                     <li class="nav-item">
-                        <a class="nav-link menu-link" href="{{ route('admin.services.index') }}">
-                            <i class="ri-customer-service-line"></i> <span data-key="t-layouts">Dịch vụ</span>
+                        <a class="nav-link menu-link {{ request()->routeIs('admin.banners.index') ? 'active' : '' }}"
+                            href="{{ route('admin.banners.index') }}">
+                            <i class="ri-image-fill"></i> <span data-key="t-layouts">Ảnh Banner</span>
                         </a>
                     </li> <!-- end Dashboard Menu -->
                 @endcan
@@ -102,6 +111,7 @@
                     </li>
 
                 @endcan
+
                 @can('view_amenities')
                     <li class="nav-item">
                         <a class="nav-link menu-link {{ request()->routeIs('admin.amenities.*') ? 'active' : '' }}"
@@ -158,13 +168,16 @@
                         </ul>
                     </div>
                 </li> --}}
+
                 @endcan
 
                 @can('view_orders')
                     <li class="nav-item">
+
                         <a class="nav-link menu-link {{ request()->routeIs('admin.orders.index') ? 'active' : '' }}"
                             href="{{ route('admin.orders.index') }}" data-bs-toggle="" role="button"
                             aria-expanded="false" aria-controls="sidebarCatalogueRoom">
+
                             <i class="ri-hotel-bed-line"></i> <span data-key="t-layouts">Đơn hàng</span>
                         </a>
                     </li>
@@ -173,17 +186,21 @@
                 @can('view_reviews')
                     @if (Auth::user()->type == 2)
                         <li class="nav-item">
+
                             <a class="nav-link menu-link {{ request()->routeIs('admin.rates.hotels') ? 'active' : '' }}"
                                 href="{{ route('admin.rates.hotels') }}" data-bs-toggle="" role="button"
                                 aria-expanded="false" aria-controls="sidebarRegion">
+
                                 <i class="ri-star-s-line"></i> <span data-key="t-layouts">Đánh giá</span>
                             </a>
                         </li>
                     @else
                         <li class="nav-item">
+
                             <a class="nav-link menu-link {{ request()->routeIs('admin.rates.hotel.hotelier') ? 'active' : '' }}"
                                 href="{{ route('admin.rates.hotel.hotelier') }}" data-bs-toggle="" role="button"
                                 aria-expanded="false" aria-controls="sidebarRegion">
+
                                 <i class="ri-star-s-line"></i> <span data-key="t-layouts">Đánh giá</span>
                             </a>
                         </li>
@@ -195,10 +212,12 @@
                         <a class="nav-link menu-link {{ request()->routeIs('admin.rooms.index') ? 'active' : '' }}"
                             href="{{ route('admin.rooms.index') }}" data-bs-toggle="" role="button"
                             aria-expanded="false" aria-controls="sidebarCatalogueRoom">
+
                             <i class="ri-hotel-bed-line"></i> <span data-key="t-layouts">Phòng</span>
                         </a>
                     </li>
                 @endcan
+
 
 
 
@@ -251,6 +270,7 @@
                         </li>
                     @endcan
                 @endif
+
 
                 @if (Auth::user()->type == \App\Models\User::ADMIN)
                     <li class="nav-item">
