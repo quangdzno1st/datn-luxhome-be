@@ -68,12 +68,12 @@
                                         </select>
                                     </div>
                                     <div class="ms-2">
-                                        <input type="number" name="min_price" class="form-control" placeholder="Giá thấp nhất"
-                                            value="{{ request('min_price') }}">
+                                        <input type="number" name="min_price" class="form-control"
+                                            placeholder="Giá thấp nhất" value="{{ request('min_price') }}">
                                     </div>
                                     <div class="ms-2">
-                                        <input type="number" name="max_price" class="form-control" placeholder="Giá cao nhất"
-                                            value="{{ request('max_price') }}">
+                                        <input type="number" name="max_price" class="form-control"
+                                            placeholder="Giá cao nhất" value="{{ request('max_price') }}">
                                     </div>
                                     <div class="search-box ms-2">
                                         <input type="text" name="keyword" class="form-control"
@@ -101,7 +101,6 @@
                                         <th class="text-center">STT</th>
                                         <th>Tên dịch vụ</th>
                                         <th>Giá</th>
-                                        <th>Mô tả</th>
                                         <th>Loại dịch vụ</th>
                                         <th>Hành động</th>
                                     </tr>
@@ -121,7 +120,6 @@
                                             <td class="text-center">{{ $index + 1 }}</td>
                                             <td class="">{{ $service->name }}</td>
                                             <td class="">{{ number_format($service->price, 0, ',', '.') }} VND</td>
-                                            <td class="">{{ $service->description }}</td>
                                             <td class="">
                                                 @php
                                                     $bgColor = 'bg-light text-dark';
@@ -192,9 +190,12 @@
 
                                                             <div class="mb-3">
                                                                 <label for="description" class="form-label">Mô
-                                                                    tả</label>
+                                                                    tả<span class="text-danger">*</span></label>
                                                                 <textarea name="description" class="form-control" id="description" cols="30" rows="5"
-                                                                    placeholder="Nhập mô tả">{{ $service->description }}</textarea>
+                                                                    placeholder="Nhập mô tả" required>{{ $service->description }}</textarea>
+                                                                @error('description')
+                                                                    <p class="text-danger">{{ $message }}</p>
+                                                                @enderror
 
                                                             </div>
 
@@ -329,9 +330,13 @@
                                             </div>
 
                                             <div class="mb-3">
-                                                <label for="description" class="form-label">Mô tả</label>
+                                                <label for="description" class="form-label">Mô tả<span
+                                                        class="text-danger">*</span></label>
                                                 <textarea name="description" class="form-control" id="description" cols="30" rows="5"
-                                                    placeholder="Nhập mô tả"></textarea>
+                                                    placeholder="Nhập mô tả" required></textarea>
+                                                @error('description')
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                @enderror
 
                                             </div>
 

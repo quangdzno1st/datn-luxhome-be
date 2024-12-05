@@ -50,7 +50,7 @@ class HotelRepository extends BaseRepository implements HotelInterface
     public function trash()
     {
         $hotels = $this->model
-            ->select('id', 'name', 'location', 'quantity_of_room', 'star', 'city_id',
+            ->select('id', 'name', 'thumbnail', 'location', 'quantity_of_room', 'star', 'city_id',
                 'phone', 'email', 'status', 'quantity_floor')
             ->latest('id')
             ->with('city')

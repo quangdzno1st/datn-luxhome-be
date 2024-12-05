@@ -43,8 +43,11 @@
                                 <div class="col-sm">
                                     <div class="d-flex justify-content-sm-end">
                                         <div class="search-box ms-2">
-                                            <input type="text" class="form-control" placeholder="Search...">
+                                            <input type="text" class="form-control" placeholder="Tìm kiếm...">
                                             <i class="ri-search-line search-icon"></i>
+                                        </div>
+                                        <div class="ms-1">
+                                            <button class="btn btn-primary">Tìm kiếm</button>
                                         </div>
                                     </div>
                                 </div>
@@ -78,10 +81,8 @@
                                             <td>{{ $hotel->name }}</td>
                                             <td>
                                                 <div class="hotel-image-wrapper">
-                                                    @foreach ($hotel->images as $image)
-                                                        <img src="{{ \Storage::url($image->path) }}"
-                                                             alt="{{ $image->alt }}">
-                                                    @endforeach
+                                                    <img src="{{ \Storage::url($hotel->thumbnail) }}"
+                                                         alt="{{ $hotel->name }}">
                                                 </div>
                                             </td>
 

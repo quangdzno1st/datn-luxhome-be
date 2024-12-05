@@ -41,7 +41,7 @@ class ServiceServiceImpl implements ServiceService
             $query->where('type', $type);
         }
 
-        $services = $query->orderBy('created_at')->paginate(10);
+        $services = $query->latest('created_at')->paginate(10);
 
         return $services;
     }

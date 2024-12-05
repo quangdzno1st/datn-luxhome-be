@@ -49,7 +49,7 @@ class HotelServiceServiceImpl implements HotelServiceService
                 $query->where('type', $type);
             });
         }
-        $hotelServices = $query->orderBy('created_at')->paginate(10);
+        $hotelServices = $query->latest('created_at')->paginate(10);
         return $hotelServices;
     }
 

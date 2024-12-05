@@ -58,7 +58,7 @@ class RateController extends Controller
             }
         }
 
-        $rates = $query->paginate(10);
+        $rates = $query->latest('created_at')->paginate(10);
         // dd($rates->toArray());
 
         return view(self::PATH_VIEW . 'list-rates-one-hotel', compact('hotel', 'rates'));
@@ -96,7 +96,7 @@ class RateController extends Controller
         //     }
         // }
 
-        $rates = $query->paginate(10);
+        $rates = $query->latest('created_at')->paginate(10);
 
         return view(self::PATH_VIEW . 'list-rates-one-hotel-trash', compact('hotel', 'rates'));
     }
@@ -135,7 +135,7 @@ class RateController extends Controller
             }
         }
 
-        $rates = $query->paginate(10);
+        $rates = $query->latest('created_at')->paginate(10);
 
         return view(self::PATH_VIEW . 'list-rates-one-hotel', compact('hotel', 'rates'));
     }
@@ -174,7 +174,7 @@ class RateController extends Controller
         //     }
         // }
 
-        $rates = $query->paginate(10);
+        $rates = $query->latest('created_at')->paginate(10);
 
         return view(self::PATH_VIEW . 'list-rates-one-hotel-trash', compact('hotel', 'rates'));
     }

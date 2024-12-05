@@ -28,7 +28,8 @@ class UpdateRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|gte:0',
-            'type' => 'required'
+            'type' => 'required',
+            'description' => 'required'
         ];
     }
 
@@ -39,7 +40,8 @@ class UpdateRequest extends FormRequest
             'price.required' => 'Giá dịch vụ là bắt buộc',
             'price.numeric' => 'Giá dịch vụ phải là 1 số',
             'price.gte:0' => 'Giá dịch vụ phải lớn hơn bằng 0',
-            'type.required' => 'Loại dịch vụ là bắt buộc'
+            'type.required' => 'Loại dịch vụ là bắt buộc',
+            'description.required' => 'Loại dịch vụ là bắt buộc'
         ];
     }
 
