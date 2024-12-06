@@ -426,7 +426,7 @@
                         <div class="address" style="width: 190px; margin-top: 10px">{{$hotel->location}}</div>
                         {{--                        <span class="rating"> 8 /10</span>--}}
                         <div class="description">
-                            <p>{{ \Illuminate\Support\Str::limit(strip_tags(html_entity_decode($hotel->description)), 100) }}</p>
+                            <p>{{ \Illuminate\Support\Str::limit(strip_tags(html_entity_decode($hotel->description)), 300) }}</p>
 
 
                         </div>
@@ -441,13 +441,9 @@
                                           ->unique()
                                 @endphp
                                 @foreach($facilities as $facilitie)
-                                    <div class="text-wrap">
-                                        <ul class="three-col">
-                                            <li style="width: 90%">{{$facilitie->content}}</li>
-                                        </ul>
-                                    </div>
-                                @endforeach
 
+                                            <li style="">{{$facilitie->content}}</li>
+                                @endforeach
                             </ul>
                         </div>
                     </article>
