@@ -62,9 +62,16 @@
                                     action="{{ route('admin.services.index') }}">
                                     <div class="ms-2">
                                         <select name="type" id="" class="form-select">
-                                            <option value="">Chọn tất cả</option>
+                                            <option value="">Loại dịch vụ</option>
                                             <option value="1" @selected(request()->input('type') == 1)>Dịch vụ đi kèm</option>
                                             <option value="2" @selected(request()->input('type') == 2)>Dịch vụ mất phí</option>
+                                        </select>
+                                    </div>
+                                    <div class="ms-2">
+                                        <select name="status" id="" class="form-select">
+                                            <option value="">Trạng thái</option>
+                                            <option value="1" @selected(request()->input('status') == 1)>Hoạt động</option>
+                                            <option value="2" @selected(request()->input('status') == 2)>Không hoạt động</option>
                                         </select>
                                     </div>
                                     <div class="ms-2">
@@ -75,11 +82,10 @@
                                         <input type="number" name="max_price" class="form-control"
                                             placeholder="Giá cao nhất" value="{{ request('max_price') }}">
                                     </div>
-                                    <div class="search-box ms-2">
-                                        <input type="text" name="keyword" class="form-control"
-                                            placeholder="Điền tên dịch vụ, mô tả..."
-                                            value="{{ request()->has('keyword') ? request()->input('keyword') : '' }}">
-                                        <i class="ri-search-line search-icon"></i>
+                                    <div class="ms-2">
+                                        <input type="text" name="name" class="form-control"
+                                            placeholder="Điền tên dịch vụ"
+                                            value="{{ request()->has('name') ? request()->input('name') : '' }}">
                                     </div>
                                     <div class="ms-1">
                                         <button class="btn btn-primary">Tìm kiếm</button>
@@ -102,6 +108,7 @@
                                         <th>Tên dịch vụ</th>
                                         <th>Giá</th>
                                         <th>Loại dịch vụ</th>
+                                        <th>Trạng thái</th>
                                         <th>Hành động</th>
                                     </tr>
                                 </thead>
@@ -129,6 +136,18 @@
                                                 @endphp
                                                 <span
                                                     class="badge {{ $bgColor }}">{{ App\Models\Service::TYPE_SERVICE["$service->type"] }}</span>
+                                            </td>
+
+                                            <td>
+                                                @php
+                                                    $bg = 'bg-danger';
+                                                    if ($service->status == 1) {
+                                                        $bg = 'bg-success';
+                                                    }
+                                                @endphp
+                                                <span
+                                                    class="badge {{ $bg }}">{{ $service->status == 1 ? 'Hoạt động' : 'Không hoạt động' }}
+                                                </span>
                                             </td>
 
                                             <td>
@@ -197,6 +216,16 @@
                                                                     <p class="text-danger">{{ $message }}</p>
                                                                 @enderror
 
+                                                            </div>
+
+                                                            <div class="mb-2 d-flex justify-content-end">
+                                                                <div class="form-check form-switch form-switch-success">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        role="switch" name="status" id="SwitchCheck3"
+                                                                        value="1" @checked($service->status == 1)>
+                                                                    <label class="form-check-label"
+                                                                        for="SwitchCheck3">Hoạt động</label>
+                                                                </div>
                                                             </div>
 
                                                             <div class="mb-3">
@@ -338,6 +367,14 @@
                                                     <p class="text-danger">{{ $message }}</p>
                                                 @enderror
 
+                                            </div>
+
+                                            <div class="mb-2 d-flex justify-content-end">
+                                                <div class="form-check form-switch form-switch-success">
+                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                        name="status" id="SwitchCheck3" value="1" checked>
+                                                    <label class="form-check-label" for="SwitchCheck3">Hoạt động</label>
+                                                </div>
                                             </div>
 
                                             <div class="mb-3">

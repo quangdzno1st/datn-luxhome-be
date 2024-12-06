@@ -176,11 +176,13 @@ Route::group(['middleware' => ['admin']], function () {
     Route::prefix('cities')
     ->as('cities.')
     ->group(function () {
-        Route::get('/', [\App\Http\Controllers\Admin\CityController::class, 'index'])->name('index')->middleware('can:view_city');;
-        Route::post('/', [\App\Http\Controllers\Admin\CityController::class, 'store'])->name('store')->middleware('can:create_city');;
+        Route::get('/', [\App\Http\Controllers\Admin\CityController::class, 'index'])->name('index')->middleware('can:view_city');
+        Route::get('create/', [\App\Http\Controllers\Admin\CityController::class, 'create'])->name('create');
+        Route::get('edit/{id}', [\App\Http\Controllers\Admin\CityController::class, 'edit'])->name('edit');
+        Route::post('/', [\App\Http\Controllers\Admin\CityController::class, 'store'])->name('store')->middleware('can:create_city');
         Route::get('/trash', [\App\Http\Controllers\Admin\CityController::class, 'trash'])->name('trash');
-        Route::put('/{id}', [\App\Http\Controllers\Admin\CityController::class, 'update'])->name('update')->middleware('can:edit_city');;
-        Route::delete('/{id}', [\App\Http\Controllers\Admin\CityController::class, 'destroy'])->name('destroy')->middleware('can:delete_city');;
+        Route::put('/{id}', [\App\Http\Controllers\Admin\CityController::class, 'update'])->name('update')->middleware('can:edit_city');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\CityController::class, 'destroy'])->name('destroy')->middleware('can:delete_city');
         Route::get('/restore/{id}', [\App\Http\Controllers\Admin\CityController::class, 'restore'])->name('restore');
         Route::delete('/force-delete/{id}', [\App\Http\Controllers\Admin\CityController::class, 'forceDelete'])->name('forceDelete');
     });

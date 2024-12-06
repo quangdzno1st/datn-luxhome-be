@@ -16,16 +16,13 @@ class ServiceServiceImpl implements ServiceService
         $this->serviceRepository = $serviceRepository;
     }
 
-    public function getAll(Request $request)
+    public function getAll(Request $request, $org_id)
     {
-        $query = Service::query();
+        $query = Service::query()->where('hotel_id', $org_id);
 
-        if ($request->has('keyword')) {
-            $keyword = $request->input('keyword');
-            $query->where(function ($query) use ($keyword) {
-                $query->where('name', 'like', '%' . $keyword . '%')
-                    ->orWhere('description', 'like', "%" . $keyword . "%");
-            });
+        if ($request->filled('name')) {
+            $name = $request->input('name');
+            $query->where('name', 'like', '%' . $name . '%');
         }
 
         if ($request->filled('min_price')) {
@@ -39,6 +36,11 @@ class ServiceServiceImpl implements ServiceService
         if ($request->filled('type')) {
             $type = $request->input('type');
             $query->where('type', $type);
+        }
+
+        if ($request->filled('status')) {
+            $status = $request->input('status');
+            $query->where('status', $status);
         }
 
         $services = $query->latest('created_at')->paginate(10);

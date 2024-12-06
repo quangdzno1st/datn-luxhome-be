@@ -15,7 +15,7 @@ class CityRepository extends BaseRepository
 
     public function getAllCity()
     {
-        return $this->model->select('id', 'name', 'region_id')->with('region')->orderBy('name')->paginate(10);
+        return $this->model->select('id', 'name', 'region_id', 'thumbnail')->with('region')->orderBy('name')->paginate(10);
     }
 
     public function searchByPage(BaseSearchRequest $request)
@@ -34,7 +34,7 @@ class CityRepository extends BaseRepository
 
     public function detailCity($id)
     {
-        $cities = $this->model->where('id', $id)->select('id', 'name', 'region_id')->with('region')->first();
+        $cities = $this->model->where('id', $id)->select('id', 'name', 'region_id', 'thumbnail')->with('region')->first();
 
         return $cities;
     }

@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Service\CreateRequest;
 use App\Http\Requests\Admin\Service\UpdateRequest;
 use App\Models\Service;
+use App\Models\User;
 use App\Services\impl\ServiceServiceImpl;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\MessageBag;
 
@@ -23,7 +25,12 @@ class ServiceController extends Controller
     }
     public function index()
     {
-        $services = $this->service->getAll(request());
+        if (Auth::user()->org_id != null && Auth::user()->type != User::ADMIN) {
+            $org_id = Auth::user()->org_id;
+        } else {
+            return redirect()->route('admin.error.404');
+        }
+        $services = $this->service->getAll(request(), $org_id);
 
         $typesService = Service::TYPE_SERVICE;
 
@@ -32,7 +39,11 @@ class ServiceController extends Controller
 
     public function store(CreateRequest $request)
     {
-        $data = $request->validated();
+        $data = $request->all();
+
+        $data['status'] = $data['status'] ?? 2;
+
+        $data['hotel_id'] = Auth::user()->org_id;
 
         try {
             DB::beginTransaction();
@@ -50,7 +61,10 @@ class ServiceController extends Controller
 
     public function update(UpdateRequest $request,  string $id)
     {
-        $data = $request->validated();
+        $data = $request->all();
+
+        $data['status'] = $data['status'] ?? 2;
+
         try {
             DB::beginTransaction();
 

@@ -110,7 +110,7 @@
                                 <!--deal-->
                                 <article class="one-fourth">
                                     <figure><a href="{{  route('home.hotel.detail', $hotel['id'])  }}" title="">
-                                            <img src="{{ Storage::url('images'. '/' .$hotel['thumbnail']) }}"
+                                            <img src="{{ Storage::url($hotel['thumbnail']) }}"
                                                  alt="Image">
                                         </a>
                                     </figure>
@@ -152,7 +152,7 @@
                             @foreach(array_chunk($cities->toArray(), 10)[0] as $city)
                                 <article class="one-fourth">
                                     <figure><a href="" title=""><img
-                                                    src="{{ Storage::url('images'. '/' . $city['thumbnail']) }}"
+                                                    src="{{ Storage::url($city['thumbnail']) }}"
                                                     alt=""/></a></figure>
                                     <div class="details">
                                         <a href="{{ route('home.search', ['city_id' => $city['id'], 'start_date' => \Carbon\Carbon::now()->format('Y-m-d'), 'end_date' => \Carbon\Carbon::tomorrow()->format('Y-m-d')]) }}"

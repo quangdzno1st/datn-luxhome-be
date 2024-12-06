@@ -13,6 +13,7 @@ use App\Repositories\Reigion\RegionRepository;
 use App\Services\impl\CityServiceImpl;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 
 class CityController extends Controller
 {
@@ -57,42 +58,51 @@ class CityController extends Controller
         try {
             $data = $request->all();
 
-            $city = $this->cityService->createNewCity($data);
+            $data['thumbnail'] = Storage::put('cities', $data['thumbnail']);
+
+            $city = City::query()->create($data);
 
             return redirect()->route('admin.cities.index')->with('success', 'Thêm mới thành phố thành công');
         } catch (\Exception $e) {
             // dd($e->getMessage());
-            return back()->with('errors', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 
-    // public function show($id)
-    // {
-    //     $data = $this->cityRepository->detailCity($id);
+    public function create()
+    {
+        $regions = $this->regionRepository->getAllRegion();
 
-    //     return view(self::PATH_VIEW . __FUNCTION__, compact('data'));
-    // }
+        return view(self::PATH_VIEW . __FUNCTION__, compact('regions'));
+    }
 
-    // public function edit($id)
-    // {
-    //     $regions = $this->regionRepository->getAllRegion();
+    public function edit($id)
+    {
+        $regions = $this->regionRepository->getAllRegion();
 
-    //     $data = $this->cityRepository->detailCity($id);
+        $data = $this->cityRepository->detailCity($id);
 
-    //     return view(self::PATH_VIEW . __FUNCTION__, compact('data', 'regions'));
-    // }
+        return view(self::PATH_VIEW . __FUNCTION__, compact('data', 'regions'));
+    }
 
     public function update(UpdateCityRequest $request, $id)
     {
+        $city = City::query()->where('id', $id)->firstOrFail();
+
         try {
             $data = $request->all();
-            $city = $this->cityService->updateCity($data, $id);
+            
+            if ($request->has('thumbnail')) {
+                $data['thumbnail'] = Storage::put('cities', $data['thumbnail']);
+                Storage::delete($city->thumbnail);
+            }
+            $city->update($data);
 
             return redirect()->route('admin.cities.index')->with('success', 'Sửa thành phố thành công');
 
         } catch (\Exception $e) {
             // dd($e->getMessage());
-            return back()->with('errors', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -105,7 +115,7 @@ class CityController extends Controller
 
         } catch (\Exception $e) {
             // dd($e->getMessage());
-            return back()->with('errors', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -126,20 +136,24 @@ class CityController extends Controller
 
         } catch (\Exception $e) {
             // dd($e->getMessage());
-            return back()->with('errors', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 
     public function forceDelete($id)
     {
+        $city = City::withTrashed()->where('id', $id)->firstOrFail();
+
         try {
             $this->cityService->forceDeleteCity($id);
+            
+            Storage::delete($city->thumbnail);
 
             return redirect()->route('admin.cities.index')->with('success', 'Xóa vĩnh viễn thành phố thành công');
 
         } catch (\Exception $e) {
             // dd($e->getMessage());
-            return back()->with('errors', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 }
