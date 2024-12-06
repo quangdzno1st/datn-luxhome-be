@@ -68,7 +68,7 @@
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Tổng Quan</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
-
+                @endcan
    @can('view_services')
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->routeIs('admin.services.index') ? 'active' : '' }}"

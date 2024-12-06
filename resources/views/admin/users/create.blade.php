@@ -190,7 +190,7 @@
         // Hàm kiểm tra khi thay đổi radio button
         $('input[name="type"]').on('change', function () {
             if ($('#member').is(':checked')) {
-                $('#hotelSelect').prop('disabled', true);
+                $('#hotelSelect').prop('disabled', true).val("");
             } else {
                 $('#hotelSelect').prop('disabled', false);
             }
@@ -212,7 +212,7 @@
             }
         });
 
-        // Gọi hàm ngay khi tải trang để đặt trạng thái đúng
+
         if ($('#member').is(':checked')) {
             $('#hotelSelect').prop('disabled', true);
         }

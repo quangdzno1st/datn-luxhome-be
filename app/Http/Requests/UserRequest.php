@@ -40,14 +40,16 @@ class UserRequest extends FormRequest
             $rules['org_id'] = 'prohibited';
         }
 //dd($userEdit->id != $user->id && $user->user_type == User::ADMIN);
-        if ($userEdit->id != $user->id && $user->user_type == User::ADMIN && $userType != User::CUSTOMER) {
-            abort(403);
+        if ($userEdit) {
+            if ($userEdit->id != $user->id && $user->user_type == User::ADMIN && $userType != User::CUSTOMER) {
+                abort(403);
+            }
         }
 
         if (!$userId) {
-            $rules['password'] = 'required|string|min:6'; // Mật khẩu là bắt buộc khi thêm mới
+            $rules['password'] = 'required|string|min:6';
         } else {
-            $rules['password'] = 'nullable|string|min:6'; // Mật khẩu không bắt buộc khi cập nhật
+            $rules['password'] = 'nullable|string|min:6';
         }
 
         return $rules;

@@ -183,7 +183,7 @@
 
         $('input[name="type"]').on('change', function () {
             if ($('#member').is(':checked')) {
-                $('#hotelSelect').prop('disabled', true); // Vô hiệu hóa trường chọn khách sạn
+                $('#hotelSelect').prop('disabled', true).val("");
             } else {
                 $('#hotelSelect').prop('disabled', false); // Bật lại trường chọn khách sạn
             }
