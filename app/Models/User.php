@@ -42,6 +42,7 @@ class User extends Authenticatable
     const CUSTOMER = 1;
     const ADMIN = 2;
     const HOTELIER = 3;
+    const STAFF = 4;
     const ACTIVE = 1;
     const INACTIVE = 2;
     /**
@@ -84,6 +85,13 @@ class User extends Authenticatable
     public function group()
     {
         return $this->belongsTo(Group::class);
+    }
+
+    public function vouchers()
+    {
+        return $this->belongsToMany(Voucher::class, 'wallet', 'user_id', 'voucher_id')
+//            ->withPivot('created_at', 'updated_at')
+            ->where('end_date', '>', now());
     }
 
 }

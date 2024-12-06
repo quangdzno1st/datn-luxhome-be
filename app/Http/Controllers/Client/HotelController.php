@@ -34,10 +34,10 @@ class HotelController extends Controller
         $hotel->update(['view' => $view + 1]);
 
         $searchData = !$request->check ? session('search_data') : $this->catalogueRoomRepository->searchByPage($request, $hotel['id']);
-//      dd( $searchData);
         $rates = Rate::query()->where('hotel_id', $id)->paginate(20);
         session(['search_data' => $searchData]);
         session(['hotel_id' => $hotel->id]);
+        session(['search_data' => $searchData]);
         session([
             'start_date' => $request->start_date ?? session('start_date'),
             'end_date' => $request->end_date ?? session('end_date'),
