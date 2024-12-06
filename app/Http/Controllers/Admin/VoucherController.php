@@ -209,7 +209,6 @@ class VoucherController extends Controller
         $users = $this->userRepos->getByRankAndTotalAmountOrdered($request);
         $userIds = $users->pluck('id')->toArray(); // Lấy danh sách ID
 
-
         $voucherMapByCode = $this->voucher->getMapByCode($request->vouchers);
 
         if (empty($voucherMapByCode->toArray())) {
@@ -260,10 +259,23 @@ class VoucherController extends Controller
             $this->sendMailToUser($userVoucherSendMailMap);
         }
 
-
         return response()->json([
             'message' => 'Phát phiếu giảm giá thành công.',
         ], 200);
+    }
+
+    public function searchVoucher(\Illuminate\Http\Request $request)
+    {
+//        dd($request);
+        $query = $request->input('code');
+        $vouchers = Voucher::query();
+
+        if ($query) {
+            $vouchers = $vouchers->where('code', 'LIKE', "%{$query}%");
+        }
+        $vouchers = $vouchers->paginate(10);
+
+        return view('vouchers.index', compact('vouchers', 'query'));
     }
 
     private function sendMailToUser($userVoucherSendMailMap) {}

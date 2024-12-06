@@ -11,6 +11,15 @@ use Illuminate\Support\Str;
 class BookingServicesInOrderDetailController extends Controller
 {
     public function addBookingServicesInOrderDetail($orderId,Request $request){
+//        $validate=$request->validate([
+//            'services'=>'required',
+//        ],[
+//            'services.required'=>'Phải chọn dịch vụ'
+//        ]);dd($validate);
+//        dd($request->services);
+        if ($request->services==null){
+            return redirect()->back()->with('error','Phải chọn dịch vụ!');
+        }else{
         for ($i=0;$i<count($request->services);$i++){
             $price=Service::query()->where('id',$request->services[$i])->first()->price;
 //            dd($price);
@@ -25,5 +34,6 @@ class BookingServicesInOrderDetailController extends Controller
             ]);
         }
         return redirect()->back()->with('success','Thêm service thành công!');
+        }
     }
 }
