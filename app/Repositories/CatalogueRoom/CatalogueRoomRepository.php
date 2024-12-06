@@ -164,7 +164,7 @@ class   CatalogueRoomRepository extends BaseRepository implements CatalogueRoomI
             ->select('ot.room_id');
 
         return CatalogueRoom::query()
-            ->join('rooms as r', 'r.catalogue_room_id', '=', 'catalogue_rooms.id')
+            ->leftJoin('rooms as r', 'r.catalogue_room_id', '=', 'catalogue_rooms.id')
             ->leftJoinSub(
                 $bookedRoomIds,
                 'booked_rooms',
@@ -172,7 +172,7 @@ class   CatalogueRoomRepository extends BaseRepository implements CatalogueRoomI
                     $join->on('r.id', '=', 'booked_rooms.room_id');
                 }
             )
-            ->where('r.hotel_id', $orgId)
+            ->where('catalogue_rooms.hotel_id', $orgId)
             ->groupBy('catalogue_rooms.id')
             ->select('catalogue_rooms.id', DB::raw('count(r.id) as total_rooms, sum(IF(booked_rooms.room_id is null, 0, 1)) as booked_room_qty'))
             ->get()

@@ -120,17 +120,14 @@
                                                 @for($i = 1; $i <= $hotel['star']; $i++)
                                                     <i class="material-icons">&#xE838;</i>
                                                 @endfor
-                                                @if( $key/3 ==0 )
-                                                    <i class="material-icons">&#xE838;</i>
-                                                @endif
 									        </span>
                                         </h3>
                                         <span class="address">{{$hotel['district']}} • {{$hotel['province']}}</span>
                                         <span class="rating">
                                              {{ $key / 3 == 0 ? '10/10' : '9/10' }}
                                         </span>
-                                        <div class="description">
-                                            <p class="text-clamp">{{$hotel['description']}} <a
+                                        <div class="description text-clamp-5" style="padding: 3px">
+                                            <p class="">{!! $hotel['description'] !!} <a
                                                         href="{{ route('home.hotel.detail', $hotel['id'])  }} ">Xem
                                                     thêm</a></p>
                                         </div>
@@ -283,9 +280,9 @@
 
 
     <style>
-        .text-clamp {
+        .text-clamp-5 {
             display: -webkit-box;
-            -webkit-line-clamp: 3; /* Giới hạn 2 dòng */
+            -webkit-line-clamp: 5; /* Giới hạn 2 dòng */
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis; /* Thêm dấu ba chấm */
