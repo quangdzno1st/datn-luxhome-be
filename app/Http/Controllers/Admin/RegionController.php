@@ -54,7 +54,7 @@ class RegionController extends Controller
             return redirect()->route('admin.regions.index')->with('success', 'Thêm mới miền thành công');
         } catch (\Exception $e) {
             // dd($e->getMessage());
-            return back()->with('errors', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -70,7 +70,7 @@ class RegionController extends Controller
 
         } catch (\Exception $e) {
             // dd($e->getMessage());
-            return back()->with('errors', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -83,7 +83,7 @@ class RegionController extends Controller
 
         } catch (\Exception $e) {
             // dd($e->getMessage());
-            return back()->with('errors', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -103,7 +103,7 @@ class RegionController extends Controller
 
         } catch (\Exception $e) {
             // dd($e->getMessage());
-            return back()->with('errors', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -116,7 +116,7 @@ class RegionController extends Controller
 
         } catch (\Exception $e) {
             // dd($e->getMessage());
-            return back()->with('errors', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 }

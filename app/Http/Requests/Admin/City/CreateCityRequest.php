@@ -26,7 +26,8 @@ class CreateCityRequest extends FormRequest
     {
         return [
             'name' => 'required|unique:cities',
-            'region_id' => 'required|exists:regions,id'
+            'region_id' => 'required|exists:regions,id',
+            'thumbnail' => 'required'
         ];
     }
 
@@ -37,6 +38,7 @@ class CreateCityRequest extends FormRequest
             'name.unique' => 'Tên thành phố đã tồn tại',
             'region_id.required' => 'Chọn 1 miền',
             'region_id.exists' => 'Miền không tồn tại',
+            'thumbnail.required' => 'Bạn chưa chọn ảnh cho thành phố'
         ];
     }
 

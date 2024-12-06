@@ -117,11 +117,11 @@
                                                         </a>
                                                     </div> --}}
 
-                                                    <div class="service">
+                                                    {{-- <div class="service">
                                                         <a href="{{route('admin.hotel.service.index', $hotel->id)}}"
                                                            class="btn btn-sm btn-soft-primary"><i
                                                                 class="ri-customer-service-line"></i></a>
-                                                    </div>
+                                                    </div> --}}
                                                     <div class="edit">
                                                         <a href="{{route('admin.hotels.edit', $hotel->id)}}"
                                                            class="btn btn-sm btn-soft-warning edit-item-btn"><i

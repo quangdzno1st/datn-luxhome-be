@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 interface ServiceService
 {
-    public function getAll(Request $request);
+    public function getAll(Request $request, $org_id);
     public function getById($id);
     public function createNew($data);
     public function update($data, $id);
