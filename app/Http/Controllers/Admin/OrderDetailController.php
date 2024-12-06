@@ -46,15 +46,18 @@ class OrderDetailController extends Controller
         foreach ($servicesInfo as $item){
             $sumService+=$item->servicePrice;
         }
-//        dd($order);
+
         if ($order->voucher_id!=null){
             $voucher=$this->VoucherOrder($order->voucher_id);
 //            dd($voucher);
-            $order['total_amount']=($sumService+$sumOrderItem)-$voucher['discount_value'];
+            foreach ($voucher as $item){
+                $order['total_amount']=($sumService+$sumOrderItem)-$item['discount_value'];
+            }
         }else{
             $voucher=null;
         $order['total_amount']=($sumService+$sumOrderItem);
         }
+        Order::query()->where('id',$order->id)->update(['total_amount'=>$order['total_amount']]);
         $payable=$this->checkPayableOrTotal($order->id);
         $roomCode=$this->roomCode($order->id);
         $services=Service::all();
@@ -161,11 +164,6 @@ class OrderDetailController extends Controller
                     'check_out' => Carbon::now()
                 ]);
         }
-    }
-
-    public function customerInfo()
-    {
-
     }
 
     public function servicesInfo($orderId)
@@ -284,5 +282,4 @@ class OrderDetailController extends Controller
             'is_valid_checkout' => $isValidCheckoutTime,
         ];
     }
-
 }

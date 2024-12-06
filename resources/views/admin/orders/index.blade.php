@@ -4,7 +4,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title mb-0">Danh sách order</h4>
+                    <h4 class="card-title mb-0">Danh sách đơn đặt</h4>
                 </div><!-- end card header -->
 
                 <div class="card-body">
@@ -47,12 +47,9 @@
                                    style="width:100%">
                                 <thead>
                                 <tr>
-                                    <th>
-                                        Thông báo
-                                    </th>
+                                    <th>Mã code</th>
                                     <th>Email</th>
                                     <th>Người đặt</th>
-                                    <th>Mã code</th>
                                     <th>Ngày đặt</th>
                                     <th>Ngày kết thúc</th>
                                     <th>Phí đặt</th>
@@ -67,28 +64,24 @@
                                 <tbody class="list form-check-all">
                                 @foreach($orders as $order)
                                     <tr>
-
                                         <td class="text-center">
+                                            {{$order->code}}
 {{--                                            //        0: chưa đến ngày--}}
 {{--                                            //        1: checkin,checkout muộn--}}
 {{--                                            //        2: check out muộn đằng sau có khách--}}
 {{--                                            //        3: đang dùng phòng--}}
-                                            @if($order->status==3 || $order->status==4)
-                                                <span>Không có thẩm quyền</span>
-                                            @elseif($order->statusNoti==0)
-                                                <i class="fa-solid fa-triangle-exclamation text-primary"></i>
-                                            @elseif($order->statusNoti==1)
-                                                <i class="fa-solid fa-triangle-exclamation text-warning"></i>
-                                            @elseif($order->statusNoti==2)
-                                                <i class="fa-solid fa-triangle-exclamation text-danger"></i>
-                                            @elseif($order->statusNoti==3)
-                                                <i class="fa-solid fa-triangle-exclamation text-success"></i>
-                                            @else
+                                            @if($order->statusNoti==2)
+                                                <button type="button" class="btn btn-danger btn-load">
+                                                    <span class="d-flex align-items-center">
+                                                        <span class="spinner-grow flex-shrink-0" role="status">
+                                                            <span class="visually-hidden">Loading...</span>
+                                                        </span>
+                                                    </span>
+                                                </button>
                                             @endif
                                         </td>
                                         <td>{{$order->email}}</td>
                                         <td>{{$order->name}}</td>
-                                        <td>{{$order->code}}</td>
                                         <td>{{date('d-M-y', strtotime($order->start_date))}}</td>
                                         <td>{{date('d-M-y', strtotime($order->end_date))}}</td>
                                         <td>{{number_format($order->booking_fee)}}VND</td>
@@ -229,24 +222,6 @@
                                 @endforeach
                                 </tbody>
                             </table>
-                        </div>
-                    </div>
-                    <div>
-                        <div>
-                            <i class="fa-solid fa-triangle-exclamation text-warning"></i> :
-                            <span>Checkin, checkout muộn</span>
-                        </div>
-                        <div>
-                            <i class="fa-solid fa-triangle-exclamation text-danger"></i> :
-                            <span>Checkout muộn, sau có khách</span>
-                        </div>
-                        <div>
-                            <i class="fa-solid fa-triangle-exclamation text-success"></i> :
-                            <span>Đang trong thời gian dùng phòng</span>
-                        </div>
-                        <div>
-                            <i class="fa-solid fa-triangle-exclamation text-primary"></i> :
-                            <span>Chưa tới thời gian dùng phòng</span>
                         </div>
                     </div>
 

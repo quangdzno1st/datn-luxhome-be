@@ -4,42 +4,44 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title mb-0">Danh sách voucher</h4>
+                    <h4 class="card-title mb-0">Danh sách mã giảm giá</h4>
                 </div><!-- end card header -->
 
                 <div class="card-body">
                     <div class="listjs-table" id="customerList">
-                        <div class="row g-4 mb-3">
-                            <div class="col-sm-auto">
-                                <div class="col-sm-auto">
-                                    <div>
-                                        <a href="{{route('admin.vouchers.create')}}">
-                                            <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal"
-                                                    id="create-btn"><i
-                                                        class="ri-add-line align-bottom me-1"></i> Thêm voucher
-                                            </button>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm">
-                                <div class="d-flex justify-content-sm-end">
-                                    <div class="search-box ms-2">
-                                        <input type="text" class="form-control search" placeholder="Search...">
-                                        <i class="ri-search-line search-icon"></i>
-                                    </div>
-                                </div>
+                        <div class="row align-items-center g-3">
+                            <!-- Nút Thêm voucher -->
+                            <div class="col-auto">
+                                <a href="{{ route('admin.vouchers.create') }}">
+                                    <button type="button" class="btn btn-success add-btn" id="create-btn">
+                                        <i class="ri-add-line align-bottom me-1"></i> Thêm voucher
+                                    </button>
+                                </a>
                             </div>
 
-                            <div class="col-sm-auto">
-                                <div>
-                                    <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal"
-                                            id="issue-btn" data-bs-target="#showModal"><i
-                                                class="ri-add-line align-bottom me-1"></i> Phát voucher
-                                    </button>
-                                </div>
+                            <!-- Form Tìm kiếm -->
+                            <div class="col">
+                                <form action="{{ route('admin.vouchers.search') }}" method="GET" class="d-flex align-items-center gap-2">
+                                    <div class="form-group mb-0">
+                                    <input
+                                            type="text"
+                                            name="code"
+                                            class="form-control"
+                                            placeholder="Nhập mã voucher..."
+                                            value="{{ old('code') }}">
+                                    </div>
+                                    <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+                                </form>
+                            </div>
+
+                            <!-- Nút Phát voucher -->
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-success add-btn" id="issue-btn" data-bs-toggle="modal" data-bs-target="#showModal">
+                                    <i class="ri-add-line align-bottom me-1"></i> Phát voucher
+                                </button>
                             </div>
                         </div>
+
 
                         <div class="table-responsive table-card mt-3 mb-1">
                             <table class="table align-middle table-nowrap" id="customerTable">
