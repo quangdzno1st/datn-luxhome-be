@@ -10,6 +10,7 @@ use App\Http\Requests\BaseSearchRequest;
 use App\Models\Order;
 use App\Repositories\Order\OrderRepository;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -29,6 +30,7 @@ class OrderController extends Controller
 
     public function index(BaseSearchRequest $request, $payable = null)
     {
+        $hotel_id = Auth::user()?->hotel_id;
         $orders = Order::query()
             ->orderByDesc('orders.code')
             ->paginate($request->getPerPage(), ['*'], 'order', $request->order);

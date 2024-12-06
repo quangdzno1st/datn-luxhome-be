@@ -2,7 +2,8 @@
 
 namespace App\Services\impl;
 
-use App\Models\HotelService;
+use App\Constant\Enum\ActiveStatusEnum;
+use App\Models\Service;
 use App\Repositories\HotelService\HotelServiceRepository;
 use App\Services\HotelServiceService;
 use Illuminate\Http\Request;
@@ -17,9 +18,17 @@ class HotelServiceServiceImpl implements HotelServiceService
         $this->hotelServiceRepository = $hotelServiceRepository;
     }
 
-    public function getServicesByIdHotel($idHotel, Request $request)
+    public function searchByPage($idHotel, Request $request)
     {
-        $query = HotelService::query()->with('service');
+        $query = $this->genSqlClauseSearchService($idHotel, $request);
+        return $query->get()->toArray();
+    }
+
+    public function genSqlClauseSearchService($idHotel, Request $request)
+    {
+        $query = Service::query()
+            ->where('status', ActiveStatusEnum::Active->value)
+            ->where('hotel_id', $idHotel);
 
         if ($request->filled('keyword')) {
             $keyword = $request->input('keyword');
@@ -31,26 +40,32 @@ class HotelServiceServiceImpl implements HotelServiceService
 
         if ($request->filled('min_price')) {
             $minPrice = $request->min_price;
-            $query->whereHas('service', function($query) use ($minPrice) {
+            $query->whereHas('service', function ($query) use ($minPrice) {
                 $query->where('price', '>=', $minPrice);
             });
         }
-    
+
         if ($request->filled('max_price')) {
             $maxPrice = $request->max_price;
-            $query->whereHas('service', function($query) use ($maxPrice) {
+            $query->whereHas('service', function ($query) use ($maxPrice) {
                 $query->where('price', '<=', $maxPrice);
             });
         }
 
         if ($request->filled('type')) {
             $type = $request->input('type');
-            $query->whereHas('service', function($query) use ($type) {
+            $query->where(function ($query) use ($type) {
                 $query->where('type', $type);
             });
         }
-        $hotelServices = $query->latest('created_at')->paginate(10);
-        return $hotelServices;
+
+        return $query->latest('created_at');
+    }
+
+    public function getServicesByIdHotel($idHotel, Request $request)
+    {
+        $query = $this->genSqlClauseSearchService($idHotel, $request);
+        return $query->paginate(10);
     }
 
     public function create($idHotel, Request $request)
@@ -67,10 +82,10 @@ class HotelServiceServiceImpl implements HotelServiceService
 
         return $this->hotelServiceRepository->add($data);
     }
-    
+
     public function delete($id)
     {
-        $model =  $this->hotelServiceRepository->find($id);
+        $model = $this->hotelServiceRepository->find($id);
         $hotelService = $this->hotelServiceRepository->delete($model);
         return $hotelService;
     }

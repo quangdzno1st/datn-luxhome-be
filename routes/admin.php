@@ -84,7 +84,6 @@ Route::group(['middleware' => ['admin']], function () {
 //        return view('admin.content.error.404');
 //    })->name('404');
 
-
     Route::prefix('catalogue-rooms')
         ->controller(CatalogueRoomController::class)
         ->group(function () {

@@ -1,136 +1,154 @@
 @extends('client.layouts.master')
-
 <style>
-    body {
-        background-color: #f5f5f5;
-        margin: 0;
-        padding: 0;
+    /* Dịch vụ (item) */
+    .dropdown-item {
+        display: inline-block;
+        /* Cho phép các item xếp ngang */
+        width: 250px;
+        /* Đặt chiều rộng cụ thể */
+        text-align: center;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        white-space: normal;
+        /* Nội dung xuống dòng trong item */
     }
 
-    .container {
+    /* Hình ảnh */
+    .dropdown-item img {
+        width: 100%;
+        /* Chiều rộng full trong item */
+        border-radius: 8px;
+        margin-bottom: 10px;
+        object-fit: cover;
+    }
+
+    /* Thông tin dịch vụ */
+    .service-info h4 {
+        font-size: 16px;
+        color: #333;
+        margin: 5px 0;
+    }
+
+    .service-info p {
         display: flex;
         justify-content: space-between;
-        padding: 20px;
+        font-size: 14px;
+        color: #666;
     }
 
-    .left-panel,
-    .right-panel {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 5px;
+    .service-info {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    /* Checkbox */
+    .service-actions input[type="checkbox"] {
+        margin-top: 10px;
+        transform: scale(1.2);
+        /* Tăng kích thước checkbox */
+    }
+
+    .card-item {
+        --border-radius: 0.75rem;
+        --primary-color: #7257fa;
+        --secondary-color: #3c3852;
+        min-width: 210px;
+        max-width: 210px;
+        font-family: "Arial";
+        padding: 1rem;
+        cursor: pointer;
+        border-radius: var(--border-radius);
+        background: #ffffff;
+        /* Đặt nền trắng */
+        box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.1);
+        /* Tăng độ mờ và nổi bật box-shadow */
+        position: relative;
+    }
+
+    .card-item > * + * {
+        margin-top: 1.1em;
+    }
+
+    .card-item .card__content {
+        color: var(--secondary-color);
+        font-size: 0.86rem;
+    }
+
+    .card-item .card__title {
+        padding: 0;
+        font-size: 1.3rem;
+        font-weight: bold;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    .card-item .card__date {
+        color: #6e6b80;
+        font-size: 0.8rem;
+    }
+
+    .card__content img {
         width: 100%;
     }
 
-    .left-panel h2,
-    .right-panel h2 {
-        font-size: 18px;
-        color: #a89c7c;
-        margin-bottom: 10px;
-    }
-
-    .left-panel .service-item,
-    .right-panel {
-        margin: 20px 0;
-        border-left: 5px solid #a89c7c;
-        padding-left: 10px;
-        border-radius: 0 5px 5px 0;
-    }
-
-    .left-panel .service-item p,
-    .right-panel .trip-info p {
-        margin: 5px 0;
-        font-size: 14px;
-    }
-
-    .service-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .left-panel .service-item p:first-child {
-        font-weight: bold;
-    }
-
-    .right-panel .trip-info p:first-child {
-        font-weight: bold;
-    }
-
-    .right-panel .trip-info p i {
-        margin-right: 5px;
-    }
-
-    .right-panel .trip-info .price {
-        color: #f7941d;
-        font-weight: bold;
-    }
-
-    .right-panel .continue-btn {
-        background-color: #f7941d;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .service-dropdown {
-        position: relative;
-        margin-top: 10px;
-    }
-
-    .continue-button {
-        background-color: #f7941d;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .service-dropdown .dropdown-content {
-        display: none;
+    .card-item .card__arrow {
         position: absolute;
-        background-color: #fff;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 5px;
-        padding: 10px;
-        width: 300px;
-        top: 30px;
-        left: 0;
-        max-height: 200px;
-        overflow-y: auto;
-        z-index: 10;
-    }
-
-    .service-dropdown .dropdown-content .dropdown-item {
+        background: var(--primary-color);
+        padding: 0.4rem;
+        border-top-left-radius: var(--border-radius);
+        border-bottom-right-radius: var(--border-radius);
+        bottom: 0;
+        right: 0;
+        transition: 0.2s;
         display: flex;
+        justify-content: center;
         align-items: center;
+    }
+
+    .card-item svg {
+        transition: 0.2s;
+    }
+
+    /* hover */
+    .card-item:hover .card__title {
+        color: var(--primary-color);
+    }
+
+    .card-item:hover .card__arrow {
+        background: #111;
+    }
+
+    .card-item:hover .card__arrow svg {
+        transform: translateX(3px);
+    }
+
+    .right-sidebar .trip-info div {
         margin-bottom: 10px;
-    }
-
-    .service-dropdown .dropdown-content .dropdown-item img {
-        width: 50px;
-        height: 50px;
+        padding: 10px;
+        border: 1px solid #ccc;
         border-radius: 5px;
-        margin-right: 10px;
+        background-color: #f9f9f9;
     }
 
-    .service-dropdown .dropdown-content .dropdown-item p {
-        margin: 0;
-        font-size: 14px;
+    .trip-info {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
     }
 
-    .service-dropdown .dropdown-content .dropdown-item p:first-child {
-        font-weight: bold;
+    .toggle-service .arrow-icon {
+        display: inline-block;
+        transition: transform 0.3s ease;
     }
 
-    .service-dropdown .dropdown-content .dropdown-item input {
-        margin-left: auto;
-    }
-
-    .service-dropdown:hover .dropdown-content {
-        display: block;
+    .toggle-service.active .arrow-icon {
+        transform: rotate(180deg);
+        /* Xoay mũi tên lên */
     }
 </style>
 
@@ -154,55 +172,81 @@
                 <div class="">
                     <form id="booking" method="get" action="{{ route('orders.confirm') }}" class=" booking">
                         @csrf
-                        <div class="" style="display: flex">
-                            <div class="left-panel two-third" style="padding: 15px 20px">
+                        <div class="" style="display: grid;grid-template-columns: 2fr 1fr;width: 100%; gap: 10px;">
+                            <div class=" hotel-details"
+                                 style="padding: 15px 20px; overflow: hidden; height: fit-content">
                                 <h2>
                                     Dịch vụ mua thêm
                                 </h2>
-                                @foreach($roomsOrder as $room)
-                                    <div class="service-item">
-                                        <div>
-                                            <h3 style="color: #000000; margin-left: 0;">{{ $room['code'] }}</h3>
-                                            <p style="padding-bottom: 0;">Loại
-                                                phòng: {{ $room['catalogue_room_name'] }}</p>
-                                        </div>
-                                        <div class="service-dropdown">
-                                            <a class="continue-button">
-                                                Đặt dịch vụ
-                                            </a>
-                                            <div class="dropdown-content">
-                                                @foreach($services as $service)
-                                                    <div class="dropdown-item" style="justify-content: space-between;">
-                                                        <div style="display: flex; align-items: center; justify-content: left;">
-                                                            <img alt="{{ $service['service_name'] }}" height="70"
-                                                                 src="https://storage.googleapis.com/a1aa/image/fTBDgwUBPzxJDiH8nDgitf4wy92lU2H3thdHLP91P0LfLrknA.jpg"
-                                                                 width="100"/>
-                                                            <div class="service-info">
-                                                                <h4 style="color: #000; padding-bottom: 0;">
-                                                                    {{ $service['service_name'] }}
-                                                                </h4>
-                                                                <p
-                                                                        style="color: #666; font-size: 12px; margin-left: 0; padding-bottom: 0;">
-                                                                    {{ number_format($service['service_price']) . ' đ' }}
-                                                                </p>
+                                <div id="accordion" style="display: flex; flex-direction: column; grid-gap: 5px">
+                                    @foreach($roomsOrder as $room)
+                                        <div class="card">
+                                            <div class="card-header" style="background-color:#fff;">
+                                                <div class="">
+                                                    <h3 style="color: #000000; padding-left: 0;">{{ $room['code'] }}</h3>
+                                                    <div style="display: flex; justify-content: space-between">
+                                                        <p style="padding-bottom: 0;">Loại
+                                                            phòng: {{ $room['catalogue_room_name'] }}</p>
+                                                        <a style="padding-bottom: 0;" data-bs-toggle="collapse"
+                                                           href="#{{ $room['code'] }}" class="toggle-service">
+                                                            Thêm dịch vụ
+                                                            <span class="arrow-icon">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                                 fill="none" width="15" height="15">
+                                                                <path fill="#000" d="M12 16L6 10h12l-6 6z"></path>
+                                                            </svg>
+                                                        </span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="{{ $room['code'] }}" class="collapse" data-bs-parent="#accordion">
+                                                <div class="card-body"
+                                                     style="justify-content: space-between; align-items: center;display: flex;overflow-x: scroll;gap: 25px;">
+                                                    @foreach($services as $service)
+                                                        <div class="card-item">
+                                                            <h3 class="card__title" style="color: #000000; "
+                                                                title="{{ $service['name'] }}">
+                                                                {{ $service['name'] }}
+                                                            </h3>
+                                                            <p class="card__content" style="padding-bottom: 0;">
+                                                                <img src="https://storage.googleapis.com/a1aa/image/fTBDgwUBPzxJDiH8nDgitf4wy92lU2H3thdHLP91P0LfLrknA.jpg"
+                                                                     alt="{{ $service['name'] }}">
+                                                            </p>
+
+                                                            <div class="card__date">
+                                                                <h6 style="font-size: 12px">Đơn
+                                                                    giá: {{ number_format($service['price']) . ' đ' }}/
+                                                                    đơn đặt</h6>
+                                                            </div>
+                                                            <input type="checkbox"
+                                                                   name="services[{{ $room['room_id'] }}][{{ $service['id'] }}]"
+                                                                   value="1" hidden>
+
+                                                            <div class="card__arrow">
+                                                                <a class="arrow-button"
+                                                                   data-service-id="{{ $service['id'] }}">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                         viewBox="0 0 24 24" height="15" width="15">
+                                                                        <path fill="#fff"
+                                                                              d="M13.4697 17.9697C13.1768 18.2626 13.1768 18.7374 13.4697 19.0303C13.7626 19.3232 14.2374 19.3232 14.5303 19.0303L20.3232 13.2374C21.0066 12.554 21.0066 11.446 20.3232 10.7626L14.5303 4.96967C14.2374 4.67678 13.7626 4.67678 13.4697 4.96967C13.1768 5.26256 13.1768 5.73744 13.4697 6.03033L18.6893 11.25H4C3.58579 11.25 3.25 11.5858 3.25 12C3.25 12.4142 3.58579 12.75 4 12.75H18.6893L13.4697 17.9697Z">
+                                                                        </path>
+                                                                    </svg>
+                                                                </a>
                                                             </div>
                                                         </div>
-                                                        <div class="service-actions">
-                                                            <input type="checkbox"
-                                                                   name="services[{{ $room['room_id'] }}][{{ $service['service_id'] }}]"
-                                                                   value="1">
-                                                        </div>
-                                                    </div>
-                                                @endforeach
+                                                    @endforeach
+
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                @endforeach
+                                    @endforeach
+                                </div>
                             </div>
                             <!--//three-fourth content-->
 
                             <!--right sidebar-->
-                            <aside class="one-third right-sidebar booking">
+                            <aside class="right-sidebar booking">
                                 <!--Booking details-->
                                 <article class="hotel-details booking-details">
                                     <h2 class="">
@@ -221,36 +265,204 @@
                                             {{ (new DateTime($room['end_date']))->diff(new DateTime($room['start_date']))->days }}
                                             đêm
                                         </p>
-                                        <div>
-                                            <div style="display: flex; justify-content: space-between; align-items: center">
-                                                <h5>{{ $room['code'] }}</h5>
-                                                <h6 class="total-cost"> {{number_format($room['price'])}} đ / đêm</h6>
+
+                                        @php
+                                            $total_amount = 0;
+                                        @endphp
+                                        @foreach($roomsOrder as $room)
+                                            @php
+                                                $total_amount += $room['price'];
+                                            @endphp
+                                            <div>
+                                                <div style="display: flex; justify-content: space-between; align-items: center">
+                                                    <h5>{{ $room['code'] }}</h5>
+                                                    <h6 class="total-cost"> {{number_format($room['price'])}} đ /
+                                                        đêm</h6>
+                                                </div>
+                                                <p><i class="fas fa-bed"></i> x1 Phòng suite</p>
+                                                <p><i class="fas fa-user"></i> Người lớn: {{ $room['number_adult'] }},
+                                                    Trẻ
+                                                    em: {{ $room['number_child'] }}</p>
                                             </div>
-                                            <p><i class="fas fa-bed"></i> x1 Phòng suite</p>
-                                            <p><i class="fas fa-user"></i> Người lớn: {{ $room['number_adult'] }}, Trẻ
-                                                em: {{ $room['number_child'] }}</p>
-                                        </div>
+                                        @endforeach
                                     </div>
+
+                                    <!-- Dịch vụ -->
+                                    <h2>Dịch vụ</h2>
+                                    <div class="service-list">
+                                        <!-- Dịch vụ được chọn sẽ được thêm vào đây -->
+                                    </div>
+
                                     <div class="total-cost">
-                                        <p>Tổng cộng:
-                                            <span></span>
-                                        </p>
+                                        <h4><strong>Tổng cộng: <span id="total-price"> {{ number_format($total_amount) }} </span> đ</strong></h4>
+                                        <input type="number" name="total_amount" hidden value="{{ $total_amount }}"
+                                               id="total_price_input">
                                     </div>
-                                    <button class="continue-button"
-                                            style="width: 100%; background-color: #f7941d !important" href="#">
-                                        Tiếp tục
-                                    </button>
                                 </article>
-                                <!--//Booking details-->
+
+                                <button class="continue-button"
+                                        style="width: 100%; background-color: #f7941d !important">
+                                    Tiếp tục
+                                </button>
                             </aside>
                             <!--//right sidebar-->
+                        </div>
+
                     </form>
                 </div>
             </div>
         </div>
 
-        </div>
         <!--//main content-->
     </main>
     <!--//main-->
 @endsection
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const scrollContainers = document.querySelectorAll('.card-body');
+
+        scrollContainers.forEach(container => {
+            container.addEventListener('wheel', (event) => {
+                event.preventDefault();
+                container.scrollLeft += event.deltaY; // Lăn chuột dọc để cuộn ngang
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.arrow-button').forEach(button => {
+            button.addEventListener('click', function () {
+
+                const parentContainer = this.closest('div');
+
+                // Tìm checkbox thông qua container gốc
+                const checkbox = parentContainer.previousElementSibling?.querySelector('input[type="checkbox"]');
+
+                checkbox.checked = !checkbox.checked;
+
+                const serviceId = this.getAttribute('data-service-id');
+                const roomCode = this.closest('.card').querySelector('h3').textContent.trim(); // Lấy mã phòng
+                const serviceName = this.closest('.card-item').querySelector('.card__title').textContent.trim();
+                const servicePrice = parseInt(
+                    this.closest('.card-item').querySelector('.card__date h6').textContent
+                        .match(/\d+/g).join('') // Lấy số trong đơn giá
+                );
+
+                const serviceList = document.querySelector('.service-list');
+                const existingService = serviceList.querySelector(`[data-service-id="${serviceId}"]`);
+
+                if (this.classList.contains('added')) {
+                    if (existingService) {
+                        const quantityElement = existingService.querySelector('.quantity-value');
+                        let quantity = parseInt(quantityElement.textContent) - 1;
+
+                        checkbox.checked = false;
+
+                        this.classList.remove('added');
+                        this.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                            viewBox="0 0 24 24" height="15" width="15">
+                                            <path fill="#fff"
+                                                  d="M13.4697 17.9697C13.1768 18.2626 13.1768 18.7374 13.4697 19.0303C13.7626 19.3232 14.2374 19.3232 14.5303 19.0303L20.3232 13.2374C21.0066 12.554 21.0066 11.446 20.3232 10.7626L14.5303 4.96967C14.2374 4.67678 13.7626 4.67678 13.4697 4.96967C13.1768 5.26256 13.1768 5.73744 13.4697 6.03033L18.6893 11.25H4C3.58579 11.25 3.25 11.5858 3.25 12C3.25 12.4142 3.58579 12.75 4 12.75H18.6893L13.4697 17.9697Z"></path>
+                                        </svg>`;
+
+                        if (quantity === 0) {
+                            existingService.remove();
+                        } else {
+                            quantityElement.textContent = quantity;
+                            const totalElement = existingService.querySelector('.total-value');
+                            totalElement.textContent = (servicePrice * quantity).toLocaleString() + ' đ';
+                        }
+                    }
+                } else {
+
+                    checkbox.checked = true;
+
+                    if (existingService) {
+                        const quantityElement = existingService.querySelector('.quantity-value');
+                        const quantity = parseInt(quantityElement.textContent) + 1;
+                        quantityElement.textContent = quantity;
+
+                        const totalElement = existingService.querySelector('.total-value');
+                        totalElement.textContent = (servicePrice * quantity).toLocaleString() + ' đ';
+                    } else {
+                        const newService = document.createElement('div');
+                        newService.classList.add('service-item');
+                        newService.setAttribute('data-service-id', serviceId);
+                        newService.innerHTML = `
+                    <div class="trip-info">
+                         <div class="service-info ">
+                            <span class="service-name"><strong>${serviceName}</strong></span>
+                            <span class="service-price"><strong>${servicePrice.toLocaleString()} đ</strong></span>
+                        </div>
+                        <div class="service-quantity">
+                            Số lượng: <span class="quantity-value">1</span>
+                        </div>
+                        <div class="service-total ">
+                            Thành tiền: <span class="total-value">${servicePrice.toLocaleString()} đ</span>
+                        </div>
+                    </div>
+
+                    `;
+                        serviceList.appendChild(newService);
+                    }
+
+                    this.classList.add('added');
+                    this.style.color = "#fff";
+                    this.innerHTML = `Xóa`;
+                }
+
+                updateTotalPrice();
+            });
+        });
+
+        function updateTotalPrice() {
+            const serviceItems = document.querySelectorAll('.service-item');
+            const checkbox = document.getElementById('total_price_input');
+            let totalPrice = parseInt({{ $total_amount }});
+
+            serviceItems.forEach(item => {
+                const totalElement = item.querySelector('.total-value');
+                const total = parseInt(totalElement.textContent.replace(/\D/g, ''));
+                console.log(total)
+                totalPrice += total;
+            });
+
+            console.log(totalPrice);
+
+
+            document.getElementById('total-price').textContent = totalPrice.toLocaleString();
+            checkbox.value = totalPrice;
+        }
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Lấy tất cả các thẻ toggle
+        const toggleServices = document.querySelectorAll('.toggle-service');
+
+        toggleServices.forEach(toggle => {
+            const collapseTarget = toggle.getAttribute('href'); // Lấy ID của phần collapse
+            const collapseElement = document.querySelector(collapseTarget);
+
+            // Lắng nghe sự kiện show (mở)
+            collapseElement.addEventListener('show.bs.collapse', function () {
+                toggle.classList.add('active'); // Thêm class active để xoay mũi tên
+                toggle.textContent = "Ẩn dịch vụ"; // Đổi nội dung thành "Ẩn dịch vụ"
+            });
+
+            // Lắng nghe sự kiện hide (đóng)
+            collapseElement.addEventListener('hide.bs.collapse', function () {
+                toggle.classList.remove('active'); // Xóa class active
+                toggle.textContent = "Thêm dịch vụ"; // Đổi nội dung thành "Thêm dịch vụ"
+            });
+
+            // Xử lý trạng thái ban đầu
+            if (collapseElement.classList.contains('show')) {
+                toggle.classList.add('active'); // Nếu đang mở, thêm class active
+                toggle.textContent = "Ẩn dịch vụ"; // Đặt nội dung ban đầu là "Ẩn dịch vụ"
+            } else {
+                toggle.textContent = "Thêm dịch vụ"; // Đặt nội dung ban đầu là "Thêm dịch vụ"
+            }
+        });
+    });
+</script>
