@@ -79,7 +79,7 @@
                                 <tr>
                                     <td>{{ $key+1 }}</td>
                                     <td>
-                                        <img src="{{ asset($user->avatar) }}" alt="Avatar" style="width: 50px;  object-fit: cover;">
+                                        <img src="{{!empty($user->avatar) ? \Storage::url($user->avatar) : asset('theme/client/images/uploads/avatar.jpg')}}" alt="Avatar" style="width: 50px;  object-fit: cover;">
                                     </td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>

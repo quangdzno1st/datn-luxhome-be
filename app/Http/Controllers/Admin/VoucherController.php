@@ -58,8 +58,11 @@ class VoucherController extends Controller
         $data['thumbnail'] = $this->fileUploadService->storeLocal($request->file('thumbnail'));
         $data['id'] = Str::uuid()->toString();
 
-        $voucher = $this->voucher->createVoucher($data);
-        return redirect()->route('admin.vouchers.index')->with('success', 'Thêm mã giảm giá thành công!');
+            $voucher = $this->voucher->createVoucher($data);
+            return redirect()->route('admin.vouchers.index')->with('success', 'Thêm mã giảm giá thành công!');
+        } catch (\Exception $e) {
+            return Redirect::back()->with('error', 'Errors: ' . $e->getMessage());
+        }
     }
 
     public function edit($id)
@@ -131,7 +134,7 @@ class VoucherController extends Controller
 
             DB::commit();
 
-            return \redirect()->back()->with(['success'=>'Xóa thành công']);
+            return $this->index();
         } catch (\Exception $exception) {
             return Redirect::back()->with('error', 'Errors: ' . $exception->getMessage());
         }

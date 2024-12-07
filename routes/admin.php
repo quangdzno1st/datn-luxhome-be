@@ -204,17 +204,13 @@ Route::group(['middleware' => ['admin']], function () {
 
     Route::prefix('rates')->name('rates.')->controller(RateController::class)->group(function(){
         //route của superadmin
-        Route::middleware('is.super.admin')->group(function() {
-            Route::get('/hotels', 'listRatesAllHotels')->name('hotels');
-            Route::get('/hotel/{hotelId}', 'listRatesOneHotel')->name('hotel');
-            Route::get('/trash/hotel/{hotelId}', 'listRatesOneHotelTrash')->name('hotel.trash');
-        });
+        Route::get('/hotels', 'listRatesAllHotels')->name('hotels');
+        Route::get('/hotel/{hotelId}', 'listRatesOneHotel')->name('hotel');
+        Route::get('/trash/hotel/{hotelId}', 'listRatesOneHotelTrash')->name('hotel.trash');
 
         //route của hotelier
-        Route::middleware('is.staff.and.admin')->group(function() {
-            Route::get('/hotelier', 'getRatesByHotelIdOfHotelier')->name('hotel.hotelier');
-            Route::get('/trash/hotelier', 'getRatesByHotelIdOfHotelierTrash')->name('hotel.trash.hotelier');
-        });
+        Route::get('/hotelier', 'getRatesByHotelIdOfHotelier')->name('hotel.hotelier');
+        Route::get('/trash/hotelier', 'getRatesByHotelIdOfHotelierTrash')->name('hotel.trash.hotelier');
 
         //route 2 thằng đều dùng được
         Route::post('/hidden/{rateId}', 'rateHidden')->name('hidden');
@@ -228,7 +224,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/delete/{id}', 'delete')->name('delete');
     });
 
-    Route::prefix('banners')->middleware('is.super.admin')->name('banners.')->controller(BannerController::class)->group(function() {
+    Route::prefix('banners')->name('banners.')->controller(BannerController::class)->group(function() {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
         Route::post('/store', 'store')->name('store');

@@ -142,7 +142,7 @@
                                         <label class="form-label" for="avatar">Ảnh đại diện</label>
                                         <input class="form-control" id="avatar" type="file" name="avatar"
                                                accept="image/png, image/gif, image/jpeg">
-                                        <img id="avatarPreview" src="{{ asset($user->avatar) }}" alt="Preview"
+                                        <img id="avatarPreview" src="{{!empty($user->avatar) ? \Storage::url($user->avatar) : asset('theme/client/images/uploads/avatar.jpg')}}" alt="Preview"
                                              style="margin-top: 10px; max-width: 200px;"/>
                                         @error('avatar')
                                         <p class="text-danger">{{$message}}</p>
