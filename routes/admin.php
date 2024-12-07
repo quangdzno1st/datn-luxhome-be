@@ -250,7 +250,6 @@ Route::prefix('vouchers')->group(function () {
     Route::get('/list-trash', [\App\Http\Controllers\Admin\VoucherController::class, 'list_trash'])->name('vouchers.list_trash');
     Route::post('/restore/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'restore'])->name('vouchers.restore');
     Route::delete('/force_delete/{id}', [\App\Http\Controllers\Admin\VoucherController::class, 'destroy'])->name('vouchers.force_delete');
-    Route::get('/search_voucher', [\App\Http\Controllers\Admin\VoucherController::class, 'searchVoucher'])->name('vouchers.search');
 });
 
 //order

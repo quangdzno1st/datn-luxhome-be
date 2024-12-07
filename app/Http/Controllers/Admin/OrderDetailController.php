@@ -49,14 +49,15 @@ class OrderDetailController extends Controller
 
         if ($order->voucher_id!=null){
             $voucher=$this->VoucherOrder($order->voucher_id);
-//            dd($voucher);
             foreach ($voucher as $item){
                 $order['total_amount']=($sumService+$sumOrderItem)-$item['discount_value'];
+                $order['voucher_id']=$item->code;
             }
         }else{
             $voucher=null;
         $order['total_amount']=($sumService+$sumOrderItem);
         }
+//        dd($voucher);
         Order::query()->where('id',$order->id)->update(['total_amount'=>$order['total_amount']]);
         $payable=$this->checkPayableOrTotal($order->id);
         $roomCode=$this->roomCode($order->id);
@@ -214,7 +215,7 @@ class OrderDetailController extends Controller
     public function VoucherOrder($voucherId){
         $voucher=Voucher::query()->where('vouchers.id', $voucherId)
             ->select('vouchers.description',
-                'vouchers.discount_value')->get()
+                'vouchers.discount_value','vouchers.code')->get()
         ;
         return $voucher;
     }

@@ -149,14 +149,16 @@
                                         @foreach($servicesInfo as $service)
                                         <tr>
                                             <td>{{ $service->serviceName }}</td>
-{{--                                            <td>{{$service->serviceQuantity}}</td>--}}
-                                            <td>{{$service->status}}</td>
+                                            @if($service->status==2)
+                                                <td><span class="badge bg-danger">Chưa thanh toán</span></td>
+                                            @else
+                                                <td><span class="badge bg-success">Đã thanh toán</span></td>
+                                            @endif
                                             <td>{{number_format($service->servicePrice)}}VND</td>
                                         </tr>
                                         @endforeach
                                         <tr>
                                             <td>Tổng</td>
-{{--                                            <td></td>--}}
                                             <td></td>
                                             <td>{{number_format($sumService)}}VND</td>
                                         </tr>

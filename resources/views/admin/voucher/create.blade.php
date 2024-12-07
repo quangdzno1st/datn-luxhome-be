@@ -13,7 +13,7 @@
                             <div class="col-sm-auto">
                                 <div class="col-sm-auto">
                                     <div>
-                                        <a href="{{ route('vouchers.index') }}">
+                                        <a href="{{ route('admin.vouchers.index') }}">
                                             <button type="button" class="btn btn-light add-btn" data-bs-toggle="modal"
                                                 id="create-btn" data-bs-target="#showModal">Danh sách
                                             </button>

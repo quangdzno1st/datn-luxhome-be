@@ -37,17 +37,12 @@ class VoucherController extends Controller
         $this->userRepos = $userRepos;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        try {
-            // Truy xuất tất cả voucher
-            $vouchers = $this->voucher->listVoucher();
-            //            dd($vouchers);
-            // Trả về dữ liệu voucher với thông điệp thành công
-            return view(self::PATH_DIRECT . __FUNCTION__, compact('vouchers'));
-        } catch (\Exception $e) {
-            return Redirect::back()->with('error', 'Failed to retrieve vouchers');
-        }
+        $vouchers = $this->voucher->listVoucher();
+//        dd($vouchers);
+        if ($_GET)  return $this->searchVoucher($request->all());
+        return view(self::PATH_DIRECT . __FUNCTION__, compact('vouchers'));
     }
 
     public function create()
@@ -64,7 +59,7 @@ class VoucherController extends Controller
             $data['id'] = Str::uuid()->toString();
 
             $voucher = $this->voucher->createVoucher($data);
-            return redirect()->route('vouchers.index')->with('success', 'Thêm mã giảm giá thành công!');
+            return redirect()->route('admin.vouchers.index')->with('success', 'Thêm mã giảm giá thành công!');
         } catch (\Exception $e) {
             return Redirect::back()->with('error', 'Errors: ' . $e->getMessage());
         }
@@ -139,7 +134,7 @@ class VoucherController extends Controller
 
             DB::commit();
 
-            return $this->index();
+            return \redirect()->back()->with(['success'=>'Xóa thành công']);
         } catch (\Exception $exception) {
             return Redirect::back()->with('error', 'Errors: ' . $exception->getMessage());
         }
@@ -264,18 +259,16 @@ class VoucherController extends Controller
         ], 200);
     }
 
-    public function searchVoucher(\Illuminate\Http\Request $request)
+    public function searchVoucher($data)
     {
-//        dd($request);
-        $query = $request->input('code');
         $vouchers = Voucher::query();
 
-        if ($query) {
-            $vouchers = $vouchers->where('code', 'LIKE', "%{$query}%");
+        if ($data) {
+            $vouchers = $vouchers->where('code', 'LIKE', "%{$data['code']}%");
         }
         $vouchers = $vouchers->paginate(10);
-
-        return view('vouchers.index', compact('vouchers', 'query'));
+//        dd($vouchers);
+        return view('admin.voucher.index', compact('vouchers'));
     }
 
     private function sendMailToUser($userVoucherSendMailMap) {}
