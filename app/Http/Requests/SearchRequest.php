@@ -21,7 +21,8 @@ class SearchRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'number_adult' => 'sometimes|required|integer|min:1',
+            'number_adult' => 'nullable|required|integer|min:1',
+            'number_child' => 'nullable|integer|min:1',
 
             'start_date' => [
                 'sometimes',
@@ -55,6 +56,8 @@ class SearchRequest extends FormRequest
             'number_adult.required' => 'Người lớn là bắt buộc.',
             'number_adult.integer' => 'Người lớn phải là số.',
             'number_adult.min' => 'Người lớn phải ít nhất là 1.',
+            'number_child.integer' => 'Trẻ em phải là số.',
+            'number_child.min' => 'Trẻ em phải ít nhất là 1.',
             'start_date.required' => 'Ngày bắt đầu là bắt buộc.',
             'start_date.date' => 'Ngày bắt đầu không đúng định dạng.',
             'end_date.required' => 'Ngày kết thúc là bắt buộc.',

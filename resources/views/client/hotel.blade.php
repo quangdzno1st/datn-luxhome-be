@@ -362,6 +362,50 @@
             font-weight: bold;
         }
 
+        .column {
+            flex: 1;
+            min-width: 250px;
+            margin: 10px;
+        }
+        .column h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .column ul {
+            list-style: none;
+            padding: 0;
+        }
+        .column ul li {
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        .column ul li i {
+            margin-right: 10px;
+        }
+
+        .custom {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        .custom {
+            display: flex;
+            gap: 20px; /* Khoảng cách giữa các cột */
+        }
+        .custom .column {
+            flex: 1; /* Chia đều 2 cột */
+        }
+        .custom ul {
+            list-style: none;
+            padding: 0;
+        }
+        .custom li {
+            margin-bottom: 10px; /* Khoảng cách giữa các mục */
+        }
+
     </style>
 
     <main class="main">
@@ -438,7 +482,7 @@
                                           ->get()
                                           ->pluck('attributes') // Lấy tất cả các giá trị attribute_value từ các catalogue
                                           ->flatten() // Làm phẳng các mảng để có danh sách các attribute_value
-                                          ->unique()
+                                          ->unique('id')
                                 @endphp
                                 @foreach($facilities as $facilitie)
 
@@ -538,7 +582,11 @@
                                                class="form-control"
                                                placeholder="Số trẻ em"
                                                value="{{ old('number_child') ?? ($search_data['number_child_search'] ?? null) }}"/>
-                                        <div class="text-danger" style="visibility: hidden;">&nbsp;</div>
+                                        @error('number_child')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @else
+                                            <div class="text-danger" style="visibility: hidden;">&nbsp;</div>
+                                            @enderror
                                     </div>
 
                                     <input type="hidden" name="check" value="1">
@@ -552,7 +600,7 @@
                             </div>
                         </div>
                     </form>
-                    @if ($errors->any() && !($errors->has('start_date') || $errors->has('end_date')|| $errors->has('number_adult')))
+                    @if ($errors->any() && !($errors->has('start_date') || $errors->has('end_date')|| $errors->has('number_adult')|| $errors->has('number_child')))
                         <div class="alert alert-danger">
                             <ul>
                                 <li>Số lượng đặt phòng không thể để trống</li>
@@ -657,7 +705,7 @@
                                             @php
                                                 $facilities =  $data['attributes']
                                                       ->flatten()
-                                                      ->unique()
+                                                      ->unique('id')
                                             @endphp
 
                                             @foreach($facilities as $facilitie)
@@ -725,15 +773,59 @@
                               ->get()
                               ->pluck('attributes') // Lấy tất cả các giá trị attribute_value từ các catalogue
                               ->flatten() // Làm phẳng các mảng để có danh sách các attribute_value
-                              ->unique()
+                              ->unique('id')
                     @endphp
-                    @foreach($facilities as $facilitie)
-                        <div class="text-wrap">
-                            <ul class="three-col">
-                                <li>{{$facilitie->content}}</li>
+
+
+                    <div class="custom">
+                        <div class="column">
+                            <ul>
+                                @foreach($facilities->slice(0, ceil($facilities->count() / 2)) as $facility)
+                                    <li><i class="fas fa-check"></i> {{ $facility->content }}</li>
+                                @endforeach
                             </ul>
                         </div>
-                    @endforeach
+                        <div class="column">
+                            <ul>
+                                @foreach($facilities->slice(ceil($facilities->count() / 2)) as $facility)
+                                    <li><i class="fas fa-check"></i> {{ $facility->content }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+
+{{--                    @foreach($facilities as $facilitie)--}}
+{{--                        <div class="text-wrap">--}}
+{{--                            <ul class="three-col">--}}
+{{--                                <li>{{$facilitie->content}}</li>--}}
+{{--                            </ul>--}}
+{{--                        </div>--}}
+{{--                    @endforeach--}}
+{{--                 <div class="custom">--}}
+{{--                     <div class="column">--}}
+{{--                         <h3><i class="fas fa-user"></i> Cực kỳ phù hợp cho kỳ lưu trú của bạn</h3>--}}
+{{--                         <ul>--}}
+{{--                             <li><i class="fas fa-check"></i> Phòng tắm riêng</li>--}}
+{{--                             <li><i class="fas fa-check"></i> WiFi miễn phí</li>--}}
+{{--                             <li><i class="fas fa-check"></i> Điều hòa không khí</li>--}}
+{{--                             <li><i class="fas fa-check"></i> Phòng gia đình</li>--}}
+{{--                             <li><i class="fas fa-check"></i> Nhà hàng</li>--}}
+{{--                             <li><i class="fas fa-check"></i> Vòi sen</li>--}}
+{{--                             <li><i class="fas fa-check"></i> Minibar</li>--}}
+{{--                             <li><i class="fas fa-check"></i> Giữ hành lí</li>--}}
+{{--                             <li><i class="fas fa-check"></i> Tủ khóa</li>--}}
+{{--                             <li><i class="fas fa-check"></i> Giặt ủi</li>--}}
+{{--                         </ul>--}}
+{{--                     </div>--}}
+{{--                     <div class="column">--}}
+{{--                         <h3><i class="fas fa-utensils"></i> Nhà bếp</h3>--}}
+{{--                         <ul>--}}
+{{--                             <li><i class="fas fa-check"></i> Ấm đun nước điện</li>--}}
+{{--                         </ul>--}}
+
+{{--                     </div>--}}
+{{--                 </div>--}}
+
 
                 </article>
             </section>
@@ -767,6 +859,7 @@
                 <article>
                     <h2>Tất cả đánh giá về khách sạn của chúng tôi</h2>
                     <ul class="reviews">
+                        @if(count($rates) > 0)
                         @foreach($rates as $rate)
                             <li>
                                 {{--                                <figure class="left" style="display: flex; align-items: center">--}}
@@ -866,6 +959,20 @@
 
                             </li>
                         @endforeach
+                        @else
+                            <div class="no-reviews" style="
+        background: red;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 18px;
+        color: #fff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        animation: pulse 1.5s infinite;">
+                                Khách sạn chưa có đánh giá nào !
+                            </div>
+                        @endif
                     </ul>
                 </article>
             </section>

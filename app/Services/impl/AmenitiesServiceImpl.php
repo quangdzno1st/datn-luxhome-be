@@ -4,11 +4,12 @@ namespace App\Services\impl;
 
 use App\Models\Attribute;
 use App\Models\Service;
+use App\Repositories\Amenities\AmenitiesInterface;
 use App\Repositories\Amenities\AmenitiesRepository;
 use App\Services\ServiceService;
 use Illuminate\Http\Request;
 
-class AmenitiesServiceImpl implements ServiceService
+class AmenitiesServiceImpl
 {
     protected AmenitiesRepository $amenitiesRepository;
 
