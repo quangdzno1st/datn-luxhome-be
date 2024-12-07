@@ -41,7 +41,7 @@ class AmenitiesController extends Controller
 
             DB::commit();
 
-            return back()->with('msg', 'Thêm mới thành công');
+            return back()->with('success', 'Thao tác  thành công!');
 
         } catch (\Exception $exception) {
             return back()->withErrors(['error' => $exception->getMessage()]);
@@ -58,7 +58,7 @@ class AmenitiesController extends Controller
 
             DB::commit();
 
-            return back()->with('msg', 'Cập nhật thành công');
+            return back()->with('success', 'Thao tác  thành công!');
 
         } catch (\Exception $exception) {
             return back()->withErrors(['error' => $exception->getMessage()]);
@@ -74,7 +74,7 @@ class AmenitiesController extends Controller
             
             DB::commit();
 
-            return back()->with('msg', 'Xóa thành công');
+            return back()->with('success', 'Thao tác  thành công!');
 
         } catch (\Exception $exception) {
             return back()->withErrors(['error' => $exception->getMessage()]);

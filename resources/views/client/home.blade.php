@@ -76,6 +76,9 @@
                                 <label for="spinner3" style="font-weight: bold; margin-bottom: 5px; display: block;">Trẻ em</label>
                                 <input type="number" id="spinner3" name="number_child" value="{{ old('number_child') }}"
                                        style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                @error('number_child')
+                                <div class="text-danger" style="color: red;">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <p style="font-size: 0.9rem; color: #666; text-align: center; margin-top: 10px;">*Trẻ em: Từ 2 - dưới 12 tuổi</p>
@@ -132,7 +135,7 @@
                                                     thêm</a></p>
                                         </div>
                                         <a href="{{route('hotel.show', ['hotel_id'=>$hotel['id'],'check'=>1, 'start_date' => \Carbon\Carbon::now()->format('Y-m-d'), 'end_date' => \Carbon\Carbon::tomorrow()->format('Y-m-d')])}}" title="Book now"
-                                           class="gradient-button">Đặt ngay</a>
+                                           class="gradient-button">Xem ngay</a>
                                     </div>
                                 </article>
                                 <!--//deal-->
