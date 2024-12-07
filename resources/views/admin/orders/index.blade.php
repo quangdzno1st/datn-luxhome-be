@@ -1,4 +1,51 @@
 @extends('admin.layouts.master')
+@section('styles')
+    <style>
+    .btn-smaller {
+    font-size: 0.1em; /* Adjust font size as needed */
+    padding: 0.25rem 0.5rem; /* Adjust padding as needed */
+    }
+    .btn-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Description mặc định ẩn */
+    .btn-container .description {
+        position: absolute;
+        left: 105%; /* Đặt cạnh nút (bên phải) */
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: #000;
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.6rem;
+        white-space: nowrap;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+    }
+
+    /* Mũi tên chỉ vào nút */
+    .btn-container .description::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: -5px;
+        transform: translateY(-50%);
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent #000 transparent transparent;
+    }
+
+    /* Hiện description khi hover */
+    .btn-container:hover .description {
+        visibility: visible;
+        opacity: 1;
+    }
+    </style>
+@endsection
 @section('content')
     <div class="row">
         <div class="col-lg-12">
@@ -65,20 +112,24 @@
                                 @foreach($orders as $order)
                                     <tr>
                                         <td class="text-center">
-                                            {{$order->code}}
 {{--                                            //        0: chưa đến ngày--}}
 {{--                                            //        1: checkin,checkout muộn--}}
 {{--                                            //        2: check out muộn đằng sau có khách--}}
 {{--                                            //        3: đang dùng phòng--}}
-                                            @if($order->statusNoti==2)
-                                                <button type="button" class="btn btn-danger btn-load">
-                                                    <span class="d-flex align-items-center">
-                                                        <span class="spinner-grow flex-shrink-0" role="status">
-                                                            <span class="visually-hidden">Loading...</span>
-                                                        </span>
-                                                    </span>
-                                                </button>
-                                            @endif
+                                                <div class="btn-container">
+                                                    {{$order->code}}
+                                                    @if($order->statusNoti==2)
+                                                            <div type="button" class="btn btn-danger btn-sm" style="padding: 2px 2px; font-size: 0.4rem;">
+                                                                <span class="d-flex align-items-center">
+                                                                    <span class="spinner-grow flex-shrink-0" role="status" style="width: 12px; height: 12px;">
+                                                                        <span class="visually-hidden">Loading...</span>
+                                                                    </span>
+                                                                </span>
+                                                            </div>
+                                                            <!-- Description -->
+                                                            <div class="description">Quá giờ checkout, sau có khách</div>
+                                                    @endif
+                                                </div>
                                         </td>
                                         <td>{{$order->email}}</td>
                                         <td>{{$order->name}}</td>

@@ -21,7 +21,7 @@
 
                             <!-- Form Tìm kiếm -->
                             <div class="col">
-                                <form action="{{ route('admin.vouchers.search') }}" method="GET" class="d-flex align-items-center gap-2">
+                                <form action="" method="GET" class="d-flex align-items-center gap-2">
                                     <div class="form-group mb-0">
                                     <input
                                             type="text"
