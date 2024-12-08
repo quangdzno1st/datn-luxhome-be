@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers\Client;
 
-use App\Models\Rate;
-use App\Models\User;
-use Illuminate\Http\Request;
-use App\Services\OrderService;
-use App\Http\Requests\OrderRequest;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use App\Services\HotelServiceService;
 use App\Constant\Enum\ServiceTypeEnum;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\OrderRequest;
 use App\Http\Requests\OrderSearchRequest;
 use App\Models\Order;
-use Illuminate\Validation\ValidationException;
+use App\Models\Rate;
+use App\Models\User;
+use App\Repositories\CatalogueRoom\CatalogueRoomRepository;
 use App\Repositories\Service\ServiceRepository;
 use App\Repositories\Voucher\VoucherRepository;
-use App\Repositories\CatalogueRoom\CatalogueRoomRepository;
+use App\Services\HotelServiceService;
+use App\Services\OrderService;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -56,7 +55,7 @@ class AccountSettingController extends Controller
 
         $user = Auth::user();
 
-        return view('client.myaccount', compact('orders', 'user', 'rates','vouchers'));
+        return view('client.myaccount', compact('orders', 'user', 'rates', 'vouchers'));
     }
 
     public function paymentOrder($orderId)
@@ -75,6 +74,8 @@ class AccountSettingController extends Controller
 
     public function confirmOrder(Request $request)
     {
+
+//
         $hotelId = session('hotel_id') ?? null;
         if (!isset($hotelId)) {
             return redirect()->back()->with('error', 'Thông tin khách sạn không xác định');
@@ -82,7 +83,14 @@ class AccountSettingController extends Controller
 
         $roomsServiceOrder = $this->orderService->getDataBookingForConfirm($request, $hotelId);
         $vouchers = $this->voucherRepos->getAllForOrder(1200000, $hotelId);
-        return view('client.booking', compact('vouchers'));
+
+        $total_mount = $request?->total_amount;
+        $roomBooking = session('booking_data') ?? null;
+
+        $servicesQty = $roomsServiceOrder['serviceBookingsQty'];
+        $servicesInfo = $roomsServiceOrder['serviceMapById'];
+
+        return view('client.booking', compact('vouchers', "total_mount", "servicesQty", "servicesInfo", "roomBooking"));
     }
 
     public function store(OrderRequest $request)
@@ -94,9 +102,10 @@ class AccountSettingController extends Controller
     public function orderService(Request $request)
     {
         $roomsOrder = $this->orderService->getDataBookingOrder($request);
-        $services = $this->hotelServiceService->getServicesByIdHotel($roomsOrder[0]['hotel_id'],
+        $groupedRooms = $this->orderService->getRoomOrderQtyMapByCatalogueRoomId($roomsOrder);
+        $services = $this->hotelServiceService->searchByPage($roomsOrder[0]['hotel_id'],
             new Request(['type' => ServiceTypeEnum::DICH_VU_TRA_PHI->value]));
-        return view('client.bookingservice', compact('roomsOrder', 'services'));
+        return view('client.bookingservice', compact('roomsOrder', 'services', 'groupedRooms'));
 
     }
 
@@ -113,7 +122,7 @@ class AccountSettingController extends Controller
             'phone.required' => 'Vui lòng nhập số điện thoại.',
             'phone.regex' => 'Số điện thoại không hợp lệ.'
         ];
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'unique:users,email,' . Auth::id(), 'max:255'],
             'phone' => ['required', 'string', 'regex:/^(0[3|5|7|8|9])[0-9]{8}$/']
@@ -134,18 +143,18 @@ class AccountSettingController extends Controller
             if ($request->has('avatar')) {
                 $data['avatar'] = Storage::put('users', $data['avatar']);
             }
-            
+
             $userUpdate = Auth::user();
 
             $oldAvatar = $userUpdate->avatar;
 
             $userUpdate->update($data);
 
-           if ($request->has('avatar')) {
-            if (!empty($oldAvatar) && Storage::exists($oldAvatar)) {
-                Storage::delete($oldAvatar);
+            if ($request->has('avatar')) {
+                if (!empty($oldAvatar) && Storage::exists($oldAvatar)) {
+                    Storage::delete($oldAvatar);
+                }
             }
-           }
 
             return back()->with('success', 'Cập nhật thông tin thành công');
         } catch (Exception $e) {
@@ -182,7 +191,7 @@ class AccountSettingController extends Controller
             $data['password'] = bcrypt($request->input('password'));
 
             $userUpdate = Auth::user();
-            
+
             $userUpdate->update($data);
 
             return back()->with('success', 'Thay đổi mật khẩu thành công');

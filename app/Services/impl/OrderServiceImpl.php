@@ -108,6 +108,7 @@ class OrderServiceImpl implements OrderService
         }
 
         $order->total_amount = $totalServiceAmount + $totalBookingFee;
+
         $order->booking_fee = $totalBookingFee;
 
         $order->orderItem()->saveMany($orderItems);
@@ -487,11 +488,9 @@ class OrderServiceImpl implements OrderService
      */
     public function getDataBookingOrder(Request $request)
     {
-
         $bookingData = $this->validateOrderQtyRequest($request);
         $dataSearch = session('search_data');
-
-        if (empty([[$dataSearch]])) {
+        if (empty($dataSearch)) {
             return redirect()->back()->with('error', 'Thông tin đặt phòng trống');
         }
 
@@ -503,6 +502,35 @@ class OrderServiceImpl implements OrderService
 
         return $dataResp;
     }
+
+    public function getRoomOrderQtyMapByCatalogueRoomId(array $roomsOrder)
+    {
+        $groupedRooms = [];
+
+        foreach ($roomsOrder as $room) {
+            $roomType = $room['catalogue_room_name'];
+            $number_child = $room['number_child'];
+            $number_adult = $room['number_adult'];
+
+            $price = $room['price'];
+
+            if (!isset($groupedRooms[$roomType])) {
+                $groupedRooms[$roomType] = [
+                    'catalogue_room_name' => $roomType,
+                    'number_child' => $number_child,
+                    'number_adult' => $number_adult,
+                    'quantity' => 0,
+                    'total_price' => 0,
+                ];
+            }
+
+            $groupedRooms[$roomType]['quantity'] += 1;
+            $groupedRooms[$roomType]['total_price'] += $price;
+        }
+
+        return array_values($groupedRooms);
+    }
+
 
     private function validateOrderQtyRequest(Request $request): array
     {

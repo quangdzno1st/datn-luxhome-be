@@ -1,5 +1,16 @@
 @extends('client.layouts.master')
 
+<style>
+	.right-sidebar .trip-info div {
+		margin-bottom: 10px;
+		padding: 10px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		background-color: #f9f9f9;
+	}
+
+</style>
+
 @section('content')
     <!--main-->
 	<main class="main">		
@@ -17,7 +28,7 @@
 			<!--//breadcrumbs-->
 			<div class="row">
 				<!--three-fourth content-->
-				<div class="three-fourth">
+				<div class="two-third">
 					<form id="booking" method="post" action="{{ route('orders.store') }}" class="static-content booking">
 						@csrf
 						<fieldset>
@@ -93,35 +104,73 @@
 				<!--//three-fourth content-->
 				
 				<!--right sidebar-->
-				<aside class="one-fourth right-sidebar">
+				<aside class="one-third right-sidebar booking">
 					<!--Booking details-->
 					<article class="hotel-details booking-details">
-						<h1>Best ipsum hotel 
-							<span class="stars">
-								<i class="material-icons">&#xE838;</i>
-								<i class="material-icons">&#xE838;</i>
-								<i class="material-icons">&#xE838;</i>
-							</span>
-						</h1>
-						<span class="address">Marylebone, London</span>
-						<span class="rating"> 8 /10</span>
-						<dl class="booking-info">
-							<dt>Rooms</dt>
-							<dd>Standard twin room</dd>
-							<dt>Room Description</dt>
-							<dd>Room only</dd>
-							<dt>Check-in Date</dt>
-							<dd>14-11-12</dd>
-							<dt>Check-out Date</dt>
-							<dd>15-11-12</dd>
-							<dt>Room(s)</dt>
-							<dd>1 night, 1 room, max. 2 people. </dd>
-						</dl>
-						<div class="price">
-							<p class="total">Total Price:  $ 55,00</p>
+						<h2 class="">
+							Chuyến đi
+						</h2>
+						<div class="trip-info">
+							@php
+								$room = $roomBooking[0];
+							@endphp
+							<p><strong>{{ $room['hotel_name'] }}</strong></p>
+							<p>
+								<i class="far fa-calendar-alt"></i>
+								{{ \Carbon\Carbon::parse($room['start_date'])->format('d/m/Y') }}
+								-&gt;
+								{{ \Carbon\Carbon::parse($room['end_date'])->format('d/m/Y') }}
+							</p>
+							<p>
+								<i class="far fa-calendar-alt"></i>
+								{{ (new DateTime($room['end_date']))->diff(new DateTime($room['start_date']))->days }}
+								đêm
+							</p>
+
+							@php
+								$total_amount = 0;
+							@endphp
+							@foreach($roomBooking as $room)
+								@php
+									$total_amount += $room['price'];
+								@endphp
+								<div>
+									<div style="display: flex; justify-content: space-between; align-items: center">
+										<h5>{{ $room['code'] }}</h5>
+										<h6 class="total-cost"> {{number_format($room['price'])}} đ /
+											đêm</h6>
+									</div>
+									<p><i class="fas fa-bed"></i> x1 Phòng suite</p>
+									<p><i class="fas fa-user"></i> Người lớn: {{ $room['number_adult'] }},
+										Trẻ
+										em: {{ $room['number_child'] }}</p>
+								</div>
+							@endforeach
 						</div>
-					</article>
-					<!--//Booking details-->
+
+						<h2>Dịch vụ</h2>
+						@if(!empty($servicesQty))
+							@foreach($servicesQty as $key => $qty)
+								@php
+									$serviceInfo = $servicesInfo[$key];
+								@endphp
+								<div class="trip-info">
+									<div class="service-info ">
+										<span class="service-name"><strong>{{ $serviceInfo['name'] }}</strong></span>
+										<span class="service-price"><strong>{{ number_format($serviceInfo['price']) }} đ</strong></span>
+									</div>
+									<div class="service-quantity">
+										Số lượng: <span class="quantity-value">{{ $qty }}</span>
+									</div>
+									<div class="service-total ">
+										Thành tiền: <span class="total-value">{{ number_format($qty * $serviceInfo['price']) }} đ</span>
+									</div>
+								</div>
+								<div class="price">
+									<p class="total">Tổng tiền:  {{ number_format($total_mount) .' đ' }}</p>
+								</div>
+					@endforeach
+						@endif
 				</aside>
 				<!--//right sidebar-->
 			</div>

@@ -63,8 +63,8 @@
                                     <div class="ms-2">
                                         <select name="type" id="" class="form-select">
                                             <option value="">Loại dịch vụ</option>
-                                            <option value="1" @selected(request()->input('type') == 1)>Dịch vụ đi kèm</option>
-                                            <option value="2" @selected(request()->input('type') == 2)>Dịch vụ mất phí</option>
+                                            <option value="1" @selected(request()->input('type') == 1)>Dịch vụ mất phí</option>
+                                            <option value="2" @selected(request()->input('type') == 2)>Dịch vụ đi kèm</option>
                                         </select>
                                     </div>
                                     <div class="ms-2">

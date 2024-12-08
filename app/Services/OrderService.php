@@ -22,6 +22,8 @@ interface OrderService
 
     public function getDataBookingOrder(Request $request);
 
+    public function getRoomOrderQtyMapByCatalogueRoomId(array $roomsOrder);
+
     public function getDataBookingForConfirm(Request $request, $hotelId);
 
     public function cancelOrder($orderId);

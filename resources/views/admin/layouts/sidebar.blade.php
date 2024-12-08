@@ -162,7 +162,7 @@
                     <div class="collapse menu-dropdown" id="sidebarVoucher">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{ route('vouchers.index') }}" target="_self" class="nav-link"
+                                <a href="{{ route('admin.vouchers.index') }}" target="_self" class="nav-link"
                                    data-key="t-horizontal">Danh sách</a>
                             </li>
                         </ul>

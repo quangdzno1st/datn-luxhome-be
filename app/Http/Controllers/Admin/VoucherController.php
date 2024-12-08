@@ -31,7 +31,8 @@ class VoucherController extends Controller
         VoucherServiceImpl $voucher,
         FileUploadService  $fileUploadService,
         UserRepository     $userRepos
-    ) {
+    )
+    {
         $this->voucher = $voucher;
         $this->fileUploadService = $fileUploadService;
         $this->userRepos = $userRepos;
@@ -52,17 +53,13 @@ class VoucherController extends Controller
 
     public function store(CreateVoucherRequest $request)
     {
-        try {
-            $data = $request->all();
-            $data['code'] = Str::upper(Str::random(10));
-            $data['thumbnail'] = $this->fileUploadService->storeLocal($request->file('thumbnail'));
-            $data['id'] = Str::uuid()->toString();
+        $data = $request->all();
+        $data['code'] = Str::upper(Str::random(10));
+        $data['thumbnail'] = $this->fileUploadService->storeLocal($request->file('thumbnail'));
+        $data['id'] = Str::uuid()->toString();
 
-            $voucher = $this->voucher->createVoucher($data);
-            return redirect()->route('admin.vouchers.index')->with('success', 'Thêm mã giảm giá thành công!');
-        } catch (\Exception $e) {
-            return Redirect::back()->with('error', 'Errors: ' . $e->getMessage());
-        }
+        $voucher = $this->voucher->createVoucher($data);
+        return redirect()->route('admin.vouchers.index')->with('success', 'Thêm mã giảm giá thành công!');
     }
 
     public function edit($id)
@@ -271,5 +268,7 @@ class VoucherController extends Controller
         return view('admin.voucher.index', compact('vouchers'));
     }
 
-    private function sendMailToUser($userVoucherSendMailMap) {}
+    private function sendMailToUser($userVoucherSendMailMap)
+    {
+    }
 }

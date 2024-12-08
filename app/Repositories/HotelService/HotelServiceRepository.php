@@ -3,6 +3,7 @@
 namespace App\Repositories\HotelService;
 
 use App\Models\HotelService;
+use App\Models\Service;
 use App\Repositories\Base\BaseRepository;
 
 class HotelServiceRepository extends BaseRepository implements HotelServiceInterface
@@ -49,11 +50,11 @@ class HotelServiceRepository extends BaseRepository implements HotelServiceInter
 
     public function getByOrgIdAndIds($orgId, $ids)
     {
-        return HotelService::query()
-            ->join("services as s", "hotel_service.service_id", "=", "s.id")
-            ->where("hotel_service.hotel_id", $orgId)
-            ->whereIn("s.id", $ids)
-            ->select("s.id", "s.price")
+        return Service::query()
+            ->join("hotels as h", "h.id", "=", "services.hotel_id")
+            ->where("services.hotel_id", $orgId)
+            ->whereIn("services.id", $ids)
+            ->select("services.id", "services.price", "services.name")
             ->get();
     }
 }

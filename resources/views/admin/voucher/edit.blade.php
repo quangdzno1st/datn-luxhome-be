@@ -135,7 +135,7 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="mb-3 col-6">
+                                    <div class="mb-3 col-12">
                                         <label for="" class="form-label">Tổng tiền đơn đặt có thể sử dụng</label>
                                         <input type="number" class="form-control" name="conditional_total_amount"
                                             min="1" value="{{ $voucher->conditional_total_amount }}"
@@ -144,21 +144,9 @@
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
-                                <div class="mb-3">
-                                    <label for="start_date"
-                                           class="form-label">Ngày bắt đầu</label>
-                                    <input type="date" class="form-control" name="start_date"
-                                           value="{{$voucher['start_date']}}"
-                                    >
-                                    <div class="invalid-feedback"></div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="end_date"
-                                           class="form-label">Ngày kết thúc</label>
-                                    <input type="date" class="form-control" name="end_date"
-                                           value="{{$voucher['end_date']}}"
-                                    >
                                     <div class="invalid-feedback"></div>
                                     <label for="description" class="form-label">Mô tả</label>
                                     <textarea name="description" class="form-control" id="description" cols="30" rows="5"

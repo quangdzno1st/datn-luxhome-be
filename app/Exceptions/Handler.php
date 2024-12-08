@@ -2,12 +2,8 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -57,6 +53,10 @@ class Handler extends ExceptionHandler
             return $e->render();
         }
 
-        return parent::render($request, $e); 
+//        if ($e instanceof \Exception) {
+//           return redirect()->back()->with('error', $e->getMessage());
+//        }
+
+        return parent::render($request, $e);
     }
 }
