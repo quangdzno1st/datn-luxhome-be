@@ -77,7 +77,7 @@
                         </a>
                     </li> <!-- end Dashboard Menu -->
                 @endcan
-                
+
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->routeIs('admin.banners.index') ? 'active' : '' }}"
                         href="{{ route('admin.banners.index') }}">
@@ -166,24 +166,27 @@
                 @endcan
 
                 @can('view_reviews')
-                    <li class="nav-item">
+                    @if (Auth::user()->type == 2)
+                        <li class="nav-item">
 
-                        <a class="nav-link menu-link {{ request()->routeIs('admin.rates.hotels') ? 'active' : '' }}"
-                            href="{{ route('admin.rates.hotels') }}" data-bs-toggle="" role="button"
-                            aria-expanded="false" aria-controls="sidebarRegion">
+                            <a class="nav-link menu-link {{ request()->routeIs('admin.rates.hotels') ? 'active' : '' }}"
+                                href="{{ route('admin.rates.hotels') }}" data-bs-toggle="" role="button"
+                                aria-expanded="false" aria-controls="sidebarRegion">
 
-                            <i class="ri-star-s-line"></i> <span data-key="t-layouts">Đánh giá</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
+                                <i class="ri-star-s-line"></i> <span data-key="t-layouts">Đánh giá</span>
+                            </a>
+                        </li>
+                    @else
+                        <li class="nav-item">
 
-                        <a class="nav-link menu-link {{ request()->routeIs('admin.rates.hotel.hotelier') ? 'active' : '' }}"
-                            href="{{ route('admin.rates.hotel.hotelier') }}" data-bs-toggle="" role="button"
-                            aria-expanded="false" aria-controls="sidebarRegion">
+                            <a class="nav-link menu-link {{ request()->routeIs('admin.rates.hotel.hotelier') ? 'active' : '' }}"
+                                href="{{ route('admin.rates.hotel.hotelier') }}" data-bs-toggle="" role="button"
+                                aria-expanded="false" aria-controls="sidebarRegion">
 
-                            <i class="ri-star-s-line"></i> <span data-key="t-layouts">Đánh giá</span>
-                        </a>
-                    </li>
+                                <i class="ri-star-s-line"></i> <span data-key="t-layouts">Đánh giá</span>
+                            </a>
+                        </li>
+                    @endif
                 @endcan
 
                 @can('view_rooms')
