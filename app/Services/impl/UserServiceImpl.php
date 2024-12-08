@@ -52,11 +52,8 @@ class UserServiceImpl implements UserService
         $data["group_id"] = $data["type"] ;
         $data["total_amount_ordered"] = 0;
 
-        if ($request->hasFile('avatar')) {
-            $file = $request->file('avatar');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('public/avatars', $filename);
-            $data['avatar'] = str_replace('public/', 'storage/', $filePath);
+        if ($request->has('avatar')) {
+            $data['avatar'] = Storage::put('users', $data['avatar']);
         }
 
         $this->userRepository->create($data);
@@ -65,19 +62,17 @@ class UserServiceImpl implements UserService
 
     public function update($id, $request)
     {
+        $user = User::find($id);
         $data = $request->all();
-        $data["type"] = $data["type"] ?? auth()->user()->type;
+        $data["type"] = $data["type"] ?? $user->type;
         $data["group_id"] = $data["type"];
         $user = $this->detail($id);
-        if ($request->hasFile('avatar')) {
+        if ($request->has('avatar')) {
             if ($user->avatar) {
-                Storage::delete('public/' . str_replace('storage/', '', $user->avatar));
+                Storage::delete($user->avatar);
             }
 
-            $file = $request->file('avatar');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('public/avatars', $filename);
-            $data['avatar'] = str_replace('public/', 'storage/', $filePath);
+            $data['avatar'] = Storage::put('users', $data['avatar']);
         }
         return $this->userRepository->edit($user, $data);
     }
