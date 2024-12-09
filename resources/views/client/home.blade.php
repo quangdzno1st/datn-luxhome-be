@@ -158,14 +158,14 @@
                                                     src="{{ Storage::url($city['thumbnail']) }}"
                                                     alt=""/></a></figure>
                                     <div class="details">
-                                        <a href="{{ route('home.search', ['city_id' => $city['id'], 'start_date' => \Carbon\Carbon::now()->format('Y-m-d'), 'end_date' => \Carbon\Carbon::tomorrow()->format('Y-m-d')]) }}"
+                                        <a href="{{ route('home.search', ['city_id' => $city['id'],'number_adult' => 2, 'start_date' => \Carbon\Carbon::now()->format('Y-m-d'), 'end_date' => \Carbon\Carbon::tomorrow()->format('Y-m-d')]) }}"
                                            title="View all" class="gradient-button">Xem tất cả</a>
 
                                         <h4>{{ $city['name']}}</h4>
                                         <span class="count">{{ $city['hotel_qty'] }} Khách sạn</span>
                                         <div class="ribbon">
                                             <div class="half">
-                                                <a href="hotels.html" title="View all" style="padding: 5px;">
+                                                <a href="#" title="View all" style="padding: 5px;">
                                                     <span class="small"
                                                           style="text-align:center">Tổng lượt đặt (tháng)</span>
                                                     <span class="price"
@@ -173,7 +173,7 @@
                                                 </a>
                                             </div>
                                             <div class="half">
-                                                <a href="flights.html" title="View all" style="padding: 5px;">
+                                                <a href="#" title="View all" style="padding: 5px;">
                                                     <span class="small" style="text-align:center">Tổng lượt đặt</span>
                                                     <span class="price"
                                                           style="text-align:center; padding-top: 3px">{{ $totalOrderMap[$city['id']]['total_orders']}}</span>

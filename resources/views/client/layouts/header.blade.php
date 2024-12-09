@@ -29,20 +29,14 @@
         <!--//ribbon-->
 
         <!--search-->
-        <div class="search">
-            <form id="search-form" method="get"
-                action="https://www.themeenergy.com/themes/html/book-your-travel/search-form">
-                <input type="search" placeholder="Search entire site here" name="site_search" id="site_search" />
-                <input type="submit" id="submit-site-search" value="submit-site-search" name="submit-site-search" />
-            </form>
-        </div>
+{{--        <div class="search contact">--}}
+{{--            <div>Hỗ trợ 24/7</div>--}}
+{{--            <div class="number">081948374</div>--}}
+{{--        </div>--}}
         <!--//search-->
 
         <!--contact-->
-        <div class="contact">
-            <span>24/7 Support number</span>
-            <span class="number">1- 555 - 555 - 555</span>
-        </div>
+
         <!--//contact-->
     </div>
 
