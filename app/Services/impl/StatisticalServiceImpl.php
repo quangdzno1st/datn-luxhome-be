@@ -6,10 +6,12 @@ use App\Models\Rate;
 use App\Models\Room;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\CatalogueRoom;
 use Illuminate\Support\Carbon;
 use App\Constant\Enum\RoleEnum;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Constant\Enum\StatusOrderEnum;
 
 class StatisticalServiceImpl
 {
@@ -25,9 +27,9 @@ class StatisticalServiceImpl
         // Ngày cuối năm
         $endOfYear = Carbon::now()->endOfYear(); // 2024-12-31 23:59:59
 
-        $startDate = '';
+        $startDate = Carbon::now()->startOfYear()->format('Y-m-d');
 
-        $endDate = '';
+        $endDate = Carbon::now()->endOfYear()->format('Y-m-d');
 
         $selectTime = '';
 
@@ -160,7 +162,7 @@ class StatisticalServiceImpl
         // Ngày cuối năm
         $endOfYear = Carbon::now()->endOfYear(); // 2024-12-31 23:59:59
 
-        $query = Order::query()->where('net_amount', '!=', null);
+        $query = Order::query();
 
         if (session()->has('handle_data')) {
 
@@ -411,7 +413,6 @@ class StatisticalServiceImpl
                 if (!empty($hotel_id)) {
                     $query->where('org_id', $hotel_id);
                 }
-
             }
 
             // Tìm theo năm
@@ -430,7 +431,6 @@ class StatisticalServiceImpl
                 if (!empty($hotel_id)) {
                     $query->where('org_id', $hotel_id);
                 }
-
             }
 
             // Tìm theo tháng
@@ -448,7 +448,6 @@ class StatisticalServiceImpl
                 if (!empty($hotel_id)) {
                     $query->where('org_id', $hotel_id);
                 }
-
             }
         } else {
             // Mặc định
@@ -457,7 +456,6 @@ class StatisticalServiceImpl
             if (!empty($hotel_id)) {
                 $query->where('org_id', $hotel_id);
             }
-
         }
 
         $orders = $query->selectRaw('status, COUNT(status) as quantity_order')->groupBy('status')->orderBy('status')->get();
@@ -494,6 +492,9 @@ class StatisticalServiceImpl
     {
         $hotel_id = $this->checkRole();
 
+        $startDate = Carbon::now()->setTime(14, 0);
+        $endDate = Carbon::now()->addDay()->setTime(12, 0);
+
         if (session()->has('handle_data')) {
 
             $data = session('handle_data');
@@ -503,16 +504,65 @@ class StatisticalServiceImpl
             }
         }
 
-        $query = Order::query();
-
         if (!empty($hotel_id)) {
-            $totalRoomBeingBooked = $query->where('org_id', $hotel_id)->whereIn('status', [1, 2])->count();
-        } else {
-            $totalRoomBeingBooked = $query->whereIn('status', [1, 2])->count();
+            $bookedRoomIds = Order::query()
+                ->join('order_items as ot', 'ot.order_id', '=', 'orders.id')
+                ->join('rooms as r', 'r.id', '=', 'ot.room_id')
+                ->whereIn('orders.status', [StatusOrderEnum::DA_XAC_NHAN->value, StatusOrderEnum::YEU_CAU_HUY])
+                ->where('orders.org_id', $hotel_id)
+                ->where('orders.start_date', '<', $endDate)
+                ->where('orders.start_date', '>=', $startDate)
+                ->select('ot.room_id');
+
+            $bookedRooms = CatalogueRoom::query()
+                ->leftJoin('rooms as r', 'r.catalogue_room_id', '=', 'catalogue_rooms.id')
+                ->leftJoinSub(
+                    $bookedRoomIds,
+                    'booked_rooms',
+                    function ($join) {
+                        $join->on('r.id', '=', 'booked_rooms.room_id');
+                    }
+                )->where('catalogue_rooms.hotel_id', $hotel_id)
+                ->select(DB::raw('sum(IF(booked_rooms.room_id is null, 0, 1)) as booked_room_qty'))
+                ->get()
+                ->toArray();
+            // dd($bookedRooms);
+            return $bookedRooms;
         }
 
+        $bookedRoomIds = Order::query()
+            ->join('order_items as ot', 'ot.order_id', '=', 'orders.id')
+            ->join('rooms as r', 'r.id', '=', 'ot.room_id')
+            ->whereIn('orders.status', [StatusOrderEnum::DA_XAC_NHAN->value, StatusOrderEnum::YEU_CAU_HUY])
+            ->where('orders.start_date', '<', $endDate)
+            ->where('orders.start_date', '>=', $startDate)
+            ->select('ot.room_id');
+
+        $bookedRooms = CatalogueRoom::query()
+            ->leftJoin('rooms as r', 'r.catalogue_room_id', '=', 'catalogue_rooms.id')
+            ->leftJoinSub(
+                $bookedRoomIds,
+                'booked_rooms',
+                function ($join) {
+                    $join->on('r.id', '=', 'booked_rooms.room_id');
+                }
+            )->select(DB::raw('sum(IF(booked_rooms.room_id is null, 0, 1)) as booked_room_qty'))
+            ->get()
+            ->toArray();
+        // dd($bookedRooms);
+
+        return $bookedRooms;
+
+        // $query = Order::query();
+
+        // if (!empty($hotel_id)) {
+        //     $totalRoomBeingBooked = $query->where('org_id', $hotel_id)->whereIn('status', [1, 2])->count();
+        // } else {
+        //     $totalRoomBeingBooked = $query->whereIn('status', [1, 2])->count();
+        // }
+
         // dd($totalRoomBeingBooked);
-        return $totalRoomBeingBooked;
+        // return $totalRoomBeingBooked;
     }
 
     public function checkRole()

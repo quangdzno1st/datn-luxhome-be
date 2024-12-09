@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BaseSearchRequest;
+use App\Models\Banner;
 use App\Repositories\City\CityRepository;
 use App\Repositories\Hotel\HotelRepository;
 use App\Repositories\User\UserRepository;
@@ -44,8 +45,9 @@ class HomeController extends Controller
         $cityIds = array_map(function ($city) {
             return $city['id'] ?? null;
         }, $cities->toArray());
+        $banners = Banner::query()->where('status', 1)->latest('created_at')->get();
 
         $totalOrderMap = $this->orderService->getTotalOrderMapByCityId($cityIds);
-        return view("client/home", compact('cities', 'hotels', 'totalOrderMap'));
+        return view("client/home", compact('cities', 'hotels', 'totalOrderMap', 'banners'));
     }
 }

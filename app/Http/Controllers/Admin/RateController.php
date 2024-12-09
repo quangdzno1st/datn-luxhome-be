@@ -21,7 +21,7 @@ class RateController extends Controller
             $query->where('name', 'like', "%$keyword%");
         }
 
-        $ratesOfHotels = $query->paginate(10);
+        $ratesOfHotels = $query->latest('created_at')->paginate(10);
         
         return view(self::PATH_VIEW . 'index', compact('ratesOfHotels'));
     }

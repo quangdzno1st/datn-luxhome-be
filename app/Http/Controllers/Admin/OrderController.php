@@ -49,7 +49,7 @@ class OrderController extends Controller
             $currentTime = Carbon::now(); // Thời gian hiện tại
             $startDateTime = Carbon::parse($order->start_date); // Thời gian bắt đầu
             $endDateTime = Carbon::parse($order->end_date); // Thời gian kết thúc
-
+//dd($endDateTime->toDateString());
             // Trạng thái 1: Checkin muộn
             if ($currentTime->greaterThan($startDateTime) && $order->check_in==null) {
                 $order['statusNoti']=1; // Checkin muộn
@@ -71,6 +71,7 @@ class OrderController extends Controller
             }else{
                 $order['statusNoti']=0; // chưa đến ngày
             }
+//            dd($order);
         }
     }
 

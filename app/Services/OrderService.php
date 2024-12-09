@@ -29,4 +29,6 @@ interface OrderService
     public function cancelOrder($orderId);
 
     public function getOrderById($orderId);
+
+    public function handleBookingForConfirmData($hotelId, $data);
 }

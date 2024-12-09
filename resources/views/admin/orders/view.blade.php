@@ -142,7 +142,6 @@
                                     <table class="table">
                                         <tr>
                                             <td>Tên dịch vụ</td>
-{{--                                            <td>Số lượng</td>--}}
                                             <td>Trạng thái</td>
                                             <td>Giá dịch vụ</td>
                                         </tr>
@@ -204,8 +203,8 @@
                             <div class="modal-body p-5 text-center">
                                 <i class="fa-solid fa-money-bill-wave"></i>
                                 <div class="mt-4 text-center">
-                                    <h4>Số tiền cần check out là {{number_format($payable)}}VND!</h4>
-                                    <p class="text-muted fs-15 mb-4">Bạn có muốn checkout order này không?</p>
+                                    <h4>Bạn có muốn checkout order này không?</h4>
+                                    <p class="text-muted fs-15 mb-4">Thời gian checkout sẽ tính từ thời điểm này!</p>
                                     <div class="hstack gap-2 justify-content-center remove">
                                         <button class="btn btn-link link-success fw-medium text-decoration-none" id="deleteRecord-close" data-bs-dismiss="modal"><i class="ri-close-line me-1 align-middle"></i> Đóng</button>
                                         <form method="POST" action="{{route('admin.orders.checkout',$order->id)}}">
@@ -324,8 +323,8 @@
                                     <div class="mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Trạng thái</label>
                                         <select class="form-select" aria-label="Default select example" name="status">
-                                            <option value="1">Chưa thanh toán</option>
-                                            <option value="2">Đã thanh toán</option>
+                                            <option value="2">Chưa thanh toán</option>
+                                            <option value="1">Đã thanh toán</option>
                                         </select>
                                     </div>
                                 </div>
