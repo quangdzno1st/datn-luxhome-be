@@ -18,30 +18,27 @@
                 <table class="table table-striped table-hover">
                     <thead>
                     <tr>
-                        <th>{{ __("Tên") }}</th>
-                        <th>{{ __("Email") }}</th>
-                        <th>{{ __("Mã giảm giá") }}</th>
+                        <th>{{ __("Mã đơn đặt") }}</th>
                         <th>{{ __("Trạng thái") }}</th>
-                        <th>{{ __("Phí phòng") }}</th>
+                        <th>{{ __("Ngày bắt đầu") }}</th>
+                        <th>{{ __("Ngày kết thúc") }}</th>
                         <th>{{ __("Tổng tiền") }}</th>
                         <th>{{ __("Ngày checkin") }}</th>
                         <th>{{ __("Ngày checkout") }}</th>
-                        <th>{{ __("Tiền còn lại") }}</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <td>{{$order->name}}</td>
-                        <td>{{$order->email}}</td>
-                        <td>{{$order->voucher_id}}</td>
+                        <td>{{$order->code}}</td>
                         <td>
                             {{$order->status}}
                         </td>
-                        <td>{{number_format($order->booking_fee)}}VND</td>
+                        <td>{{\Carbon\Carbon::parse($order->start_date)->format('d-m-Y')}}</td>
+                        <td>{{\Carbon\Carbon::parse($order->end_date)->format('d-m-Y')}}</td>
                         <td>{{number_format($order->total_amount)}}VND</td>
                         <td>
                             @if($order->status=='Đã hủy')
-                                <span>Đã hủy</span>
+                                <span class="badge bg-danger">Đã hủy</span>
                             @elseif($order->check_in==null)
                                 <div class="d-flex gap-2">
                                     <div class="edit" id="check_out">
@@ -51,33 +48,31 @@
                                     </div>
                                 </div>
                             @else
-                                {{date('d-M-y', strtotime($order->check_in))}}
+                                {{\Carbon\Carbon::parse($order->check_in)->format('d-m-Y H:i:s')}}
                             @endif</td>
                         <td>
                             @if($order->status=='Đã hủy')
-                                <span>Đã hủy</span>
-                            @elseif($order->check_out==null)
-                            <div class="d-flex gap-2">
-                                <div class="edit" id="check_out">
-                                    <a class="btn btn-sm btn-success edit-item-btn" data-bs-toggle="modal" href="#checkoutOrder">
-                                        Check-out
-                                    </a>
-                                </div>
-                            </div>
+                                <span class="badge bg-danger">Đã hủy</span>
                             @elseif($order->check_out==null&&$order->check_in==null)
                                 <div class="d-flex gap-2">
+                                    <span>Phải checkin trước</span>
+{{--                                    <div class="edit" id="check_out">--}}
+{{--                                        <a class="btn btn-sm btn-success edit-item-btn" data-bs-toggle="modal" href="#checkoutOrderHaventCheckin">--}}
+{{--                                            Check-out--}}
+{{--                                        </a>--}}
+{{--                                    </div>--}}
+                                </div>
+                            @elseif($order->check_out==null)
+                                <div class="d-flex gap-2">
                                     <div class="edit" id="check_out">
-                                        <a class="btn btn-sm btn-success edit-item-btn" data-bs-toggle="modal" href="#checkoutOrderHaventCheckin">
+                                        <a class="btn btn-sm btn-success edit-item-btn" data-bs-toggle="modal" href="#checkoutOrder">
                                             Check-out
                                         </a>
                                     </div>
                                 </div>
                             @else
-                                {{date('d-M-y', strtotime($order->check_out))}}
+                                {{\Carbon\Carbon::parse($order->check_out)->format('d-m-Y H:i:s')}}
                             @endif
-                        </td>
-                        <td>
-                            {{number_format($order->payable)}} VND
                         </td>
                     </tr>
                     </tbody>
@@ -86,7 +81,7 @@
                 <section class="confirmation_part section_padding">
                     <div class="order_boxes">
                         <div class="row justify-content-between">
-                            <div class="col-lg-6 col-lx-4 mb-3"  style="background-color: rgba(0, 0, 0, .05);flex: 0 0 49%;  ">
+                            <div class="col-lg-6 col-lx-4 mb-3 pt-3"  style="background-color: rgba(0, 0, 0, .05);flex: 0 0 49%;  ">
                                 <div class="order-info">
                                     <h4 class="text-center pb-4">{{ __('Thông tin từng phòng') }}</h4>
                                     <table class="table">
@@ -111,7 +106,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-6 col-lx-4 mb-3"  style="background-color: rgba(0, 0, 0, .05);flex: 0 0 49%;">
+                            <div class="col-lg-6 col-lx-4 mb-3 pt-3"  style="background-color: rgba(0, 0, 0, .05);flex: 0 0 49%;">
                                 <div class="shipping-info">
                                     <h4 class="text-center pb-4">{{ __("Thông tin khách hàng") }}</h4>
                                     <table class="table">
@@ -132,8 +127,8 @@
                             </div>
                             <div class="col-lg-6 col-lx-4"  style="background-color: rgba(0, 0, 0, .05);flex: 0 0 49%;">
                                 <div class="shipping-info">
-                                    <h4 class="text-center pb-4">{{ __("Thông tin dịch vụ") }}</h4>
-                                    @if($order->status!='Đã hủy')
+                                    <h4 class="text-center pb-4 pt-3">{{ __("Thông tin dịch vụ") }}</h4>
+                                    @if($order->status=='Đang chờ'||$order->status=='Đã xác nhận'||$order->status=='Yêu cầu hủy')
                                     <button class="btn btn-info btn-sm"
                                             data-bs-toggle="modal"
                                             id="create-btn" data-bs-target="#showModal"
@@ -167,7 +162,7 @@
                             @if($voucher!=null)
                                 <div class="col-lg-6 col-lx-4"  style="background-color: rgba(0, 0, 0, .05);flex: 0 0 49%;">
                                     <div class="shipping-info">
-                                        <h4 class="text-center pb-4">{{ __("Thông tin mã giảm giá") }}</h4>
+                                        <h4 class="text-center pb-4 pt-3">{{ __("Thông tin mã giảm giá") }}</h4>
                                         <table class="table">
                                             <tr>
                                                 <td>Loại giảm giá</td>
