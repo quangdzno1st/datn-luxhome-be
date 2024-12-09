@@ -57,7 +57,7 @@ class OrderDetailController extends Controller
             $voucher=null;
         $order['total_amount']=($sumService+$sumOrderItem);
         }
-//        dd($voucher);
+//        dd($order);
         Order::query()->where('id',$order->id)->update(['total_amount'=>$order['total_amount']]);
         $payable=$this->checkPayableOrTotal($order->id);
         $roomCode=$this->roomCode($order->id);
