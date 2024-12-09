@@ -10,6 +10,8 @@
 	<meta name="description" content="Book Your Travel - Online Booking HTML Template">
 	<meta name="author" content="themeenergy.com">
 
+	<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+
 	<title>Book Your Travel - Home</title>
 	<!-- Latest compiled and minified CSS -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">

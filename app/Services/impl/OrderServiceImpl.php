@@ -613,6 +613,15 @@ class OrderServiceImpl implements OrderService
 
         session(['service_booking' => $data]);// lưu trữ thông tin đặt phòng và địch vụ
 
+        return $this->handleBookingForConfirmData($hotelId, $data);
+    }
+
+    public function handleBookingForConfirmData($hotelId, $data)
+    {
+        if (empty($data)) {
+            return [];
+        }
+
         $serviceBookingsQty = $this->handleCountService($data);// sử lý thông tin đầu ra hiển thị giao diện;
         $serviceMapById = $this->getServiceMapById($hotelId);
 

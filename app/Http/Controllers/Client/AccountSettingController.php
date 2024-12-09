@@ -17,6 +17,7 @@ use App\Services\OrderService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -69,13 +70,22 @@ class AccountSettingController extends Controller
         $data = $this->orderService->paymentReturn($request);
         $order = $data['order'];
         $status = $data['status'];
-        return view('client.bookingfinish', compact('order', 'status'));
+
+        $roomsServiceOrder = [];
+        if (!empty($order)) {
+            $roomsServiceOrder = $this->orderService->getDataBookingForConfirm($request, $order['org_id']);
+        }
+
+        $roomBooking = session('booking_data') ?? null;
+        $servicesQty = $roomsServiceOrder['serviceBookingsQty'] ?? null;
+        $servicesInfo = $roomsServiceOrder['serviceMapById'] ?? null;
+
+        return view('client.bookingfinish', compact('order', 'status', "servicesQty", "servicesInfo" , "roomBooking"));
     }
 
     public function confirmOrder(Request $request)
     {
 
-//
         $hotelId = session('hotel_id') ?? null;
         if (!isset($hotelId)) {
             return redirect()->back()->with('error', 'Thông tin khách sạn không xác định');
@@ -87,8 +97,9 @@ class AccountSettingController extends Controller
         $total_mount = $request?->total_amount;
         $roomBooking = session('booking_data') ?? null;
 
-        $servicesQty = $roomsServiceOrder['serviceBookingsQty'];
-        $servicesInfo = $roomsServiceOrder['serviceMapById'];
+        $servicesQty = $roomsServiceOrder['serviceBookingsQty'] ?? null;
+
+        $servicesInfo = $roomsServiceOrder['serviceMapById'] ?? null;
 
         return view('client.booking', compact('vouchers', "total_mount", "servicesQty", "servicesInfo", "roomBooking"));
     }
@@ -168,14 +179,24 @@ class AccountSettingController extends Controller
 
     public function changePassword(Request $request)
     {
+        $user = Auth::user();
+
         $message = [
-            'password.required' => 'Vui lòng nhập mật khẩu.',
+            'password.required' => 'Vui lòng nhập mật khẩu mới.',
             'password.confirmed' => 'Mật khẩu xác nhận không khớp.',
-            'password.max' => 'Mật khẩu không được vượt quá :max ký tự.'
+            'password.max' => 'Mật khẩu không được vượt quá :max ký tự.',
+            'password.min' => 'Mật khẩu tối thiểu phải :min ký tự.'
         ];
         $validator = Validator::make($request->all(), [
-            'password' => ['required', 'string', 'confirmed', 'max:255']
+            'old_password' => 'required',
+            'password' => ['required', 'string', 'confirmed', 'min:6', 'max:255']
         ], $message);
+
+        if (!Hash::check($request->input('old_password'), $user->password)) {
+            return back()
+                ->withErrors(['password' => 'Mật khẩu không đúng.'])
+                ->with('error', 'Đổi mật khẩu không thành công!');
+        }
 
         if ($validator->fails()) {
             // Xử lý lỗi validate

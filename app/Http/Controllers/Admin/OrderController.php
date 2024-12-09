@@ -32,7 +32,7 @@ class OrderController extends Controller
     {
         $hotel_id = Auth::user()?->hotel_id;
         $orders = Order::query()
-            ->orderByDesc('orders.code')
+            ->orderByDesc('created_at')
             ->paginate($request->getPerPage(), ['*'], 'order', $request->order);
         $this->checkStatusNoti($orders);
 //        dd($orders);
@@ -42,14 +42,15 @@ class OrderController extends Controller
     public function checkStatusNoti($orders)
     {
 //        0: chưa đến ngày
-//        1: checkin,checkout muộn
+//        1: checkin muộn
 //        2: check out muộn đằng sau có khách
 //        3: đang dùng phòng
+//        4: checkout muộn
         foreach ($orders as $order) {
             $currentTime = Carbon::now(); // Thời gian hiện tại
             $startDateTime = Carbon::parse($order->start_date); // Thời gian bắt đầu
             $endDateTime = Carbon::parse($order->end_date); // Thời gian kết thúc
-
+//dd($endDateTime->toDateString());
             // Trạng thái 1: Checkin muộn
             if ($currentTime->greaterThan($startDateTime) && $order->check_in==null) {
                 $order['statusNoti']=1; // Checkin muộn
@@ -58,12 +59,12 @@ class OrderController extends Controller
                 // Kiểm tra có khách đặt khác cùng ngày
                 $hasNextBooking = Order::where('id', '!=', $order->id)
                 ->whereDate('start_date', $endDateTime->toDateString())
-//                    ->where('check_in', '!=', null)
+//                    ->where('check_in', '==', null)
                 ->exists();
                 if ($hasNextBooking) {
                     $order['statusNoti']=2; // Checkout muộn, có khách đặt khác cùng ngày
                 }else{
-                    $order['statusNoti']=1;
+                    $order['statusNoti']=4;
                 }
             }
             elseif (!is_null($order->check_in) && $currentTime->between($startDateTime, $endDateTime)) {

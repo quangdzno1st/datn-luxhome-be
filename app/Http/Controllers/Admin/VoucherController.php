@@ -31,8 +31,7 @@ class VoucherController extends Controller
         VoucherServiceImpl $voucher,
         FileUploadService  $fileUploadService,
         UserRepository     $userRepos
-    )
-    {
+    ) {
         $this->voucher = $voucher;
         $this->fileUploadService = $fileUploadService;
         $this->userRepos = $userRepos;
@@ -42,7 +41,7 @@ class VoucherController extends Controller
     {
         $vouchers = $this->voucher->listVoucher();
 //        dd($vouchers);
-        if ($_GET)  return $this->searchVoucher($request->all());
+        if ($_GET) return $this->searchVoucher($request->all());
         return view(self::PATH_DIRECT . __FUNCTION__, compact('vouchers'));
     }
 
@@ -58,11 +57,9 @@ class VoucherController extends Controller
         $data['thumbnail'] = $this->fileUploadService->storeLocal($request->file('thumbnail'));
         $data['id'] = Str::uuid()->toString();
 
-            $voucher = $this->voucher->createVoucher($data);
-            return redirect()->route('admin.vouchers.index')->with('success', 'Thêm mã giảm giá thành công!');
-        } catch (\Exception $e) {
-            return Redirect::back()->with('error', 'Errors: ' . $e->getMessage());
-        }
+        $voucher = $this->voucher->createVoucher($data);
+        return redirect()->route('admin.vouchers.index')->with('success', 'Thêm mã giảm giá thành công!');
+
     }
 
     public function edit($id)
@@ -134,7 +131,7 @@ class VoucherController extends Controller
 
             DB::commit();
 
-            return $this->index();
+            return \redirect()->back();
         } catch (\Exception $exception) {
             return Redirect::back()->with('error', 'Errors: ' . $exception->getMessage());
         }
@@ -143,7 +140,6 @@ class VoucherController extends Controller
     public function list_trash()
     {
         $trashedVouchers = Voucher::onlyTrashed()->get();
-        //        dd($trashedVouchers);
         return view(self::PATH_DIRECT . __FUNCTION__, compact('trashedVouchers'));
     }
 
@@ -267,11 +263,9 @@ class VoucherController extends Controller
             $vouchers = $vouchers->where('code', 'LIKE', "%{$data['code']}%");
         }
         $vouchers = $vouchers->paginate(10);
-//        dd($vouchers);
+        //        dd($vouchers);
         return view('admin.voucher.index', compact('vouchers'));
     }
 
-    private function sendMailToUser($userVoucherSendMailMap)
-    {
-    }
+    private function sendMailToUser($userVoucherSendMailMap) {}
 }

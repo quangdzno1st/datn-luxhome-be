@@ -65,9 +65,15 @@
                             @endif
                                 <form action="{{ route('admin.orders.search') }}" method="GET" class="d-flex align-items-center justify-content-end flex-wrap gap-2">
                                     <div class="form-group mb-0">
+                                        <div class="">
+                                            <label for="start_date">Mã phòng:</label>
+                                        </div>
                                         <input type="text" name="code" placeholder="Mã đặt phòng" class="form-control" value="{{ request('code') }}">
                                     </div>
                                     <div class="form-group mb-0">
+                                        <div class="">
+                                            <label for="start_date">Trạng thái:</label>
+                                        </div>
                                         <select name="status" class="form-control">
                                             <option value="">Trạng thái</option>
                                             <option value="1" {{ request('status') == 'pending' ? 'selected' : '' }}>Chờ xử lý</option>
@@ -78,33 +84,41 @@
                                         </select>
                                     </div>
                                     <div class="form-group mb-0">
-                                        <input type="number" name="total_amount" placeholder="Tổng tiền tối thiểu" class="form-control" value="{{ request('total_amount') }}">
+                                        <div class="">
+                                            <label for="start_date">Tổng tiền tối thiểu:</label>
+                                        </div>
+                                        <input type="number" name="total_amount" placeholder="1000000" class="form-control" value="{{ request('total_amount') }}">
                                     </div>
                                     <div class="form-group mb-0">
+                                        <div class="">
+                                            <label for="start_date">Thời gian bắt đầu:</label>
+                                        </div>
                                         <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
                                     </div>
                                     <div class="form-group mb-0">
+                                        <div class="">
+                                            <label for="start_date">Thời gian kết thúc:</label>
+                                        </div>
                                         <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                                    <div class="form-group mb-0">
+                                        <div class="">
+                                            <label for="start_date">Hành động:</label>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                                    </div>
                                 </form>
-
-
                                 <table id="example" class="table table-bordered dt-responsive nowrap align-middle"
                                    style="width:100%">
                                 <thead>
                                 <tr>
                                     <th>Mã code</th>
-                                    <th>Email</th>
                                     <th>Người đặt</th>
-                                    <th>Ngày đặt</th>
-                                    <th>Ngày kết thúc</th>
-                                    <th>Phí đặt</th>
-                                    <th>Tổng tiền</th>
-                                    <th>Tiền thực nhận</th>
-                                    <th>Chi phí phát sinh</th>
                                     <th>Trạng thái</th>
                                     <th>Trạng thái thanh toán</th>
+                                    <th>Ngày đặt</th>
+                                    <th>Ngày kết thúc</th>
+                                    <th>Tổng tiền</th>
                                     <th>Chi tiết</th>
                                 </tr>
                                 </thead>
@@ -128,19 +142,30 @@
                                                             </div>
                                                             <!-- Description -->
                                                             <div class="description">Quá giờ checkout, sau có khách</div>
+                                                    @elseif($order->statusNoti==1)
+                                                        <div type="button" class="btn btn-warning btn-sm" style="padding: 2px 2px; font-size: 0.4rem;">
+                                                                <span class="d-flex align-items-center">
+                                                                    <span class="spinner-grow flex-shrink-0" role="status" style="width: 12px; height: 12px;">
+                                                                        <span class="visually-hidden">Loading...</span>
+                                                                    </span>
+                                                                </span>
+                                                        </div>
+                                                        <!-- Description -->
+                                                        <div class="description">Checkin muộn</div>
+                                                    @elseif($order->statusNoti==4)
+                                                        <div type="button" class="btn btn-warning btn-sm" style="padding: 2px 2px; font-size: 0.4rem;">
+                                                                <span class="d-flex align-items-center">
+                                                                    <span class="spinner-grow flex-shrink-0" role="status" style="width: 12px; height: 12px;">
+                                                                        <span class="visually-hidden">Loading...</span>
+                                                                    </span>
+                                                                </span>
+                                                        </div>
+                                                        <!-- Description -->
+                                                        <div class="description">Checkout muộn</div>
                                                     @endif
                                                 </div>
                                         </td>
-                                        <td>{{$order->email}}</td>
                                         <td>{{$order->name}}</td>
-                                        <td>{{date('d-M-y', strtotime($order->start_date))}}</td>
-                                        <td>{{date('d-M-y', strtotime($order->end_date))}}</td>
-                                        <td>{{number_format($order->booking_fee)}}VND</td>
-                                        <td>
-                                            {{number_format($order->total_amount)}} VND
-                                        </td>
-                                        <td>{{number_format($order->net_amount)}}VND</td>
-                                        <td>{{number_format($order->incidental_costs)}}VND</td>
                                         <td>
                                             <div class="btn-group">
                                                 @if(\App\Constant\Enum\StatusOrderEnum::isYeuCauHuy($order['status']))
@@ -160,18 +185,22 @@
                                             <div class="btn-group">
                                                 @if(\App\Constant\Enum\StatusPaymentOrderEnum::isChuaHoanTien($order['status_payment'])
                                                        && \App\Constant\Enum\StatusOrderEnum::isDaHuy($order['status']))
-
-                                                        <a class="btn btn-sm btn-danger edit-item-btn"
+                                                        <a class="btn btn-sm btn-danger edit-item-btn badge"
                                                            data-bs-toggle="modal" href="#ht{{ $order['id'] }}">
                                                             {{ \App\Constant\Enum\StatusPaymentOrderEnum::parse($order['status_payment'])->getName() }}
                                                         </a>
 
                                                 @elseif(\App\Constant\Enum\StatusPaymentOrderEnum::isChuaThanhToan($order['status_payment']))
-                                                    <button class="btn btn-sm btn-warning">{{ \App\Constant\Enum\StatusPaymentOrderEnum::parse($order['status_payment'])->getName() }}</button>
+                                                    <button class="btn btn-sm btn-warning badge">{{ \App\Constant\Enum\StatusPaymentOrderEnum::parse($order['status_payment'])->getName() }}</button>
                                                 @else
-                                                    <button class="btn btn-sm btn-success">{{ \App\Constant\Enum\StatusPaymentOrderEnum::parse($order['status_payment'])->getName() }}</button>
+                                                    <button class="btn btn-sm btn-success badge">{{ \App\Constant\Enum\StatusPaymentOrderEnum::parse($order['status_payment'])->getName() }}</button>
                                                 @endif
                                             </div>
+                                        </td>
+                                        <td>{{\Carbon\Carbon::parse($order->end_date)->format('d-m-Y')}}</td>
+                                        <td>{{\Carbon\Carbon::parse($order->start_date)->format('d-m-Y')}}</td>
+                                        <td>
+                                            {{number_format($order->total_amount)}} VND
                                         </td>
                                         <td>
                                             <div class="dropdown d-inline-block">
@@ -185,14 +214,6 @@
                                                            class="dropdown-item">
                                                             <i class="ri-eye-fill align-bottom me-2 text-muted"></i> Chi
                                                             tiết</a>
-                                                    </li>
-                                                    <li>
-                                                        <form>
-                                                            <button type="button" class="dropdown-item remove-item-btn">
-                                                                <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
-                                                                Xóa
-                                                            </button>
-                                                        </form>
                                                     </li>
                                                 </ul>
                                             </div>

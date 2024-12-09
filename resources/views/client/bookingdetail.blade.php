@@ -172,11 +172,11 @@
                             <form action="{{ route('client.rating', $order['id']) }}" method="post">
                                 @csrf
                                 <select name="rate">
-                                    <option value="5">Rất tốt</option>
-                                    <option value="4">Tốt</option>
-                                    <option value="3">Tạm</option>
+                                    <option value="5">Rất Hài Lòng</option>
+                                    <option value="4">Hài Lòng</option>
+                                    <option value="3">Trung Bình</option>
                                     <option value="2">Kém</option>
-                                    <option value="1">Rất kém</option>
+                                    <option value="1">Rất Kém</option>
                                 </select>
                                 <input type="hidden" name="hotel_id" value="{{ $order['org_id'] }}">
                                 <textarea style="margin-top: 10px" name="content" cols="30" rows="10" placeholder="Nhận xét ý kiến của bạn"></textarea>
