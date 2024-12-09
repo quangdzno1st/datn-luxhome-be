@@ -50,8 +50,9 @@ class HotelController extends Controller
         return view('client.hotel', compact('filteredData', 'hotel', 'rates'));
     }
 
-    public function search(SearchRequest $request)
+    public function search(Request $request)
     {
+        dd($request->all());
         $data = $this->catalogueRoomRepository->searchByPage($request);
         session(['search_data' => $data]);
         session(['start_date' => $request->start_date]);

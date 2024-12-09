@@ -1,73 +1,121 @@
+
+<style>
+    .footer {
+        background: #f8f9fa;
+        padding: 40px 0;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    .footer .wrap {
+        width: 90%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .footer .row {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .footer .one-fourth {
+        flex: 1 1 22%;
+        min-width: 220px;
+    }
+
+    .footer h6 {
+        font-size: 16px;
+        margin-bottom: 15px;
+        font-weight: bold;
+        color: #000; /* Tone màu đen */
+    }
+
+    .footer ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .footer ul li {
+        margin-bottom: 10px;
+    }
+
+    .footer ul li a {
+        text-decoration: none;
+        color: #000; /* Tone màu đen */
+        transition: color 0.3s;
+    }
+
+    .footer ul li a:hover {
+        color: #555; /* Màu hover nhẹ hơn */
+    }
+
+    .footer .bottom {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    .footer .bottom p {
+        color: #000; /* Tone màu đen */
+        font-size: 12px;
+    }
+</style>
+
+
 <footer class="footer">
     <div class="wrap">
         <div class="row">
-            <!--column-->
+            <!-- Cột 1: Hỗ trợ -->
             <article class="one-fourth">
-                <h6>Book Your Travel</h6>
-                <p>1400 PennsylSUVia Ave. Washington, DC</p>
-                <p><em>P:</em> 24/7 customer support: 1-555-555-5555</p>
-                <p><em>E:</em> <a href="#" title="booking@mail.com">booking@mail.com</a></p>
-            </article>
-            <!--//column-->
-
-            <!--column-->
-            <article class="one-fourth">
-                <h6>Customer support</h6>
+                <h6>Hỗ trợ</h6>
                 <ul>
-                    <li><a href="#" title="Faq">Faq</a></li>
-                    <li><a href="#" title="How do I make a reservation?">How do I make a reservation?</a></li>
-                    <li><a href="#" title="Payment options">Payment options</a></li>
-                    <li><a href="#" title="Booking tips">Booking tips</a></li>
+                    <li><a href="#">Quản lí các chuyến đi của bạn</a></li>
+                    <li><a href="#">Liên hệ Dịch vụ Khách hàng</a></li>
+                    <li><a href="#">Trung tâm thông tin bảo mật</a></li>
                 </ul>
             </article>
-            <!--//column-->
 
-            <!--column-->
             <article class="one-fourth">
-                <h6>Follow us</h6>
-                <ul class="social">
-                    <li><a href="#" title="facebook"><i class="fa fa-fw fa-facebook"></i></a></li>
-                    <li><a href="#" title="youtube"><i class="fa  fa-fw fa-youtube"></i></a></li>
-                    <li><a href="#" title="rss"><i class="fa  fa-fw fa-rss"></i></a></li>
-                    <li><a href="#" title="gplus"><i class="fa fa-fw fa-google-plus"></i></a></li>
-                    <li><a href="#" title="linkedin"><i class="fa fa-fw fa-linkedin"></i></a></li>
-                    <li><a href="#" title="twitter"><i class="fa fa-fw fa-twitter"></i></a></li>
-                    <li><a href="#" title="pinterest"><i class="fa fa-fw fa-pinterest-p"></i></a></li>
-                    <li><a href="#" title="vimeo"><i class="fa fa-fw fa-vimeo"></i></a></li>
+                <h6>Khám phá thêm</h6>
+                <ul>
+                    <li><a href="#">Chương trình khách hàng thân thiết Luxhome</a></li>
+                    <li><a href="#">Ưu đãi theo mùa và dịp lễ</a></li>
+                    <li><a href="#">Bài viết về du lịch</a></li>
+                    <li><a href="#">Luxhome dành cho Doanh Nghiệp</a></li>
+                    <li><a href="#">Traveller Review Awards</a></li>
                 </ul>
             </article>
-            <!--//column-->
 
-            <!--column-->
+            <!-- Cột 3: Điều khoản và cài đặt -->
             <article class="one-fourth">
-                <h6>Don’t miss our exclusive offers</h6>
-                <form id="newsletter"
-                    action="https://www.themeenergy.com/themes/html/book-your-travel/newsletter.php" method="post">
-                    <fieldset>
-                        <input type="email" id="newsletter_signup" name="newsletter_signup"
-                            placeholder="Enter your email here" />
-                        <input type="submit" id="newsletter_submit" name="newsletter_submit" value="Signup"
-                            class="gradient-button" />
-                    </fieldset>
-                </form>
+                <h6>Điều khoản và cài đặt</h6>
+                <ul>
+                    <li><a href="#">Bảo mật & Cookie</a></li>
+                    <li><a href="#">Điều khoản và điều kiện của Luxhome</a></li>
+                    <li><a href="#">Tranh chấp đối tác Luxhome</a></li>
+                    <li><a href="#">Chính sách chống Nô lệ Hiện đại</a></li>
+                    <li><a href="#">Chính sách về Quyền con người</a></li>
+                </ul>
             </article>
-            <!--//column-->
 
-            <div class="bottom full-width">
-                <p class="copy">Copyright 2016 Book your travel ltd. All rights reserved</p>
-                <nav>
-                    <ul>
-                        <li><a href="#" title="About us">About us</a></li>
-                        <li><a href="contact.html" title="Contact">Contact</a></li>
-                        <li><a href="#" title="Partners">Partners</a></li>
-                        <li><a href="#" title="Customer service">Customer service</a></li>
-                        <li><a href="#" title="FAQ">FAQ</a></li>
-                        <li><a href="#" title="Careers">Careers</a></li>
-                        <li><a href="#" title="Terms & Conditions">Terms &amp; Conditions</a></li>
-                        <li><a href="#" title="Privacy statement">Privacy statement</a></li>
-                    </ul>
-                </nav>
-            </div>
+            <!-- Cột 4: Về chúng tôi -->
+            <article class="one-fourth">
+                <h6>Về Luxhome</h6>
+                <ul>
+                    <li><a href="#">Về Luxhome</a></li>
+                    <li><a href="#">Chúng tôi hoạt động như thế nào</a></li>
+                    <li><a href="#">Du lịch bền vững</a></li>
+                    <li><a href="#">Truyền thông Luxhome</a></li>
+                    <li><a href="#">Cơ hội việc làm tại Luxhome</a></li>
+                </ul>
+            </article>
+        </div>
+
+        <!-- Dòng dưới cùng -->
+        <div class="bottom full-width">
+            <p class="copy">© 2024 Luxhome. Mọi quyền được bảo lưu.</p>
         </div>
     </div>
 </footer>
