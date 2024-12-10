@@ -1,5 +1,16 @@
 @extends('client.layouts.master')
 
+<style>
+    .right-sidebar .trip-info div {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+</style>
+
 @section('content')
     <!--main-->
     <main class="main">
@@ -19,7 +30,7 @@
             @if($order && $status)
                 <div class="row">
                     <!--three-fourth content-->
-                    <div class="three-fourth">
+                    <div class="two-third">
                         <form id="booking" method="post"
                               action="https://www.themeenergy.com/themes/html/book-your-travel/booking"
                               class="static-content booking">
@@ -71,42 +82,74 @@
                     <!--//three-fourth content-->
 
                     <!--right sidebar-->
-                    <aside class="one-fourth right-sidebar">
+                    <aside class="one-third right-sidebar booking">
                         <!--Booking details-->
                         <article class="hotel-details booking-details">
-                            <h1>{{ $order['hotel_name'] }}
-                                <span class="stars">
-                                    @for($i = 1; $i <= $order['star']; $i++)
-                                        <i class="material-icons">&#xE838;</i>
-                                    @endfor
-							</span>
-                            </h1>
-                            <span class="address">{{ $order['district'] . ' • ' . $order['province']}}</span>
-                            <span class="rating"> 9 /10</span>
-                            <dl class="booking-info">
-                                <dt>Ngày bắt đầu: <span
-                                            style="font-weight: 500">{{ \Carbon\Carbon::parse($order['start_date'])->locale('vi')->isoFormat(' D [tháng] M [năm] YYYY') }}</span>
-                                </dt>
-                                <dt>Ngày kết thúc: <span
-                                            style="font-weight: 500">{{ \Carbon\Carbon::parse($order['end_date'])->locale('vi')->isoFormat(' D [tháng] M [năm] YYYY') }}</span>
-                                </dt>
-                            </dl>
-                            <div class="price">
-                                <p class="total">Tổng tiền: {{ number_format($order['total_amount']) . ' đ' }}</p>
-                            </div>
-                        </article>
-                        <!--//Booking details-->
+                            <h2 class="">
+                                Chuyến đi
+                            </h2>
+                            <div class="trip-info">
+                                <p><strong>{{ $order['hotel_name'] }}</strong></p>
+                                <p>
+                                    <i class="far fa-calendar-alt"></i>
+                                    {{ \Carbon\Carbon::parse($order['start_date'])->format('d/m/Y') }}
+                                    -&gt;
+                                    {{ \Carbon\Carbon::parse($order['end_date'])->format('d/m/Y') }}
+                                </p>
+                                <p>
+                                    <i class="far fa-calendar-alt"></i>
+                                    {{ (new DateTime($order['end_date']))->diff(new DateTime($order['start_date']))->days }}
+                                    đêm
+                                </p>
 
-                        <!--Need Help Booking?-->
-                        <article class="widget">
-                            <h4>Need Help Booking?</h4>
-                            <p>Call our customer services team on the number below to speak to one of our advisors who
-                                will help you with all of your holiday needs.</p>
-                            <p class="number">1- 555 - 555 - 555</p>
-                        </article>
-                        <!--//Need Help Booking?-->
+                                @php
+                                    $total_amount = 0;
+                                @endphp
+                                @foreach($roomBooking as $room)
+                                    @php
+                                        $total_amount += $room['price'];
+                                    @endphp
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center">
+                                            <h5>{{ $room['code'] }}</h5>
+                                            <h6 class="total-cost"> {{number_format($room['price'])}} đ /
+                                                đêm</h6>
+                                        </div>
+                                        <p><i class="fas fa-bed"></i> x1 Phòng suite</p>
+                                        <p><i class="fas fa-user"></i> Người lớn: {{ $room['number_adult'] }},
+                                            Trẻ
+                                            em: {{ $room['number_child'] }}</p>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <h2    @if(empty($servicesQty))
+                    style="border: none"
+                                    @endif>Dịch vụ</h2>
+                            @if(!empty($servicesQty))
+                                @foreach($servicesQty as $key => $qty)
+                                    @php
+                                        $serviceInfo = $servicesInfo[$key];
+                                    @endphp
+                                    <div class="trip-info">
+                                        <div class="service-info ">
+                                            <span class="service-name"><strong>{{ $serviceInfo['name'] }}</strong></span>
+                                            <span class="service-price"><strong>{{ number_format($serviceInfo['price']) }} đ</strong></span>
+                                        </div>
+                                        <div class="service-quantity">
+                                            Số lượng: <span class="quantity-value">{{ $qty }}</span>
+                                        </div>
+                                        <div class="service-total ">
+                                            Thành tiền: <span class="total-value">{{ number_format($qty * $serviceInfo['price']) }} đ</span>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
+
+                            <div class="price">
+                                <p class="total">Tổng tiền: {{ number_format($total_amount) .' đ' }}</p>
+                            </div>
                     </aside>
-                    <!--//right sidebar-->
                 </div>
             @else
                 <div class="static-content booking">
