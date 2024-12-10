@@ -44,7 +44,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <a href="{{route('admin.catalogue-rooms.create')}}" class="btn btn-success">+ Thêm mới</a>
+                    <a href="{{route('admin.catalogue-rooms.create')}}" class="btn btn-success" style="height: 37px; ">+ Thêm mới</a>
                         <form class="d-flex justify-content-sm-end" action="" method="get">
                             <div class="search-box ms-2">
                                 <input type="text" class="form-control " placeholder="Điền tên loại" name="name" value="{{ request()->has('name') ? request()->input('name') : '' }}">
@@ -68,13 +68,13 @@
                 <div class="card-body">
                     <div class="row">
                         @foreach ($catalogueRooms as $catalogueRoom)
-                        <div class="col-sm-6 col-xl-3">
+                        <div class="col-sm-6 col-xl-4">
                             <!-- Simple card -->
                             <div class="card">
                                 <img class="card-img-top img-fluid" style="height: 12rem; object-fit: cover" src="{{\Storage::url($catalogueRoom->thumbnail)}}" alt="Ảnh thumbnail loại phòng">
                                 <div class="card-body">
                                     <div class="">
-                                        <h4 class="card-title mb-2">{{$catalogueRoom->name}}</h4>
+                                        <h4 class="card-title mb-2 " title="{{ $catalogueRoom->name }}">{{$catalogueRoom->name}}</h4>
                                     </div>
                                     <p class="card-text fw-bold">Trạng thái: {!! $catalogueRoom->status == 1 ? '<span class="badge bg-success">Hoạt động</span>' : '<span class="badge bg-danger">Không hoạt động</span>' !!}</p>
                                     <p class="card-text">Diện tích: {{$catalogueRoom->acreage}} <span>m<sup>2</sup></span></p>
@@ -102,5 +102,16 @@
     </div><!--end row-->
 
 @endsection
+
+<style>
+    .text-clamp {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis; /* Thêm dấu ba chấm */
+        line-height: 20px;
+    }
+</style>
 
 

@@ -42,7 +42,7 @@ class VoucherController extends Controller
     {
         $vouchers = $this->voucher->listVoucher();
 //        dd($vouchers);
-        if ($_GET)  return $this->searchVoucher($request->all());
+        if ($_GET) return $this->searchVoucher($request->all());
         return view(self::PATH_DIRECT . __FUNCTION__, compact('vouchers'));
     }
 
@@ -58,11 +58,9 @@ class VoucherController extends Controller
         $data['thumbnail'] = $this->fileUploadService->storeLocal($request->file('thumbnail'));
         $data['id'] = Str::uuid()->toString();
 
-            $voucher = $this->voucher->createVoucher($data);
-            return redirect()->route('admin.vouchers.index')->with('success', 'Thêm mã giảm giá thành công!');
-        } catch (\Exception $e) {
-            return Redirect::back()->with('error', 'Errors: ' . $e->getMessage());
-        }
+        $voucher = $this->voucher->createVoucher($data);
+        return redirect()->route('admin.vouchers.index')->with('success', 'Thêm mã giảm giá thành công!');
+
     }
 
     public function edit($id)

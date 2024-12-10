@@ -1,7 +1,7 @@
 <header class="header">
     <div class="wrap">
         <!--logo-->
-        <div class="logo"><a href="{{ route('home.index') }}" title="Book Your Travel"><img src="{{asset('theme/client/images/txt/logo.png')}}"
+        <div class="logo"><a href="{{ route('home.index') }}" title="Book Your Travel"><img width="145px" style="height: 67px" src="{{asset('theme/client/images/txt/logo.png')}}"
                     alt="Book Your Travel" /></a></div>
         <!--//logo-->
 
