@@ -495,6 +495,15 @@ class StatisticalServiceImpl
         $startDate = Carbon::now()->setTime(14, 0);
         $endDate = Carbon::now()->addDay()->setTime(12, 0);
 
+        if (session()->has('handle_data')) {
+
+            $data = session('handle_data');
+
+            if (!empty($data['hotel_id'])) {
+                $hotel_id = $data['hotel_id'];
+            }
+        }
+
         if (!empty($hotel_id)) {
             $bookedRoomIds = Order::query()
                 ->join('order_items as ot', 'ot.order_id', '=', 'orders.id')
@@ -522,36 +531,27 @@ class StatisticalServiceImpl
         }
 
         $bookedRoomIds = Order::query()
-                ->join('order_items as ot', 'ot.order_id', '=', 'orders.id')
-                ->join('rooms as r', 'r.id', '=', 'ot.room_id')
-                ->whereIn('orders.status', [StatusOrderEnum::DA_XAC_NHAN->value, StatusOrderEnum::YEU_CAU_HUY])
-                ->where('orders.start_date', '<', $endDate)
-                ->where('orders.start_date', '>=', $startDate)
-                ->select('ot.room_id');
+            ->join('order_items as ot', 'ot.order_id', '=', 'orders.id')
+            ->join('rooms as r', 'r.id', '=', 'ot.room_id')
+            ->whereIn('orders.status', [StatusOrderEnum::DA_XAC_NHAN->value, StatusOrderEnum::YEU_CAU_HUY])
+            ->where('orders.start_date', '<', $endDate)
+            ->where('orders.start_date', '>=', $startDate)
+            ->select('ot.room_id');
 
-            $bookedRooms = CatalogueRoom::query()
-                ->leftJoin('rooms as r', 'r.catalogue_room_id', '=', 'catalogue_rooms.id')
-                ->leftJoinSub(
-                    $bookedRoomIds,
-                    'booked_rooms',
-                    function ($join) {
-                        $join->on('r.id', '=', 'booked_rooms.room_id');
-                    }
-                )->select(DB::raw('sum(IF(booked_rooms.room_id is null, 0, 1)) as booked_room_qty'))
-                ->get()
-                ->toArray();
-            // dd($bookedRooms);
+        $bookedRooms = CatalogueRoom::query()
+            ->leftJoin('rooms as r', 'r.catalogue_room_id', '=', 'catalogue_rooms.id')
+            ->leftJoinSub(
+                $bookedRoomIds,
+                'booked_rooms',
+                function ($join) {
+                    $join->on('r.id', '=', 'booked_rooms.room_id');
+                }
+            )->select(DB::raw('sum(IF(booked_rooms.room_id is null, 0, 1)) as booked_room_qty'))
+            ->get()
+            ->toArray();
+        // dd($bookedRooms);
 
         return $bookedRooms;
-
-        // if (session()->has('handle_data')) {
-
-        //     $data = session('handle_data');
-
-        //     if (!empty($data['hotel_id'])) {
-        //         $hotel_id = $data['hotel_id'];
-        //     }
-        // }
 
         // $query = Order::query();
 
