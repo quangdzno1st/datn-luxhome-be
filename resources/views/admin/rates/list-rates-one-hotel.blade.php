@@ -70,17 +70,17 @@
                                     </div>
                                     <div class="ms-2">
                                         <select name="rate" id="" class="form-select">
-                                            <option value="">Chọn tất cả</option>
-                                            <option value="5" @selected(request()->input('rate') == 5)>Rất tốt</option>
-                                            <option value="4" @selected(request()->input('rate') == 4)>Tốt</option>
-                                            <option value="3" @selected(request()->input('rate') == 3)>Tạm</option>
+                                            <option value="">Lọc đánh giá</option>
+                                            <option value="5" @selected(request()->input('rate') == 5)>Rất Hài Lòng</option>
+                                            <option value="4" @selected(request()->input('rate') == 4)>Hài Lòng</option>
+                                            <option value="3" @selected(request()->input('rate') == 3)>Bình Thường</option>
                                             <option value="2" @selected(request()->input('rate') == 2)>Kém</option>
                                             <option value="1" @selected(request()->input('rate') == 1)>Rất kém</option>
                                         </select>
                                     </div>
                                     <div class="ms-2">
                                         <select name="status" id="" class="form-select">
-                                            <option value="">Chọn tất cả</option>
+                                            <option value="">Lọc trả lời</option>
                                             <option value="1" @selected(request()->input('status') == 1)>Đã trả lời</option>
                                             <option value="2" @selected(request()->input('status') == 2)>Chưa trả lời</option>
                                         </select>
@@ -98,7 +98,7 @@
                                 <tr>
                                     <th scope="col">STT</th>
                                     <th scope="col">Khách hàng</th>
-                                    <th scope="col">Điểm</th>
+                                    <th scope="col">Đánh giá</th>
                                     <th scope="col">Nội dung</th>
                                     <th scope="col">Ngày đánh giá</th>
                                     <th scope="col">Trạng thái</th>
@@ -111,9 +111,7 @@
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $rate->user->name }}</td>
                                         <td class="text-warning">
-                                            @for ($i = 0; $i < $rate->rate; $i++)
-                                                <i class="ri-star-fill"></i>
-                                            @endfor
+                                            <span style="background-color: {{App\Models\Rate::RATE[$rate->rate][1]}}" class="badge ">{{App\Models\Rate::RATE[$rate->rate][0]}}</span>
                                         </td>
                                         <td>{{ $rate->content }}</td>
                                         <td>{{ Carbon\Carbon::parse($rate->created_at)->format('H:i:s d-m-Y') }}</td>
@@ -218,9 +216,7 @@
                                                         @csrf
                                                         <div class="modal-body">
                                                             <div class="mb-3">
-                                                                <label for="" class="form-label">Đánh giá của
-                                                                    khách
-                                                                    hàng
+                                                                <label for="" class="form-label">Đánh giá của 
                                                                     {{ $rate->user->name }}:</label>
                                                                 <div>{{ $rate->content }}</div>
                                                                 <div class="text-warning">
@@ -313,6 +309,22 @@
         </div>
         <!-- end col -->
     </div>
+@endsection
+
+@section('styles')
+    <style>
+        td {
+            white-space: nowrap;
+            /* Không xuống dòng */
+            overflow: hidden;
+            /* Ẩn phần văn bản thừa */
+            text-overflow: ellipsis;
+            /* Hiển thị dấu ... khi vượt quá */
+            max-width: 150px;
+            /* Đặt chiều rộng tối đa */
+
+        }
+    </style>
 @endsection
 
 @section('style-libs')

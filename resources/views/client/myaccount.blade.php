@@ -458,6 +458,8 @@
                                             @enderror
                                             <!--edit fields-->
                                             <div class="edit_field" id="field4">
+                                                <label for="old_password">Mật khẩu cũ:</label>
+                                                <input type="password" id="old_password" name="old_password"/>
                                                 <label for="new_password">Mật khẩu mới:</label>
                                                 <input type="password" id="new_password" name="password"/>
                                                 <label for="new_password">Xác nhận mật khẩu:</label>
