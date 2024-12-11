@@ -22,169 +22,6 @@
             </div>
         </div>
     </div> --}}
-    <div class="row">
-        <div class="col-xl-2 col-md-6">
-            <!-- card -->
-            <div class="card card-animate">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1 overflow-hidden">
-                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Doanh thu</p>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <div>
-                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
-                                    data-target="{{ (int) $totalRevenue->total_revenue }}">0</span><sup>đ</sup> </h4>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span href="javascript:void(0)" class="text-decoration-underline" style="color: white"></span>
-                            <div class="avatar-sm flex-shrink-0">
-                                <span class="avatar-title bg-success-subtle rounded fs-3">
-                                    <i class="bx bx-dollar-circle text-success"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- end card body -->
-            </div><!-- end card -->
-        </div><!-- end col -->
-
-        <div class="col-xl-2 col-md-6">
-            <!-- card -->
-            <div class="card card-animate">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1 overflow-hidden">
-                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Đơn đặt</p>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <div>
-                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
-                                    data-target="{{ $totalOrder->total_order }}">0</span></h4>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a href="{{ route('admin.orders.index') }}" class="text-decoration-underline">Xem chi tiết</a>
-                            <div class="avatar-sm flex-shrink-0">
-                                <span class="avatar-title bg-danger rounded fs-3">
-                                    <i class="ri-building-4-line"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- end card body -->
-            </div><!-- end card -->
-        </div><!-- end col -->
-
-        <div class="col-xl-2 col-md-6">
-            <!-- card -->
-            <div class="card card-animate">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1 overflow-hidden">
-                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Tổng số phòng</p>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <div>
-                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
-                                    data-target="{{ $thongkeTotalRoom }}">0</span> </h4>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a href="{{ route('admin.rooms.index') }}" class="text-decoration-underline">Xem chi tiết</a>
-                            <div class="avatar-sm flex-shrink-0">
-                                <span class="avatar-title bg-info-subtle rounded fs-3">
-                                    <i class="las la-door-closed text-info"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- end card body -->
-            </div><!-- end card -->
-        </div><!-- end col -->
-
-        <div class="col-xl-2 col-md-6">
-            <!-- card -->
-            <div class="card card-animate">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1 overflow-hidden">
-                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Phòng đang đặt</p>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <div>
-                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
-                                    data-target="{{ $thongkeTotalRoomBeingBooked }}">0</span> </h4>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a href="#" class="text-decoration-underline text-white">.</a>
-                            <div class="avatar-sm flex-shrink-0">
-                                <span class="avatar-title bg-warning-subtle rounded fs-3">
-                                    <i class="las la-door-open text-warning"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- end card body -->
-            </div><!-- end card -->
-        </div><!-- end col -->
-
-        <div class="col-xl-2 col-md-6">
-            <!-- card -->
-            <div class="card card-animate">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1 overflow-hidden">
-                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Đánh giá</p>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <div>
-                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
-                                    data-target="{{ $totalRating->total_rating }}">0</span> </h4>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a href="{{ route('admin.rates.hotels') }}" class="text-decoration-underline">Xem chi tiết</a>
-                            <div class="avatar-sm flex-shrink-0">
-                                <span class="avatar-title bg-primary-subtle rounded fs-3">
-                                    <i class="ri-message-2-line text-primary"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- end card body -->
-            </div><!-- end card -->
-        </div><!-- end col -->
-
-        <div class="col-xl-2 col-md-6">
-            <!-- card -->
-            <div class="card card-animate">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1 overflow-hidden">
-                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Người dùng</p>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <div>
-                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
-                                    data-target="{{ $totalUser }}">0</span></h4>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a href="{{ route('admin.users.index') }}" class="text-decoration-underline">Xem chi tiết</a>
-                            <div class="avatar-sm flex-shrink-0">
-                                <span class="avatar-title bg-warning-subtle rounded fs-3">
-                                    <i class="bx bx-user-circle text-warning"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- end card body -->
-            </div><!-- end card -->
-        </div><!-- end col -->
-    </div> <!-- end row-->
 
     <div class="row">
         <div class="col-lg-12">
@@ -253,6 +90,266 @@
 
                     </form>
                 </div>
+            </div>
+            <!-- end col -->
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+
+    <div class="row">
+        <div class="col-xl-2 col-md-6">
+            <!-- card -->
+            <div class="card card-animate">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Doanh thu</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div>
+                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
+                                    data-target="{{ (int) $totalRevenue->total_revenue }}">0</span><sup>đ</sup> </h4>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span href="javascript:void(0)" class="text-decoration-underline" style="color: white"></span>
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-success-subtle rounded fs-3">
+                                    <i class="bx bx-dollar-circle text-success"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
+
+        <div class="col-xl-2 col-md-6">
+            <!-- card -->
+            <div class="card card-animate">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Đơn đặt</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div>
+                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
+                                    data-target="{{ $totalOrder->total_order }}">0</span></h4>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <span href="javascript:void(0)" class="text-decoration-underline" style="color: white"></span>
+                            {{-- @if (Auth::user()->type == 2)
+                                <a href="#" class="text-decoration-underline text-white">.</a>
+                            @else
+                                <a href="{{ route('admin.orders.index') }}" class="text-decoration-underline">Xem chi tiết</a>
+                            @endif --}}
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-danger rounded fs-3">
+                                    <i class="ri-building-4-line"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
+
+        <div class="col-xl-2 col-md-6">
+            <!-- card -->
+            <div class="card card-animate">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Tổng số phòng</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div>
+                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
+                                    data-target="{{ $thongkeTotalRoom }}">0</span> </h4>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span href="javascript:void(0)" class="text-decoration-underline" style="color: white"></span>
+                            {{-- @if (Auth::user()->type == 2)
+                                <a href="#" class="text-decoration-underline text-white">.</a>
+                            @else
+                                <a href="{{ route('admin.rooms.index') }}" class="text-decoration-underline">Xem chi tiết</a>
+                            @endif --}}
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-info-subtle rounded fs-3">
+                                    <i class="las la-door-closed text-info"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
+
+        <div class="col-xl-2 col-md-6">
+            <!-- card -->
+            <div class="card card-animate">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Phòng đang đặt</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div>
+                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
+                                    data-target="{{ $thongkeTotalRoomBeingBooked[0]['booked_room_qty'] }}">0</span> </h4>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span href="javascript:void(0)" class="text-decoration-underline" style="color: white"></span>
+                            {{-- <a href="#" class="text-decoration-underline text-white">.</a> --}}
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-warning-subtle rounded fs-3">
+                                    <i class="las la-door-open text-warning"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
+
+        <div class="col-xl-2 col-md-6">
+            <!-- card -->
+            <div class="card card-animate">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Đánh giá</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div>
+                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
+                                    data-target="{{ $totalRating->total_rating }}">0</span> </h4>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span href="javascript:void(0)" class="text-decoration-underline" style="color: white"></span>
+                            {{-- @if (Auth::user()->type == 2)
+                                <a href="#" class="text-decoration-underline text-white">.</a>
+                            @else
+                                <a href="{{ route('admin.rates.hotels') }}" class="text-decoration-underline">Xem chi tiết</a>
+                            @endif --}}
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-primary-subtle rounded fs-3">
+                                    <i class="ri-message-2-line text-primary"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
+
+        <div class="col-xl-2 col-md-6">
+            <!-- card -->
+            <div class="card card-animate">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Người dùng</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div>
+                            <h4 class="fs-20 fw-semibold ff-secondary mb-1"><span class="counter-value"
+                                    data-target="{{ $totalUser }}">0</span></h4>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span href="javascript:void(0)" class="text-decoration-underline" style="color: white"></span>
+                            {{-- @if (Auth::user()->type == 2)
+                                <a href="#" class="text-decoration-underline text-white">.</a>
+                            @else
+                                <a href="{{ route('admin.users.index') }}" class="text-decoration-underline">Xem chi tiết</a>
+                            @endif --}}
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-warning-subtle rounded fs-3">
+                                    <i class="bx bx-user-circle text-warning"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
+    </div> <!-- end row-->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                {{-- <div class="card-header">
+                    <form action="{{ route('admin.handle.statistical') }}" method="post" class="row">
+                        @csrf
+                        @if (Auth::check() && Auth::user()->type == \App\Constant\Enum\RoleEnum::SupperAdmin->value)
+                            <div class="mb-3 col-3">
+                                <div class="">
+                                    <label for="hotel">Chọn khách sạn:</label>
+                                </div>
+                                <div class="">
+                                    <select name="hotel_id" id="hotel" class="form-select">
+                                        <option value="">Tất cả</option>
+                                        @foreach ($hotels as $hotel)
+                                            <option value="{{ $hotel->id }}" @selected($hotel_id == $hotel->id)>
+                                                {{ $hotel->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @endif
+                        <div class="mb-3 col-3">
+                            <div class="">
+                                <label for="start_date">Thời gian bắt đầu:</label>
+                            </div>
+                            <div class="">
+                                <input type="date" class="form-control" id="start_date" name="start_date"
+                                    value="{{ $startDate }}">
+                            </div>
+                            @error('start_date')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div class="mb-3 col-3">
+                            <div class="">
+                                <label for="end_date">Thời gian kết thúc:</label>
+                            </div>
+                            <div class="">
+                                <input type="date" class="form-control" id="end_date" name="end_date"
+                                    value="{{ $endDate }}">
+                            </div>
+                            @error('end_date')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div class="mb-3 col-3">
+                            <div class="">
+                                <label for="option">Chọn mốc theo:</label>
+                            </div>
+                            <div class="d-flex">
+                                <div class="col-9">
+                                    <select name="option_time" id="option" class="form-select">
+                                        @foreach ($optionTime as $key => $value)
+                                            <option value="{{ $key }}" @selected($selectTime != '' && $selectTime == $key)>
+                                                {{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <button type="submit" class="btn btn-success d-block">Xem</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div> --}}
                 <div class="card-body">
                     <div class="d-flex">
                         <div style="width: 100%; max-width: 60%">

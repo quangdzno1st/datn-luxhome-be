@@ -56,8 +56,8 @@
                                         </select>
                                     </div>
                                     <div class="search-box ms-2">
-                                        <input type="text" class="form-control " placeholder="Search..."
-                                               name="keyword">
+                                        <input type="text" class="form-control " placeholder="Tìm kiếm..."
+                                               name="keyword" value="{{request()->input('keyword')}}">
                                         <i class="ri-search-line search-icon"></i>
                                     </div>
                                     <div class="ms-1">

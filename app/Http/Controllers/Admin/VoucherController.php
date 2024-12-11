@@ -31,8 +31,7 @@ class VoucherController extends Controller
         VoucherServiceImpl $voucher,
         FileUploadService  $fileUploadService,
         UserRepository     $userRepos
-    )
-    {
+    ) {
         $this->voucher = $voucher;
         $this->fileUploadService = $fileUploadService;
         $this->userRepos = $userRepos;
@@ -265,11 +264,9 @@ class VoucherController extends Controller
             $vouchers = $vouchers->where('code', 'LIKE', "%{$data['code']}%");
         }
         $vouchers = $vouchers->paginate(10);
-//        dd($vouchers);
+        //        dd($vouchers);
         return view('admin.voucher.index', compact('vouchers'));
     }
 
-    private function sendMailToUser($userVoucherSendMailMap)
-    {
-    }
+    private function sendMailToUser($userVoucherSendMailMap) {}
 }

@@ -6,15 +6,11 @@
     <style></style>
     <div class="slider">
         <ul id="hero-gallery" class="cS-hidden">
-            <li data-thumb="{{asset('theme/client/images/uploads/slider7.jpg')}}">
-                <img src="{{asset('theme/client/images/uploads/slider7.jpg')}}" alt=""/>
-            </li>
-            <li data-thumb="{{asset('theme/client/images/uploads/slider3.jpg')}}">
-                <img src="{{asset('theme/client/images/uploads/slider3.jpg')}}" alt=""/>
-            </li>
-            <li data-thumb="{{asset('theme/client/images/uploads/slider2.jpg')}}">
-                <img src="{{asset('theme/client/images/uploads/slider2.jpg')}}" alt=""/>
-            </li>
+            @foreach ($banners as $banner)
+                <li data-thumb="{{Storage::url($banner->image)}}">
+                    <img src="{{Storage::url($banner->image)}}" alt=""/>
+                </li>
+            @endforeach
         </ul>
     </div>
     <!--//slider-->

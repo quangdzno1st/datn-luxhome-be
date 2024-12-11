@@ -11,6 +11,14 @@ class Rate extends Model
 {
     use HasFactory, HasUuids, SoftDeletes;
 
+    const RATE = [
+        '1' => ['Rất Kém', '#FF0000'],
+        '2' => ['Kém', '#FF9800'],
+        '3' => ['Bình Thường', '#FBC02D'],
+        '4' => ['Hài Lòng', '#4CAF50'],
+        '5' => ['Rất Hài Lòng', '#2E7D32'],
+    ];
+
     public $incrementing = false;
 
     protected $keyType = 'string';

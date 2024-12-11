@@ -147,12 +147,6 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="end_date"
-                                           class="form-label">Ngày kết thúc</label>
-                                    <input type="date" class="form-control" name="end_date"
-                                           value="{{$voucher['end_date']}}"
-                                    >
-                                    <div class="invalid-feedback"></div>
                                     <label for="description" class="form-label">Mô tả</label>
                                     <textarea name="description" class="form-control" id="description" cols="30" rows="5"
                                         placeholder="Nhập mô tả">{{ $voucher->description }}
