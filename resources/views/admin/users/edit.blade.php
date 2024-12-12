@@ -102,23 +102,17 @@
                                             <input class="form-check-input" type="radio" name="type" id="admin"
                                                 value="{{\App\Models\User::ADMIN}}" {{ $user->type == \App\Models\User::ADMIN ? 'checked' : '' }}>
                                             <label class="form-check-label" for="admin">
-                                                Admin
+                                                Chủ chuỗi khách sạn
                                             </label>
                                         </div>
                                         <div class="form-check form-radio-success mb-3">
                                             <input class="form-check-input" type="radio" name="type" id="hotelier"
                                                 value="{{ \App\Models\User::HOTELIER }}" {{ $user->type == \App\Models\User::HOTELIER ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="member">
+                                            <label class="form-check-label" for="hotelier">
                                                 Chủ khách sạn
                                             </label>
                                         </div>
-                                        <div class="form-check form-radio-success mb-3">
-                                            <input class="form-check-input" type="radio" name="type" id="staff"
-                                                value="{{ \App\Models\User::STAFF }}" {{ $user->type == \App\Models\User::STAFF ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="member">
-                                                Nhân viên
-                                            </label>
-                                        </div>
+
                                         <div class="form-check form-radio-success mb-3">
                                             <input class="form-check-input" type="radio" name="type" id="member"
                                                 value="{{\App\Models\User::CUSTOMER}}" {{ $user->type == \App\Models\User::CUSTOMER ? 'checked' : '' }}>
@@ -182,7 +176,7 @@
         });
 
         $('input[name="type"]').on('change', function () {
-            if ($('#member').is(':checked')) {
+            if ($('#member').is(':checked') || $('#admin').is(':checked')) {
                 $('#hotelSelect').prop('disabled', true).val("");
             } else {
                 $('#hotelSelect').prop('disabled', false); // Bật lại trường chọn khách sạn
@@ -206,9 +200,10 @@
         });
 
         // Gọi hàm ngay khi tải trang để đặt trạng thái đúng
-        if ($('#member').is(':checked')) {
+        if ($('#member').is(':checked') || $('#admin').is(':checked')) {
             $('#hotelSelect').prop('disabled', true);
         }
+
     });
 </script>
 

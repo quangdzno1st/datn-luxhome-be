@@ -59,11 +59,11 @@ Route::group(['middleware' => ['admin']], function () {
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy')->middleware('can:delete_users');
 
 
-    Route::get('/permissions', [UserController::class,'permissionsList'])->name('permissions');
+    Route::get('/permissions', [UserController::class,'permissionsList'])->name('permissions')->middleware('is.admin');
 //        ->middleware('is.admin');
-    Route::get('/permissions/edit/{id}', [UserController::class,'permissionsEdit'])->name('permissions.edit');
+    Route::get('/permissions/edit/{id}', [UserController::class,'permissionsEdit'])->name('permissions.edit')->middleware('is.admin');
 //        ->middleware('is.admin');
-    Route::post('/permissions/update/{id}', [UserController::class,'permissionsUpdate'])->name('permissions.update');
+    Route::post('/permissions/update/{id}', [UserController::class,'permissionsUpdate'])->name('permissions.update')->middleware('is.admin');
 //        ->middleware('is.admin');
 //    Route::get('user-delete/{id}', [App\Http\Controllers\Admin\UserController::class, 'destroy']);
 //

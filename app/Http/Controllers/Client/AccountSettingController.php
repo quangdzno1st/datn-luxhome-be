@@ -14,6 +14,7 @@ use App\Repositories\Service\ServiceRepository;
 use App\Repositories\Voucher\VoucherRepository;
 use App\Services\HotelServiceService;
 use App\Services\OrderService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,7 +49,12 @@ class AccountSettingController extends Controller
     public function index(OrderSearchRequest $request)
     {
         $userId = Auth::user()->id;
-        $vouchers = User::query()->find($userId)->vouchers;
+        $vouchers = User::query()
+            ->find($userId)
+            ->vouchers()
+            ->where('status', 1)
+            ->where('end_date', '>=', Carbon::now()->format('Y-m-d'))
+            ->get();
         $rates = Rate::withoutTrashed()->with('hotel', 'comment')->where('user_id', $userId)->get();
 
         $orders = $this->orderService->searchByPage($request);

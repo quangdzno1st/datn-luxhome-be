@@ -367,19 +367,23 @@
             min-width: 250px;
             margin: 10px;
         }
+
         .column h3 {
             font-size: 18px;
             margin-bottom: 10px;
         }
+
         .column ul {
             list-style: none;
             padding: 0;
         }
+
         .column ul li {
             margin-bottom: 5px;
             display: flex;
             align-items: center;
         }
+
         .column ul li i {
             margin-right: 10px;
         }
@@ -388,23 +392,51 @@
             display: flex;
             flex-wrap: wrap;
             max-width: 1200px;
-            padding: 20px;
+            padding: 0 0px;
         }
 
         .custom {
             display: flex;
             gap: 20px; /* Khoảng cách giữa các cột */
         }
+
         .custom .column {
             flex: 1; /* Chia đều 2 cột */
         }
+
         .custom ul {
             list-style: none;
             padding: 0;
         }
+
         .custom li {
             margin-bottom: 10px; /* Khoảng cách giữa các mục */
         }
+
+        .description-container {
+            max-width: 1200px; /* Quy định chiều rộng tối đa */
+            margin: 0 auto; /* Canh giữa với margin tự động */
+            padding: 15px; /* Thêm khoảng cách bên trong */
+            border: 1px solid #ddd; /* Đường viền nhẹ */
+            border-radius: 8px; /* Bo góc mềm mại */
+            background-color: #f9f9f9; /* Màu nền nhạt */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tạo hiệu ứng nổi */
+        }
+
+        .description-title {
+            font-size: 18px; /* Kích thước tiêu đề */
+            margin-bottom: 10px; /* Khoảng cách dưới tiêu đề */
+            color: #333; /* Màu chữ tiêu đề */
+        }
+
+        .description-content {
+            font-size: 16px; /* Kích thước chữ mô tả */
+            line-height: 1.8; /* Độ giãn dòng */
+            color: #555; /* Màu chữ nội dung */
+            text-align: justify; /* Căn chỉnh đều 2 bên */
+            word-wrap: break-word; /* Xuống dòng khi nội dung quá dài */
+        }
+
 
     </style>
 
@@ -486,7 +518,7 @@
                                 @endphp
                                 @foreach($facilities as $facilitie)
 
-                                            <li style="">{{$facilitie->content}}</li>
+                                    <li style="">{{$facilitie->content}}</li>
                                 @endforeach
                             </ul>
                         </div>
@@ -518,7 +550,7 @@
                     <li class="availability"><a href="#availability" title="Availability">Tình trạng phòng</a>
                     </li>
                     <li class="description"><a href="#description" title="Description">Mô tả</a></li>
-                    <li class="facilities"><a href="#facilities" title="Facilities">Tiện nghi</a></li>
+                    <li class="facilities"><a href="#facilities" title="Facilities">Dịch vụ</a></li>
                     <li class="location"><a href="#location" title="Location">Vị trí</a></li>
                     <li class="reviews"><a href="#reviews" title="Reviews">Đánh giá</a></li>
                 </ul>
@@ -565,10 +597,10 @@
                                     <div class="form-group col-md-3">
                                         <label for="spinner2">Số người lớn</label>
 
-                                        <input type="number" id="spinner2" name="number_adult"
+                                        <input type="number" id="spinner2" min="1" name="number_adult"
                                                class="form-control"
                                                placeholder="Số  người lớn"
-                                               value="{{ old('number_adult') ?? ( $search_data['number_adult_search'] ??  2) }}"/>
+                                               value="{{ old('number_adult') ?? ( $search_data['number_adult_search'] ??  null) }}"/>
                                         @error('number_adult')
                                         <div class="text-danger">{{ $message }}</div>
                                         @else
@@ -578,7 +610,7 @@
 
                                     <div class="form-group col-md-2">
                                         <label for="spinner3">Số trẻ em</label>
-                                        <input type="number" id="spinner3" name="number_child"
+                                        <input type="number" id="spinner3" min="1" name="number_child"
                                                class="form-control"
                                                placeholder="Số trẻ em"
                                                value="{{ old('number_child') ?? ($search_data['number_child_search'] ?? null) }}"/>
@@ -700,24 +732,23 @@
                                             </div>
                                         </div>
                                         <div class="more-information">
-                                            <div style="margin-bottom: 10px"><strong>+ Tiện
-                                                    nghi</strong></div>
                                             @php
                                                 $facilities =  $data['attributes']
                                                       ->flatten()
                                                       ->unique('id')
                                             @endphp
 
-                                            @foreach($facilities as $facilitie)
-                                                <div class="text-wrap">
 
-                                                    <div class="facility-list">
-                                                        <div class="facility-item">{{$facilitie->content}}</div>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                            <div style="margin-bottom: 10px"><strong>+ Mô tả</strong></div>
-                                            <p>{!! $data['description'] !!}</p>
+
+                                            <div class="description-container">
+                                                <div style="margin-bottom: 10px"><strong>+ Tiện
+                                                        nghi:
+                                                    </strong> {{ $facilities->pluck('content')->join(', ') }}</div>
+
+                                                <div class=""><strong>+ Mô tả</strong></div>
+                                                <p class="description-content">{!! $data['description'] !!}</p>
+                                            </div>
+
                                         </div>
                                     </li>
                                 @endforeach
@@ -766,65 +797,75 @@
             <!--facilities-->
             <section id="facilities" class="tab-content">
                 <article>
-                    <h2>Tiện nghi</h2>
-                    @php
-                        $facilities =   $hotel->catalogues()
-                              ->with('attributes') // Lấy thông tin các attribute_value của các loại phòng
-                              ->get()
-                              ->pluck('attributes') // Lấy tất cả các giá trị attribute_value từ các catalogue
-                              ->flatten() // Làm phẳng các mảng để có danh sách các attribute_value
-                              ->unique('id')
-                    @endphp
+                    <h2>Dịch vụ</h2>
 
+                    @php
+                        $freeServices = $hotel?->services()->where('type', 1)->get();
+                        $paidServices = $hotel?->services()->where('type',  2)->get();
+
+//                                                $facilities =   $hotel->catalogues()
+//                                                      ->with('attributes') // Lấy thông tin các attribute_value của các loại phòng
+//                                                      ->get()
+//                                                      ->pluck('attributes') // Lấy tất cả các giá trị attribute_value từ các catalogue
+//                                                      ->flatten() // Làm phẳng các mảng để có danh sách các attribute_value
+//                                                      ->unique('id')
+                    @endphp
 
                     <div class="custom">
                         <div class="column">
+                            <h4>Dịch vụ miễn phí</h4>
                             <ul>
-                                @foreach($facilities->slice(0, ceil($facilities->count() / 2)) as $facility)
-                                    <li><i class="fas fa-check"></i> {{ $facility->content }}</li>
+                                @foreach($freeServices as $service)
+                                    <li><strong>{{ $service->name }}</strong></li>
                                 @endforeach
                             </ul>
                         </div>
                         <div class="column">
+                            <h4>Dịch vụ mất phí</h4>
                             <ul>
-                                @foreach($facilities->slice(ceil($facilities->count() / 2)) as $facility)
-                                    <li><i class="fas fa-check"></i> {{ $facility->content }}</li>
+                                @foreach($paidServices as $service)
+                                    <li>
+                                        <strong>{{ $service->name }} </strong> (
+                                        <span class="price">{{ number_format($service->price, 0, ',', '.') }} VNĐ</span>)
+                                    </li>
                                 @endforeach
                             </ul>
                         </div>
                     </div>
 
-{{--                    @foreach($facilities as $facilitie)--}}
-{{--                        <div class="text-wrap">--}}
-{{--                            <ul class="three-col">--}}
-{{--                                <li>{{$facilitie->content}}</li>--}}
-{{--                            </ul>--}}
-{{--                        </div>--}}
-{{--                    @endforeach--}}
-{{--                 <div class="custom">--}}
-{{--                     <div class="column">--}}
-{{--                         <h3><i class="fas fa-user"></i> Cực kỳ phù hợp cho kỳ lưu trú của bạn</h3>--}}
-{{--                         <ul>--}}
-{{--                             <li><i class="fas fa-check"></i> Phòng tắm riêng</li>--}}
-{{--                             <li><i class="fas fa-check"></i> WiFi miễn phí</li>--}}
-{{--                             <li><i class="fas fa-check"></i> Điều hòa không khí</li>--}}
-{{--                             <li><i class="fas fa-check"></i> Phòng gia đình</li>--}}
-{{--                             <li><i class="fas fa-check"></i> Nhà hàng</li>--}}
-{{--                             <li><i class="fas fa-check"></i> Vòi sen</li>--}}
-{{--                             <li><i class="fas fa-check"></i> Minibar</li>--}}
-{{--                             <li><i class="fas fa-check"></i> Giữ hành lí</li>--}}
-{{--                             <li><i class="fas fa-check"></i> Tủ khóa</li>--}}
-{{--                             <li><i class="fas fa-check"></i> Giặt ủi</li>--}}
-{{--                         </ul>--}}
-{{--                     </div>--}}
-{{--                     <div class="column">--}}
-{{--                         <h3><i class="fas fa-utensils"></i> Nhà bếp</h3>--}}
-{{--                         <ul>--}}
-{{--                             <li><i class="fas fa-check"></i> Ấm đun nước điện</li>--}}
-{{--                         </ul>--}}
 
-{{--                     </div>--}}
-{{--                 </div>--}}
+
+                    {{--                    @foreach($facilities as $facilitie)--}}
+                    {{--                        <div class="text-wrap">--}}
+                    {{--                            <ul class="three-col">--}}
+                    {{--                                <li>{{$facilitie->content}}</li>--}}
+                    {{--                            </ul>--}}
+                    {{--                        </div>--}}
+                    {{--                    @endforeach--}}
+                    {{--                 <div class="custom">--}}
+                    {{--                     <div class="column">--}}
+                    {{--                         <h3><i class="fas fa-user"></i> Cực kỳ phù hợp cho kỳ lưu trú của bạn</h3>--}}
+                    {{--                         <ul>--}}
+                    {{--                             <li><i class="fas fa-check"></i> Phòng tắm riêng</li>--}}
+                    {{--                             <li><i class="fas fa-check"></i> WiFi miễn phí</li>--}}
+                    {{--                             <li><i class="fas fa-check"></i> Điều hòa không khí</li>--}}
+                    {{--                             <li><i class="fas fa-check"></i> Phòng gia đình</li>--}}
+                    {{--                             <li><i class="fas fa-check"></i> Nhà hàng</li>--}}
+                    {{--                             <li><i class="fas fa-check"></i> Vòi sen</li>--}}
+                    {{--                             <li><i class="fas fa-check"></i> Minibar</li>--}}
+                    {{--                             <li><i class="fas fa-check"></i> Giữ hành lí</li>--}}
+                    {{--                             <li><i class="fas fa-check"></i> Tủ khóa</li>--}}
+                    {{--                             <li><i class="fas fa-check"></i> Giặt ủi</li>--}}
+                    {{--                         </ul>--}}
+                    {{--                     </div>--}}
+                    {{--                     <div class="column">--}}
+                    {{--                         <h3><i class="fas fa-utensils"></i> Nhà bếp</h3>--}}
+                    {{--                         <ul>--}}
+                    {{--                             <li><i class="fas fa-check"></i> Ấm đun nước điện</li>--}}
+                    {{--                         </ul>--}}
+
+                    {{--                     </div>--}}
+                    {{--                 </div>--}}
 
 
                 </article>
@@ -860,40 +901,40 @@
                     <h2>Tất cả đánh giá về khách sạn của chúng tôi</h2>
                     <ul class="reviews">
                         @if(count($rates) > 0)
-                        @foreach($rates as $rate)
-                            <li>
-                                {{--                                <figure class="left" style="display: flex; align-items: center">--}}
-                                {{--                                    <img width="100px"--}}
-                                {{--                                         src="data:image/png;base64,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"--}}
-                                {{--                                         alt="avatar"/>--}}
-                                {{--                                    <div style="">--}}
-                                {{--                                        <p style="font-size: 14px; font-weight: bold">{{$rate?->user->name}}</p>--}}
-                                {{--                                        <p>{{ $rate->created_at }}</p>--}}
-                                {{--                                    </div>--}}
-                                {{--                                </figure>--}}
-                                {{--                                <div class="review" style="margin-top: 17px">--}}
-                                {{--                                    <p class="review-content" style="font-size: 14px;">{{ $rate->content }}</p>--}}
+                            @foreach($rates as $rate)
+                                <li>
+                                    {{--                                <figure class="left" style="display: flex; align-items: center">--}}
+                                    {{--                                    <img width="100px"--}}
+                                    {{--                                         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMwAAADACAMAAAB/Pny7AAAAb1BMVEX///8WFhgAAAD8/PwYGBoTExUODhAXFhr5+fn19fXx8fHp6ekQEBPi4uIAAAQaGhxsbG2WlpZYWFjJycnb29vDw8O9vb5lZWbU1NQdHR2lpaWtra2BgYE2NjYtLS5ISEeOjo4kJCY/Pz94eHhPT1GtlMmfAAAM2ElEQVR4nO1dC9uiKhDWQUhNTbMsL92s//8bDxcxK/HSh9Wex3fP7tn9IuRlhpkBBjSMGTNmzJgxY8aMGTNmzJgxY8aMGTNmzHgPaNSPfxYI0SYj1NpsVH346Ta9CdTofeT6m33Msd/4Lmor89MQve4s91kRrm/loUZ5W4dFtl8691L/Avz8ekpTAgDEa4D/IE1P19z/dgt7IDVnmYTAWWBstgBjzgnCZNn81o+BtcleJrsUwDMts52KoEM/9gDSXbK0jd8kQwf7vrhQkVimuTKVVDgdWsC0qIAuxd79RS7IT3YEyMoSfd8DXsJa0S/sEv/X6KBNxqgszMViwRpL/1jw35a5kAQWprWQP+f/pn9bMDrZ5kfoiGb42RrgURyUhukFIBDUf/GoQBYPBTHAOvMblX0PzF042c56osKaSOmVu2sRRVlOkUVRcd2V4ufPZa1d5vyG64nDFZBm41a0xaS8ZtuYOn3XcWwawiDbcVwaDsTb7FrSoY9XzW8QWIXxt3lQONEBvMV9ZDCjC+s8Xrp2+xdsdxnnVCupAb+PpoUHh8j5bMub4AGjsb15RGoNpmOadvouce0ehUG2m+yo+KgJqL9MvNvW+EoMyh03omJJAVtW1RzLBNq/vjFgJLMCPpUpmFbFxrIwpFQ46BtBAXuov6O6IpUf4yBdb41hnSvEamzXaVA7pRXV0J0v2HwUvLnbEsxaTwgcwy3/aEhz6kLb8CitB9VSE8qt8QWzhpwEQHhITBlRKold68cgNRP/sxNKh/LAwo8CJB+1A4jrkRPd7fEiIOvceUvVmZvK1ySorWEAkftBO8C8huGeieRiWXTYb959PPvWhpoCaUZMEpyX4hkfAX2OX2DpJlYehLFdyeuduuh/dhyCV1kSi3iF/7FhQ5+zvBJP2lSAs8t78l3JVJKmZlq6XXJdfoKN8AHLay0XEw6xlhHrxIc7G0zZfMLf0Prd4h6KwG2jKFZJyo2zc3G9FucsdvkHSGW5N7c7GyjcD1BhxvQsH0onV4WrUghWMj4foIHDObZVbWSqVtDJneyksz21v+HDNZIh/IpYkcIgMxXxoyMNv9hygMljMIs6VjhGvkJ9mJGOLMkGQ/SmSRlOhv7a1jpGUtF9LeExsjkVvHgC5nTa4lBbCD0ltaZtp45skLGHgBtQKpc0U5ShIyU/Ps5x7gggzV1DpW1ZSmVjiXL7qUfNUo5Sy4PMVunL5gqB1c6FamcA141K1ewMPEvaluW0XOwrWJJLpBqhaEsZK7nwqcJtq1hVN4xIsrHgqpjfaUJeOxhmbtr9pJ2XdJLTvXAGZd7WUFbh3Vh6OJ+KB2t3XMqBwB1BWyFk58egi4hAcMxtxfimFroqRMrYmMbdMNMZUqvMunwFN7/tIcyYJsegdw2QyiY4Ju3ukwZ+N1hVAgzfi8X7ySBqamhEhhmXw771IVR1NjQA7l6c5c2kI+Kw4V94JWPsD4wNxpZHDeZEvmZ/ApMvERFIVD5guQY6/131kWFFYN1qrVjFCbPreIVNOO0noWI4dGSKWYcIYtp6lYYHA+QiZRO19botApuqGJynmXhuL9XoZ8sOCuxB2foWgLLb/V1VEblsp+BS9xY5tltMFnOtx5FZK8P8/Ch7rt1s/hHbKmzCpFD4MqbrY7jQliYqW2UX1doiSScQjSsFH5TtMRPT/9NYMidFFEFjwLLyVrDTKxpmYGIZ+GNFeIlYENoRxbTAYqNGNd3O5PMg1h0+2yFwF2MGB3XAxAKRQaasaiYzVuonHphoqLOBUGuIxvyYEAxeQa7sJ/dERlDh1ZFTuw6xR+SwEs+Edg/9PpuwGg1QGkrFiC/jyVzat2X4I0r5zFCvljnVVIsLRlVzNJYLYxMpKkNcNLwQAb2OM5Om7NiRrBQOiJafEYQd6U8y/IZ2m/MuTrLaXC1xd62YKHeBrJWGl4mmYnzSyWVT2WVy6ZjJ+rd3yNw60miWVQCFoX1x7j2cKzJQtE/7OfblO2RKZXxGJ51VBIU7LPg4sElZpUAeiTvsim4yzFMTMUsna02TNOZkjqJOxQxkKjJidsR78ajL1SAjMisyfAP1Y2T4jpYgY0baXE1Yuf/uKEn/mKkjQkz9pg6wHYwb4YEFnDZdmzCb0ztkTmpDRR+24XE4XpHbUpOebQ+Ex489U1h3/Y7TVPsZBocvomGTHHTNarKUDxnPzLv75t0IoAMoF8OVL9Po4MImfZj3Tk+uzvmd2OzcXWfMtQKrp7cj4VYRc7Du8cNJ6vW0/QVemnTXual0F0I9882qPqt3aWE53pyRsmel3y3ESn1vTw4EG/+8c1TRugC1pNdg7EwzuPbNiCtPQ0o9FiAXyzKYdAfiiG2qjV4D2PYtv2ZiIJKLnh0BWd2hR71pHzMZDqZjsTp7lyqS46CuHAgUiSEYnLqNGWtURhV8BBmLz7q62cTVVCqIdJhmuZI5ZAiiA4zQMwsO/Q2szZmWlU33WpFRrzDfMW5JE3oUl8HfVWSuOsgsKzcDYf9+KTKK4aKhtn6AVx/z+OFkgkFuyy8HywbKIQdP3FB6TR1k5O4CXIcs+LBdwGFc2D7ggAqdSss79lFGQJIJBkRHbLM4TwfFASTN7SFbfHYRfI0MMtzoMoANuUSucmn0Z8jQuW7Wz4ZcMmdY7uL3yIhEUSdPe6wApLljtO+cP2MaMsMMgGgA35dWMeF7yIPGC4NeAzDONBsiPFkWAPy41hPY8SyAYmkMntHrNc3jvRbXNSoclpj2IB/Mz3Cc9gM17M3Hd8EdK2fZ0Hh3gcDDDXgBXHbxQ6Fe3LVcS2xWBZpk1FyPN3UT3Q4X0yMkCAjxzMvhFm3qDwdiUy0N6wk0h04Bml/hg5s32U+iItyt17uwiBK/UcIwhpHSOwUYPDkzqjYu4zxP9vw4qSBlOw47q2XIPGB7n+R5vJTlu5EcdE7Ohk6bGRA71hxeAKCM5HlF1PiQE9pHJS1wCdkB534ymqfNAxc0ONxsbQJZWFYAt2jflk22j24QLKwFAXOdDRgGmhc0+ud6coygPFzJRGEM+FY8nY5FflLcMFSn7TxYhbmwauq4Zsw8dwiqRUBLXV91qsEv0sYRP6qXcLxdo2Tj2gjZ7iaJrrcjNFc9PUgLv/56K3QvAvYvz4ruTU6EmI+JpiQg1CCXJ4qSGmn2z6YPtUxCTonR5XU0L88iuXCO1QvnNkt9TwlLE3yYNVNmmLoZ7meIh58CAhbvYMKOALalN4qH5+Ir2hbO+7c0RO6et1hgvGo217LMx+x502pypYXxYuF1HI7QvaVRbzZh1WYTHy67Ucsyj+AHGlsr5ptNWOtmk9gGxKptQIT+xkWyee1GsQ2I9W0D9m7QCrmMWmNuZdNWs/YN2p6tc3ZQhKf//gEWrbn1lJD2rfPupAZkG07xJx0TgMIxno/VTJDUwKBON2F56Bq48Mylp2EzRboJQyMR6KV/4sMbO+avaHHJaJpEoI4UreWO/G3wV7DI7mlATpWi1ZE8F/XfyzIMGD9F5ZMlzzXTGh90e3sIxm39qWCZQdPLs2dMlNb4lHAqpSNOIOiSjDgvIWvmCaeim/QmnD6nAleiQdWOoybJmOSYSAOMGvmmulOBn5K0az2Ty1CacF9OYtsJkyVpK9Ln4yEL/sPxkOWcVZZlgvT51oMNzlmrYBqTjAkPNnC0HDnx9fjLO8hBLq3VR048PMVpoNfDQCjXLBjmlCuh3w8DaVmWfcHLMS3nb7OYVjI7oWdTH9N6PkBnoM1qdEpWH7wVu1lEagF92lQH6B6PNr5xKGsIxMEtfrTRnPBo48uh0zoq0EqGzY+nP3SKHo4Dr31kPF+6pgMYDOSvue/HUx4HNp4OarsTCIZW7H7ioDZHfYR+BVE+Jh9rGFjWVh5VMdmUR+g56ssNTLK6BboC5juwGdykjZz8coPmtRNvZDEPQeBVAp/82on6QhDdCtaEqHryC0Eer2qZFNNf1fJ4ic6U+MAlOk/XG00Icb3RlFQ4nceLp6ZBffHUxIOG73E0rgSbhIu8Emx6iMvaJhw3+EOXtUk2fkEmk41HPnqNHpPN/YJDzSDkkxccCpPpRqprsv7IBXjy5icvBmXzgfuloDpIPFwK+jkinAx73MN1rTrofO+6VuPpIt0/43sX6Qo2D1cc/w38iuPMNezJfWUrn5fLp/8ETMi3Lp++g10L/lezVl0LPslq30i8XNg+HuzC9mkW+0ZBdZX+GPzMVfri+S0vORhBRbzk4Bvjvh3Pr58Ygt97/USN5otBhlyjZ/7ui0EY3ntly2uWxC+ANep/8zIdOYD/F685asLPi64XUBU//wKqGk+vBqvfDVb+i68Ga2rOP//SNuP/9Do9CUV7/zUaM2bMmDFjxowZM2bMmDFjxowZM2bM+B38ByN0vNhaC8F2AAAAAElFTkSuQmCC"--}}
+                                    {{--                                         alt="avatar"/>--}}
+                                    {{--                                    <div style="">--}}
+                                    {{--                                        <p style="font-size: 14px; font-weight: bold">{{$rate?->user->name}}</p>--}}
+                                    {{--                                        <p>{{ $rate->created_at }}</p>--}}
+                                    {{--                                    </div>--}}
+                                    {{--                                </figure>--}}
+                                    {{--                                <div class="review" style="margin-top: 17px">--}}
+                                    {{--                                    <p class="review-content" style="font-size: 14px;">{{ $rate->content }}</p>--}}
 
-                                {{--                                    <div class="" style="display: flex; align-items: center; margin-right: 10px;">--}}
-                                {{--                                        @for($i = 1; $i<= $rate->rate; ++$i)--}}
-                                {{--                                            <span style="color:yellow; font-size: 20px; font-weight: bold;"--}}
-                                {{--                                                  class="star">&#9733;</span>--}}
-                                {{--                                        @endfor--}}
-                                {{--                                    </div>--}}
-                                {{--                                </div>--}}
+                                    {{--                                    <div class="" style="display: flex; align-items: center; margin-right: 10px;">--}}
+                                    {{--                                        @for($i = 1; $i<= $rate->rate; ++$i)--}}
+                                    {{--                                            <span style="color:yellow; font-size: 20px; font-weight: bold;"--}}
+                                    {{--                                                  class="star">&#9733;</span>--}}
+                                    {{--                                        @endfor--}}
+                                    {{--                                    </div>--}}
+                                    {{--                                </div>--}}
 
-                                <div class="review-container">
-                                    <div class="user-info">
-                                        <img alt="User profile picture" height="50"
-                                             src="{{ asset($rate?->user->avatar) }}" width="50"/>
-                                        <div class="user-details">
+                                    <div class="review-container">
+                                        <div class="user-info">
+                                            <img alt="User profile picture" height="50"
+                                                 src="{{ asset($rate?->user->avatar) }}" width="50"/>
+                                            <div class="user-details">
      <span class="user-name">
       {{$rate?->user->name}}
      </span>
 
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="review-header">
+                                        <div class="review-header">
     <span class="review-rating">
 
           @for($i = 1; $i<= $rate->rate; ++$i)
@@ -906,62 +947,66 @@
 </span>
 
 
-                                    </div>
-                                    {{--                                    <div class="review-title">--}}
-                                    {{--                                        Hotel tốt--}}
-                                    {{--                                    </div>--}}
-                                    <div class="review-content">
-                                        <div class="pros">
-                                            {!! $rate->rate > 2 ?
-           '<i class="fas fa-smile" style="color: green; font-size: 20px; margin-right: 8px;"></i>' :
-           '<i class="fas fa-frown" style="color: red; font-size: 20px; margin-right: 8px;"></i>'
-       !!}
-                                            <span>
+                                        </div>
+                                        {{--                                    <div class="review-title">--}}
+                                        {{--                                        Hotel tốt--}}
+                                        {{--                                    </div>--}}
+                                        <div class="review-content">
+                                            <div class="pros">
+                                                {!! $rate->rate > 2 ?
+               '<i class="fas fa-smile" style="color: green; font-size: 20px; margin-right: 8px;"></i>' :
+               '<i class="fas fa-frown" style="color: red; font-size: 20px; margin-right: 8px;"></i>'
+           !!}
+                                                <span>
     {{ \Illuminate\Support\Str::limit($rate->content, 80) }}
-                                                @if(strlen($rate->content) > 80)
-                                                    <a href="javascript:void(0);" class="text-primary" id="showModal{{$rate->id}}">Xem thêm</a>
-                                                @endif
+                                                    @if(strlen($rate->content) > 80)
+                                                        <a href="javascript:void(0);" class="text-primary"
+                                                           id="showModal{{$rate->id}}">Xem thêm</a>
+                                                    @endif
 </span>
-                                            <!-- Modal -->
-                                            <div id="myModal{{$rate->id}}"  class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">Chi tiết nội dung</h5>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            {{ $rate->content }}  <!-- Hiển thị nội dung đầy đủ trong modal -->
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                                <!-- Modal -->
+                                                <div id="myModal{{$rate->id}}" class="modal fade" tabindex="-1"
+                                                     role="dialog" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Chi tiết nội dung</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                {{ $rate->content }}  <!-- Hiển thị nội dung đầy đủ trong modal -->
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                        data-dismiss="modal">Đóng
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+
                                         </div>
+                                        @if (!empty($rate->comment))
+                                            <div class="hotel-response">
+                                                <div class="response-title">
+                                                    <i class="fas fa-comment">
+                                                    </i>
+                                                    Phản hồi của khách sạn:
+                                                </div>
+                                                <div class="response-content">
+                                                    {{$rate->comment->content}}
+                                                </div>
+                                            </div>
+                                        @endif
 
                                     </div>
-                                    @if (!empty($rate->comment))
-                                    <div class="hotel-response">
-                                        <div class="response-title">
-                                            <i class="fas fa-comment">
-                                            </i>
-                                            Phản hồi của khách sạn:
-                                        </div>
-                                        <div class="response-content">
-                                            {{$rate->comment->content}}
-                                        </div>
-                                    </div>
-                                    @endif
-
-                                </div>
 
 
-                            </li>
-                        @endforeach
+                                </li>
+                            @endforeach
                         @else
                             <div class="no-reviews" style="
-        background: red;
+        background: #41AFAA;
         padding: 20px;
         border-radius: 10px;
         text-align: center;
@@ -1008,7 +1053,7 @@
         $(document).ready(function () {
 
 
-            $("a[id^='showModal']").click(function(){
+            $("a[id^='showModal']").click(function () {
                 // Lấy id của modal từ liên kết
                 var modalId = $(this).attr('id').replace('showModal', '');
 
@@ -1017,7 +1062,7 @@
             });
 
             // Đảm bảo rằng sự kiện đóng modal hoạt động
-            $(".close, .btn-secondary").click(function(){
+            $(".close, .btn-secondary").click(function () {
                 $(this).closest('.modal').modal('hide');
             });
 

@@ -112,21 +112,14 @@
                                                 <input class="form-check-input" type="radio" name="type" id="admin"
                                                        value="{{ \App\Models\User::ADMIN }}">
                                                 <label class="form-check-label" for="admin">
-                                                    Admin
+                                                    Chủ chuỗi khách sạn
                                                 </label>
                                             </div>
                                             <div class="form-check form-radio-danger mb-3 me-3">
                                                 <input class="form-check-input" type="radio" name="type" id="hotelier"
                                                        value="{{ \App\Models\User::HOTELIER }}">
-                                                <label class="form-check-label" for="admin">
+                                                <label class="form-check-label" for="hotelier">
                                                     Chủ khách sạn
-                                                </label>
-                                            </div>
-                                            <div class="form-check form-radio-danger mb-3 me-3">
-                                                <input class="form-check-input" type="radio" name="type" id="staff"
-                                                       value="{{ \App\Models\User::STAFF }}">
-                                                <label class="form-check-label" for="admin">
-                                                   Nhân viên
                                                 </label>
                                             </div>
                                             <div class="form-check form-radio-success mb-3">
@@ -189,7 +182,7 @@
         });
         // Hàm kiểm tra khi thay đổi radio button
         $('input[name="type"]').on('change', function () {
-            if ($('#member').is(':checked')) {
+            if ($('#member').is(':checked') || $('#admin').is(':checked')) {
                 $('#hotelSelect').prop('disabled', true).val("");
             } else {
                 $('#hotelSelect').prop('disabled', false);
@@ -213,7 +206,7 @@
         });
 
 
-        if ($('#member').is(':checked')) {
+        if ($('#member').is(':checked') || $('#admin').is(':checked')) {
             $('#hotelSelect').prop('disabled', true);
         }
     });

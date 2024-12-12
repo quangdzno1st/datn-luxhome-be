@@ -36,9 +36,11 @@
                 @endif
 
                 <div class="card-header d-flex justify-content-between">
+                    @can('create_users')
                     <div class="">
                         <a href="{{ route('admin.users.create') }}" class="btn btn-success">+ Thêm mới</a>
                     </div>
+                    @endcan
                     <form method="GET" id="searchForm" action="{{ route('admin.users.index') }}" class="d-flex justify-content-end mb-3">
                         <div class="input-group w-auto">
                             <!-- Tìm kiếm theo tên -->
@@ -48,9 +50,9 @@
                             <!-- Tìm kiếm theo type (Customer/Admin) -->
                             <select name="type" class="form-select" id="typeSelect">
                                 <option value="">Tất cả loại</option>
-                                <option value="{{ \App\Models\User::CUSTOMER }}" {{ request()->input('type') == \App\Models\User::CUSTOMER ? 'selected' : '' }}>Customer</option>
-                                <option value="{{ \App\Models\User::ADMIN }}" {{ request()->input('type') == \App\Models\User::ADMIN ? 'selected' : '' }}>Admin</option>
-                                <option value="{{ \App\Models\User::HOTELIER }}" {{ request()->input('type') == \App\Models\User::HOTELIER ? 'selected' : '' }}>Hotelier</option>
+                                <option value="{{ \App\Models\User::CUSTOMER }}" {{ request()->input('type') == \App\Models\User::CUSTOMER ? 'selected' : '' }}>Người dùng</option>
+                                <option value="{{ \App\Models\User::ADMIN }}" {{ request()->input('type') == \App\Models\User::ADMIN ? 'selected' : '' }}>Chủ chuỗi khách sạn</option>
+                                <option value="{{ \App\Models\User::HOTELIER }}" {{ request()->input('type') == \App\Models\User::HOTELIER ? 'selected' : '' }}>Chủ khách sạn</option>
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary ms-2">Tìm kiếm</button>
@@ -71,7 +73,9 @@
                                 <th>Loại tài khoản</th>
 
                                 <th>Trạng thái</th>
+                                @can('edit_users')
                                 <th>Hành động</th>
+                                @endcan
                             </tr>
                         </thead>
                         <tbody>
@@ -102,15 +106,19 @@
                                             <span class="badge bg-danger-subtle text-danger text-uppercase">Inactive</span>
                                         @endif
                                     </td>
+                                    @can('edit_users')
                                     <td class="d-flex justify-content-center">
+
                                         <a href="{{route('admin.users.edit', $user)}}" class="btn btn-soft-warning me-2"><i
                                             class="ri-edit-2-line"></i></a>
+
 {{--                                        <form action="{{route('admin.users.destroy', $user)}}" method="post">--}}
 {{--                                            @csrf--}}
 {{--                                            @method('DELETE')--}}
 {{--                                            <button type="submit" class="btn btn-soft-danger" onclick="return confirm('Bạn có muốn xóa không?')"><i class="ri-delete-bin-line"></i></button>--}}
 {{--                                        </form>--}}
                                     </td>
+                                       @endcan
                                 </tr>
                             @endforeach
                         </tbody>

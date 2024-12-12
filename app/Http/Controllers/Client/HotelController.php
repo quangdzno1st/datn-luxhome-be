@@ -30,7 +30,6 @@ class HotelController extends Controller
         $hotel = Hotel::query()->findOrFail($id);
 
         $view = $hotel->view;
-
         $hotel->update(['view' => $view + 1]);
 
         $searchData = !$request->check ? session('search_data') : $this->catalogueRoomRepository->searchByPage($request, $hotel['id']);
@@ -50,7 +49,7 @@ class HotelController extends Controller
         return view('client.hotel', compact('filteredData', 'hotel', 'rates'));
     }
 
-    public function search(Request $request)
+    public function search(SearchRequest $request)
     {
         $data = $this->catalogueRoomRepository->searchByPage($request);
         session(['search_data' => $data]);
@@ -78,8 +77,12 @@ class HotelController extends Controller
             }
         }
 
+        $hotelIds = $data
+            ->filter(function ($hotel) {
+                return $hotel['rooms_count'] > 0;
+            })
+            ->pluck('hotel_id');
 
-        $hotelIds = $data->pluck('hotel_id')->unique();
         $query = Hotel::query()
             ->whereIn('id', $hotelIds)
             ->where('city_id', $request->city_id);
