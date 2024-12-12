@@ -27,11 +27,11 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'price' => 'required|numeric',
-            'price_hour' => 'required|numeric',
-            'number_adult' => 'required|numeric',
-            'number_child' => 'required|numeric',
-            'acreage' => 'required|numeric',
+            'price' => 'required|numeric|min:0',
+            'price_hour' => 'required|numeric|min:0',
+            'number_adult' => 'required|numeric|min:0',
+            'number_child' => 'required|numeric|min:0',
+            'acreage' => 'required|numeric|min:0',
             'description' => 'required|string',
             'hotel_id' => 'required|string',
             'images' => 'array',
@@ -50,6 +50,11 @@ class UpdateRequest extends FormRequest
             'acreage.required' => 'Vui lòng nhập diện tích',
             'number_adult.required' => 'Vui lòng nhập sức chứa người lớn',
             'number_child.required' => 'Vui lòng nhập sức chứa trẻ em',
+            'price.min' => 'Giá loại phòng phải lớn hơn bằng 0',
+            'price_hour.min' => 'Giá phạt phải lớn hơn bằng 0',
+            'acreage.min' => 'Diện tích phải lớn hơn bằng 0',
+            'number_adult.min' => 'Sức chứa người lớn phải lớn hơn bằng 0',
+            'number_child.min' => 'Sức chứa trẻ em phải lớn hơn bằng 0',
             'description.required' => 'Vui lòng nhập mô tả',
         ];
     }

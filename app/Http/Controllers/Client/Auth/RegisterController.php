@@ -46,6 +46,8 @@ class RegisterController extends Controller
 
         $data['password'] = bcrypt($data['password']);
 
+        $data['group_id'] = 1;
+
         $data['total_amount_ordered'] = 0;
 
         $newUser = User::query()->create($data);
