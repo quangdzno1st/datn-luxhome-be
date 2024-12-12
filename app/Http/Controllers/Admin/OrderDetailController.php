@@ -238,7 +238,6 @@ class OrderDetailController extends Controller
 
             return $extraHours * $extraFeePerHour;
         }
-
         return 0;
     }
 

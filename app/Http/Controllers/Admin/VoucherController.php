@@ -131,7 +131,7 @@ class VoucherController extends Controller
 
             DB::commit();
 
-            return $this->index();
+            return \redirect()->back();
         } catch (\Exception $exception) {
             return Redirect::back()->with('error', 'Errors: ' . $exception->getMessage());
         }
@@ -140,7 +140,6 @@ class VoucherController extends Controller
     public function list_trash()
     {
         $trashedVouchers = Voucher::onlyTrashed()->get();
-        //        dd($trashedVouchers);
         return view(self::PATH_DIRECT . __FUNCTION__, compact('trashedVouchers'));
     }
 
