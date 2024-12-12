@@ -71,7 +71,7 @@
                                     </div>
                                 </div>
                             @else
-                                {{date('d-M-y', strtotime($order->check_out))}}
+                                {{\Carbon\Carbon::parse($order->check_out)->format('d-m-Y H:i:s')}}
                             @endif
                         </td>
                     </tr>
