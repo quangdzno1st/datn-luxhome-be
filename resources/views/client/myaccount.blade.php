@@ -411,7 +411,8 @@
                                     <th>Hình ảnh</th>
                                     <th>Mã Voucher</th>
                                     <th>Mô tả</th>
-                                    <th>Hiệu lực đến</th>
+                                    <th>Từ ngày</th>
+                                    <th>Đến ngày</th>
                                     <th >Trạng thái</th>
                                     <th>Giảm giá</th>
 
@@ -427,13 +428,35 @@
                                         <td>{{ $voucher->code }}</td>
                                         <td>{{ $voucher->description }}</td>
 
-                                        <td> {{ $voucher->end_date }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($voucher->start_date)->format('d/m/Y') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($voucher->end_date)->format('d/m/Y') }}</td>
+
                                         <td>
-                        <span class="status {{ $voucher->status ? 'active' : 'expired' }}">
-                            {{ $voucher->status ? 'Còn hiệu lực' : 'Hết hạn' }}
-                        </span>
+                                            @php
+                                                $currentDate = \Carbon\Carbon::today();
+                                                $startDate = \Carbon\Carbon::parse($voucher->start_date);
+                                                $endDate = \Carbon\Carbon::parse($voucher->end_date);
+                                            @endphp
+
+                                            <span class="status
+        {{ $voucher->status && $currentDate->between($startDate, $endDate) ? 'active' : 'expired' }}">
+        @if ($currentDate->between($startDate, $endDate))
+                                                    Khả dụng
+                                                @elseif ($currentDate->isBefore($startDate))
+                                                    Chưa khả dụng
+                                                @else
+                                                    Hết hạn
+                                                @endif
+    </span>
                                         </td>
-                                        <td>{{ $voucher->discount_value }}%</td>
+                                        <td>
+                                            @if($voucher->discount_type)
+                                                {{ $voucher->discount_value }}%
+                                            @else
+                                                {{ number_format($voucher->discount_value, 0, ',', '.') }}VNĐ
+                                            @endif
+                                        </td>
+
                                     </tr>
                                 @endforeach
                                 </tbody>

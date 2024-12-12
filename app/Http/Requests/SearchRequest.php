@@ -20,8 +20,9 @@ class SearchRequest extends FormRequest
      */
     public function rules(): array
     {
+        $isTypeTrue = $this->input('type');
         return [
-            'number_adult' => 'nullable|required|integer|min:1',
+            'number_adult' => $isTypeTrue ? 'nullable|integer|min:1' : 'required|integer|min:1',
             'number_child' => 'nullable|integer|min:1',
 
             'start_date' => [

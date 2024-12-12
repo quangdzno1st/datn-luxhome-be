@@ -100,11 +100,13 @@
                                         class="nav-link {{ request()->routeIs('admin.users.index') ? 'active' : '' }}"
                                         data-key="t-horizontal">Danh Sách</a>
                                 </li>
+                                  @can('create_users')
                                 <li class="nav-item">
                                     <a href="{{ route('admin.users.create') }}"
                                         class="nav-link {{ request()->routeIs('admin.users.create') ? 'active' : '' }}"
                                         data-key="t-detached">Thêm Mới</a>
                                 </li>
+                                    @endcan
                             </ul>
                         </div>
                     </li>
@@ -233,13 +235,16 @@
                     </li>
                 @endcan
 
-                <li class="nav-item">
-                    <a class="nav-link menu-link {{ request()->routeIs('admin.permissions') ? 'active' : '' }}"
-                        href="{{ route('admin.permissions') }}">
-                        <i class="ri-group-line"></i> <span data-key="t-layouts">Phân quyền</span>
-                    </a>
 
-                </li>
+                @if (Auth::user()->type == \App\Models\User::ADMIN)
+                    <li class="nav-item">
+                        <a class="nav-link menu-link {{ request()->routeIs('admin.permissions') ? 'active' : '' }}"
+                            href="{{ route('admin.permissions') }}">
+                            <i class="ri-group-line"></i> <span data-key="t-layouts">Phân quyền</span>
+                        </a>
+
+                    </li>
+                @endif
             </ul>
         </div>
         <!-- Sidebar -->

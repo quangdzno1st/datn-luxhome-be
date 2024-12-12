@@ -70,7 +70,7 @@
                             </div>
                             <div class="f-item one-half spinner">
                                 <label for="spinner3" style="font-weight: bold; margin-bottom: 5px; display: block;">Trẻ em</label>
-                                <input type="number" id="spinner3" name="number_child" value="{{ old('number_child') }}"
+                                <input type="number" id="spinner3" min="1" name="number_child" value="{{ old('number_child') }}"
                                        style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
                                 @error('number_child')
                                 <div class="text-danger" style="color: red;">{{ $message }}</div>
@@ -154,11 +154,11 @@
                                                     src="{{ Storage::url($city['thumbnail']) }}"
                                                     alt=""/></a></figure>
                                     <div class="details">
-                                        <a href="{{ route('home.search', ['city_id' => $city['id'],'number_adult' => 2, 'start_date' => \Carbon\Carbon::now()->format('Y-m-d'), 'end_date' => \Carbon\Carbon::tomorrow()->format('Y-m-d')]) }}"
+                                        <a href="{{ route('home.search', ['city_id' => $city['id'],'type' => true, 'start_date' => \Carbon\Carbon::now()->format('Y-m-d'), 'end_date' => \Carbon\Carbon::tomorrow()->format('Y-m-d')]) }}"
                                            title="View all" class="gradient-button">Xem tất cả</a>
 
                                         <h4>{{ $city['name']}}</h4>
-                                        <span class="count">{{ $city['hotel_qty'] }} Khách sạn</span>
+                                        <span class="count">Có tất cả <strong>{{ $city['hotel_qty'] }}</strong> khách sạn</span>
                                         <div class="ribbon">
                                             <div class="half">
                                                 <a href="#" title="View all" style="padding: 5px;">
