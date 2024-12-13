@@ -50,11 +50,14 @@ class Order extends Model
     {
         return $this->belongsToMany(Attribute::class, 'catalogue_room_attribute', 'catalogue_room_id', 'attribute_value_id');
     }
-    public function orderItem()
+//    public function orderItem()
+//    {
+//        return $this->hasMany(OrderItem::class, 'order_id');
+//    }
+    public function orderItems()
     {
         return $this->hasMany(OrderItem::class, 'order_id');
     }
-
     public function bookingService() {
         return $this->hasMany(BookingService::class, 'order_id');
     }

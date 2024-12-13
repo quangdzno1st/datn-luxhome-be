@@ -13,6 +13,7 @@ use App\Services\FileUploadService;
 use App\Services\impl\VoucherServiceImpl;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
@@ -40,8 +41,8 @@ class VoucherController extends Controller
     public function index(Request $request)
     {
         $vouchers = $this->voucher->listVoucher();
-//        dd($vouchers);
         if ($_GET) return $this->searchVoucher($request->all());
+
         return view(self::PATH_DIRECT . __FUNCTION__, compact('vouchers'));
     }
 
@@ -57,9 +58,10 @@ class VoucherController extends Controller
         $data['thumbnail'] = $this->fileUploadService->storeLocal($request->file('thumbnail'));
         $data['id'] = Str::uuid()->toString();
 
+        if(Auth::user()->type==3) $data['hotel_id'] = Auth::user()->org_id;
+
         $voucher = $this->voucher->createVoucher($data);
         return redirect()->route('admin.vouchers.index')->with('success', 'Thêm mã giảm giá thành công!');
-
     }
 
     public function edit($id)
@@ -263,7 +265,6 @@ class VoucherController extends Controller
             $vouchers = $vouchers->where('code', 'LIKE', "%{$data['code']}%");
         }
         $vouchers = $vouchers->paginate(10);
-        //        dd($vouchers);
         return view('admin.voucher.index', compact('vouchers'));
     }
 

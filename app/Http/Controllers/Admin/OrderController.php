@@ -7,7 +7,9 @@ use App\Constant\Enum\StatusPaymentOrderEnum;
 use App\Exceptions\RespException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BaseSearchRequest;
+use App\Models\Hotel;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Repositories\Order\OrderRepository;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -27,55 +29,73 @@ class OrderController extends Controller
         $this->orderRepos = $orderRepos;
     }
 
-
-    public function index(BaseSearchRequest $request, $payable = null)
+    public function index(BaseSearchRequest $request)
     {
-        $hotel_id = Auth::user()?->hotel_id;
-        $orders = Order::query()
-            ->orderByDesc('created_at')
-            ->paginate($request->getPerPage(), ['*'], 'order', $request->order);
+        $org_id = Auth::user()?->org_id;
+        $hotels=null;
+        if (Auth::user()->type==2){
+            $orders = Order::query()
+                ->orderByDesc('created_at')
+                ->paginate($request->getPerPage(), ['*'], 'order', $request->order);
+            $hotels=Hotel::query()->select('id','name')->get();
+        }else{
+            $orders = Order::query()
+                ->orderByDesc('created_at')
+                ->where('org_id', $org_id)
+                ->paginate($request->getPerPage(), ['*'], 'order', $request->order);
+        }
+//        if ($_GET) return $this->search($request->all());
         $this->checkStatusNoti($orders);
-//        dd($orders);
-        return view(self::PATH_VIEW . __FUNCTION__, compact('orders', 'payable'));
+        return view(self::PATH_VIEW . __FUNCTION__, compact('orders','hotels'));
     }
 
     public function checkStatusNoti($orders)
     {
+//        note place
 //        0: chưa đến ngày
 //        1: checkin muộn
 //        2: check out muộn đằng sau có khách
 //        3: đang dùng phòng
 //        4: checkout muộn
         foreach ($orders as $order) {
-            $currentTime = Carbon::now(); // Thời gian hiện tại
-            $startDateTime = Carbon::parse($order->start_date); // Thời gian bắt đầu
-            $endDateTime = Carbon::parse($order->end_date); // Thời gian kết thúc
+            $currentTime = Carbon::now();
+            $startDateTime = Carbon::parse($order->start_date);
+            $endDateTime = Carbon::parse($order->end_date);
 //dd($endDateTime->toDateString());
             // Trạng thái 1: Checkin muộn
             if ($currentTime->greaterThan($startDateTime) && $order->check_in==null) {
-                $order['statusNoti']=1; // Checkin muộn
+                $order['statusNoti']=1; // Checkin muộnnnn
             }
             elseif (!is_null($order->check_in) && is_null($order->check_out) && $currentTime->greaterThan($endDateTime)) {
-                // Kiểm tra có khách đặt khác cùng ngày
-                $hasNextBooking = Order::where('id', '!=', $order->id)
-                ->whereDate('start_date', $endDateTime->toDateString())
-//                    ->where('check_in', '==', null)
-                ->exists();
-                if ($hasNextBooking) {
-                    $order['statusNoti']=2; // Checkout muộn, có khách đặt khác cùng ngày
-                }else{
-                    $order['statusNoti']=4;
+
+                $currentOrderRoomIds = OrderItem::where('order_id', $order->id)
+                    ->pluck('room_id')
+                    ->toArray();
+
+                $hasNextBookingWithSameRoom = Order::where('id', '!=', $order->id)
+                    ->whereDate('start_date', $endDateTime->toDateString())
+                    ->whereHas('orderItems', function ($query) use ($currentOrderRoomIds) {
+                        $query->whereIn('room_id', $currentOrderRoomIds);
+                    })
+                    ->exists();
+
+                if ($hasNextBookingWithSameRoom) {
+                    // Checkout muộn, có khách đặt khác cùng ngày và trùng phòng
+                    $order['statusNoti'] = 2;
+                } else {
+                    // Checkout muộn, không có khách đặt trùng phòng
+                    $order['statusNoti'] = 4;
                 }
             }
             elseif (!is_null($order->check_in) && $currentTime->between($startDateTime, $endDateTime)) {
-                $order['statusNoti']=3; // Đang dùng phòng
+                // Đang dùng phòng
+                $order['statusNoti']=3;
             }else{
-                $order['statusNoti']=0; // chưa đến ngày
+                // chưa đến ngày
+                $order['statusNoti']=0;
             }
-//            dd($order);
         }
     }
-
 
     public function not_accepted_cancel($orderId)
     {
@@ -201,6 +221,12 @@ class OrderController extends Controller
     {
         $query = Order::query();
 
+//        $hotels=null;
+//
+//        if ($request->filled('hotel')) {
+//            $query->where('org_id', '=', $request->hotel);
+//            $hotels=Hotel::query()->select('id','name')->get();
+//        }
         // Lọc theo mã đặt phòng
         if ($request->filled('code')) {
             $query->where('code', 'LIKE', '%' . $request->code . '%');
@@ -226,10 +252,13 @@ class OrderController extends Controller
             $query->whereDate('end_date', '<=', $request->end_date);
         }
 
-        // Thực thi query và phân trang kết quả
-        $orders = $query->paginate(10);
+        $orders = $query
+            ->orderByDesc('created_at')
+            ->paginate(10)
+        ;
+
+        $this->checkStatusNoti($orders);
 
         return view('admin.orders.index', compact('orders'));
     }
-
 }

@@ -5,6 +5,7 @@ namespace App\Services\impl;
 use App\Models\Voucher;
 use App\Repositories\Voucher\VoucherRepository;
 use App\Services\VoucherService;
+use Illuminate\Support\Facades\Auth;
 
 class VoucherServiceImpl implements VoucherService
 {
@@ -17,45 +18,54 @@ class VoucherServiceImpl implements VoucherService
 
     public function listVoucher()
     {
-        $services = Voucher::query()->latest('created_at')->paginate(10);
-        return $services;
+        if (Auth::user()->type==2){
+            $vouchers = Voucher::query()
+                ->latest('created_at')
+                ->paginate(10);
+        }else{
+            $vouchers = Voucher::query()
+                ->latest('created_at')
+                ->where('hotel_id','=',Auth::user()->org_id)
+                ->paginate(10);
+        }
+        return $vouchers;
     }
 
     public function showVoucher($id)
     {
-        $service = $this->voucherRepository->first(['id' => $id]);
-        return $service;
+        $voucher = $this->voucherRepository->first(['id' => $id]);
+        return $voucher;
     }
 
     public function createVoucher($data)
     {
-        $service = $this->voucherRepository->create($data);
-        return $service;
+        $voucher = $this->voucherRepository->create($data);
+        return $voucher;
     }
 
     public function updateVoucher($data, $id)
     {
         $model = $this->voucherRepository->find($id);
-        $service = $this->voucherRepository->edit($model, $data);
-        return $service;
+        $voucher = $this->voucherRepository->edit($model, $data);
+        return $voucher;
     }
 
     public function deleteVoucher($id)
     {
-        $service = $this->voucherRepository->remove($id);
-        return $service;
+        $voucher = $this->voucherRepository->remove($id);
+        return $voucher;
     }
 
     public function restoreVoucher($id)
     {
-        $service = $this->voucherRepository->retore($id);
-        return $service;
+        $voucher = $this->voucherRepository->retore($id);
+        return $voucher;
     }
 
     public function forceDeleteVoucher($id)
     {
-        $service = $this->voucherRepository->destroy($id);
-        return $service;
+        $voucher = $this->voucherRepository->destroy($id);
+        return $voucher;
     }
 
     public function getByCondition($key)
