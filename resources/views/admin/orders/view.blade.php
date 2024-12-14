@@ -3,7 +3,11 @@
     <div class="card">
         <div class="header d-flex justify-content-between align-items-center">
             <h5 class="card-header mb-0">{{ __('Thông tin chi tiết đơn đặt') }}</h5>
-            <a href="{{route('admin.orders.index')}}"><button class="btn btn-success me-3">Quay lại</button></a>
+            <a href="{{ route('admin.orders.index') }}">
+                <button type="button" class="btn btn-light add-btn me-3" data-bs-toggle="modal"
+                        id="create-btn" data-bs-target="#showModal">Danh sách
+                </button>
+            </a>
         </div>
 
     @if (session('success'))

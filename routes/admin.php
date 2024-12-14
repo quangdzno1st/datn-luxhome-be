@@ -259,7 +259,7 @@ Route::prefix('orders')->group(function () {
     Route::post('/accepted_cancel/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'accepted_cancel'])->name('orders.accepted_cancel')->middleware('can:edit_orders');
     Route::post('/refunded-money/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'refundMoney'])->name('orders.refunded-money')->middleware('can:edit_orders');
 // search
-    Route::get('/search_order', [\App\Http\Controllers\Admin\OrderController::class, 'search'])->name('orders.search')->middleware('can:view_orders');
+//    Route::get('/search_order', [\App\Http\Controllers\Admin\OrderController::class, 'search'])->name('orders.search')->middleware('can:view_orders');
 });
 
 Route::get('/404', function () {
