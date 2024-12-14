@@ -9,6 +9,7 @@ use App\Http\Controllers\Client\Auth\RegisterController;
 use App\Http\Controllers\Client\CityController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\HotelController;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -101,3 +102,15 @@ Route::get('/password/reset', [ForgotPasswordController::class, 'showFormForgot'
 Route::post('/password/reset', [ForgotPasswordController::class, 'sendMailReset'])->name('client.password.reset');
 Route::get('/password/reset/{token}', [ForgotPasswordController::class, 'showFormResetPassword'])->name('client.show.form.reset');
 Route::post('/password/reset/update', [ForgotPasswordController::class, 'ResetUpdatePassword'])->name('client.reset.update');
+
+
+Route::get('/test-redis', function () {
+    // Gửi một giá trị vào Redis
+    Redis::set('name', 'John Doe');
+
+    // Lấy giá trị từ Redis
+    $value = Redis::get('name');
+
+    // Hiển thị giá trị lấy từ Redis
+    return $value; // Kết quả sẽ là "John Doe"
+});

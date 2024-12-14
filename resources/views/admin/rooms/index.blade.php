@@ -66,8 +66,8 @@
                                     </div>
                                     <input type="hidden" name="hotel_id" value="{{$hotelId}}">
                                     <div class="search-box ms-2">
-                                        <input type="text" class="form-control " placeholder="Tìm kiếm..."
-                                               name="keyword" value="{{request()->input('keyword')}}">
+                                        <input type="text" class="form-control " placeholder="Search..."
+                                               name="keyword">
                                         <i class="ri-search-line search-icon"></i>
                                     </div>
                                     <div class="ms-1">
@@ -420,9 +420,11 @@
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header bg-light p-3">
+
                                         <h5 class="modal-title" id="exampleModalLabel">Thêm phòng</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close" id="close-modal"></button>
+
                                     </div>
                                     <form class="tablelist-form" autocomplete="off"
                                           action="{{ route('admin.rooms.store') }}" method="POST">

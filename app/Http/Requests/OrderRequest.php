@@ -30,6 +30,7 @@ class OrderRequest extends FormRequest
             'user_phone_number' => 'required|string|regex:/^[0-9]{10,15}$/',
             'user_name' => 'required|string|max:255',
             'note' => 'nullable|string',
+            'total_amount' => 'nullable',
         ];
     }
 
