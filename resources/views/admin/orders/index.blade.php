@@ -64,6 +64,19 @@
                                 </div>
                             @endif
                                 <form action="{{ route('admin.orders.search') }}" method="GET" class="d-flex align-items-center justify-content-end flex-wrap gap-2">
+{{--                                    @if(\Illuminate\Support\Facades\Auth::user()->type==2)--}}
+{{--                                        <div class="form-group mb-0">--}}
+{{--                                            <div class="">--}}
+{{--                                                <label for="start_date">Khách sạn:</label>--}}
+{{--                                            </div>--}}
+{{--                                            <select name="hotel" class="form-control">--}}
+{{--                                                <option value="">Khách sạn</option>--}}
+{{--                                                @foreach($hotels as $hotel)--}}
+{{--                                                    <option value="{{$hotel->id}}" {{ request('hotel') == $hotel->id ? 'selected' : '' }}>{{$hotel->name}}</option>--}}
+{{--                                                @endforeach--}}
+{{--                                            </select>--}}
+{{--                                        </div>--}}
+{{--                                    @endif--}}
                                     <div class="form-group mb-0">
                                         <div class="">
                                             <label for="start_date">Mã phòng:</label>
@@ -125,7 +138,7 @@
                                 <tbody class="list form-check-all">
                                 @foreach($orders as $order)
                                     <tr>
-                                        <td class="text-center">
+                                        <td class="">
 {{--                                            //        0: chưa đến ngày--}}
 {{--                                            //        1: checkin,checkout muộn--}}
 {{--                                            //        2: check out muộn đằng sau có khách--}}
@@ -197,8 +210,8 @@
                                                 @endif
                                             </div>
                                         </td>
-                                        <td>{{\Carbon\Carbon::parse($order->end_date)->format('d-m-Y')}}</td>
                                         <td>{{\Carbon\Carbon::parse($order->start_date)->format('d-m-Y')}}</td>
+                                        <td>{{\Carbon\Carbon::parse($order->end_date)->format('d-m-Y')}}</td>
                                         <td>
                                             {{number_format($order->total_amount)}} VND
                                         </td>

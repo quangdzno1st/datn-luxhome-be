@@ -4,7 +4,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title mb-0">Sửa voucher</h4>
+                    <h4 class="card-title mb-0">Sửa phiếu giảm giá</h4>
                 </div><!-- end card header -->
 
                 {{-- @if ($errors->any())
@@ -159,8 +159,13 @@
 
                                 <div class="modal-footer">
                                     <div class="hstack gap-2 justify-content-end">
+                                        <a href="{{route('admin.vouchers.index')}}">
+                                        <button type="button" class="btn btn-success" id="add-btn">
+                                            Quay lại
+                                        </button>
+                                        </a>
                                         <button type="submit" class="btn btn-warning" id="add-btn">
-                                            Update
+                                            Sửa
                                         </button>
                                     </div>
                                 </div>

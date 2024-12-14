@@ -4,7 +4,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title mb-0">Danh sách mã giảm giá</h4>
+                    <h4 class="card-title mb-0">Danh sách phiếu giảm giá</h4>
                 </div><!-- end card header -->
 
                 <div class="card-body">
@@ -14,7 +14,7 @@
                             <div class="col-auto">
                                 <a href="{{ route('admin.vouchers.create') }}">
                                     <button type="button" class="btn btn-success add-btn" id="create-btn">
-                                        <i class="ri-add-line align-bottom me-1"></i> Thêm voucher
+                                        <i class="ri-add-line align-bottom me-1"></i> Thêm phiếu giảm giá
                                     </button>
                                 </a>
                             </div>
@@ -27,7 +27,7 @@
                                             type="text"
                                             name="code"
                                             class="form-control"
-                                            placeholder="Nhập mã voucher..."
+                                            placeholder="Nhập mã giảm giá..."
                                             value="{{ old('code') }}">
                                     </div>
                                     <button class="btn btn-primary" type="submit">Tìm kiếm</button>
@@ -37,7 +37,7 @@
                             <!-- Nút Phát voucher -->
                             <div class="col-auto">
                                 <button type="button" class="btn btn-success add-btn" id="issue-btn" data-bs-toggle="modal" data-bs-target="#showModal">
-                                    <i class="ri-add-line align-bottom me-1"></i> Phát voucher
+                                    <i class="ri-add-line align-bottom me-1"></i> Phát phiếu giảm giá
                                 </button>
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                                             <input class="form-check-input" type="checkbox" name="" value="">
                                         </div>
                                     </th>
-                                    <th class="" data-sort="customer_name">Mã voucher</th>
+                                    <th class="" data-sort="customer_name">Mã giảm giá</th>
                                     <th class="" data-sort="customer_name">Thumbnail</th>
                                     <th class="" data-sort="customer_name">Mô tả</th>
                                     <th class="" data-sort="email">Trạng thái</th>
@@ -93,7 +93,7 @@
                                             </td>
                                         @endif
                                         <td class="number">{{ $voucher['quantity'] }}</td>
-                                        <td class="number">{{ $voucher['discount_type'] == 1 ? $voucher['discount_value'] . "%" : $voucher['discount_value'] }}</td>
+                                        <td class="number">{{ $voucher['discount_type'] == 1 ? $voucher['discount_value'] . "%" : number_format($voucher['discount_value']) ."VND"}}</td>
                                         <td class="date">{{$voucher['start_date'] ? \Carbon\Carbon::parse($voucher->start_date)->format('d-m-Y') : ''}}</td>
                                         <td class="date">{{$voucher['end_date'] ? \Carbon\Carbon::parse($voucher->end_date )->format('d-m-Y') : ''}}</td>
                                         <td>

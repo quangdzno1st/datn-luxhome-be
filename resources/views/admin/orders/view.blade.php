@@ -1,13 +1,12 @@
 @extends('admin.layouts.master')
 @section('content')
     <div class="card">
-        <div class="row">
-            <div class="col-md-12">
-{{--                @include('backend.layouts.notification')--}}
-            </div>
+        <div class="header d-flex justify-content-between align-items-center">
+            <h5 class="card-header mb-0">{{ __('Thông tin chi tiết đơn đặt') }}</h5>
+            <a href="{{route('admin.orders.index')}}"><button class="btn btn-success me-3">Quay lại</button></a>
         </div>
-        <h5 class="card-header">{{ __('Thông tin chi tiết đơn đặt') }}</h5>
-        @if (session('success'))
+
+    @if (session('success'))
             <div class="card-header  alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success')}} với chi phí phát sinh là {{number_format(session('incidental_costs'))}}VND
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -39,6 +38,8 @@
                         <td>
                             @if($order->status=='Đã hủy')
                                 <span class="badge bg-danger">Đã hủy</span>
+                            @elseif($order->status=='Đang chờ')
+                                <span class="badge bg-warning">Chưa xác nhận</span>
                             @elseif($order->check_in==null)
                                 <div class="d-flex gap-2">
                                     <div class="edit" id="check_out">
@@ -55,7 +56,7 @@
                                 <span class="badge bg-danger">Đã hủy</span>
                             @elseif($order->check_out==null&&$order->check_in==null)
                                 <div class="d-flex gap-2">
-                                    <span>Phải checkin trước</span>
+                                    <span class="badge bg-warning">Phải checkin trước</span>
 {{--                                    <div class="edit" id="check_out">--}}
 {{--                                        <a class="btn btn-sm btn-success edit-item-btn" data-bs-toggle="modal" href="#checkoutOrderHaventCheckin">--}}
 {{--                                            Check-out--}}
@@ -190,7 +191,7 @@
                 </section>
 {{--                @include('admin.orders.order_items.order_items')--}}
             @endif
-                <!-- Modal -->s
+                <!-- Modal -->
 {{--                notificate--}}
                 <div class="modal fade flip" id="checkoutOrder" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
