@@ -11,6 +11,7 @@ use App\Models\Service;
 use App\Models\User;
 use App\Models\Voucher;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 define('CHECKIN_START', '14:00');
@@ -24,6 +25,7 @@ class OrderDetailController extends Controller
 
     public function showOrderDetail(Order $order)
     {
+        if (Auth::user()->type==3&&$order->org_id==Auth::user()->org_id||Auth::user()->type==2){
         $sumService=0;
         $sumOrderItem=0;
 
@@ -78,6 +80,10 @@ class OrderDetailController extends Controller
             'sumOrderItem','payable','voucher','services',
             'roomCode'
         ));
+        }
+        else{
+            return redirect()->back()->with('error','Khách sạn bạn không quản lý đơn hàng này');
+        }
     }
 
     public function checkPayableOrTotal($idOrder)

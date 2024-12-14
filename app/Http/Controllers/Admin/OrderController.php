@@ -36,7 +36,7 @@ class OrderController extends Controller
         if (Auth::user()->type==2){
             $orders = Order::query()
                 ->orderByDesc('created_at')
-                ->paginate(2, ['*'], 'order', $request->order);
+                ->paginate($request->getPerPage(), ['*'], 'order', $request->order);
             $hotels=Hotel::query()->select('id','name')->get();
         }else{
             $orders = Order::query()
@@ -44,8 +44,8 @@ class OrderController extends Controller
                 ->where('org_id', $org_id)
                 ->paginate($request->getPerPage(), ['*'], 'order', $request->order);
         }
-//        if ($_GET) return $this->search($request->all());
         $this->checkStatusNoti($orders);
+        if ($_GET) $orders= $this->search($request->all());
         return view(self::PATH_VIEW . __FUNCTION__, compact('orders','hotels'));
     }
 
@@ -217,42 +217,36 @@ class OrderController extends Controller
         }
     }
 
-    public function search(\Illuminate\Http\Request $request)
+    public function search($request)
     {
-        $query = Order::query()->where('org_id',  auth()->user()->type);
+//        dd($request);
+        $query = Order::query()
+            ->where('org_id',  Auth::user()->org_id)
+            ->orderByDesc('created_at');
 
-        // Lọc theo mã đặt phòng
-        if ($request->filled('code')) {
-            $query->where('code', 'LIKE', '%' . $request->code . '%');
+        if (isset($request['hotel'])&&$request['hotel']!='') {
+            $query->where('org_id',  $request['hotel']);
         }
 
-        // Lọc theo trạng thái
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
+        if (isset($request['code'])&&$request['code']!='') {
+            $query->where('code', 'LIKE', '%' . $request['code']. '%');
         }
 
-        // Lọc theo tổng tiền
-        if ($request->filled('total_amount')) {
-            $query->where('total_amount', '>=', $request->total_amount);
+        if (isset($request['status'])&&$request['status']!='') {
+            $query->where('status', $request['status']);
         }
 
-        // Lọc theo ngày bắt đầu
-        if ($request->filled('start_date')) {
-            $query->whereDate('start_date', '>=', $request->start_date);
+        if (isset($request['total_amount'])&&$request['total_amount']!='') {
+            $query->where('total_amount', '>=', $request['total_amount']);
         }
 
-        // Lọc theo ngày kết thúc
-        if ($request->filled('end_date')) {
-            $query->whereDate('end_date', '<=', $request->end_date);
+        if (isset($request['start_date'])&&$request['start_date']!='') {
+            $query->whereDate('start_date', '>=', $request['start_date']);
         }
 
-        $orders = $query
-            ->orderByDesc('created_at')
-            ->paginate(10)
-        ;
-
-        $this->checkStatusNoti($orders);
-
-        return view('admin.orders.index', compact('orders'));
+        if (isset($request['end_date'])&&$request['end_date']!='') {
+            $query->whereDate('end_date', '<=', $request['end_date']);
+        }
+        return $query->paginate(10, ['*'], 'order');
     }
 }

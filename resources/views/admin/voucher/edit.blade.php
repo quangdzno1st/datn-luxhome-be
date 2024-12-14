@@ -159,11 +159,6 @@
 
                                 <div class="modal-footer">
                                     <div class="hstack gap-2 justify-content-end">
-                                        <a href="{{route('admin.vouchers.index')}}">
-                                        <button type="button" class="btn btn-success" id="add-btn">
-                                            Quay lại
-                                        </button>
-                                        </a>
                                         <button type="submit" class="btn btn-warning" id="add-btn">
                                             Sửa
                                         </button>

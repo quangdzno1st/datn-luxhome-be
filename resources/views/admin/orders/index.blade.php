@@ -63,20 +63,20 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             @endif
-                                <form action="{{ route('admin.orders.search') }}" method="GET" class="d-flex align-items-center justify-content-end flex-wrap gap-2">
-{{--                                    @if(\Illuminate\Support\Facades\Auth::user()->type==2)--}}
-{{--                                        <div class="form-group mb-0">--}}
-{{--                                            <div class="">--}}
-{{--                                                <label for="start_date">Khách sạn:</label>--}}
-{{--                                            </div>--}}
-{{--                                            <select name="hotel" class="form-control">--}}
-{{--                                                <option value="">Khách sạn</option>--}}
-{{--                                                @foreach($hotels as $hotel)--}}
-{{--                                                    <option value="{{$hotel->id}}" {{ request('hotel') == $hotel->id ? 'selected' : '' }}>{{$hotel->name}}</option>--}}
-{{--                                                @endforeach--}}
-{{--                                            </select>--}}
-{{--                                        </div>--}}
-{{--                                    @endif--}}
+                                <form action="" method="GET" class="d-flex align-items-center justify-content-end flex-wrap gap-2">
+                                    @if(\Illuminate\Support\Facades\Auth::user()->type==2)
+                                        <div class="form-group mb-0">
+                                            <div class="">
+                                                <label for="start_date">Khách sạn:</label>
+                                            </div>
+                                            <select name="hotel" class="form-control">
+                                                <option value="">Khách sạn</option>
+                                                @foreach($hotels as $hotel)
+                                                    <option value="{{$hotel->id}}" {{ request('hotel') == $hotel->id ? 'selected' : '' }}>{{$hotel->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    @endif
                                     <div class="form-group mb-0">
                                         <div class="">
                                             <label for="start_date">Mã phòng:</label>
@@ -312,7 +312,8 @@
 
                     <div class="d-flex justify-content-end">
                         <div class="pagination-wrap hstack gap-2">
-                            {{ $orders->links() }}
+{{--                            {{ $orders->links() }}--}}
+                            {{ $orders->appends(request()->query())->links() }}
                         </div>
                     </div>
                 </div><!-- end card -->
