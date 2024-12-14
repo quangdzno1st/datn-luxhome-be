@@ -6,7 +6,9 @@
 
 @section('content')
 
-    <!-- start page title -->
+
+
+
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -32,11 +34,18 @@
                 <div class="card-header">
                     <div class="row g-4 mb-3">
                         <div class="col-sm-auto">
-                            <div>
-                                <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal"
+                            <div class="d-flex">
+                                @can('create_rooms')
+                                <button type="button" class="btn btn-success add-btn " style="margin-right:5px " data-bs-toggle="modal"
                                         id="create-btn" data-bs-target="#showModal"><i
                                             class="ri-add-line align-bottom me-1"></i> Thêm mới
                                 </button>
+                                @endcan
+                                    @if(auth()->user()->type == \App\Models\User::ADMIN)
+                                        <form action="{{ route('admin.rooms.index') }}" method="get">
+                                            <button type="submit"   class="btn btn-secondary">Đổi khách sạn</button>
+                                        </form>
+                                    @endif
                             </div>
                         </div>
                         <div class="col-sm">
@@ -55,6 +64,7 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    <input type="hidden" name="hotel_id" value="{{$hotelId}}">
                                     <div class="search-box ms-2">
                                         <input type="text" class="form-control " placeholder="Tìm kiếm..."
                                                name="keyword" value="{{request()->input('keyword')}}">
@@ -105,17 +115,21 @@
                                             </div>
                                             <div class="d-flex gap-2 justify-content-end">
                                                 <div class="edit">
+                                                     @can('edit_rooms')
                                                     <button class="btn btn-sm btn-soft-warning edit-item-btn"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#showModal{{ $room->id }}"><i
                                                                 class="ri-edit-2-line"></i></button>
+                                                      @endcan
                                                 </div>
 
                                                 <div class="remove">
+                                                         @can('delete_rooms')
                                                     <button class="btn btn-sm btn-soft-danger remove-item-btn"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#deleteRecordModal{{ $room->id }}"><i
                                                                 class="ri-delete-bin-2-line"></i></button>
+                                                       @endcan
                                                 </div>
 
                                             </div>
@@ -462,13 +476,105 @@
                         </div>
                     </div>
 
-                </div><!-- end card -->
+                </div>
             </div>
-            <!-- end col -->
+
         </div>
-        <!-- end col -->
+
     </div>
-    <!-- end row -->
+    @if (!$hotelId && auth()->user()->type == \App\Models\User::ADMIN)
+        <div id="overlay" class="overlay"></div>
+        <div id="hotelModal" class="modal">
+            <div class="modal-content">
+                <h2>Vui lòng chọn khách sạn</h2>
+                <form action="{{ route('admin.rooms.index') }}" method="get">
+                    <div class="form-group">
+                        <label for="hotel_id">Chọn khách sạn</label>
+                        <select name="hotel_id" id="hotel_id" class="form-control" required>
+                            <option value="">Chọn khách sạn</option>
+                            @foreach ($hotels as $hotel)
+                                <option value="{{ $hotel->id }}">{{ $hotel->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-change btn-primary">Chọn</button>
+                </form>
+            </div>
+        </div>
+
+        <style>
+            /* Overlay mờ nền */
+            .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5); /* Lớp phủ mờ */
+                z-index: 9998; /* Đặt thấp hơn modal */
+                pointer-events: auto; /* Cho phép tương tác với overlay */
+            }
+
+
+            /* Modal CSS */
+            .modal {
+                display: flex; /* Sử dụng flexbox để căn giữa */
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999; /* Đặt layer của modal cao hơn overlay */
+            }
+
+            .modal-content {
+                background: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                text-align: center;
+                width: 400px;
+                max-width: 100%;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            }
+
+            .modal-content h2 {
+                font-size: 24px;
+                color: #4CAF50;
+                margin-bottom: 20px;
+            }
+
+            .modal-content .form-group {
+                margin-top: 10px;
+                margin-bottom: 20px;
+            }
+
+            .form-control {
+                width: 100%;
+                padding: 10px;
+                font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            .btn-change {
+                padding: 10px 20px;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                font-size: 16px;
+                cursor: pointer;
+            }
+
+            .btn-change:hover {
+                background-color: #45a049;
+            }
+        </style>
+
+    @endif
+
 @endsection
 
 @section('style-libs')

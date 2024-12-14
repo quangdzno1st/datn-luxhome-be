@@ -29,16 +29,17 @@ class AuthController extends Controller
     public function authenticate(Request $request)
     {
         $request->validate([
-            'phone' => ['required', 'regex:/^(0|\+84)[0-9]{9,10}$/'],
-            'password' => 'required|min:6'
+            'email' => ['required', 'email'], // Kiểm tra email hợp lệ
+            'password' => 'required|min:6'    // Mật khẩu yêu cầu tối thiểu 6 ký tự
         ], [
-            'phone.required' => 'Vui lòng nhập số điện thoại',
-            'phone.regex' => 'Số điện thoại không đúng định dạng',
-            'password.required' => 'Vui lòng nhập mật khẩu',
-            'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự'
+            'email.required' => 'Vui lòng nhập email', // Thông báo lỗi nếu email không được nhập
+            'email.email' => 'Địa chỉ email không hợp lệ', // Thông báo lỗi nếu email không đúng định dạng
+            'password.required' => 'Vui lòng nhập mật khẩu', // Thông báo lỗi nếu mật khẩu không được nhập
+            'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự' // Thông báo lỗi nếu mật khẩu ít hơn 6 ký tự
         ]);
 
-        if (auth()->attempt(['phone' => $request->phone, 'password' => $request->password])) {
+
+        if (auth()->attempt(['email' => $request->email, 'password' => $request->password])) {
             if (auth()->user()->type != User::CUSTOMER) {
                 $request->session()->regenerate();
                 return redirect()->intended(route('admin.statistical.index'));

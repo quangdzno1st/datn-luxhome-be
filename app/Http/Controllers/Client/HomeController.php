@@ -50,4 +50,10 @@ class HomeController extends Controller
         $totalOrderMap = $this->orderService->getTotalOrderMapByCityId($cityIds);
         return view("client/home", compact('cities', 'hotels', 'totalOrderMap', 'banners'));
     }
+
+    public function contact()
+    {
+        return view("client.contact");
+
+    }
 }

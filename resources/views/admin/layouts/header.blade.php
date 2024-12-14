@@ -79,7 +79,7 @@
                                 src="{{!empty(Auth::user()->avatar) ? \Storage::url(Auth::user()->avatar) : asset('theme/client/images/uploads/avatar.jpg')}}" alt="Header Avatar">
                             <span class="text-start ms-xl-2">
                                 <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{Auth::user()->name}}</span>
-                                <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">{{Auth::user()->type == 2 ? 'Chủ chuỗi khách sạn': 'Chủ khách sạn'}}</span>
+                                <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">{{Auth::user()->type == 2 ? 'Chủ chuỗi khách sạn': 'Quản lý khách sạn'}}</span>
                             </span>
                         </span>
                     </button>

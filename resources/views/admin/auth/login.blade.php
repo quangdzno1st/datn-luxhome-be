@@ -4,7 +4,7 @@
 <head>
 
     <meta charset="utf-8" />
-    <title>Đăng nhập Luxhotel</title>
+    <title>Đăng nhập LuxHome</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
@@ -74,10 +74,10 @@
                                     <form action="{{ route('admin.auth.login') }}"  method="post">
                                         @csrf
                                         <div class="mb-3">
-                                            <label for="phone" class="form-label">Số điện thoại</label>
-                                            <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" placeholder="Enter phone number" value="{{ old('phone') }}">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="Enter email number" value="{{ old('email') }}">
 
-                                            @error('phone')
+                                            @error('email')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>

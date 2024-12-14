@@ -109,7 +109,7 @@
                                             <input class="form-check-input" type="radio" name="type" id="hotelier"
                                                 value="{{ \App\Models\User::HOTELIER }}" {{ $user->type == \App\Models\User::HOTELIER ? 'checked' : '' }}>
                                             <label class="form-check-label" for="hotelier">
-                                                Chủ khách sạn
+                                                Quản lý khách sạn
                                             </label>
                                         </div>
 

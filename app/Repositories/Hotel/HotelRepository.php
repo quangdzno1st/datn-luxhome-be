@@ -19,6 +19,7 @@ class HotelRepository extends BaseRepository implements HotelInterface
             ->select('id', 'name', 'location', 'quantity_of_room', 'star', 'city_id',
                 'phone', 'email', 'status', 'quantity_floor', 'thumbnail', 'description', 'province',
                 'district', 'commune', 'latitude', 'longitude', 'view')
+            ->orderByDesc('view')
             ->latest('id')
             ->with(['city', 'images'])
             ->paginate(10);
