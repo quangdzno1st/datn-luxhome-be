@@ -62,7 +62,7 @@
                         <div class="row">
                             <div class="f-item one-half spinner" style="padding-right: 10px;">
                                 <label for="spinner2" style="font-weight: bold; margin-bottom: 5px; display: block;">Người lớn</label>
-                                <input type="number" id="spinner2" name="number_adult" value="{{ old('number_adult') ?? 2 }}"
+                                <input type="number" id="spinner2" min="1" name="number_adult" value="{{ old('number_adult') ?? 2 }}"
                                        style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
                                 @error('number_adult')
                                 <div class="text-danger" style="color: red;">{{ $message }}</div>
@@ -106,6 +106,13 @@
                         <div class="row">
 
                             @foreach($hotels as $key => $hotel)
+                             @php
+                                 $rates = $hotel->rates()->pluck('rate');
+                                 $total = $rates->sum();
+                                 $count = $rates->count();
+                                 $average = $count > 0 ? $total / $count : 0;
+                                 $rating = round($average * 2, 1);
+                                @endphp
                                 <!--deal-->
                                 <article class="one-fourth">
                                     <figure><a href="{{  route('home.hotel.detail', $hotel['id'])  }}" title="">
@@ -123,7 +130,7 @@
                                         </h3>
                                         <span class="address">{{$hotel['district']}} • {{$hotel['province']}}</span>
                                         <span class="rating">
-                                             {{ $key / 3 == 0 ? '10/10' : '9/10' }}
+                                             {{ $rating }}
                                         </span>
                                         <div class="description text-clamp-5" style="padding: 3px">
                                             <p class="">{!! $hotel['description'] !!} <a
@@ -147,8 +154,12 @@
                     <!--top destinations-->
                     <div class="destinations">
                         <div class="row">
-                            <!--column-->
-                            @foreach(array_chunk($cities->toArray(), 10)[0] as $city)
+                            @php
+                                $sortedCities = collect($cities)->sortByDesc(function ($city) use ($totalOrderMap) {
+                                    return $totalOrderMap[$city['id']]['orders_this_month'] ?? 0;
+                                });
+                            @endphp
+                            @foreach(array_chunk($sortedCities->toArray(), 10)[0] as $city)
                                 <article class="one-fourth">
                                     <figure><a href="" title=""><img
                                                     src="{{ Storage::url($city['thumbnail']) }}"

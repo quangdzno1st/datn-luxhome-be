@@ -119,7 +119,7 @@
                                                 <input class="form-check-input" type="radio" name="type" id="hotelier"
                                                        value="{{ \App\Models\User::HOTELIER }}">
                                                 <label class="form-check-label" for="hotelier">
-                                                    Chủ khách sạn
+                                                        Quản lý khách sạn
                                                 </label>
                                             </div>
                                             <div class="form-check form-radio-success mb-3">

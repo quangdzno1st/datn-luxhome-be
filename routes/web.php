@@ -16,6 +16,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
+Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('/search', [\App\Http\Controllers\Client\HotelController::class, 'search'])->name('home.search');
 Route::get('/hotel/{hotel_id}', [\App\Http\Controllers\Client\HotelController::class, 'show'])->name('hotel.show');
 

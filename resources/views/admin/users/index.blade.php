@@ -52,7 +52,7 @@
                                 <option value="">Tất cả loại</option>
                                 <option value="{{ \App\Models\User::CUSTOMER }}" {{ request()->input('type') == \App\Models\User::CUSTOMER ? 'selected' : '' }}>Người dùng</option>
                                 <option value="{{ \App\Models\User::ADMIN }}" {{ request()->input('type') == \App\Models\User::ADMIN ? 'selected' : '' }}>Chủ chuỗi khách sạn</option>
-                                <option value="{{ \App\Models\User::HOTELIER }}" {{ request()->input('type') == \App\Models\User::HOTELIER ? 'selected' : '' }}>Chủ khách sạn</option>
+                                <option value="{{ \App\Models\User::HOTELIER }}" {{ request()->input('type') == \App\Models\User::HOTELIER ? 'selected' : '' }}>Quản lý khách sạn</option>
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary ms-2">Tìm kiếm</button>
@@ -92,7 +92,7 @@
                                         @if ($user->type === \App\Models\User::CUSTOMER)
                                         <span class="badge bg-info">Người dùng</span>
                                         @elseif($user->type === \App\Models\User::HOTELIER)
-                                        <span class="badge bg-danger">Chủ khách sạn</span>
+                                        <span class="badge bg-danger">Quản lý khách sạn</span>
                                         @elseif($user->type === \App\Models\User::STAFF)
                                         <span class="badge bg-success">Nhân viên</span>
                                         @else

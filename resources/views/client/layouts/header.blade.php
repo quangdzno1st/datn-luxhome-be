@@ -137,8 +137,8 @@
                         </li>
                     </ul>
                 </li> --}}
-                <li><a href="contact.html" title="Contact">Liên Hệ</a></li>
-                <li><a href="blog.html" title="Blog">Tin Tức</a>
+{{--                <li><a href="contact.html" title="Contact">Liên Hệ</a></li>--}}
+{{--                <li><a href="blog.html" title="Blog">Tin Tức</a>--}}
                     {{-- <ul>
                         <li><a href="blog_single.html" title="Single Post">Single Post</a>
                     </ul> --}}
