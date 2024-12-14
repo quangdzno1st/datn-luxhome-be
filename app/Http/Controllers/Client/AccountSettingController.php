@@ -86,28 +86,27 @@ class AccountSettingController extends Controller
         $servicesQty = $roomsServiceOrder['serviceBookingsQty'] ?? null;
         $servicesInfo = $roomsServiceOrder['serviceMapById'] ?? null;
 
-        return view('client.bookingfinish', compact('order', 'status', "servicesQty", "servicesInfo" , "roomBooking"));
+        return view('client.bookingfinish', compact('order', 'status', "servicesQty", "servicesInfo", "roomBooking"));
     }
 
     public function confirmOrder(Request $request)
     {
-
         $hotelId = session('hotel_id') ?? null;
         if (!isset($hotelId)) {
             return redirect()->back()->with('error', 'Thông tin khách sạn không xác định');
         }
 
         $roomsServiceOrder = $this->orderService->getDataBookingForConfirm($request, $hotelId);
-        $vouchers = $this->voucherRepos->getAllForOrder(1200000, $hotelId);
+        $total_amount = $request?->total_amount;
 
-        $total_mount = $request?->total_amount;
+
+        $user = Auth::user();
+        $vouchers = $user ? $this->voucherRepos->getAllForOrder($total_amount, $hotelId, $user['id']) : [];
         $roomBooking = session('booking_data') ?? null;
-
         $servicesQty = $roomsServiceOrder['serviceBookingsQty'] ?? null;
-
         $servicesInfo = $roomsServiceOrder['serviceMapById'] ?? null;
 
-        return view('client.booking', compact('vouchers', "total_mount", "servicesQty", "servicesInfo", "roomBooking"));
+        return view('client.booking', compact('vouchers', "total_amount", "servicesQty", "servicesInfo", "roomBooking"));
     }
 
     public function store(OrderRequest $request)

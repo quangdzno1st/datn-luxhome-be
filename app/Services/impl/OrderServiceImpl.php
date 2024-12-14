@@ -25,6 +25,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
 
 class OrderServiceImpl implements OrderService
@@ -92,14 +93,26 @@ class OrderServiceImpl implements OrderService
         $serviceMapById = $this->getServiceMapById($order['org_id']);
         $roomMapById = $this->getRoomMapById($order['org_id'], $orderItemReqs, $order);
 
+        $start_date = $order['start_date'];
+        $end_date = $order['end_date'];
+
         foreach ($orderItemReqs as $item) {
-            $roomEntity = $roomMapById[$item['room_id']] ?? null;
+            $roomId = $item['room_id'];
+
+            $this->validateCurrentRoomIsBooking($roomId, $start_date, $end_date);
+
+            $roomEntity = $roomMapById[$roomId] ?? null;
             $this->createOrderItem($orderItems, $roomEntity, $order['id']);
 
             $serviceForRoom = $serviceReqs[$item['room_id']] ?? null;
             if (!empty($serviceForRoom)) {
-                $serviceAmount = $this->createBookingServices($bookingServices, $serviceForRoom,
-                    $serviceMapById, $order['org_id'], $item['room_id']);
+                $serviceAmount = $this->createBookingServices(
+                    $bookingServices,
+                    $serviceForRoom,
+                    $serviceMapById,
+                    $order['org_id'],
+                    $item['room_id']
+                );
 
                 $totalServiceAmount += $serviceAmount;
             }
@@ -206,7 +219,38 @@ class OrderServiceImpl implements OrderService
     private function validateBeforeSave(array $data): void
     {
         $this->validateHotel($data["hotel_id"]);
-        $this->validateVoucher($data["voucher_id"], $data["hotel_id"]);
+        $this->validateVoucher($data["voucher_id"], $data["hotel_id"], $data['total_amount']);
+    }
+
+    /**
+     * @throws RespException
+     */
+    private function validateCurrentRoomIsBooking($roomId, $startDate, $endDate)
+    {
+        $startTime = Carbon::parse($startDate);
+        $endTime = Carbon::parse($endDate);
+
+        $key = "room_{$roomId}_booked_times";
+
+        $existingBookings = Redis::lrange($key, 0, -1);
+
+        foreach ($existingBookings as $booking) {
+            $bookingData = json_decode($booking, true);
+            $existingStartTime = Carbon::parse($bookingData['start_time']);
+            $existingEndTime = Carbon::parse($bookingData['end_time']);
+
+            if ($startTime < $existingEndTime && $endTime > $existingStartTime) {
+                throw new RespException(trans('Phòng không còn trống trong khách sạn.'));
+            }
+        }
+
+        $bookingData = json_encode([
+            'start_time' => $startTime->toDateTimeString(),
+            'end_time' => $endTime->toDateTimeString()
+        ]);
+
+        Redis::rpush($key, $bookingData);
+        Redis::expire($key, 300);
     }
 
     /**
@@ -223,14 +267,19 @@ class OrderServiceImpl implements OrderService
     /**
      * @throws RespException
      */
-    private function validateVoucher($voucherId, $orgId): void
+    private function validateVoucher($voucherId, $orgId, $orderTotalAmount): void
     {
         if (is_null($voucherId)) {
             return;
         }
 
-        $isValid = $this->voucherRepos->existsByIdAndOrgId($voucherId, $orgId);
-        if (!$isValid) {
+        $user = Auth::user();
+        if (is_null($user)) {
+            throw new RespException("Người dùng chưa đăng nhập không thể dùng phiếu giảm giá.");
+        }
+
+        $voucher = $this->voucherRepos->getInvalidVoucherByUserIdAndVoucherId($voucherId, $orgId, $orderTotalAmount, $user['id']);
+        if (empty($voucher) || empty($voucher[0])) {
             throw new RespException(__('messages.voucher_not_found'));
         }
     }
@@ -284,11 +333,32 @@ class OrderServiceImpl implements OrderService
      */
     public function handlePaymentOrder($order): string
     {
-        $data = $this->generateUrlRedirect($order['total_amount']);
+        $data = $this->generateUrlRedirect($this->getTotalAmountDiscount($order['total_amount'], $order['voucher_id'], $order['org_id']));
         $order->transaction_id = $data['vnp_TxnRef'];
         $order->save();
 
         return $data['vnp_Url'];
+    }
+
+    public function getTotalAmountDiscount($totalAmount, $voucherId, $orgId)
+    {
+
+        $user = Auth::user();
+        if (is_null($voucherId) || is_null($user)) {
+            return $totalAmount;
+        }
+
+        $discountAmount = 0;
+        $voucher = $this->voucherRepos->getInvalidVoucherByUserIdAndVoucherId($voucherId, $orgId, $totalAmount, $user['id']);
+        
+        if ($voucher[0]['discount_type'] == 1) {
+            $discountAmount = $totalAmount * ($voucher[0]['discount_value'] / 100);
+            $discountAmount = (min($discountAmount, $voucher[0]['max_price']));
+        } else {
+            $discountAmount = $voucher[0]['discount_value'];
+        }
+
+        return $totalAmount - $discountAmount;
     }
 
     public function generateUrlRedirect($totalAmount): array
@@ -401,8 +471,11 @@ class OrderServiceImpl implements OrderService
     private function handleWhenPaymentSuccess($order): void
     {
         $this->bookingServiceRepos->updateStatusByOrderId(StatusOrderEnum::DA_XAC_NHAN->value, $order['id']);
-        $this->orderRepos->updateStatusById(StatusOrderEnum::DA_XAC_NHAN->value,
-            StatusPaymentOrderEnum::DA_THANH_TOAN, $order['id']);
+        $this->orderRepos->updateStatusById(
+            StatusOrderEnum::DA_XAC_NHAN->value,
+            StatusPaymentOrderEnum::DA_THANH_TOAN,
+            $order['id']
+        );
         //        //Send mail hóa đơn
         OrderSuccess::dispatch($order);
     }
@@ -583,6 +656,13 @@ class OrderServiceImpl implements OrderService
         return $dataResp;
     }
 
+    private function clearSessionByKey($key)
+    {
+        if (!empty(session($key))) {
+            session()->forget($key);
+        }
+    }
+
     private function buildRoomBookingResp(&$dataResp, $roomsBooking, $catalogueInformation)
     {
         foreach ($roomsBooking as $item) {
@@ -606,6 +686,7 @@ class OrderServiceImpl implements OrderService
      */
     public function getDataBookingForConfirm(Request $request, $hotelId)
     {
+        $this->clearSessionByKey('service_booking');
         $data = $this->getBookingServiceForRooms($request);
         if (empty($data)) {
             return [];
@@ -667,8 +748,11 @@ class OrderServiceImpl implements OrderService
     {
         $order = $this->getNonNullById($orderId);
         $this->validateBeforeRequirementCancel($order);
-        $this->orderRepos->updateWhenRequirementCancel(StatusOrderEnum::YEU_CAU_HUY->value,
-            StatusPaymentOrderEnum::DA_THANH_TOAN, $orderId);
+        $this->orderRepos->updateWhenRequirementCancel(
+            StatusOrderEnum::YEU_CAU_HUY->value,
+            StatusPaymentOrderEnum::DA_THANH_TOAN,
+            $orderId
+        );
     }
 
 
