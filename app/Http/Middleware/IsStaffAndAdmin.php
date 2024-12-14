@@ -16,12 +16,12 @@ class IsStaffAndAdmin
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
+
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->type > User::CUSTOMER && Auth::user()->type != User::ADMIN) {
-            return $next($request);
+        if ($request->route('hotelId') != \auth()->user()->org_id && \auth()->user()->type != User::ADMIN) {
+            return back()->with('error', 'Mày cút ngay');
         }
-
-        return redirect()->route('admin.error.404');
+        return $next($request);
     }
 }

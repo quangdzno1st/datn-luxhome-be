@@ -13,11 +13,14 @@ class CheckRole
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
+
+
     public function handle(Request $request, Closure $next,...$type): Response
     {
         if (Auth::check()) {
+
             if (Auth::user()->type != User::CUSTOMER) {
                 return $next($request);
             }
