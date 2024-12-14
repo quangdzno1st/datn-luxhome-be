@@ -194,19 +194,19 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/create', [\App\Http\Controllers\Admin\HotelController::class, 'create'])->name('create')->middleware('can:create_hotel');
         Route::post('/', [\App\Http\Controllers\Admin\HotelController::class, 'store'])->name('store')->middleware('can:create_hotel');
         Route::get('/trash', [\App\Http\Controllers\Admin\HotelController::class, 'trash'])->name('trash');
-        Route::get('/show/{id}', [\App\Http\Controllers\Admin\HotelController::class, 'show'])->name('show');
-        Route::get('/edit/{id}', [\App\Http\Controllers\Admin\HotelController::class, 'edit'])->name('edit')->middleware('can:edit_hotel');
-        Route::put('/{id}', [\App\Http\Controllers\Admin\HotelController::class, 'update'])->name('update')->middleware('can:edit_hotel');
-        Route::delete('/{id}', [\App\Http\Controllers\Admin\HotelController::class, 'destroy'])->name('destroy')->middleware('can:delete_hotel');
-        Route::get('/restore/{id}', [\App\Http\Controllers\Admin\HotelController::class, 'restore'])->name('restore');
-        Route::delete('/force-delete/{id}', [\App\Http\Controllers\Admin\HotelController::class, 'forceDelete'])->name('forceDelete');
+        Route::get('/show/{hotelId}', [\App\Http\Controllers\Admin\HotelController::class, 'show'])->name('show')->middleware();
+        Route::get('/edit/{hotelId}', [\App\Http\Controllers\Admin\HotelController::class, 'edit'])->name('edit')->middleware(['can:edit_hotel','check.hotel']);
+        Route::put('/{hotelId}', [\App\Http\Controllers\Admin\HotelController::class, 'update'])->name('update')->middleware(['can:edit_hotel','check.hotel']);
+        Route::delete('/{hotelId}', [\App\Http\Controllers\Admin\HotelController::class, 'destroy'])->name('destroy')->middleware( ['can:delete_hotel','check.hotel']);
+        Route::get('/restore/{hotelId}', [\App\Http\Controllers\Admin\HotelController::class, 'restore'])->name('restore')->middleware('check.hotel');
+        Route::delete('/force-delete/{hotelId}', [\App\Http\Controllers\Admin\HotelController::class, 'forceDelete'])->name('forceDelete')->middleware('check.hotel');
     });
 
     Route::prefix('rates')->name('rates.')->controller(RateController::class)->group(function(){
         //route của superadmin
         Route::get('/hotels', 'listRatesAllHotels')->name('hotels');
-        Route::get('/hotel/{hotelId}', 'listRatesOneHotel')->name('hotel');
-        Route::get('/trash/hotel/{hotelId}', 'listRatesOneHotelTrash')->name('hotel.trash');
+        Route::get('/hotel/{hotelId}', 'listRatesOneHotel')->name('hotel')->middleware('check.hotel');
+        Route::get('/trash/hotel/{hotelId}', 'listRatesOneHotelTrash')->middleware('check.hotel');
 
         //route của hotelier
         Route::get('/hotelier', 'getRatesByHotelIdOfHotelier')->name('hotel.hotelier');
@@ -259,7 +259,7 @@ Route::prefix('orders')->group(function () {
     Route::post('/accepted_cancel/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'accepted_cancel'])->name('orders.accepted_cancel')->middleware('can:edit_orders');
     Route::post('/refunded-money/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'refundMoney'])->name('orders.refunded-money')->middleware('can:edit_orders');
 // search
-    Route::get('/search_order', [\App\Http\Controllers\Admin\OrderController::class, 'search'])->name('orders.search')->middleware('can:edit_orders');
+    Route::get('/search_order', [\App\Http\Controllers\Admin\OrderController::class, 'search'])->name('orders.search')->middleware('can:view_orders');
 });
 
 Route::get('/404', function () {

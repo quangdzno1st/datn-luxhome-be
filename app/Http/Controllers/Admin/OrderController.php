@@ -36,7 +36,7 @@ class OrderController extends Controller
         if (Auth::user()->type==2){
             $orders = Order::query()
                 ->orderByDesc('created_at')
-                ->paginate($request->getPerPage(), ['*'], 'order', $request->order);
+                ->paginate(2, ['*'], 'order', $request->order);
             $hotels=Hotel::query()->select('id','name')->get();
         }else{
             $orders = Order::query()
@@ -219,14 +219,8 @@ class OrderController extends Controller
 
     public function search(\Illuminate\Http\Request $request)
     {
-        $query = Order::query();
+        $query = Order::query()->where('org_id',  auth()->user()->type);
 
-//        $hotels=null;
-//
-//        if ($request->filled('hotel')) {
-//            $query->where('org_id', '=', $request->hotel);
-//            $hotels=Hotel::query()->select('id','name')->get();
-//        }
         // Lọc theo mã đặt phòng
         if ($request->filled('code')) {
             $query->where('code', 'LIKE', '%' . $request->code . '%');
