@@ -6,6 +6,9 @@ use App\Exceptions\RespException;
 use App\Http\Controllers\Api\Controller;
 use App\Http\Requests\Api\Voucher\CreateVoucherRequest;
 use App\Http\Requests\Api\Voucher\UpdateVoucherRequest;
+use App\Models\Hotel;
+use App\Models\Order;
+use App\Models\User;
 use App\Models\Voucher;
 use App\Models\Wallet;
 use App\Repositories\User\UserRepository;
@@ -41,9 +44,11 @@ class VoucherController extends Controller
     public function index(Request $request)
     {
         $vouchers = $this->voucher->listVoucher();
-        if ($_GET) return $this->searchVoucher($request->all());
+        $hotels=Hotel::query()->select('id','name')->get();
+        if ($_GET) $vouchers= $this->searchVoucher($request->all());
 
-        return view(self::PATH_DIRECT . __FUNCTION__, compact('vouchers'));
+//        dd($vouchers);
+        return view(self::PATH_DIRECT . __FUNCTION__, compact('vouchers','hotels'));
     }
 
     public function create()
@@ -66,13 +71,11 @@ class VoucherController extends Controller
 
     public function edit($id)
     {
-        try {
-            $voucher = $this->getNonNullById($id);
-
-            // dd($voucher->toArray());
+        $voucher = $this->getNonNullById($id);
+        if (Auth::user()->type==User::HOTELIER&&$voucher->hotel_id==Auth::user()->org_id||Auth::user()->type==User::ADMIN||$voucher->hotel_id==null){
             return view(self::PATH_DIRECT . __FUNCTION__, compact('voucher'));
-        } catch (\Exception $e) {
-            return Redirect::back()->with('error', 'Errors: ' . $e->getMessage());
+        }else{
+            return redirect()->back()->with('error', 'Không được vào voucher này!');
         }
     }
 
@@ -259,14 +262,34 @@ class VoucherController extends Controller
 
     public function searchVoucher($data)
     {
-        $vouchers = Voucher::query();
+        if (Auth::user()->type == User::ADMIN) {
+            $vouchers = Voucher::query()
+                ->orderByDesc('created_at');
+        } else {
+            $vouchers = Voucher::query()
+                ->orderByDesc('created_at')
+                ->where(function ($query) {
+                    $query->where('hotel_id', Auth::user()->org_id)
+                        ->orWhereNull('hotel_id');
+                });
+        }
 
-        if ($data) {
+        // Điều kiện lọc theo hotel
+        if (isset($data['hotel']) && $data['hotel'] != '') {
+            $vouchers = $vouchers->where(function ($query) use ($data) {
+                $query->where('hotel_id', $data['hotel']);
+            });
+        }
+
+        // Điều kiện lọc theo code
+        if (isset($data['code']) && $data['code'] != '') {
             $vouchers = $vouchers->where('code', 'LIKE', "%{$data['code']}%");
         }
-        $vouchers = $vouchers->paginate(10);
-        return view('admin.voucher.index', compact('vouchers'));
+
+        // Paginate sau khi truy vấn được xây dựng đầy đủ
+        return $vouchers->paginate(10);
     }
+
 
     private function sendMailToUser($userVoucherSendMailMap) {}
 }

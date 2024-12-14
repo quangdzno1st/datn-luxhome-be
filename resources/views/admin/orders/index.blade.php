@@ -1,4 +1,7 @@
 @extends('admin.layouts.master')
+@section('title')
+    Đơn đặt
+@endsection
 @section('styles')
     <style>
     .btn-smaller {
@@ -48,12 +51,24 @@
 @endsection
 @section('content')
     <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">Danh sách đơn đặt</h4>
+
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Đơn đặt</a></li>
+                        <li class="breadcrumb-item active">Danh sách</li>
+                    </ol>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title mb-0">Danh sách đơn đặt</h4>
-                </div><!-- end card header -->
-
                 <div class="card-body">
                     <div class="listjs-table" id="customerList">
                         <div class="card-body">
@@ -63,32 +78,32 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             @endif
-                                <form action="" method="GET" class="d-flex align-items-center justify-content-end flex-wrap gap-2">
-                                    @if(\Illuminate\Support\Facades\Auth::user()->type==2)
-                                        <div class="form-group mb-0">
+                                <form action="" method="GET" class="d-flex align-items-center justify-content-end gap-2">
+                                    @if(\Illuminate\Support\Facades\Auth::user()->type==\App\Models\User::ADMIN)
+                                        <div class="mb-0">
                                             <div class="">
                                                 <label for="start_date">Khách sạn:</label>
                                             </div>
-                                            <select name="hotel" class="form-control">
-                                                <option value="">Khách sạn</option>
+                                            <select name="hotel" class="form-select">
+                                                <option value="">Chọn khách sạn</option>
                                                 @foreach($hotels as $hotel)
                                                     <option value="{{$hotel->id}}" {{ request('hotel') == $hotel->id ? 'selected' : '' }}>{{$hotel->name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     @endif
-                                    <div class="form-group mb-0">
+                                    <div class=" mb-0">
                                         <div class="">
                                             <label for="start_date">Mã phòng:</label>
                                         </div>
                                         <input type="text" name="code" placeholder="Mã đặt phòng" class="form-control" value="{{ request('code') }}">
                                     </div>
-                                    <div class="form-group mb-0">
+                                    <div class=" mb-0">
                                         <div class="">
                                             <label for="start_date">Trạng thái:</label>
                                         </div>
-                                        <select name="status" class="form-control">
-                                            <option value="">Trạng thái</option>
+                                        <select name="status" class="form-select">
+                                            <option value="">Chọn trạng thái</option>
                                             <option value="1" {{ request('status') == 'pending' ? 'selected' : '' }}>Chờ xử lý</option>
                                             <option value="2" {{ request('status') == 'confirmed' ? 'selected' : '' }}>Đã xác nhận</option>
                                             <option value="3" {{ request('status') == 'completed' ? 'selected' : '' }}>Đã hoàn thành</option>
@@ -96,27 +111,27 @@
                                             <option value="5" {{ request('status') == 'require_cancelled' ? 'selected' : '' }}>Yêu cầu hủy</option>
                                         </select>
                                     </div>
-                                    <div class="form-group mb-0">
+                                    <div class=" mb-0">
                                         <div class="">
                                             <label for="start_date">Tổng tiền tối thiểu:</label>
                                         </div>
                                         <input type="number" name="total_amount" placeholder="1000000" class="form-control" value="{{ request('total_amount') }}">
                                     </div>
-                                    <div class="form-group mb-0">
+                                    <div class=" mb-0">
                                         <div class="">
                                             <label for="start_date">Thời gian bắt đầu:</label>
                                         </div>
                                         <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
                                     </div>
-                                    <div class="form-group mb-0">
+                                    <div class=" mb-0">
                                         <div class="">
                                             <label for="start_date">Thời gian kết thúc:</label>
                                         </div>
                                         <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
                                     </div>
-                                    <div class="form-group mb-0">
+                                    <div class=" mb-0">
                                         <div class="">
-                                            <label for="start_date">Hành động:</label>
+                                            <label for="start_date"><span class="text-white">.</span></label>
                                         </div>
                                         <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                                     </div>
@@ -198,7 +213,7 @@
                                             <div class="btn-group">
                                                 @if(\App\Constant\Enum\StatusPaymentOrderEnum::isChuaHoanTien($order['status_payment'])
                                                        && \App\Constant\Enum\StatusOrderEnum::isDaHuy($order['status']))
-                                                        <a class="btn btn-sm btn-danger edit-item-btn badge"
+                                                        <a class="btn btn-sm btn-danger edit-item-btn"
                                                            data-bs-toggle="modal" href="#ht{{ $order['id'] }}">
                                                             {{ \App\Constant\Enum\StatusPaymentOrderEnum::parse($order['status_payment'])->getName() }}
                                                         </a>
@@ -228,6 +243,14 @@
                                                             <i class="ri-eye-fill align-bottom me-2 text-muted"></i> Chi
                                                             tiết</a>
                                                     </li>
+                                                    @if($order['status']==\App\Constant\Enum\StatusOrderEnum::DA_XAC_NHAN->value)
+                                                    <li>
+                                                        <a href="#{{ $order['id'] }}" class="dropdown-item" data-bs-toggle="modal" >
+                                                            <i class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                            Hủy đơn
+                                                        </a>
+                                                    </li>
+                                                    @endif
                                                 </ul>
                                             </div>
                                         </td>
@@ -244,6 +267,7 @@
                                                             order {{ $order['code'] }} này
                                                             không?</p>
                                                         <div class="hstack gap-2 justify-content-center remove">
+                                                            @if($order['status']==\App\Constant\Enum\StatusOrderEnum::YEU_CAU_HUY->value)
                                                             <form method="POST"
                                                                   action="{{route('admin.orders.not_accepted_cancel',$order['id'])}}">
                                                                 @csrf
@@ -254,6 +278,14 @@
                                                                     <i class="ri-close-line me-1 align-middle"></i>Hủy
                                                                 </button>
                                                             </form>
+                                                            @else
+                                                                <button class="btn btn-link link-success fw-medium text-decoration-none"
+                                                                        type="submit"
+                                                                        id="deleteRecord-close"
+                                                                        data-bs-dismiss="modal">
+                                                                    <i class="ri-close-line me-1 align-middle"></i>Đóng
+                                                                </button>
+                                                            @endif
                                                             <form method="POST"
                                                                   action="{{route('admin.orders.accepted_cancel',$order['id'])}}">
                                                                 @csrf

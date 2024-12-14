@@ -25,7 +25,7 @@ class OrderDetailController extends Controller
 
     public function showOrderDetail(Order $order)
     {
-        if (Auth::user()->type==3&&$order->org_id==Auth::user()->org_id||Auth::user()->type==2){
+        if (Auth::user()->type==User::HOTELIER&&$order->org_id==Auth::user()->org_id||Auth::user()->type==User::ADMIN){
         $sumService=0;
         $sumOrderItem=0;
 
@@ -43,7 +43,7 @@ class OrderDetailController extends Controller
         $orderItemInfo=$this->orderItemInfo($order->id);
         $servicesInfo=$this->servicesInfo($order->id);
         foreach ($orderItemInfo as $item){
-            $sumOrderItem+=$item->orderItemQuantity*$item->cataloguePrice;
+            $sumOrderItem+=$item->totalQuantity*$item->cataloguePrice;
         }
         foreach ($servicesInfo as $item){
             $sumService+=$item->servicePrice;
@@ -51,30 +51,27 @@ class OrderDetailController extends Controller
 
         if ($order->voucher_id!=null){
             $voucher=$this->VoucherOrder($order->voucher_id);
-//            dd($voucher);
             foreach ($voucher as $item){
                 if ($item['discount_type']){
-//                    phần trăm
                     if ((($sumService+$sumOrderItem)*$item['discount_value'])/100>$item['max_price']){
                         $order['total_amount']=($sumService+$sumOrderItem)-$item['max_price'];
                     }else{
                         $order['total_amount']=($sumService+$sumOrderItem)-(($sumService+$sumOrderItem)*$item['discount_value'])/100;
                     }
-//                dd(1);
                 }else{
-//                    tiền
                     $order['total_amount']=($sumService+$sumOrderItem)-$item['discount_value'];
                 }
                 $order['voucher_id']=$item->code;
             }
         }else{
             $voucher=null;
-        $order['total_amount']=($sumService+$sumOrderItem);
+            $order['total_amount']=($sumService+$sumOrderItem);
+//        dd($order['total_amount']);
         }
-//        Order::query()->where('id',$order->id)->update(['total_amount'=>$order['total_amount']]);
+        Order::query()->where('id',$order->id)->update(['total_amount'=>$order['total_amount']]);
         $payable=$this->checkPayableOrTotal($order->id);
         $roomCode=$this->roomCode($order->id);
-        $services=Service::all();
+        $services=$this->availableServices($order->id);
         return view(self::PATH_VIEW, compact('order',
             'orderItemInfo','servicesInfo','sumService',
             'sumOrderItem','payable','voucher','services',
@@ -153,13 +150,14 @@ class OrderDetailController extends Controller
         $order = Order::query()->where('id', $idOrder)->first();
         $isCheckout=$this->isCheckout($order);
         if ($isCheckout['is_valid_checkout']){
-            $this->updateStatusGeneral('booking_services',$idOrder);
-            $this->updateStatusGeneral('orders',$idOrder);
-            $user=User::query()->update([
-                'rank'=>1,
-                'total_amount_ordered'=>$order->total_amount,
-            ]);
+            User::where('id', $order->user_id)
+                ->update([
+                    'rank' => 1,
+                    'total_amount_ordered' => DB::raw('total_amount_ordered + ' . $order->total_amount),
+                ]);
             $incidental_costs=$this->calculateLateCheckoutFee($order);
+            $this->updateStatusGeneral('booking_services',$idOrder);
+            $this->updateStatusGeneral('orders',$idOrder,$incidental_costs,$order->total_amount);
             $order->update(['incidental_costs'=>$incidental_costs]);
             return redirect()->back()->with(
                 ['success'=>'Checkout thành công',
@@ -171,7 +169,7 @@ class OrderDetailController extends Controller
         }
     }
 
-    public function updateStatusGeneral($table,$idOrder){
+    public function updateStatusGeneral($table,$idOrder,$incidental_costs=null,$total_amount=null){
         if($table == 'booking_services'){
             DB::table($table)->where('order_id', $idOrder)
                 ->update(['status' => StatusOrderEnum::HOAN_THANH->value]);
@@ -179,6 +177,7 @@ class OrderDetailController extends Controller
             DB::table($table)->where('id', $idOrder)
                 ->update([
                     'status' => StatusOrderEnum::HOAN_THANH->value,
+                    'net_amount'=>$incidental_costs+$total_amount,
                     'check_out' => Carbon::now()
                 ]);
         }
@@ -188,17 +187,38 @@ class OrderDetailController extends Controller
     {
         try {
             $result = Order::where('orders.id', $orderId)
-                    ->join('booking_services', 'booking_services.order_id', '=', 'orders.id')
-                    ->join('services', 'services.id', '=', 'booking_services.service_id')
-                    ->select(
+                ->join('booking_services', 'booking_services.order_id', '=', 'orders.id')
+                ->join('services', 'services.id', '=', 'booking_services.service_id')
+                ->select(
                     'services.name as serviceName',
                     'booking_services.quantity as serviceQuantity',
-                    'booking_services.price as servicePrice',
+                    'services.price as servicePrice',
                     'booking_services.status as status',
                 )
                 ->get();
             return $result;
         }catch (\Exception $exception){
+            return $exception->getMessage();
+        }
+    }
+
+    public function availableServices($orderId)
+    {
+        try {
+            $result = Service::leftJoin('booking_services', function ($join) use ($orderId) {
+                $join->on('services.id', '=', 'booking_services.service_id')
+                    ->where('booking_services.order_id', '=', $orderId);
+            })
+                ->select(
+                    'services.id as id',
+                    'services.name as name',
+                    'services.price as price',
+                    'booking_services.status as status'
+                )
+                ->whereNull('booking_services.service_id')
+                ->get();
+            return $result;
+        } catch (\Exception $exception) {
             return $exception->getMessage();
         }
     }
@@ -210,23 +230,30 @@ class OrderDetailController extends Controller
                 ->join('order_items', 'order_items.order_id', '=', 'orders.id')
                 ->join('rooms', 'order_items.room_id', '=', 'rooms.id')
                 ->join('catalogue_rooms', 'catalogue_rooms.id', '=', 'rooms.catalogue_room_id')
-                ->select('catalogue_rooms.name as catalogueName', 'catalogue_rooms.price as cataloguePrice'
-                    , 'rooms.code as roomCode', 'order_items.quantity as orderItemQuantity')
+                ->select(
+                    'catalogue_rooms.name as catalogueName',
+                    'catalogue_rooms.price as cataloguePrice',
+                    DB::raw('GROUP_CONCAT(rooms.code SEPARATOR ", ") as roomCodes'),
+                    DB::raw('SUM(order_items.quantity) as totalQuantity')
+                )
+                ->groupBy('catalogue_rooms.name', 'catalogue_rooms.price')
                 ->get();
+
             return $result;
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return $exception->getMessage();
         }
     }
+
     public function checkinOrder($orderId)
     {
         $order=Order::query()->where('id', $orderId)->first();
         $isCheckin=$this->isCheckin($order);
         if ($isCheckin['is_valid_checkin']){
             Order::query()->where('id', $orderId)->update(['check_in' => Carbon::now()]);
-            return redirect()->back()->with('success','Checkin thành công');
+            return redirect()->back()->with('success',$isCheckin['message']);
         }else{
-            return redirect()->back()->with('error','Checkin thất bại(không trong thời gian 14:00 đến 00:00)');
+            return redirect()->back()->with('error',$isCheckin['message']);
         }
     }
     public function VoucherOrder($voucherId){
@@ -261,26 +288,41 @@ class OrderDetailController extends Controller
     public function isCheckin($order)
     {
         $currentTime = Carbon::now(); // Thời gian hiện tại
+        $startDate = Carbon::parse($order->start_date); // Lấy ngày bắt đầu từ order
 
         // Lấy thời gian check-in dự kiến
         $checkinStartTime = Carbon::createFromTimeString(CHECKIN_START); // 14:00
         $checkinEndTime = Carbon::createFromTimeString(CHECKIN_END); // 00:00
 
-        // Nếu thời gian kết thúc nhỏ hơn thời gian bắt đầu, nghĩa là khoảng thời gian qua ngày
-        if ($checkinEndTime->lt($checkinStartTime)) {
-            $isValidCheckinTime = $currentTime->between($checkinStartTime, Carbon::createFromTime(23, 59, 59)) ||
-                $currentTime->between(Carbon::createFromTime(0, 0, 0), $checkinEndTime);
-        } else {
-            // Xử lý bình thường nếu không qua ngày
-            $isValidCheckinTime = $currentTime->between($checkinStartTime, $checkinEndTime);
+        // Kiểm tra ngày hiện tại có đến ngày bắt đầu chưa
+        if ($currentTime->lt($startDate)) {
+            return [
+                'order_id' => $order->id,
+                'is_valid_checkin' => false,
+                'message' => 'Chưa đến ngày check-in',
+            ];
         }
 
-        // Lưu kết quả kiểm tra cho order
+        // Tính toán thời gian check-in trong ngày
+        $checkinStartDateTime = $startDate->copy()->setTimeFrom($checkinStartTime); // Ngày bắt đầu + giờ check-in
+        $checkinEndDateTime = $startDate->copy()->setTimeFrom($checkinEndTime); // Ngày bắt đầu + giờ kết thúc
+
+        // Nếu thời gian kết thúc nhỏ hơn thời gian bắt đầu, xử lý qua ngày
+        if ($checkinEndTime->lt($checkinStartTime)) {
+            $isValidCheckinTime = $currentTime->between($checkinStartDateTime, $startDate->copy()->endOfDay()) ||
+                $currentTime->between($startDate->copy()->addDay()->startOfDay(), $checkinEndDateTime);
+        } else {
+            // Xử lý bình thường nếu không qua ngày
+            $isValidCheckinTime = $currentTime->between($checkinStartDateTime, $checkinEndDateTime);
+        }
+
         return [
             'order_id' => $order->id,
             'is_valid_checkin' => $isValidCheckinTime,
+            'message' => $isValidCheckinTime ? 'Thời gian hợp lệ để check-in' : 'Checkin thất bại(không trong thời gian 14:00 đến 00:00)',
         ];
     }
+
 
     public function isCheckout($order)
     {
