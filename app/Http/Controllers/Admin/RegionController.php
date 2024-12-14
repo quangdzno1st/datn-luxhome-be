@@ -99,7 +99,7 @@ class RegionController extends Controller
         try {
             $region = $this->regionService->restoreReigon($id);
 
-            return redirect()->route('regions.index')->with('success', 'Khôi phục miền thành công');
+            return redirect()->route('admin.regions.index')->with('success', 'Khôi phục miền thành công');
 
         } catch (\Exception $e) {
             // dd($e->getMessage());

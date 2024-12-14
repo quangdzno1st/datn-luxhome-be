@@ -135,8 +135,8 @@
 
                 <!-- end card -->
                 <div class="d-flex justify-content-between mb-3">
-                    <a class="btn btn-outline-danger w-sm" data-bs-toggle="modal"
-                    data-bs-target="#deleteRecordModal1">Xóa loại phòng</a>
+                    {{-- <a class="btn btn-outline-danger w-sm" data-bs-toggle="modal"
+                    data-bs-target="#deleteRecordModal1">Xóa loại phòng</a> --}}
                     <button type="submit" class="btn btn-warning w-sm">Cập nhật</button>
                 </div>
             </div>

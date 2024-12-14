@@ -106,13 +106,13 @@
                                                         </a>
                                                     </div>
 
-                                                    <div class="remove">
+                                                    {{-- <div class="remove">
                                                         <button class="btn btn-sm btn-soft-danger remove-item-btn"
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#deleteRecordModal{{ $hotel->id }}">
                                                             <i class="ri-delete-bin-2-fill"></i>
                                                         </button>
-                                                    </div>
+                                                    </div> --}}
 
                                                 </div>
                                             </td>

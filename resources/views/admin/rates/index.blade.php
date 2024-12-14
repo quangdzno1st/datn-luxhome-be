@@ -1,4 +1,8 @@
 @extends('admin.layouts.master')
+@section('title')
+    Danh sách đánh giá từng khách sạn
+@endsection
+
 @section('content')
 <div class="row">
     <div class="col-12">

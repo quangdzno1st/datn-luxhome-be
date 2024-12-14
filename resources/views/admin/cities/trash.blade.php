@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-    Danh sách miền
+    Danh sách thành phố ẩn
 @endsection
 
 @section('content')
@@ -42,13 +42,13 @@
                                 </div>
                                 <div class="col-sm">
                                     <div class="d-flex justify-content-sm-end">
-                                        <div class="search-box ms-2">
+                                        {{-- <div class="search-box ms-2">
                                             <input type="text" class="form-control search" placeholder="Search...">
                                             <i class="ri-search-line search-icon"></i>
                                         </div>
                                         <div class="ms-2">
                                             <button class="btn btn-primary" type="submit">Tìm</button>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>

@@ -1,5 +1,9 @@
 @extends('client.layouts.master')
 
+@section('title')
+    Khách sạn
+@endsection
+
 @section('content')
     <!--main-->
     <style>

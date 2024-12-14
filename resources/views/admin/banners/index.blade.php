@@ -176,7 +176,7 @@
                         </div>
 
                     </div>
-                    {{ $banners->links() }}
+                    {{ $banners->appends(request()->query())->links() }}
                 </div><!-- end card -->
             </div>
             <!-- end col -->

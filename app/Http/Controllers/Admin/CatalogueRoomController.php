@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Models\Hotel;
 use App\Models\Image;
 use App\Models\Attribute;
-use App\Repositories\CatalogueRoom\CatalogueRoomRepository;
 use Illuminate\Http\Request;
 use App\Models\CatalogueRoom;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +15,7 @@ use App\Models\CatalogueRoomAttribute;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Admin\CatalogueRoom\CreateRequest;
 use App\Http\Requests\Admin\CatalogueRoom\UpdateRequest;
+use App\Repositories\CatalogueRoom\CatalogueRoomRepository;
 
 class CatalogueRoomController extends Controller
 {
@@ -33,11 +34,22 @@ class CatalogueRoomController extends Controller
 
     public function index()
     {
-        $hotelID = Auth::user()->org_id;
+        if (Auth::user()->org_id != null && Auth::user()->type != User::ADMIN) {
+            $hotelID = Auth::user()->org_id;
+        } else {
+            $hotelID = '';
+        }
 
-        $hotel = Hotel::query()->where('id', $hotelID)->firstOrFail();
+        $query = CatalogueRoom::query()->with('hotel', 'attributes', 'images');
 
-        $query = CatalogueRoom::query()->with('hotel', 'attributes', 'images')->where('hotel_id', $hotelID);
+        if (!empty($hotelID)) {
+            $query->where('hotel_id', $hotelID);
+        }
+
+        if (request()->filled('hotel')) {
+            $hotel_id = request()->input('hotel');
+            $query->where('hotel_id', $hotel_id);
+        }
         
         if (request()->filled('name')) {
             $name = request()->input('name');
@@ -58,7 +70,9 @@ class CatalogueRoomController extends Controller
         $catalogueRooms = $query->latest('created_at')->paginate(10);
 
         $roomBookedQtyMapBy = $this->catalogueRoomRepos->getRoomBookedQtyToday($hotelID);
-        return view(self::PATH_VIEW . __FUNCTION__, compact('catalogueRooms', 'hotel', 'roomBookedQtyMapBy'));
+
+        $hotels = Hotel::all();
+        return view(self::PATH_VIEW . __FUNCTION__, compact('catalogueRooms', 'hotels', 'roomBookedQtyMapBy'));
     }
 
 
