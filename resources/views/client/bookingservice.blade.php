@@ -1,4 +1,9 @@
 @extends('client.layouts.master')
+
+@section('title')
+    Chọn dịch vụ
+@endsection
+
 <style>
     /* Dịch vụ (item) */
     .dropdown-item {

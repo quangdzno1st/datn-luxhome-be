@@ -12,33 +12,17 @@
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                 <h4 class="mb-sm-0">Danh sách loại phòng</h4>
 
-                <div class="page-title-right">
+                {{-- <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="javascript: void(0);">Khách sạn: {{$hotel->name}}</a></li>
                     </ol>
-                </div>
+                </div> --}}
 
             </div>
         </div>
     </div>
 
     <!-- end page title -->
-    
-     <!-- Notification -->
-     {{-- <div class="row">
-        @if (session('msg'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>{{session('msg')}}</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        @endif
-        @if (session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>{{session('error')}}</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        @endif
-    </div> --}}
 
     <div class="row">
         <div class="col-lg-12">
@@ -46,9 +30,19 @@
                 <div class="card-header d-flex justify-content-between">
                     <a href="{{route('admin.catalogue-rooms.create')}}" class="btn btn-success" style="height: 37px; ">+ Thêm mới</a>
                         <form class="d-flex justify-content-sm-end" action="" method="get">
-                            <div class="search-box ms-2">
+                            @if (Auth::user()->type == App\Models\User::ADMIN)
+                                        <div class="ms-2">
+                                            <select name="hotel" id="" class="form-select">
+                                                <option value="">Chọn khách sạn</option>
+                                                @foreach ($hotels as $hotel)
+                                                    <option value="{{ $hotel->id }}" @selected(request()->input('hotel') == $hotel->id)>
+                                                        {{ $hotel->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    @endif
+                            <div class="ms-2">
                                 <input type="text" class="form-control " placeholder="Điền tên loại" name="name" value="{{ request()->has('name') ? request()->input('name') : '' }}">
-                                <i class="ri-search-line search-icon"></i>
                             </div>
                             <div class="ms-2">
                                 <input type="text" class="form-control " placeholder="Điền giá" name="price" value="{{ request()->has('price') ? request()->input('price') : '' }}">
@@ -93,7 +87,7 @@
                         </div><!-- end col -->
                         @endforeach
                         <div class="row">
-                            {{$catalogueRooms->links()}}
+                            {{$catalogueRooms->appends(request()->query())->links()}}
                         </div>
                     </div>
                 </div>
@@ -103,6 +97,7 @@
 
 @endsection
 
+@section('styles')
 <style>
     .text-clamp {
         display: -webkit-box;
@@ -114,4 +109,5 @@
     }
 </style>
 
+@endsection
 

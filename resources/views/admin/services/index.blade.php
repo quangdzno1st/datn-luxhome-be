@@ -60,35 +60,46 @@
                             <div class="col-sm">
                                 <form class="d-flex justify-content-sm-end" method="GET"
                                     action="{{ route('admin.services.index') }}">
-                                    <div class="ms-2">
+                                    @if (Auth::user()->type == App\Models\User::ADMIN)
+                                        <div class="ms-1">
+                                            <select name="hotel" id="" class="form-select">
+                                                <option value="">Chọn khách sạn</option>
+                                                @foreach ($hotels as $hotel)
+                                                    <option value="{{ $hotel->id }}" @selected(request()->input('hotel') == $hotel->id)>
+                                                        {{ $hotel->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    @endif
+                                    <div class="ms-1">
                                         <select name="type" id="" class="form-select">
                                             <option value="">Loại dịch vụ</option>
                                             <option value="1" @selected(request()->input('type') == 1)>Dịch vụ mất phí</option>
                                             <option value="2" @selected(request()->input('type') == 2)>Dịch vụ đi kèm</option>
                                         </select>
                                     </div>
-                                    <div class="ms-2">
+                                    <div class="ms-1">
                                         <select name="status" id="" class="form-select">
                                             <option value="">Trạng thái</option>
                                             <option value="1" @selected(request()->input('status') == 1)>Hoạt động</option>
                                             <option value="2" @selected(request()->input('status') == 2)>Không hoạt động</option>
                                         </select>
                                     </div>
-                                    <div class="ms-2">
+                                    <div class="ms-1">
                                         <input type="number" name="min_price" class="form-control"
                                             placeholder="Giá thấp nhất" value="{{ request('min_price') }}">
                                     </div>
-                                    <div class="ms-2">
+                                    <div class="ms-1">
                                         <input type="number" name="max_price" class="form-control"
                                             placeholder="Giá cao nhất" value="{{ request('max_price') }}">
                                     </div>
-                                    <div class="ms-2">
+                                    <div class="ms-1">
                                         <input type="text" name="name" class="form-control"
                                             placeholder="Điền tên dịch vụ"
                                             value="{{ request()->has('name') ? request()->input('name') : '' }}">
                                     </div>
                                     <div class="ms-1">
-                                        <button class="btn btn-primary">Tìm kiếm</button>
+                                        <button class="btn btn-primary">Tìm</button>
                                     </div>
                                 </form>
                             </div>
@@ -406,7 +417,7 @@
                         </div>
 
                     </div>
-                    {{ $services->links() }}
+                    {{ $services->appends(request()->query())->links() }}
                 </div><!-- end card -->
             </div>
             <!-- end col -->

@@ -1,5 +1,9 @@
 @extends('client.layouts.master')
 
+@section('title')
+    Đặt phòng thành công
+@endsection
+
 <style>
     .right-sidebar .trip-info div {
         margin-bottom: 10px;

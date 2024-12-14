@@ -1,4 +1,8 @@
 @extends('admin.layouts.master')
+@section('title')
+    Danh sách mã giảm giá
+@endsection
+
 @section('content')
     <div class="row">
         <div class="col-lg-12">

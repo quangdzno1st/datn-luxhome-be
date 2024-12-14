@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Service\CreateRequest;
 use App\Http\Requests\Admin\Service\UpdateRequest;
+use App\Models\Hotel;
 use App\Models\Service;
 use App\Models\User;
 use App\Services\impl\ServiceServiceImpl;
@@ -28,13 +29,15 @@ class ServiceController extends Controller
         if (Auth::user()->org_id != null && Auth::user()->type != User::ADMIN) {
             $org_id = Auth::user()->org_id;
         } else {
-            return redirect()->route('admin.error.404');
+            $org_id = '';
         }
         $services = $this->service->getAll(request(), $org_id);
 
         $typesService = Service::TYPE_SERVICE;
 
-        return view(self::PATH_VIEW . __FUNCTION__, compact('services', 'typesService'));
+        $hotels = Hotel::all();
+
+        return view(self::PATH_VIEW . __FUNCTION__, compact('services', 'typesService', 'hotels'));
     }
 
     public function store(CreateRequest $request)

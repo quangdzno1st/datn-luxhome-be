@@ -1,5 +1,9 @@
 @extends('client.layouts.master')
 
+@section('title')
+    Tài khoản của tôi
+@endsection
+
 <style>
     .no-hover:hover {
         pointer-events: none; /* Vô hiệu hóa sự kiện hover */

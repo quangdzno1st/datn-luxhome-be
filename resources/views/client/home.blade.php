@@ -1,5 +1,9 @@
 @extends('client.layouts.master')
 
+@section('title')
+    LuxHome - Trang Chủ
+@endsection
+
 @section('content')
     <!--slider-->
 

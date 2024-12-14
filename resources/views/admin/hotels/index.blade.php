@@ -196,7 +196,7 @@
                             </div>
 
                         </div>
-                        {{ $data->links() }}
+                        {{ $data->appends(request()->query())->links() }}
                     </div><!-- end card -->
                 </div>
                 <!-- end col -->

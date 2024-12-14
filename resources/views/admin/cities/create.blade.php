@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-    Thêm mới banner
+    Thêm mới thành phố
 @endsection
 
 @section('content')

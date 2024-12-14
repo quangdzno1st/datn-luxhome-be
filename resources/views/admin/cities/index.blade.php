@@ -22,21 +22,6 @@
         </div>
     </div>
 
-    <!-- Notification -->
-    {{-- <div class="row">
-            @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>{{session('success')}}</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            @endif
-            @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>{{session('error')}}</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            @endif
-        </div> --}}
 
     <div class="row">
         <div class="col-lg-12">
@@ -62,14 +47,17 @@
                             </div>
                             <div class="col-sm">
                                 <form class="d-flex justify-content-sm-end" action="" method="get">
-                                    <div class="search-box ms-2">
-                                        <input type="text" value="{{ request()->input('city') }}" class="form-control"
-                                            name="city" placeholder="Điền tên thành phố">
-                                        <i class="ri-search-line search-icon"></i>
+                                    <div class="ms-2">
+                                        <select name="region" id="" class="form-select">
+                                            <option value="">Chọn miền</option>
+                                            @foreach ($regions as $region)
+                                                <option value="{{$region->id}}" @selected(request()->input('region') == $region->id)>{{$region->name}}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="ms-2">
-                                        <input type="text" value="{{ request()->input('region') }}" class="form-control"
-                                            name="region" placeholder="Điền tên miền">
+                                        <input type="text" value="{{ request()->input('city') }}" class="form-control"
+                                            name="city" placeholder="Điền tên thành phố">
                                     </div>
                                     <div class="ms-2">
                                         <button class="btn btn-primary" type="submit">Tìm</button>
@@ -290,7 +278,7 @@
                             </div> --}}
 
                     </div>
-                    {{ $data->links() }}
+                    {{ $data->appends(request()->query())->links() }}
                 </div><!-- end card -->
             </div>
             <!-- end col -->

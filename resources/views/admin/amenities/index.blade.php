@@ -272,7 +272,7 @@
                             </div>
 
                         </div>
-                        {{ $amenities->links() }}
+                        {{ $amenities->appends(request()->query())->links() }}
                     </div><!-- end card -->
                 </div>
                 <!-- end col -->

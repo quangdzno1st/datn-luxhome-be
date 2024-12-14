@@ -129,7 +129,6 @@
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#deleteRecordModal{{ $room->id }}"><i
                                                                 class="ri-delete-bin-2-line"></i></button>
-                                                       @endcan
                                                 </div>
 
                                             </div>
@@ -472,7 +471,7 @@
 
                     <div class="d-flex justify-content-end">
                         <div class="pagination-wrap hstack gap-2">
-                            {{ $rooms->links() }}
+                            {{ $rooms->appends(request()->query())->links() }}
                         </div>
                     </div>
 

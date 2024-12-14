@@ -40,9 +40,7 @@ class CityController extends Controller
 
         if (request()->filled('region')) {
             $region = request()->input('region');
-            $query->whereHas('region', function($query) use ($region) {
-                $query->where('name', 'like', '%' . $region . '%');
-            });
+            $query->where('region_id', $region);
         }
         
         $data = $query->orderBy('name')->paginate(10);

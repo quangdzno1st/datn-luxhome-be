@@ -12,7 +12,7 @@
 
 	<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
-	<title>Book Your Travel - Home</title>
+	<title> @yield('title') </title>
 	<!-- Latest compiled and minified CSS -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 

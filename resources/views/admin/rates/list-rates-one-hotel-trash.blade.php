@@ -1,4 +1,8 @@
 @extends('admin.layouts.master')
+@section('title')
+    Danh sách đánh giá bị ẩn
+@endsection
+
 @section('content')
     <div class="row">
         <div class="col-12">
@@ -170,7 +174,7 @@
                         </table>
 
                         <div class="mt-3">
-                            {{ $rates->links() }}
+                            {{ $rates->appends(request()->query())->links() }}
                         </div>
                     </div>
                 </div><!-- end card -->
