@@ -51,6 +51,10 @@ class Hotel extends Model
     {
         return $this->hasMany(Service::class);
     }
+    public function orders()
+    {
+        return $this->hasMany(Order::class,'org_id');
+    }
 
     public function images()
     {

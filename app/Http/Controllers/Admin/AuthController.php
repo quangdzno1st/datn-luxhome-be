@@ -40,7 +40,7 @@ class AuthController extends Controller
 
 
         if (auth()->attempt(['email' => $request->email, 'password' => $request->password])) {
-            if (auth()->user()->type != User::CUSTOMER) {
+            if (auth()->user()->type != User::CUSTOMER && auth()->user()->is_active == 1 ) {
                 $request->session()->regenerate();
                 return redirect()->intended(route('admin.statistical.index'));
             }

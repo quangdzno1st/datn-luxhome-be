@@ -40,7 +40,7 @@ class HomeController extends Controller
 
     public function index()
     {
-        $hotels = $this->hotelRepos->getAllForAdmin();
+        $hotels = $this->hotelRepos->getAllForClient();
         $cities = $this->cityRepos->searchByPage(new BaseSearchRequest());
         $cityIds = array_map(function ($city) {
             return $city['id'] ?? null;

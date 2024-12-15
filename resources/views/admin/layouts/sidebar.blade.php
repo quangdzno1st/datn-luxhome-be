@@ -116,14 +116,14 @@
                         </div>
                     </li>
                 @endcan
-
+ @can('view_banners')
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->routeIs('admin.banners.index') ? 'active' : '' }}"
                         href="{{ route('admin.banners.index') }}">
                         <i class="ri-image-fill"></i> <span data-key="t-layouts">Ảnh Banner</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
-
+@endcan
                 @can('view_hotel')
                     <li class="nav-item">
                         <a class="nav-link menu-link {{ request()->routeIs('admin.hotels.index') ? 'active' : '' }}"

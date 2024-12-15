@@ -39,6 +39,11 @@ class UserRequest extends FormRequest
         if ($userType == User::CUSTOMER) {
             $rules['org_id'] = 'prohibited';
         }
+
+        if (in_array($userType, [User::HOTELIER, User::STAFF])) {
+            $rules['org_id'] = 'required';
+        }
+
 //dd($userEdit->id != $user->id && $user->user_type == User::ADMIN);
         if ($userEdit) {
             if ($userEdit->id != $user->id && $user->user_type == User::ADMIN && $userType != User::CUSTOMER) {
@@ -59,6 +64,7 @@ class UserRequest extends FormRequest
     {
         return [
             'name.required' => "Vui lòng nhập tên!",
+            'org_id.required' => "Vui lòng chọn khách sạn!",
             'name.max' => "Tên không được vượt quá 255 ký tự!",
             'phone.required' => "Vui lòng nhập số điện thoại!",
             'phone.regex' => "Số điện thoại không hợp lệ!",

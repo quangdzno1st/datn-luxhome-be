@@ -43,6 +43,13 @@ class User extends Authenticatable
     const ADMIN = 2;
     const HOTELIER = 3;
     const STAFF = 4;
+
+    public const ROLES = [
+        self::CUSTOMER => 'Người dùng',
+        self::ADMIN => 'Chủ chuỗi KS',
+        self::HOTELIER => 'Quản lý KS',
+        self::STAFF => 'Nhân viên KS',
+    ];
     const ACTIVE = 1;
     const INACTIVE = 2;
     /**

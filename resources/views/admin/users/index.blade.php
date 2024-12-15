@@ -50,9 +50,10 @@
                             <!-- Tìm kiếm theo type (Customer/Admin) -->
                             <select name="type" class="form-select" id="typeSelect">
                                 <option value="">Tất cả loại</option>
-                                <option value="{{ \App\Models\User::CUSTOMER }}" {{ request()->input('type') == \App\Models\User::CUSTOMER ? 'selected' : '' }}>Người dùng</option>
                                 <option value="{{ \App\Models\User::ADMIN }}" {{ request()->input('type') == \App\Models\User::ADMIN ? 'selected' : '' }}>Chủ chuỗi khách sạn</option>
                                 <option value="{{ \App\Models\User::HOTELIER }}" {{ request()->input('type') == \App\Models\User::HOTELIER ? 'selected' : '' }}>Quản lý khách sạn</option>
+                                <option value="{{ \App\Models\User::STAFF }}" {{ request()->input('type') == \App\Models\User::STAFF ? 'selected' : '' }}>Nhân viên khách sạn</option>
+                                <option value="{{ \App\Models\User::CUSTOMER }}" {{ request()->input('type') == \App\Models\User::CUSTOMER ? 'selected' : '' }}>Người dùng</option>
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary ms-2">Tìm kiếm</button>

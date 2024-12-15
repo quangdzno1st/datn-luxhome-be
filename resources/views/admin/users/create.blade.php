@@ -89,7 +89,7 @@
                                     @if(auth()->user()->type == \App\Models\User::ADMIN)
                                     <div class="mb-3">
                                         <label for="hotel" class="form-label">Chọn Khách Sạn:</label>
-                                        <select class="form-control @error('hotel') is-invalid @enderror"
+                                        <select class="form-control @error('org_id') is-invalid @enderror"
                                                 id="hotelSelect" name="org_id">
                                             <option value="">-- Chọn Khách Sạn --</option>
                                             @foreach($hotels as $hotel)
@@ -110,27 +110,40 @@
                                         <div class="mb-3 d-flex" style="margin-top: 26px">
                                             <div class="form-check form-radio-danger mb-3 me-3">
                                                 <input class="form-check-input" type="radio" name="type" id="admin"
-                                                       value="{{ \App\Models\User::ADMIN }}">
+                                                       value="{{ \App\Models\User::ADMIN }}"
+                                                        {{ old('type', $user->type ?? \App\Models\User::CUSTOMER) == \App\Models\User::ADMIN ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="admin">
-                                                    Chủ chuỗi khách sạn
+                                                    Chủ chuỗi KS
                                                 </label>
                                             </div>
                                             <div class="form-check form-radio-danger mb-3 me-3">
                                                 <input class="form-check-input" type="radio" name="type" id="hotelier"
-                                                       value="{{ \App\Models\User::HOTELIER }}">
+                                                       value="{{ \App\Models\User::HOTELIER }}"
+                                                        {{ old('type', $user->type ?? \App\Models\User::CUSTOMER) == \App\Models\User::HOTELIER ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="hotelier">
-                                                        Quản lý khách sạn
+                                                    Quản lý KS
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-radio-danger mb-3 me-3">
+                                                <input class="form-check-input" type="radio" name="type" id="staff"
+                                                       value="{{ \App\Models\User::STAFF }}"
+                                                        {{ old('type', $user->type ?? \App\Models\User::CUSTOMER) == \App\Models\User::STAFF ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="staff">
+                                                    Nhân viên KS
                                                 </label>
                                             </div>
                                             <div class="form-check form-radio-success mb-3">
                                                 <input class="form-check-input" type="radio" name="type" id="member"
-                                                       value="{{ \App\Models\User::CUSTOMER }}" checked>
+                                                       value="{{ \App\Models\User::CUSTOMER }}"
+                                                        {{ old('type', $user->type ?? \App\Models\User::CUSTOMER) == \App\Models\User::CUSTOMER ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="member">
                                                     Người dùng
                                                 </label>
                                             </div>
                                         </div>
+
                                     @endif
+
 
                                     <div class="mb-3 form-check" style="margin-top:{{ auth()->user()->type == \App\Models\User::ADMIN ?'45px' :'26px' }}">
                                         <input type="hidden" name="is_active" value="0">
