@@ -13,7 +13,7 @@
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="javascript: void(0);">Tài khoản</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('admin.users.index')}}">Tài khoản</a></li>
                         <li class="breadcrumb-item active">Thêm mới</li>
                     </ol>
                 </div>
@@ -163,9 +163,9 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="card-header align-items-center d-flex">
+                                <div class="card-header align-items-center justify-content-between d-flex">
+                                    <a href="{{ route('admin.users.index') }}" class="btn btn-primary"><i class="ri-arrow-left-line"></i> Quay lại</a>
                                     <button type="submit" class="btn btn-success ">Thêm Mới</button>
-                                    <a href="{{ route('admin.users.index') }}" class="btn btn-primary ">Quay lại</a>
                                 </div>
                             </div>
                         </div>

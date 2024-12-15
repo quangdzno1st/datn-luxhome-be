@@ -206,7 +206,7 @@ Route::group(['middleware' => ['admin']], function () {
         //route của superadmin
         Route::get('/hotels', 'listRatesAllHotels')->name('hotels');
         Route::get('/hotel/{hotelId}', 'listRatesOneHotel')->name('hotel')->middleware('check.hotel');
-        Route::get('/trash/hotel/{hotelId}', 'listRatesOneHotelTrash')->middleware('check.hotel');
+        Route::get('/trash/hotel/{hotelId}', 'listRatesOneHotelTrash')->name('hotel.trash')->middleware('check.hotel');
 
         //route của hotelier
         Route::get('/hotelier', 'getRatesByHotelIdOfHotelier')->name('hotel.hotelier');

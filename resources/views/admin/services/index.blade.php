@@ -186,7 +186,7 @@
                                             <div class="modal-dialog modal-dialog-centered">
                                                 <div class="modal-content">
                                                     <div class="modal-header bg-light p-3">
-                                                        <h5 class="modal-title">Chi tiết</h5>
+                                                        <h5 class="modal-title">Chi Tiết Dịch Vụ</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close" id="close-modal"></button>
                                                     </div>
@@ -261,8 +261,8 @@
                                                                 <button type="button" class="btn btn-light"
                                                                     data-bs-dismiss="modal">Đóng
                                                                 </button>
-                                                                <button type="submit" class="btn btn-success"
-                                                                    id="add-btn">Cập Nhật Dịch Vụ
+                                                                <button type="submit" class="btn btn-warning"
+                                                                    id="add-btn">Cập Nhật
                                                                 </button>
                                                             </div>
                                                         </div>
