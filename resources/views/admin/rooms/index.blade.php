@@ -129,6 +129,7 @@
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#deleteRecordModal{{ $room->id }}"><i
                                                                 class="ri-delete-bin-2-line"></i></button>
+                                                    @endcan
                                                 </div>
 
                                             </div>

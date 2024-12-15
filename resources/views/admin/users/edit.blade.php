@@ -36,17 +36,19 @@
                             <div class="row gy-4">
                                 <div class="col-7">
                                     <div class="mb-3">
-                                        <label for="name" class="form-label">Tên<span class="text-danger">*</span></label>
+                                        <label for="name" class="form-label">Tên<span
+                                                    class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="name" placeholder="Enter name"
-                                            name="name" value="{{ $user->name }}">
+                                               name="name" value="{{ $user->name }}">
                                         @error('name')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="mb-3">
-                                        <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
+                                        <label for="email" class="form-label">Email<span
+                                                    class="text-danger">*</span></label>
                                         <input type="email" class="form-control" id="email" placeholder="Enter email"
-                                            name="email" value="{{ $user->email }}">
+                                               name="email" value="{{ $user->email }}">
                                         @error('email')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                         @enderror
@@ -57,9 +59,10 @@
                                             name="password" value="{{$user->password}}">
                                     </div> --}}
                                     <div class="mb-3">
-                                        <label for="phone" class="form-label">Số điện thoại<span class="text-danger">*</span></label>
+                                        <label for="phone" class="form-label">Số điện thoại<span
+                                                    class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="phone" placeholder="Enter phone"
-                                            name="phone" value="{{$user->phone}}">
+                                               name="phone" value="{{$user->phone}}">
                                         @error('phone')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                         @enderror
@@ -68,61 +71,71 @@
 
                                         <label for="address" class="form-label">Địa chỉ</label>
                                         <input type="text" class="form-control" id="address" placeholder="Enter address"
-                                            name="address" value="{{$user->address}}">
+                                               name="address" value="{{$user->address}}">
                                         @error('address')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     @if(auth()->user()->type == \App\Models\User::ADMIN)
-                                    <div class="mb-3">
-                                        <label for="hotel" class="form-label">Chọn Khách Sạn:</label>
-                                        <select class="form-control @error('hotel') is-invalid @enderror"
-                                                id="hotelSelect" name="org_id">
-                                            <option value="">-- Chọn Khách Sạn --</option>
-                                            @foreach($hotels as $hotel)
-                                                <option value="{{$hotel->id}}" @if($hotel->id == $user?->org_id) selected @endif>{{$hotel->name}}</option>
-                                            @endforeach
-                                        </select>
+                                        <div class="mb-3">
+                                            <label for="hotel" class="form-label">Chọn Khách Sạn:</label>
+                                            <select class="form-control @error('org_id') is-invalid @enderror"
+                                                    id="hotelSelect" name="org_id">
+                                                <option value="">-- Chọn Khách Sạn --</option>
+                                                @foreach($hotels as $hotel)
+                                                    <option value="{{$hotel->id}}"
+                                                            @if($hotel->id == $user?->org_id) selected @endif>{{$hotel->name}}</option>
+                                                @endforeach
+                                            </select>
 
-                                        @error('org_id')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                                            @error('org_id')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                            @enderror
+                                        </div>
                                     @endif
                                 </div>
                                 <div class="col-5">
-{{--                                    <div class="mb-3">--}}
-{{--                                        <label for="avatar" class="form-label">Avatar:</label>--}}
-{{--                                        <input type="file" class="form-control" id="avatar" name="avatar">--}}
-{{--                                        <img src="{{ \Storage::url($user->avatar) }}" alt="" width="100px">--}}
-{{--                                    </div>--}}
+                                    {{--                                    <div class="mb-3">--}}
+                                    {{--                                        <label for="avatar" class="form-label">Avatar:</label>--}}
+                                    {{--                                        <input type="file" class="form-control" id="avatar" name="avatar">--}}
+                                    {{--                                        <img src="{{ \Storage::url($user->avatar) }}" alt="" width="100px">--}}
+                                    {{--                                    </div>--}}
                                     @if(auth()->user()->type == \App\Models\User::ADMIN)
-                                    <div class="mb-3 d-flex gap-2" style="margin-top:26px ">
-                                        <div class="form-check form-radio-danger mb-3 me-3">
-                                            <input class="form-check-input" type="radio" name="type" id="admin"
-                                                value="{{\App\Models\User::ADMIN}}" {{ $user->type == \App\Models\User::ADMIN ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="admin">
-                                                Chủ chuỗi khách sạn
-                                            </label>
-                                        </div>
-                                        <div class="form-check form-radio-success mb-3">
-                                            <input class="form-check-input" type="radio" name="type" id="hotelier"
-                                                value="{{ \App\Models\User::HOTELIER }}" {{ $user->type == \App\Models\User::HOTELIER ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="hotelier">
-                                                Quản lý khách sạn
-                                            </label>
-                                        </div>
+                                        <div class="mb-3 d-flex gap-2" style="margin-top:26px ">
+                                            <div class="form-check form-radio-danger mb-3 me-3">
+                                                <input class="form-check-input" type="radio" name="type" id="admin"
+                                                       value="{{\App\Models\User::ADMIN}}" {{ $user->type == \App\Models\User::ADMIN ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="admin">
+                                                    Chủ chuỗi KS
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-radio-success mb-3">
+                                                <input class="form-check-input" type="radio" name="type" id="hotelier"
+                                                       value="{{ \App\Models\User::HOTELIER }}" {{ $user->type == \App\Models\User::HOTELIER ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="hotelier">
+                                                    Quản lý KS
+                                                </label>
+                                            </div>
 
-                                        <div class="form-check form-radio-success mb-3">
-                                            <input class="form-check-input" type="radio" name="type" id="member"
-                                                value="{{\App\Models\User::CUSTOMER}}" {{ $user->type == \App\Models\User::CUSTOMER ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="member">
-                                                Người dùng
-                                            </label>
+                                            <div class="form-check form-radio-success mb-3">
+                                                <input class="form-check-input" type="radio" name="type" id="staff"
+                                                       value="{{ \App\Models\User::STAFF }}" {{ $user->type == \App\Models\User::STAFF ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="staff">
+                                                    Nhân viên KS
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check form-radio-success mb-3">
+                                                <input class="form-check-input" type="radio" name="type" id="member"
+                                                       value="{{\App\Models\User::CUSTOMER}}" {{ $user->type == \App\Models\User::CUSTOMER ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="member">
+                                                    Người dùng
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
                                     @endif
-                                    <div class="mb-3 form-check" style="margin-top:{{ auth()->user()->type == \App\Models\User::ADMIN ?'45px' :'26px' }}">
+                                    <div class="mb-3 form-check"
+                                         style="margin-top:{{ auth()->user()->type == \App\Models\User::ADMIN ?'45px' :'26px' }}">
                                         <!-- Input hidden để trả về giá trị 0 khi checkbox không được chọn -->
                                         <input type="hidden" name="is_active" value="0">
 
@@ -136,7 +149,9 @@
                                         <label class="form-label" for="avatar">Ảnh đại diện</label>
                                         <input class="form-control" id="avatar" type="file" name="avatar"
                                                accept="image/png, image/gif, image/jpeg">
-                                        <img id="avatarPreview" src="{{!empty($user->avatar) ? \Storage::url($user->avatar) : asset('theme/client/images/uploads/avatar.jpg')}}" alt="Preview"
+                                        <img id="avatarPreview"
+                                             src="{{!empty($user->avatar) ? \Storage::url($user->avatar) : asset('theme/client/images/uploads/avatar.jpg')}}"
+                                             alt="Preview"
                                              style="margin-top: 10px; max-width: 200px;"/>
                                         @error('avatar')
                                         <p class="text-danger">{{$message}}</p>
@@ -183,7 +198,7 @@
             }
         });
 
-        $('#togglePassword').click(function() {
+        $('#togglePassword').click(function () {
             // Get the input field and toggle the type
             const passwordField = $('#password');
             const passwordFieldType = passwordField.attr('type');

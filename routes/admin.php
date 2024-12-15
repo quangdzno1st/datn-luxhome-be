@@ -134,8 +134,8 @@ Route::group(['middleware' => ['admin']], function () {
 
 
     Route::controller(StatisticalController::class)->group(function () {
-        Route::get('/', 'index')->name('statistical.index')->middleware('can:view_amenities');
-        Route::post('/statistical', 'handleStatistical')->name('handle.statistical')->middleware('can:create_amenities');
+        Route::get('/', 'index')->name('statistical.index')->middleware('can:view_overview');
+        Route::post('/statistical', 'handleStatistical')->name('handle.statistical')->middleware('can:create_overview');
     });
 
     Route::prefix('services')->controller(ServiceController::class)->group(function () {
@@ -225,11 +225,11 @@ Route::group(['middleware' => ['admin']], function () {
     });
 
     Route::prefix('banners')->name('banners.')->controller(BannerController::class)->group(function() {
-        Route::get('/', 'index')->name('index');
-        Route::get('/create', 'create')->name('create');
-        Route::post('/store', 'store')->name('store');
-        Route::get('/update{id}', 'update')->name('update');
-        Route::delete('/destroy{id}', 'destroy')->name('destroy');
+        Route::get('/', 'index')->name('index')->middleware('can:view_banners');
+        Route::get('/create', 'create')->name('create')->middleware('can:create_banners');
+        Route::post('/store', 'store')->name('store')->middleware('can:create_banners');
+        Route::get('/update{id}', 'update')->name('update')->middleware('can:edit_banners');
+        Route::delete('/destroy{id}', 'destroy')->name('destroy')->middleware('can:delete_vouchers');
     });
 });
 

@@ -25,6 +25,23 @@ class HotelRepository extends BaseRepository implements HotelInterface
             ->paginate(10);
     }
 
+    public function getAllForClient()
+    {
+        $currentMonthStart = now()->startOfMonth();
+        $currentMonthEnd = now()->endOfMonth();
+
+        return $this->model
+            ->select('hotels.id', 'hotels.name', 'hotels.location', 'hotels.quantity_of_room', 'hotels.star',
+                'hotels.city_id', 'hotels.phone', 'hotels.email', 'hotels.status', 'hotels.quantity_floor',
+                'hotels.thumbnail', 'hotels.description', 'hotels.province', 'hotels.district', 'hotels.commune',
+                'hotels.latitude', 'hotels.longitude', 'hotels.view')
+            ->withCount(['orders as monthly_orders' => function ($query) use ($currentMonthStart, $currentMonthEnd) {
+                $query->whereBetween('created_at', [$currentMonthStart, $currentMonthEnd]);
+            }])
+            ->orderByDesc('monthly_orders')
+            ->paginate(10);
+    }
+
     public function getAllForHotelier()
     {
         $user = Auth::user();
