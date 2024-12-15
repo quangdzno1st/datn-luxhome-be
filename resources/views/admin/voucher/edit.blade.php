@@ -28,8 +28,9 @@
                                 <div class="col-sm-auto">
                                     <div>
                                         <a href="{{ route('admin.vouchers.index') }}">
-                                            <button type="button" class="btn btn-light add-btn" data-bs-toggle="modal"
-                                                id="create-btn" data-bs-target="#showModal">Danh sách
+                                            <button type="button" class="btn btn-primary bg-gradient waves-effect waves-primary me-2" data-bs-toggle="modal"
+                                                    id="create-btn" >
+                                                <i class="ri-arrow-left-s-line"></i> Danh sách
                                             </button>
                                         </a>
                                     </div>

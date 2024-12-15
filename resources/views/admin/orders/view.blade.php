@@ -1,11 +1,29 @@
 @extends('admin.layouts.master')
+@section('title')
+    Chi tiết đơn đặt
+@endsection
 @section('content')
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">Chi tiết đơn đặt</h4>
+
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Đơn đặt</a></li>
+                        <li class="breadcrumb-item active">Danh sách</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card">
         <div class="header d-flex justify-content-between align-items-center">
             <h5 class="card-header mb-0">{{ __('Thông tin chi tiết đơn đặt') }}</h5>
             <a href="{{ route('admin.orders.index') }}">
-                <button type="button" class="btn btn-light add-btn me-3" data-bs-toggle="modal"
-                        id="create-btn" data-bs-target="#showModal">Danh sách
+                <button type="button" class="btn btn-primary bg-gradient waves-effect waves-primary me-2" data-bs-toggle="modal"
+                        id="create-btn" >
+                    <i class="ri-arrow-left-s-line"></i> Danh sách
                 </button>
             </a>
         </div>
@@ -23,9 +41,9 @@
                     <tr>
                         <th>{{ __("Mã đơn đặt") }}</th>
                         <th>{{ __("Trạng thái") }}</th>
+                        <th>{{ __("Tổng tiền") }}</th>
                         <th>{{ __("Ngày bắt đầu") }}</th>
                         <th>{{ __("Ngày kết thúc") }}</th>
-                        <th>{{ __("Tổng tiền") }}</th>
                         <th>{{ __("Ngày checkin") }}</th>
                         <th>{{ __("Ngày checkout") }}</th>
                     </tr>
@@ -36,9 +54,9 @@
                         <td>
                             {{$order->status}}
                         </td>
-                        <td>{{\Carbon\Carbon::parse($order->start_date)->format('d-m-Y')}}</td>
-                        <td>{{\Carbon\Carbon::parse($order->end_date)->format('d-m-Y')}}</td>
                         <td>{{number_format($order->total_amount)}}VND</td>
+                        <td>{{\Carbon\Carbon::parse($order->start_date)->format('H:i:s d-m-Y')}}</td>
+                        <td>{{\Carbon\Carbon::parse($order->end_date)->format('H:i:s d-m-Y')}}</td>
                         <td>
                             @if($order->status=='Đã hủy')
                                 <span class="badge bg-danger">Đã hủy</span>
@@ -53,7 +71,7 @@
                                     </div>
                                 </div>
                             @else
-                                {{\Carbon\Carbon::parse($order->check_in)->format('d-m-Y H:i:s')}}
+                                {{\Carbon\Carbon::parse($order->check_in)->format('H:i:s d-m-Y')}}
                             @endif</td>
                         <td>
                             @if($order->status=='Đã hủy')
@@ -76,7 +94,7 @@
                                     </div>
                                 </div>
                             @else
-                                {{\Carbon\Carbon::parse($order->check_out)->format('d-m-Y H:i:s')}}
+                                {{\Carbon\Carbon::parse($order->check_out)->format('H:i:s d-m-Y')}}
                             @endif
                         </td>
                     </tr>
@@ -91,19 +109,22 @@
                                     <h4 class="text-center pb-4">{{ __('Thông tin từng phòng') }}</h4>
                                     <table class="table">
                                         <tr>
+                                            <td>Mã phòng</td>
                                             <td>Loại phòng</td>
                                             <td>Số lượng</td>
                                             <td>Giá</td>
                                         </tr>
                                         @foreach($orderItemInfo as $orderItem)
                                         <tr class="">
+                                            <td>{{ $orderItem->roomCodes }}</td>
                                             <td>{{ $orderItem->catalogueName }}</td>
-                                            <td>{{ $orderItem->orderItemQuantity }}</td>
+                                            <td>{{ $orderItem->totalQuantity }}</td>
                                             <td>{{ number_format($orderItem->cataloguePrice) }}VND</td>
                                         </tr>
                                         @endforeach
                                             <tr>
                                                 <td>Tổng</td>
+                                                <td></td>
                                                 <td></td>
                                                 <td>{{number_format($sumOrderItem)}}VND</td>
                                             </tr>
@@ -136,7 +157,7 @@
                                     @if($order->status=='Đang chờ'||$order->status=='Đã xác nhận'||$order->status=='Yêu cầu hủy')
                                     <button class="btn btn-info btn-sm"
                                             data-bs-toggle="modal"
-                                            id="create-btn" data-bs-target="#showModal"
+                                            id="create-btn" data-bs-target="#service{{$order->id}}"
                                     >Thêm service</button>
                                     @endif
                                     <table class="table">
@@ -269,7 +290,7 @@
                     </div>
                 </div>
 {{--                form add service--}}
-                <div class="modal fade" id="showModal" tabindex="-1"
+                <div class="modal fade" id="service{{$order->id}}" tabindex="-1"
                      aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
@@ -301,15 +322,6 @@
                                             @endforeach
                                         </div>
                                     </div>
-
-{{--                                    <!-- Số lượng -->--}}
-{{--                                    <div class="mb-3">--}}
-{{--                                        <label for="quantity" class="form-label fw-bold">Số lượng</label>--}}
-{{--                                        <input name="quantity" type="number" class="form-control"--}}
-{{--                                               id="quantity" placeholder="Nhập số lượng dịch vụ">--}}
-{{--                                    </div>--}}
-
-                                    <!-- Phòng -->
                                     <div class="mb-3">
                                         <label for="roomId" class="form-label fw-bold">Phòng</label>
                                         <select class="form-select" id="roomId" name="roomId">

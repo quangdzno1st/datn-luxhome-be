@@ -16,6 +16,9 @@
                         <div class="row align-items-center g-3">
                             <!-- Nút Thêm voucher -->
                             <div class="col-auto">
+                                <div class="">
+                                    <label for="code"></label>
+                                </div>
                                 <a href="{{ route('admin.vouchers.create') }}">
                                     <button type="button" class="btn btn-success add-btn" id="create-btn">
                                         <i class="ri-add-line align-bottom me-1"></i> Thêm phiếu giảm giá
@@ -26,7 +29,23 @@
                             <!-- Form Tìm kiếm -->
                             <div class="col">
                                 <form action="" method="GET" class="d-flex align-items-center gap-2">
+                                    @if(\Illuminate\Support\Facades\Auth::user()->type==\App\Models\User::ADMIN)
+                                        <div class="mb-0">
+                                            <div class="">
+                                                <label for="start_date">Khách sạn:</label>
+                                            </div>
+                                            <select name="hotel" class="form-select">
+                                                <option value="">Chọn khách sạn</option>
+                                                @foreach($hotels as $hotel)
+                                                    <option value="{{$hotel->id}}" {{ request('hotel') == $hotel->id ? 'selected' : '' }}>{{$hotel->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    @endif
                                     <div class="form-group mb-0">
+                                        <div class="">
+                                        <label for="code">Nhập mã giảm giá:</label>
+                                    </div>
                                     <input
                                             type="text"
                                             name="code"
@@ -34,12 +53,20 @@
                                             placeholder="Nhập mã giảm giá..."
                                             value="{{ old('code') }}">
                                     </div>
-                                    <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+                                        <div class="form-group mb-0">
+                                            <div class="">
+                                                <label for="code"></label>
+                                            </div>
+                                            <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+                                        </div>
                                 </form>
                             </div>
 
                             <!-- Nút Phát voucher -->
                             <div class="col-auto">
+                                <div class="">
+                                    <label for="code"></label>
+                                </div>
                                 <button type="button" class="btn btn-success add-btn" id="issue-btn" data-bs-toggle="modal" data-bs-target="#showModal">
                                     <i class="ri-add-line align-bottom me-1"></i> Phát phiếu giảm giá
                                 </button>
@@ -224,8 +251,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </div>
                                     <div class="modal-footer">
                                         <div class="hstack gap-2 justify-content-end">
@@ -239,12 +264,9 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
-
                     <div class="d-flex justify-content-end">
-                        {{$vouchers->links()}}
+                        {{ $vouchers->appends(request()->query())->links() }}
                     </div>
                     
                 </div><!-- end card -->

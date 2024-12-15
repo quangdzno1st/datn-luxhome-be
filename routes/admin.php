@@ -258,8 +258,8 @@ Route::prefix('orders')->group(function () {
     Route::post('/not_accepted_cancel/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'not_accepted_cancel'])->name('orders.not_accepted_cancel')->middleware('can:edit_orders');
     Route::post('/accepted_cancel/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'accepted_cancel'])->name('orders.accepted_cancel')->middleware('can:edit_orders');
     Route::post('/refunded-money/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'refundMoney'])->name('orders.refunded-money')->middleware('can:edit_orders');
-// search
-//    Route::get('/search_order', [\App\Http\Controllers\Admin\OrderController::class, 'search'])->name('orders.search')->middleware('can:view_orders');
+// hủy đơn ở orders admin
+    Route::post('/cancel_order_admin/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'accepted_cancel'])->name('orders.cancel_order_admin')->middleware('can:edit_orders');
 });
 
 Route::get('/404', function () {

@@ -10,6 +10,7 @@ use App\Http\Requests\BaseSearchRequest;
 use App\Models\Hotel;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\User;
 use App\Repositories\Order\OrderRepository;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -33,19 +34,20 @@ class OrderController extends Controller
     {
         $org_id = Auth::user()?->org_id;
         $hotels=null;
-        if (Auth::user()->type==2){
+        if (Auth::user()->type==User::ADMIN){
             $orders = Order::query()
                 ->orderByDesc('created_at')
-                ->paginate($request->getPerPage(), ['*'], 'order', $request->order);
+                ->paginate(10, ['*'], 'order');
             $hotels=Hotel::query()->select('id','name')->get();
         }else{
             $orders = Order::query()
                 ->orderByDesc('created_at')
                 ->where('org_id', $org_id)
-                ->paginate($request->getPerPage(), ['*'], 'order', $request->order);
+                ->paginate(10, ['*'], 'order');
         }
-        $this->checkStatusNoti($orders);
+//        dd($orders);
         if ($_GET) $orders= $this->search($request->all());
+        $this->checkStatusNoti($orders);
         return view(self::PATH_VIEW . __FUNCTION__, compact('orders','hotels'));
     }
 
@@ -74,7 +76,7 @@ class OrderController extends Controller
 
                 $hasNextBookingWithSameRoom = Order::where('id', '!=', $order->id)
                     ->whereDate('start_date', $endDateTime->toDateString())
-                    ->whereHas('orderItems', function ($query) use ($currentOrderRoomIds) {
+                    ->whereHas('orderItem', function ($query) use ($currentOrderRoomIds) {
                         $query->whereIn('room_id', $currentOrderRoomIds);
                     })
                     ->exists();
@@ -119,9 +121,9 @@ class OrderController extends Controller
      */
     public function validateBeforeRequirementCancel($order): void
     {
-        if (!StatusOrderEnum::isYeuCauHuy($order['status'])) {
-            throw new RespException('Đơn đặt ở trạng thái không thể hủy.');
-        }
+//        if (!StatusOrderEnum::isYeuCauHuy($order['status'])) {
+//            throw new RespException('Đơn đặt ở trạng thái không thể hủy.');
+//        }
 
         if (isset($order['check_in'])) {
             throw new RespException('Không thể hủy đơn khi đã sử dụng phòng');
@@ -220,10 +222,15 @@ class OrderController extends Controller
     public function search($request)
     {
 //        dd($request);
+        if (Auth::user()->type==User::ADMIN){
         $query = Order::query()
-            ->where('org_id',  Auth::user()->org_id)
             ->orderByDesc('created_at');
-
+        }else{
+            $query = Order::query()
+                ->orderByDesc('created_at')
+                ->where('org_id', Auth::user()->org_id)
+            ;
+        }
         if (isset($request['hotel'])&&$request['hotel']!='') {
             $query->where('org_id',  $request['hotel']);
         }
@@ -248,5 +255,9 @@ class OrderController extends Controller
             $query->whereDate('end_date', '<=', $request['end_date']);
         }
         return $query->paginate(10, ['*'], 'order');
+    }
+    public function cancel_order_admin($id)
+    {
+        $this->accepted_cancel($id,'admin');
     }
 }

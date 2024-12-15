@@ -240,7 +240,6 @@
                             href="{{ route('admin.permissions') }}">
                             <i class="ri-group-line"></i> <span data-key="t-layouts">Phân quyền</span>
                         </a>
-
                     </li>
                 @endif
             </ul>

@@ -2,6 +2,7 @@
 
 namespace App\Services\impl;
 
+use App\Models\User;
 use App\Models\Voucher;
 use App\Repositories\Voucher\VoucherRepository;
 use App\Services\VoucherService;
@@ -18,7 +19,7 @@ class VoucherServiceImpl implements VoucherService
 
     public function listVoucher()
     {
-        if (Auth::user()->type==2){
+        if (Auth::user()->type==User::ADMIN){
             $vouchers = Voucher::query()
                 ->latest('created_at')
                 ->paginate(10);
