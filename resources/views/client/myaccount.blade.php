@@ -393,7 +393,7 @@
                                         <td><a href="#field5" class="gradient-button edit">Sửa</a></td>
                                     </tr>
 
-                                    <tr>
+                                    {{-- <tr>
                                         <th>CCCD:</th>
                                         <td>{{ !empty($user->cccd) ? $user->cccd : '' }}
                                             <!--edit fields-->
@@ -410,7 +410,7 @@
                                             <!--//edit fields-->
                                         </td>
                                         <td><a href="#field6" class="gradient-button edit">Sửa</a></td>
-                                    </tr>
+                                    </tr> --}}
 
                                 </table>
                             </form>

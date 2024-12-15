@@ -192,7 +192,7 @@
                             <h2>Thông tin hóa đơn</h2>
                             <div class="row">
                                 <div class="f-item one-half">
-                                    <label for="first_name">Họ Và Tên*</label>
+                                    <label for="first_name">Họ Và Tên<span style="color: red">*</span></label>
                                     <input type="text" id="first_name" name="user_name"
                                            value="{{ old('user_name', $user?->name) }}"/>
 
@@ -201,7 +201,7 @@
                                     @enderror
                                 </div>
                                 <div class="f-item one-half">
-                                    <label for="last_name">Địa Chỉ Email*</label>
+                                    <label for="last_name">Địa Chỉ Email<span style="color: red">*</span></label>
                                     <input type="text" id="last_name" name="user_email"
                                            value="{{ old('user_email', $user?->email) }}"/>
 
@@ -213,7 +213,7 @@
 
                             <div class="row">
                                 <div class="f-item one-half">
-                                    <label for="email">Số Điện Thoại*</label>
+                                    <label for="email">Số Điện Thoại<span style="color: red">*</span></label>
                                     <input type="number" id="email" name="user_phone_number"
                                            value="{{ old('user_phone_number', $user?->phone) }}"/>
 
