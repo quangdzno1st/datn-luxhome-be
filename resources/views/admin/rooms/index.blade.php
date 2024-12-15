@@ -136,6 +136,8 @@
                                                             data-bs-target="#deleteRecordModal{{ $room->id }}"><i
                                                                 class="ri-delete-bin-2-line"></i></button>
                                                     @endcan
+                                                    </div>
+
                                                 </div>
                                             </div><!-- end card body -->
 

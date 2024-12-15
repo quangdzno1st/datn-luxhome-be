@@ -61,15 +61,10 @@ class CreateRequest extends FormRequest
         ];
     }
 
-    // protected function failedValidation(Validator $validator)
-    // {
-    //     $errors = $validator->errors()->toArray();
+    protected function failedValidation(Validator $validator)
+    {
+        session()->flash('error', 'Thêm loại phòng không thành công.');
 
-    //     throw new HttpResponseException(
-    //         response()->json([
-    //             'result' => false,
-    //             'errors' => $errors,
-    //         ], 422)
-    //     );
-    // }
+        parent::failedValidation($validator);
+    }
 }

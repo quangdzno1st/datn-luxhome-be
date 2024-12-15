@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\Hotel;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 
 class UpdateHotelRequest extends FormRequest
 {
@@ -65,5 +66,12 @@ class UpdateHotelRequest extends FormRequest
             'longitude.required' => 'Kinh độ đang trống',
             'longitude.max' => 'Kinh độ quá dài'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        session()->flash('error', 'Cập nhật khách sạn không thành công.');
+
+        parent::failedValidation($validator);
     }
 }
