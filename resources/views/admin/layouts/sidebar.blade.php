@@ -82,7 +82,7 @@
 
                 @can('view_city')
                     <li class="nav-item">
-                        <a class="nav-link menu-link {{ request()->routeIs('admin.cities.index') ? 'active' : '' }}"
+                        <a class="nav-link menu-link {{ request()->routeIs('admin.cities.*') ? 'active' : '' }}"
                             href="{{ route('admin.cities.index') }}" data-bs-toggle="" role="button" aria-expanded="false"
                             aria-controls="sidebarRegion">
                             <i class="bx bxs-city"></i> <span data-key="t-layouts">Thành phố</span>
@@ -118,7 +118,7 @@
                 @endcan
  @can('view_banners')
                 <li class="nav-item">
-                    <a class="nav-link menu-link {{ request()->routeIs('admin.banners.index') ? 'active' : '' }}"
+                    <a class="nav-link menu-link {{ request()->routeIs('admin.banners.*') ? 'active' : '' }}"
                         href="{{ route('admin.banners.index') }}">
                         <i class="ri-image-fill"></i> <span data-key="t-layouts">Ảnh Banner</span>
                     </a>
@@ -126,7 +126,7 @@
 @endcan
                 @can('view_hotel')
                     <li class="nav-item">
-                        <a class="nav-link menu-link {{ request()->routeIs('admin.hotels.index') ? 'active' : '' }}"
+                        <a class="nav-link menu-link {{ request()->routeIs('admin.hotels.*') ? 'active' : '' }}"
                             href="{{ route('admin.hotels.index') }}" data-bs-toggle="" role="button"
                             aria-expanded="false" aria-controls="sidebarRegion">
                             <i class="ri-hotel-line"></i> <span data-key="t-layouts">Khách sạn</span>
@@ -145,7 +145,7 @@
 
                 @can('view_categories')
                     <li class="nav-item">
-                        <a class="nav-link menu-link {{ request()->routeIs('admin.catalogue-rooms.index') ? 'active' : '' }}"
+                        <a class="nav-link menu-link {{ request()->routeIs('admin.catalogue-rooms.*') ? 'active' : '' }}"
                             href="{{ route('admin.catalogue-rooms.index') }}" data-bs-toggle="" role="button"
                             aria-expanded="false" aria-controls="sidebarRegion">
                             <i class="ri-layout-3-line"></i> <span data-key="t-layouts">Loại phòng</span>
@@ -191,7 +191,7 @@
 
                 @can('view_vouchers')
                     <li class="nav-item">
-                        <a class="nav-link menu-link" href="{{ route('admin.vouchers.index') }}" data-bs-toggle=""
+                        <a class="nav-link menu-link {{ request()->routeIs('admin.vouchers.*') ? 'active' : '' }}" href="{{ route('admin.vouchers.index') }}" data-bs-toggle=""
                             role="button" aria-expanded="false" aria-controls="sidebarRegion">
                             <i class="ri-coupon-2-line"></i> <span data-key="t-layouts">Phiếu giảm giá</span>
                         </a>
@@ -201,7 +201,7 @@
                 @can('view_orders')
                     <li class="nav-item">
 
-                        <a class="nav-link menu-link {{ request()->routeIs('admin.orders.index') ? 'active' : '' }}"
+                        <a class="nav-link menu-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}"
                             href="{{ route('admin.orders.index') }}" data-bs-toggle="" role="button"
                             aria-expanded="false" aria-controls="sidebarCatalogueRoom">
 
@@ -214,7 +214,7 @@
                     @if (Auth::user()->type == 2)
                         <li class="nav-item">
 
-                            <a class="nav-link menu-link {{ request()->routeIs('admin.rates.hotels') ? 'active' : '' }}"
+                            <a class="nav-link menu-link {{ request()->routeIs('admin.rates.*') ? 'active' : '' }}"
                                 href="{{ route('admin.rates.hotels') }}" data-bs-toggle="" role="button"
                                 aria-expanded="false" aria-controls="sidebarRegion">
 
@@ -224,7 +224,7 @@
                     @else
                         <li class="nav-item">
 
-                            <a class="nav-link menu-link {{ request()->routeIs('admin.rates.hotel.hotelier') ? 'active' : '' }}"
+                            <a class="nav-link menu-link {{ request()->routeIs('admin.rates.hotel.*') ? 'active' : '' }}"
                                 href="{{ route('admin.rates.hotel.hotelier') }}" data-bs-toggle="" role="button"
                                 aria-expanded="false" aria-controls="sidebarRegion">
 

@@ -63,6 +63,19 @@
         background-color: #dc3545;
         color: #fff;
     }
+
+    .badge {
+            display: inline-block;
+            padding: 0.35em 0.65em;
+            font-size: 0.75rem;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.375rem;
+            color: #fff
+        }
 </style>
 
 @section('content')
@@ -246,20 +259,18 @@
                                 <div class="" style="width:100%">
                                     <p><span style="font-weight:bold">Thời gian</span>: {{Carbon\Carbon::parse($rate->created_at)->format('H:i:s d-m-Y'); }}</p>
                                 </div>
+                                <div class="" style="width:100%; margin: 5px 0">
+                                    <span style="font-weight:bold">Đánh giá</span>: 
+                                    <span class="badge" style="background-color: {{App\Models\Rate::RATE[$rate->rate][1]}}">
+                                        {{App\Models\Rate::RATE[$rate->rate][0]}}
+                                    </span>
+                                </div>
                                 <div class="" style="width:100%;">
                                     <p><span style="font-weight:bold">Nội dung</span>: {{$rate->content}}</p>
                                 </div>
-                                <div class="" style="width:100%">
-                                    <div class="" style="display: flex; align-items: center; margin-right: 10px;">
-                                        @for($i = 1; $i<= $rate->rate; ++$i)
-                                            <span style="color:yellow; font-size: 20px; font-weight: bold;"
-                                                  class="star">&#9733;</span>
-                                        @endfor
-                                    </div>
-                                </div>
                             </div>
                             @if (!empty($rate->comment))
-                                <div style="margin-left: 2rem; border: 1px solid gray; border-radius:15px;box-shadow: 1px 2px gray;">
+                                <div style="margin-left: 2rem; border-radius:10px; background-color:#F0F0F0">
                                     <div style="padding-left: 1rem; font-weight: bold">Phản hồi của khách sạn:</div>
                                     <p style="padding-left: 1rem">{{$rate->comment->content}}</p>
                                 </div>

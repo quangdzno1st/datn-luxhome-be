@@ -41,7 +41,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm">
-                                    <div class="d-flex justify-content-sm-end">
+                                    {{-- <div class="d-flex justify-content-sm-end">
                                         <div class="search-box ms-2">
                                             <input type="text" class="form-control" placeholder="Tìm kiếm...">
                                             <i class="ri-search-line search-icon"></i>
@@ -49,7 +49,7 @@
                                         <div class="ms-1">
                                             <button class="btn btn-primary">Tìm kiếm</button>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 

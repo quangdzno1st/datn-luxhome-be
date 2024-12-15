@@ -159,7 +159,7 @@
                                                                 <button type="button" class="btn btn-light"
                                                                         data-bs-dismiss="modal">Đóng
                                                                 </button>
-                                                                <button type="submit" class="btn btn-success"
+                                                                <button type="submit" class="btn btn-warning"
                                                                         id="add-btn">Cập Nhật tiện nghi
                                                                 </button>
                                                             </div>

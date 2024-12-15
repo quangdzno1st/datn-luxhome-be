@@ -14,7 +14,7 @@
 
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">Thành phố</a></li>
+                            <li class="breadcrumb-item"><a href="{{route('admin.cities.index')}}">Thành phố</a></li>
                             <li class="breadcrumb-item active">Thùng rác</li>
                         </ol>
                     </div>

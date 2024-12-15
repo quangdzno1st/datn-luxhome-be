@@ -13,7 +13,7 @@
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="javascript: void(0);">Thành phố</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('admin.cities.index')}}">Thành phố</a></li>
                         <li class="breadcrumb-item active">Thêm mới</li>
                     </ol>
                 </div>
@@ -33,7 +33,7 @@
                         <div class="row g-4 mb-3">
                             <div class="col-sm-auto">
                                 <div>
-                                    <a href="{{ route('admin.cities.index') }}" class="btn btn-light add-btn"><i
+                                    <a href="{{ route('admin.cities.index') }}" class="btn btn-primary bg-gradient waves-effect waves-primary"><i
                                             class="ri-arrow-left-line"></i> Quay lại
                                     </a>
                                 </div>

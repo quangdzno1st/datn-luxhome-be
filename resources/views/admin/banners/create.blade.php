@@ -33,7 +33,7 @@
                             <div class="row g-4 mb-3">
                                 <div class="col-sm-auto">
                                     <div>
-                                        <a href="{{route('admin.banners.index')}}" class="btn btn-light add-btn"><i
+                                        <a href="{{route('admin.banners.index')}}" class="btn btn-primary bg-gradient waves-effect waves-primary"><i
                                                     class="ri-arrow-left-line"></i> Quay lại
                                         </a>
                                         {{-- <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i
