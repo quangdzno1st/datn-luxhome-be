@@ -288,13 +288,11 @@ class OrderDetailController extends Controller
     public function isCheckin($order)
     {
         $currentTime = Carbon::now(); // Thời gian hiện tại
-        $startDate = Carbon::parse($order->start_date); // Lấy ngày bắt đầu từ order
+        $startDate = Carbon::parse($order->start_date); // Ngày bắt đầu từ order
 
-        // Lấy thời gian check-in dự kiến
         $checkinStartTime = Carbon::createFromTimeString(CHECKIN_START); // 14:00
         $checkinEndTime = Carbon::createFromTimeString(CHECKIN_END); // 00:00
 
-        // Kiểm tra ngày hiện tại có đến ngày bắt đầu chưa
         if ($currentTime->lt($startDate)) {
             return [
                 'order_id' => $order->id,
@@ -303,18 +301,14 @@ class OrderDetailController extends Controller
             ];
         }
 
-        // Tính toán thời gian check-in trong ngày
-        $checkinStartDateTime = $startDate->copy()->setTimeFrom($checkinStartTime); // Ngày bắt đầu + giờ check-in
-        $checkinEndDateTime = $startDate->copy()->setTimeFrom($checkinEndTime); // Ngày bắt đầu + giờ kết thúc
+        $checkinStartDateTime = $currentTime->copy()->setTimeFrom($checkinStartTime);
+        $checkinEndDateTime = $currentTime->copy()->setTimeFrom($checkinEndTime);
 
-        // Nếu thời gian kết thúc nhỏ hơn thời gian bắt đầu, xử lý qua ngày
         if ($checkinEndTime->lt($checkinStartTime)) {
-            $isValidCheckinTime = $currentTime->between($checkinStartDateTime, $startDate->copy()->endOfDay()) ||
-                $currentTime->between($startDate->copy()->addDay()->startOfDay(), $checkinEndDateTime);
-        } else {
-            // Xử lý bình thường nếu không qua ngày
-            $isValidCheckinTime = $currentTime->between($checkinStartDateTime, $checkinEndDateTime);
+            $checkinEndDateTime = $checkinEndDateTime->addDay();
         }
+
+        $isValidCheckinTime = $currentTime->between($checkinStartDateTime, $checkinEndDateTime);
 
         return [
             'order_id' => $order->id,
