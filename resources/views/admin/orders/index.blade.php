@@ -201,9 +201,10 @@
                                                        data-bs-toggle="modal" href="#{{ $order['id'] }}">
                                                         Yêu cầu hủy
                                                     </a>
-                                                @elseif(\App\Constant\Enum\StatusOrderEnum::isDaXacNhan($order['status'])
-                                                    || \App\Constant\Enum\StatusOrderEnum::isHoanThanh($order['status']))
+                                                @elseif(\App\Constant\Enum\StatusOrderEnum::isHoanThanh($order['status']))
                                                     <button class="btn btn-sm btn-success">{{ \App\Constant\Enum\StatusOrderEnum::parse($order['status'])->getName() }}</button>
+                                                @elseif(\App\Constant\Enum\StatusOrderEnum::isDaXacNhan($order['status']))
+                                                    <button class="btn btn-sm btn-primary">{{ \App\Constant\Enum\StatusOrderEnum::parse($order['status'])->getName() }}</button>
                                                 @else
                                                     <button class="btn btn-sm btn-warning">{{\App\Constant\Enum\StatusOrderEnum::parse($order['status'])->getName() }}</button>
                                                 @endif

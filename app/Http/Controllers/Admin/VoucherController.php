@@ -270,7 +270,7 @@ class VoucherController extends Controller
                 ->orderByDesc('created_at')
                 ->where(function ($query) {
                     $query->where('hotel_id', Auth::user()->org_id)
-                        ->orWhereNull('hotel_id');
+                        ->orWhere('hotel_id',null);
                 });
         }
 
@@ -286,7 +286,6 @@ class VoucherController extends Controller
             $vouchers = $vouchers->where('code', 'LIKE', "%{$data['code']}%");
         }
 
-        // Paginate sau khi truy vấn được xây dựng đầy đủ
         return $vouchers->paginate(10);
     }
 

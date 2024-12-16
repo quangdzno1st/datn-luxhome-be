@@ -168,8 +168,9 @@
                                         </tr>
                                         @foreach($servicesInfo as $service)
                                         <tr>
+{{--                                            <td><span class="badge bg-danger">{{ $service->status }}</span></td>--}}
                                             <td>{{ $service->serviceName }}</td>
-                                            @if($service->status==2)
+                                            @if($service->status==1)
                                                 <td><span class="badge bg-danger">Chưa thanh toán</span></td>
                                             @else
                                                 <td><span class="badge bg-success">Đã thanh toán</span></td>
@@ -335,8 +336,8 @@
                                     <div class="mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Trạng thái</label>
                                         <select class="form-select" aria-label="Default select example" name="status">
-                                            <option value="2">Chưa thanh toán</option>
-                                            <option value="1">Đã thanh toán</option>
+                                            <option value="1">Chưa thanh toán</option>
+                                            <option value="2">Đã thanh toán</option>
                                         </select>
                                     </div>
                                 </div>

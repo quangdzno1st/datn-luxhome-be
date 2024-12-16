@@ -7,17 +7,12 @@ use App\Models\BookingService;
 use App\Models\Order;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class BookingServicesInOrderDetailController extends Controller
 {
     public function addBookingServicesInOrderDetail($orderId,Request $request){
-//        $validate=$request->validate([
-//            'services'=>'required',
-//        ],[
-//            'services.required'=>'Phải chọn dịch vụ'
-//        ]);dd($validate);
-//        dd($request->services);
         if ($request->services==null){
             return redirect()->back()->with('error','Phải chọn dịch vụ!');
         }else{
@@ -31,6 +26,11 @@ class BookingServicesInOrderDetailController extends Controller
                 'status'=>$request->status,
                 'price'=>$price
             ]);
+            $test=Order::where('id', $orderId)
+                ->update([
+                    'total_amount' => DB::raw('total_amount + ' . $price),
+                ]);
+            dd($test);
         }
         return redirect()->back()->with('success','Thêm service thành công!');
         }
