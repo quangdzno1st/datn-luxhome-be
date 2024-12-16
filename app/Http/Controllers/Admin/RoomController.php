@@ -47,20 +47,20 @@ class RoomController extends Controller
     public function store(RoomRequest $request)
     {
         $this->roomService->create($request);
-        return redirect()->route('admin.rooms.index')->with('success', 'Thêm mới thành công!');
+        return redirect()->back()->with('success', 'Thêm mới thành công!');
     }
 
 
     public function update(RoomRequest $request, $id)
     {
         $this->roomService->update($id, $request);
-        return redirect()->route('admin.rooms.index')->with('success', 'Cập nhật thành công!');
+        return redirect()->back()->with('success', 'Cập nhật thành công!');
     }
 
 
     public function destroy($id)
     {
         $this->roomService->delete($id);
-        return redirect()->route('admin.rooms.index')->with('success', 'Xóa thành công!');
+        return redirect()->back()->with('success', 'Xóa thành công!');
     }
 }
