@@ -68,7 +68,7 @@ class OrderDetailController extends Controller
             $order['total_amount']=($sumService+$sumOrderItem);
 //        dd($order['total_amount']);
         }
-        Order::query()->where('id',$order->id)->update(['total_amount'=>$order['total_amount']]);
+//        Order::query()->where('id',$order->id)->update(['total_amount'=>$order['total_amount']]);
         $payable=$this->checkPayableOrTotal($order->id);
         $roomCode=$this->roomCode($order->id);
         $services=$this->availableServices($order->id);
@@ -172,7 +172,8 @@ class OrderDetailController extends Controller
     public function updateStatusGeneral($table,$idOrder,$incidental_costs=null,$total_amount=null){
         if($table == 'booking_services'){
             DB::table($table)->where('order_id', $idOrder)
-                ->update(['status' => StatusOrderEnum::HOAN_THANH->value]);
+//                đã thanh toán
+                ->update(['status' => 2]);
         }else{
             DB::table($table)->where('id', $idOrder)
                 ->update([
@@ -190,6 +191,7 @@ class OrderDetailController extends Controller
                 ->join('booking_services', 'booking_services.order_id', '=', 'orders.id')
                 ->join('services', 'services.id', '=', 'booking_services.service_id')
                 ->select(
+                    'booking_services.id as bookingServiceId',
                     'services.name as serviceName',
                     'booking_services.quantity as serviceQuantity',
                     'services.price as servicePrice',
@@ -278,7 +280,7 @@ class OrderDetailController extends Controller
         if ($actualCheckout->greaterThan($checkoutEnd)) {
             $extraHours = $checkoutEnd->diffInHours($actualCheckout);
 
-            $extraFeePerHour = 100000;
+            $extraFeePerHour = $order->booking_fee*0.01;
 
             return $extraHours * $extraFeePerHour;
         }

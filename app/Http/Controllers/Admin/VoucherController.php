@@ -8,6 +8,7 @@ use App\Http\Requests\Api\Voucher\CreateVoucherRequest;
 use App\Http\Requests\Api\Voucher\UpdateVoucherRequest;
 use App\Http\Requests\VoucherRequest;
 use App\Models\Hotel;
+use App\Models\Order;
 use App\Models\User;
 use App\Models\Voucher;
 use App\Models\Wallet;

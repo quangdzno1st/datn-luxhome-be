@@ -27,6 +27,7 @@ class VoucherServiceImpl implements VoucherService
             $vouchers = Voucher::query()
                 ->latest('created_at')
                 ->where('hotel_id','=',Auth::user()->org_id)
+                ->orWhere('hotel_id',null)
                 ->paginate(10);
         }
         return $vouchers;

@@ -36,12 +36,14 @@ class OrderController extends Controller
         $hotels=null;
         if (Auth::user()->type==User::ADMIN){
             $orders = Order::query()
-                ->orderByDesc('created_at')
+//                ->orderByDesc('created_at')
+                    ->latest('created_at')
                 ->paginate(10, ['*'], 'order');
             $hotels=Hotel::query()->select('id','name')->get();
         }else{
             $orders = Order::query()
-                ->orderByDesc('created_at')
+//                ->orderByDesc('created_at')
+                ->latest('created_at')
                 ->where('org_id', $org_id)
                 ->paginate(10, ['*'], 'order');
         }
@@ -224,10 +226,13 @@ class OrderController extends Controller
 //        dd($request);
         if (Auth::user()->type==User::ADMIN){
         $query = Order::query()
-            ->orderByDesc('created_at');
+//            ->orderByDesc('created_at')
+            ->latest('created_at')
+            ;
         }else{
             $query = Order::query()
-                ->orderByDesc('created_at')
+//                ->orderByDesc('created_at')
+                ->latest('created_at')
                 ->where('org_id', Auth::user()->org_id)
             ;
         }

@@ -98,9 +98,9 @@
                                 <thead class="table-light">
                                 <tr>
                                     <th class="" data-sort="customer_name">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="" value="">
-                                        </div>
+{{--                                        <div class="form-check">--}}
+{{--                                            <input class="form-check-input" type="checkbox" name="" value="">--}}
+{{--                                        </div>--}}
                                     </th>
                                     <th class="" data-sort="customer_name">Mã giảm giá</th>
                                     <th class="" data-sort="customer_name">Thumbnail</th>
