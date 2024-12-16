@@ -256,7 +256,10 @@
                                                         từ (VND):</label>
                                                     <input type="text" class="form-control"
                                                            name="total_amount_ordered_from"
-                                                           placeholder="Tổng chi tiêu từ" id="cleave-numeral-from">
+                                                           placeholder="Tổng chi tiêu từ" id="cleave-numeral-from" min="0">
+                                                    @error('total_amount_ordered_from')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                             <!--end col-->
@@ -266,7 +269,10 @@
                                                         đến (VND):</label>
                                                     <input type="text" class="form-control"
                                                            name="total_amount_ordered_to"
-                                                           placeholder="Tổng chi tiêu đến" id="cleave-numeral-to">
+                                                           placeholder="Tổng chi tiêu đến" id="cleave-numeral-to" min="0">
+                                                    @error('total_amount_ordered_to')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                         </div>

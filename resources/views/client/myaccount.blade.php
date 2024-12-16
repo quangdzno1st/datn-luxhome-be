@@ -393,24 +393,6 @@
                                         <td><a href="#field5" class="gradient-button edit">Sửa</a></td>
                                     </tr>
 
-                                    {{-- <tr>
-                                        <th>CCCD:</th>
-                                        <td>{{ !empty($user->cccd) ? $user->cccd : '' }}
-                                            <!--edit fields-->
-                                            <div class="edit_field" id="field6">
-                                                <label for="cccd">CCCD mới:</label>
-                                                <input type="text" id="cccd" name="cccd"
-                                                       value="{{ !empty($user->cccd) ? $user->cccd : '' }}"/>
-                                                <input type="submit" value="Lưu"
-                                                       onclick="return confirm('Bạn có chắc chắn muốn cập nhật thông tin không?')"
-                                                       class="gradient-button"
-                                                       id="submit6"/>
-                                                <a href="#">Hủy</a>
-                                            </div>
-                                            <!--//edit fields-->
-                                        </td>
-                                        <td><a href="#field6" class="gradient-button edit">Sửa</a></td>
-                                    </tr> --}}
 
                                 </table>
                             </form>

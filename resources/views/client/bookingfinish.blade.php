@@ -102,7 +102,7 @@
                                 </p>
                                 <p>
                                     <i class="far fa-calendar-alt"></i>
-                                    {{ (new DateTime($order['end_date']))->diff(new DateTime($order['start_date']))->days }}
+                                    {{ (new DateTime($order['start_date']))->setTime(0,0,0)->diff((new DateTime($order['end_date']))->setTime(0,0,0))->days }}
                                     đêm
                                 </p>
 
@@ -127,8 +127,8 @@
                                 @endforeach
                             </div>
 
-                            <h2    @if(empty($servicesQty))
-                    style="border: none"
+                            <h2 @if(empty($servicesQty))
+                                    style="border: none"
                                     @endif>Dịch vụ</h2>
                             @if(!empty($servicesQty))
                                 @foreach($servicesQty as $key => $qty)

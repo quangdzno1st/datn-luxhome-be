@@ -213,7 +213,7 @@
 
                             <div class="row">
                                 <div class="f-item one-half">
-                                    <label for="email">Số Điện Thoại<span style="color: red">*</span></label>
+                                    <label for="email">Số Điện Thoại*</label>
                                     <input type="number" id="email" name="user_phone_number"
                                            value="{{ old('user_phone_number', $user?->phone) }}"/>
 
@@ -221,19 +221,25 @@
                                     <div class="text-danger" style="color:red">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="f-item one-half" >
+                                <div class="f-item one-half">
                                     <strong><span>Chọn phiếu giảm giá</span></strong>
-                                    <a type="button"   data-bs-toggle="modal"
-                                       data-bs-target="#voucherModal"><i class="fa-solid fa-square-plus fa-2xl" style="color: #ad1b01; margin: 0 5px"></i></a>
+                                    <a type="button" data-bs-toggle="modal"
+                                       data-bs-target="#voucherModal"><i class="fa-solid fa-square-plus fa-2xl"
+                                                                         style="color: #ad1b01; margin: 0 5px"></i></a>
                                     <div style="display: flex; align-items: center; padding-top: 10px">
-                                        <div id="selectedVoucher"  style="display: none;">
-                                            <strong> <i class="fa-solid fa-ticket fa-xl" style="color: #fd7272; padding-right: 5px"></i></strong> <strong><span id="selectedVoucherCode"></span></strong>
-                                            <a type="button" id="removeVoucher" class="btn btn-remove btn-sm"><i class="fa-solid fa-trash-can fa-xl" style="color: #b30000;"></i>
+                                        <div id="selectedVoucher" style="display: none;">
+                                            <strong> <i class="fa-solid fa-ticket fa-xl"
+                                                        style="color: #fd7272; padding-right: 5px"></i></strong>
+                                            <strong><span id="selectedVoucherCode"></span></strong>
+                                            <a type="button" id="removeVoucher" class="btn btn-remove btn-sm"><i
+                                                        class="fa-solid fa-trash-can fa-xl" style="color: #b30000;"></i>
                                             </a>
                                         </div>
 
-                                        <input type="text" hidden name="total_amount" id="totalAmountDiscount" class="total" value="{{ $total_amount }}" />
-                                        <input hidden type="text" id="voucherId" name="voucher_id" />
+
+                                        <input type="text" hidden name="total_amount" id="totalAmountDiscount"
+                                               class="total" value="{{ $total_amount }}"/>
+                                        <input hidden type="text" id="voucherId" name="voucher_id"/>
 
                                     </div>
 
@@ -277,7 +283,9 @@
 
                                                                         <div style=" padding: 10px">
                                                                             <h5> {{ $desc }} </h5>
-                                                                            <p style="padding-bottom: 5px; color: #0a0c0d">Đơn tối thiểu: {{ number_format($voucher['conditional_total_amount']) . ' VND' }}</p>
+                                                                            <p style="padding-bottom: 5px; color: #0a0c0d">
+                                                                                Đơn tối
+                                                                                thiểu: {{ number_format($voucher['conditional_total_amount']) . ' VND' }}</p>
                                                                             <p>
                                                                                 HSD: {{ \Carbon\Carbon::parse($voucher['start_date'])->format('d/m/Y') . ' - ' . \Carbon\Carbon::parse($voucher['end_date'])->format('d/m/Y') }}</p>
                                                                         </div>
@@ -321,7 +329,7 @@
                 <aside class="one-third right-sidebar booking">
                     <article class="hotel-details booking-details">
                         <h2 class="">Chuyến đi</h2>
-                        <div >
+                        <div>
                             @php
                                 $room = $roomBooking[0];
                             @endphp
@@ -362,6 +370,7 @@
                             @foreach($servicesQty as $key => $qty)
                                 @php
                                     $serviceInfo = $servicesInfo[$key];
+                                    $total_amount += $serviceInfo['price'];
                                 @endphp
                                 <div class="trip-info">
                                     <div class="service-info">
@@ -390,6 +399,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+
         let selectedVoucherCode = null;
         let totalAmount = {{ $total_amount }}; // Giá trị tổng tiền gốc từ Blade
         const totalElement = document.querySelector('.price .total');
@@ -468,7 +478,6 @@
                 currency: 'VND',
             }).format(newTotal)}`;
 
-            totalAmountDiscount.value = newTotal;
         }
 
         // Hàm tính tổng tiền sau giảm giá

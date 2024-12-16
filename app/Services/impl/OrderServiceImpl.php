@@ -68,6 +68,7 @@ class OrderServiceImpl implements OrderService
     public function create(OrderRequest $request)
     {
         $data = $request->validated();
+
         $data['hotel_id'] = session('hotel_id') ?? null;
         $this->validateBeforeSave($data);
 
@@ -253,6 +254,12 @@ class OrderServiceImpl implements OrderService
         Redis::expire($key, 300);
     }
 
+    private function generateUniqueKey($username, $email, $phone)
+    {
+        $separator = "|";
+        return $username . $separator . $email . $separator . $phone;
+    }
+
     /**
      * @throws RespException
      */
@@ -335,6 +342,7 @@ class OrderServiceImpl implements OrderService
     {
         $data = $this->generateUrlRedirect($this->getTotalAmountDiscount($order['total_amount'], $order['voucher_id'], $order['org_id']));
         $order->transaction_id = $data['vnp_TxnRef'];
+        session('transaction_id', $data['vnp_TxnRef']);
         $order->save();
 
         return $data['vnp_Url'];
@@ -350,7 +358,7 @@ class OrderServiceImpl implements OrderService
 
         $discountAmount = 0;
         $voucher = $this->voucherRepos->getInvalidVoucherByUserIdAndVoucherId($voucherId, $orgId, $totalAmount, $user['id']);
-        
+
         if ($voucher[0]['discount_type'] == 1) {
             $discountAmount = $totalAmount * ($voucher[0]['discount_value'] / 100);
             $discountAmount = (min($discountAmount, $voucher[0]['max_price']));
