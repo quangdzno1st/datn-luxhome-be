@@ -98,8 +98,6 @@ class AccountSettingController extends Controller
 
         $roomsServiceOrder = $this->orderService->getDataBookingForConfirm($request, $hotelId);
         $total_amount = $request?->total_amount;
-
-
         $user = Auth::user();
         $vouchers = $user ? $this->voucherRepos->getAllForOrder($total_amount, $hotelId, $user['id']) : [];
         $roomBooking = session('booking_data') ?? null;

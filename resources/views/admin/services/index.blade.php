@@ -49,10 +49,12 @@
                         <div class="row g-4 mb-3">
                             <div class="col-sm-auto">
                                 <div>
+                                    @can('create_service')
                                     <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal"
                                         id="create-btn" data-bs-target="#showModal"><i
                                             class="ri-add-line align-bottom me-1"></i> Thêm Mới
                                     </button>
+                                    @endcan
                                     {{-- <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i
                                                     class="ri-delete-bin-2-line"></i></button> --}}
                                 </div>
@@ -120,7 +122,9 @@
                                         <th>Giá</th>
                                         <th>Loại dịch vụ</th>
                                         <th>Trạng thái</th>
+                                        @can('edit_service, delete_service')
                                         <th>Hành động</th>
+                                        @endcan
                                     </tr>
                                 </thead>
                                 <tbody class="list form-check-all">
@@ -161,6 +165,7 @@
                                                 </span>
                                             </td>
 
+                                            @can('edit_service, delete_service')
                                             <td>
                                                 <div class="d-flex gap-2">
                                                     <div class="edit">
@@ -179,6 +184,7 @@
 
                                                 </div>
                                             </td>
+                                        @endcan
                                         </tr>
 
                                         <div class="modal fade" id="showModal{{ $service->id }}" tabindex="-1"

@@ -38,6 +38,7 @@ class HotelRepository extends BaseRepository implements HotelInterface
             ->withCount(['orders as monthly_orders' => function ($query) use ($currentMonthStart, $currentMonthEnd) {
                 $query->whereBetween('created_at', [$currentMonthStart, $currentMonthEnd]);
             }])
+            ->whereNull('deleted_at')
             ->orderByDesc('monthly_orders')
             ->paginate(10);
     }

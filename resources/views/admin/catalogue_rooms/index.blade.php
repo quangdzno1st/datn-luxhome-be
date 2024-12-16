@@ -28,7 +28,9 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
+                    @can('create_categories')
                     <a href="{{route('admin.catalogue-rooms.create')}}" class="btn btn-success" style="height: 37px; ">+ Thêm mới</a>
+                    @endcan
                         <form class="d-flex justify-content-sm-end" action="" method="get">
                             @if (Auth::user()->type == App\Models\User::ADMIN)
                                         <div class="ms-2">
@@ -79,15 +81,17 @@
                                      @if($roomBookedQtyMapBy[$catalogueRoom['id']]['booked_room_qty'] == $roomBookedQtyMapBy[$catalogueRoom['id']]['total_rooms'])
                                             <span class="badge bg-warning">Hết phòng</span>
                                      @endif</p>
+                                     @can('edit_categories')
                                     <div class="text-end">
                                         <a href="{{route('admin.catalogue-rooms.edit', $catalogueRoom->id)}}" class="btn btn-soft-secondary">Chi tiết</a>
                                     </div>
+                                    @endcan
                                 </div>
                             </div><!-- end card -->
                         </div><!-- end col -->
                         @endforeach
                         <div class="row">
-                            {{$catalogueRooms->appends(request()->query())->links()}}
+                            {{$catalogueRooms->appends(request()->query())->links()}}   
                         </div>
                     </div>
                 </div>

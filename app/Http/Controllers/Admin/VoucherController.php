@@ -6,8 +6,8 @@ use App\Exceptions\RespException;
 use App\Http\Controllers\Api\Controller;
 use App\Http\Requests\Api\Voucher\CreateVoucherRequest;
 use App\Http\Requests\Api\Voucher\UpdateVoucherRequest;
+use App\Http\Requests\VoucherRequest;
 use App\Models\Hotel;
-use App\Models\Order;
 use App\Models\User;
 use App\Models\Voucher;
 use App\Models\Wallet;
@@ -35,7 +35,8 @@ class VoucherController extends Controller
         VoucherServiceImpl $voucher,
         FileUploadService  $fileUploadService,
         UserRepository     $userRepos
-    ) {
+    )
+    {
         $this->voucher = $voucher;
         $this->fileUploadService = $fileUploadService;
         $this->userRepos = $userRepos;
@@ -44,11 +45,11 @@ class VoucherController extends Controller
     public function index(Request $request)
     {
         $vouchers = $this->voucher->listVoucher();
-        $hotels=Hotel::query()->select('id','name')->get();
-        if ($_GET) $vouchers= $this->searchVoucher($request->all());
+        $hotels = Hotel::query()->select('id', 'name')->get();
+        if ($_GET) $vouchers = $this->searchVoucher($request->all());
 
 //        dd($vouchers);
-        return view(self::PATH_DIRECT . __FUNCTION__, compact('vouchers','hotels'));
+        return view(self::PATH_DIRECT . __FUNCTION__, compact('vouchers', 'hotels'));
     }
 
     public function create()
@@ -63,7 +64,7 @@ class VoucherController extends Controller
         $data['thumbnail'] = $this->fileUploadService->storeLocal($request->file('thumbnail'));
         $data['id'] = Str::uuid()->toString();
 
-        if(Auth::user()->type==3) $data['hotel_id'] = Auth::user()->org_id;
+        if (Auth::user()->type == 3) $data['hotel_id'] = Auth::user()->org_id;
 
         $voucher = $this->voucher->createVoucher($data);
         return redirect()->route('admin.vouchers.index')->with('success', 'Thêm mã giảm giá thành công!');
@@ -72,9 +73,9 @@ class VoucherController extends Controller
     public function edit($id)
     {
         $voucher = $this->getNonNullById($id);
-        if (Auth::user()->type==User::HOTELIER&&$voucher->hotel_id==Auth::user()->org_id||Auth::user()->type==User::ADMIN||$voucher->hotel_id==null){
+        if (Auth::user()->type == User::HOTELIER && $voucher->hotel_id == Auth::user()->org_id || Auth::user()->type == User::ADMIN || $voucher->hotel_id == null) {
             return view(self::PATH_DIRECT . __FUNCTION__, compact('voucher'));
-        }else{
+        } else {
             return redirect()->back()->with('error', 'Không được vào voucher này!');
         }
     }
@@ -199,7 +200,7 @@ class VoucherController extends Controller
     /**
      * @throws RespException
      */
-    public function issueVoucher(Request $request)
+    public function issueVoucher(VoucherRequest $request)
     {
 
         $users = $this->userRepos->getByRankAndTotalAmountOrdered($request);
@@ -268,10 +269,8 @@ class VoucherController extends Controller
         } else {
             $vouchers = Voucher::query()
                 ->orderByDesc('created_at')
-                ->where(function ($query) {
-                    $query->where('hotel_id', Auth::user()->org_id)
-                        ->orWhereNull('hotel_id');
-                });
+                ->where('hotel_id', Auth::user()->org_id)
+                ->orWhereNull('hotel_id');
         }
 
         // Điều kiện lọc theo hotel
@@ -291,5 +290,7 @@ class VoucherController extends Controller
     }
 
 
-    private function sendMailToUser($userVoucherSendMailMap) {}
+    private function sendMailToUser($userVoucherSendMailMap)
+    {
+    }
 }

@@ -137,7 +137,6 @@
                                                                 class="ri-delete-bin-2-line"></i></button>
                                                     @endcan
                                                     </div>
-
                                                 </div>
                                             </div><!-- end card body -->
 
@@ -259,32 +258,6 @@
                                                 aria-label="Close" id="close-modal"></button>
 
                                     </div>
-                                    <form class="tablelist-form" autocomplete="off"
-                                          action="{{ route('admin.rooms.store') }}" method="POST">
-                                        @csrf
-                                        <div class="modal-body">
-                                            <div class="mb-3">
-                                                <label for="catalogue_room_id" class="form-label">Loại phòng</label>
-                                                <select class="form-control" data-trigger name="catalogue_room_id"
-                                                        id="type-field" required>
-                                                    @foreach ($catalogueRooms as $catalogueRoom)
-                                                        <option value="{{ $catalogueRoom->id }}">
-                                                            {{ $catalogueRoom->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label for="catalogue_room_id" class="form-label">Trạng thái</label>
-                                                <select class="form-control" data-trigger name="status" id="type-field"
-                                                        required>
-                                                    @foreach (\App\Constant\Enum\RoomStatusEnum::cases() as $roomStatus)
-                                                        <option value="{{ $roomStatus->value }}">
-                                                            {{ $roomStatus->getName() }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
                                         <form class="tablelist-form" autocomplete="off"
                                             action="{{ route('admin.rooms.store') }}" method="POST">
                                             @csrf

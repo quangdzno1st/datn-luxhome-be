@@ -85,6 +85,7 @@ class VoucherRepository extends BaseRepository implements VoucherInterface
 
     public function getInvalidVoucherByUserIdAndVoucherId($voucherId, $hotelId, $orderTotalAmount, $userId)
     {
+
         $dateNow = Carbon::now()->startOfDay();
         return Voucher::query()
             ->select('vouchers.id as voucher_id', 'vouchers.discount_type', 'vouchers.discount_value', 'vouchers.max_price')

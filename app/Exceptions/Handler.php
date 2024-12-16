@@ -53,9 +53,9 @@ class Handler extends ExceptionHandler
             return $e->render();
         }
 
-//        if ($e instanceof \Exception) {
-//           return redirect()->back()->with('error', $e->getMessage());
-//        }
+       if ($e instanceof \Exception) {
+          return redirect()->back()->with('error', $e->getMessage());
+       }
 
         return parent::render($request, $e);
     }
