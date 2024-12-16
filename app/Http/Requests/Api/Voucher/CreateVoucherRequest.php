@@ -31,7 +31,7 @@ class CreateVoucherRequest extends FormRequest
             'status' => 'required|in:1,0', // bắt buộc, phải là một trong hai giá trị: 'active' hoặc 'inactive'
             'quantity' => 'required|integer|min:1', // bắt buộc, là số nguyên, tối thiểu là 1
             'discount_value' => 'required|numeric|min:1', // bắt buộc, là số, tối thiểu là 1
-            'start_date' => 'nullable|date', // bắt buộc, phải là ngày hợp lệ
+            'start_date' => 'nullable|date|after_or_equal:today', // bắt buộc, phải là ngày hợp lệ
             'end_date' => 'nullable|date|after_or_equal:start_date', // có thể bỏ trống, là ngày hợp lệ, phải lớn hơn hoặc bằng ngày bắt đầu
             'discount_type' => 'required|in:1,0',
             'max_price' => 'numeric|min:1',
@@ -66,6 +66,7 @@ class CreateVoucherRequest extends FormRequest
             'discount_value.min' => 'Giá trị giảm giá phải lớn hơn hoặc bằng 0',
 
             'start_date.date' => 'Ngày bắt đầu phải là ngày hợp lệ',
+            'start_date.after_or_equal' => 'Ngày bắt đầu phải lớn hơn hoặc bằng ngày hiện tại.',
 
             'end_date.date' => 'Ngày kết thúc phải là ngày hợp lệ',
             'end_date.after_or_equal' => 'Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu',

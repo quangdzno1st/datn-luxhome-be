@@ -34,4 +34,9 @@ class Service extends Model
         'id' => 'string',
     ];
 
+    public function hotel()
+    {
+        return $this->hasOne(Hotel::class, 'id', 'hotel_id');
+    }
+
 }

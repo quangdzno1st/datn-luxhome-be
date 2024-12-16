@@ -144,46 +144,31 @@ class VoucherController extends Controller
         }
     }
 
-    public function list_trash()
-    {
-        $trashedVouchers = Voucher::onlyTrashed()->get();
-        return view(self::PATH_DIRECT . __FUNCTION__, compact('trashedVouchers'));
-    }
-
-    public function restore($id)
-    {
-        try {
-            DB::beginTransaction();
-
-            $voucher = $this->voucher->restoreVoucher($id);
-
-            DB::commit();
-
-            return $this->index();
-        } catch (\Exception $exception) {
-            return Redirect::back()->with('error', 'Errors: ' . $exception->getMessage());
-        }
-    }
+    // public function list_trash()
+    // {
+    //     $trashedVouchers = Voucher::onlyTrashed()->get();
+    //     return view(self::PATH_DIRECT . __FUNCTION__, compact('trashedVouchers'));
+    // }
 
     /**
      * @throws RespException
      */
-    public function destroy($id)
-    {
+    // public function destroy($id)
+    // {
 
-        try {
-            DB::beginTransaction();
+    //     try {
+    //         DB::beginTransaction();
 
-            $voucher = $this->getNonNullById($id);
-            $this->voucher->forceDeleteVoucher($voucher['id']);
+    //         $voucher = $this->getNonNullById($id);
+    //         $this->voucher->forceDeleteVoucher($voucher['id']);
 
-            DB::commit();
+    //         DB::commit();
 
-            return $this->index();
-        } catch (\Exception $exception) {
-            return Redirect::back()->with('error', 'Errors: ' . $exception->getMessage());
-        }
-    }
+    //         return $this->index();
+    //     } catch (\Exception $exception) {
+    //         return Redirect::back()->with('error', 'Errors: ' . $exception->getMessage());
+    //     }
+    // }
 
     public function getByCondition($key)
     {

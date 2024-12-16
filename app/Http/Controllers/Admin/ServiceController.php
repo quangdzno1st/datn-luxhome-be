@@ -46,8 +46,6 @@ class ServiceController extends Controller
 
         $data['status'] = $data['status'] ?? 2;
 
-        $data['hotel_id'] = Auth::user()->org_id;
-
         try {
             DB::beginTransaction();
 

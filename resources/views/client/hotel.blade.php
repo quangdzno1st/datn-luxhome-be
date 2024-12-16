@@ -1133,18 +1133,24 @@
             });
 
             @foreach ($filteredData as $key => $data)
-                $('#qty_room_{{ $key }}').on('input', function() {
-                    var qty = $(this).val(); // Lấy giá trị số lượng phòng nhập vào
-                    var availableRooms = {{ $data['rooms_count'] }}; // Lấy số phòng có sẵn từ server
+    $('#qty_room_{{ $key }}').on('input', function() {
+        var qty = $(this).val(); // Lấy giá trị số lượng phòng nhập vào
+        var availableRooms = {{ $data['rooms_count'] }}; // Lấy số phòng có sẵn từ server
 
-                    // Kiểm tra nếu số lượng phòng nhập vào vượt quá số phòng có sẵn
-                    if (qty > availableRooms) {
-                        $('#error-message_{{ $key }}').show();
-                    } else {
-                        $('#error-message_{{ $key }}').hide();
-                    }
-                });
-            @endforeach
+        // Kiểm tra nếu giá trị nhập là số âm
+        if (qty < 0) {
+            $('#error-message_{{ $key }}').text('Không được nhập số âm.').show(); // Hiển thị lỗi
+            $(this).val(0); // Đặt lại giá trị về 0
+        }
+        // Kiểm tra nếu số lượng phòng nhập vào vượt quá số phòng có sẵn
+        else if (qty > availableRooms) {
+            $('#error-message_{{ $key }}').text('Số lượng phòng không đủ.').show(); // Hiển thị lỗi
+        } else {
+            $('#error-message_{{ $key }}').hide(); // Ẩn lỗi nếu hợp lệ
+        }
+    });
+@endforeach
+
 
             $('.qty-input').on('input', function() {
                 // Lấy giá trị vừa nhập

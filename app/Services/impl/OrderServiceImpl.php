@@ -630,7 +630,7 @@ class OrderServiceImpl implements OrderService
         }
 
         if (!$isInvalid) {
-            $request->validate($rules);
+            $request->validate($rules, ['required' => 'Số lượng đặt phòng không thể để trống']);
         }
 
         return $data;

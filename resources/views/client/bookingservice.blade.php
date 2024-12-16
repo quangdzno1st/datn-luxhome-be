@@ -267,7 +267,7 @@
                                         </p>
                                         <p>
                                             <i class="far fa-calendar-alt"></i>
-                                            @dd(new DateTime($room['end_date']),new DateTime($room['start_date']))
+                                            {{-- @dd(new DateTime($room['end_date']),new DateTime($room['start_date'])) --}}
 
                                             {{ (new DateTime($room['end_date']))->diff(new DateTime($room['start_date']))->days }}
                                             đêm

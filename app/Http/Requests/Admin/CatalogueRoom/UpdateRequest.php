@@ -35,7 +35,7 @@ class UpdateRequest extends FormRequest
             'description' => 'required|string',
             'hotel_id' => 'required|string',
             'images' => 'array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            // 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'thumbnail' => 'image|mimes:jpeg,png,jpg,gif',
         ];
     }

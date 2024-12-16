@@ -35,7 +35,7 @@ class CreateRequest extends FormRequest
             'description' => 'required|string',
             'hotel_id' => 'required|string',
             'images' => 'required|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            // 'images.*' => 'image|mimes:jpeg,png,jpg,gif',
             'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif',
         ];
     }

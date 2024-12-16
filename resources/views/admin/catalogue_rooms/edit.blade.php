@@ -33,22 +33,6 @@
     </div>
     <!-- end page title -->
 
-    <!-- Notification -->
-    {{-- <div class="row">
-        @if (session('msg'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>{{ session('msg') }}</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-        @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>{{ session('error') }}</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-    </div> --}}
-
     <form action="{{ route('admin.catalogue-rooms.update', $catalogueRoom->id) }}" method="post" enctype="multipart/form-data">
         @csrf
         @method('PUT')
@@ -88,14 +72,14 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
-                            <div class="col">
-                                <label class="form-label" for="price_hour">Giá phạt checkout quá giờ<span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="price_hour" name="price_hour"
-                                    value="{{ $catalogueRoom->price_hour }}" placeholder="Giá phạt">
-                                @error('price_hour')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
+                            {{-- <div class="col"> --}}
+                            {{-- <label class="form-label" for="price_hour">Giá phạt checkout quá giờ<span class="text-danger">*</span></label> --}}
+                            <input type="hidden" class="form-control" id="price_hour" name="price_hour" value="0"
+                                placeholder="Giá phạt">
+                                {{-- @error('price_hour')
+                                <p class="text-danger">{{$message}}</p>
+                            @enderror --}}
+                           {{-- </div> --}}
                         </div>
 
                         {{-- <div class="mb-3 row">
@@ -142,7 +126,7 @@
             </div>
             <!-- end col -->
             <div class="col-lg-4">
-                {{-- @if (Auth::user()->type == 2)
+                @if (Auth::user()->type == 2)
                     <div class="card">
                         <div class="card-header">
                             <h5 class="card-title mb-0">Khách sạn</h5>
@@ -153,7 +137,7 @@
                                 <select name="hotel_id" id="hotel" class="form-select">
                                     <option value="">--Chọn khách sạn--</option>
                                     @foreach ($hotels as $hotel)
-                                        <option value="{{ $hotel->id }}">{{ $hotel->name }}</option>
+                                        <option value="{{ $hotel->id }}" @selected($catalogueRoom->hotel->id == $hotel->id)>{{ $hotel->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('hotel_id')
@@ -166,8 +150,8 @@
                     <!-- end card -->
                 @else
                     <input type="hidden" value="{{Auth::user()->org_id}}" name="hotel_id">
-                @endif --}}
-                <input type="hidden" value="{{ Auth::user()->org_id }}" name="hotel_id">
+                @endif
+                {{-- <input type="hidden" value="{{ Auth::user()->org_id }}" name="hotel_id"> --}}
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
                         <h5 class="card-title mb-0">Hình ảnh</h5>

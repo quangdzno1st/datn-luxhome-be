@@ -18,7 +18,7 @@ class ServiceServiceImpl implements ServiceService
 
     public function getAll(Request $request, $org_id)
     {
-        $query = Service::query();
+        $query = Service::query()->with('hotel');
 
         if (!empty($org_id)) {
             $query->where('hotel_id', $org_id);

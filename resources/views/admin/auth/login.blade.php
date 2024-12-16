@@ -75,7 +75,7 @@
                                         @csrf
                                         <div class="mb-3">
                                             <label for="email" class="form-label">Email</label>
-                                            <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="Enter email number" value="{{ old('email') }}">
+                                            <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="Nhập email" value="{{ old('email') }}">
 
                                             @error('email')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -94,7 +94,7 @@
                                                 <input type="password"
                                                        class="form-control pe-5 password-input @error('password') is-invalid @enderror"
                                                        name="password"
-                                                       placeholder="Enter password"
+                                                       placeholder="Nhập mật khẩu"
                                                        id="password-input"
                                                        value="">
 

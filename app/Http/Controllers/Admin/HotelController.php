@@ -32,9 +32,9 @@ class HotelController extends Controller
     {
         $user = Auth::user();
 
-        if($user->type == User::HOTELIER){
+        if ($user->type != User::ADMIN) {
             $data = $this->hotelRepository->getAllForHotelier();
-        }else if($user->type == User::ADMIN){
+        } else {
             $query = Hotel::query();
             if (request()->filled('keyword')) {
                 $keyword = request()->input('keyword');
@@ -57,14 +57,14 @@ class HotelController extends Controller
     {
         try {
             $data = $request->validated();
-//            dd($data);
+            //            dd($data);
             $data['status'] = $request->status ? 1 : 0;
             $this->hotelService->createNewHotel($data);
 
             return redirect()->route('admin.hotels.index')->with('success', 'Thêm mới khách sạn thành công');
         } catch (\Exception $e) {
             // dd($e->getMessage());
-            return back()->with('error' , $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -114,7 +114,6 @@ class HotelController extends Controller
         $data = $this->hotelRepository->trash();
 
         return view(self::PATH_VIEW . __FUNCTION__, compact('data'));
-
     }
 
     public function restore($id)
