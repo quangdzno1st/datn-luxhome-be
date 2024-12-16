@@ -263,6 +263,7 @@
                                             @csrf
                                             <div class="modal-body">
                                                 <div class="mb-3">
+                                                    <input type="hidden" name="hotel_id" value="{{ request('hotel_id') ?? auth()->user()->org_id }}">
                                                     <label for="catalogue_room_id" class="form-label">Loại phòng</label>
                                                     <select class="form-control" data-trigger name="catalogue_room_id"
                                                         id="type-field" required>
