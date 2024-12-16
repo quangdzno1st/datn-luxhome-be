@@ -51,7 +51,7 @@
                             </div>
                             <div class="ms-2">
                                 <select name="status" id="" class="form-select">
-                                    <option value="">Chọn tất cả</option>
+                                    <option value="">Chọn trạng thái</option>
                                     <option value="1" @selected(request()->input('status') == 1)>Hoạt động</option>
                                     <option value="2" @selected(request()->input('status') == 2)>Không hoạt động</option>
                                 </select>

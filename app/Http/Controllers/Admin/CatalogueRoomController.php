@@ -148,18 +148,19 @@ class CatalogueRoomController extends Controller
 
         $attributes = Attribute::all();
 
-        $catalogueRoom = CatalogueRoom::query()->with('hotel', 'attributes', 'images')->where('id', $id)->where('hotel_id', $hotelID)->firstOrFail();
+        $catalogueRoom = CatalogueRoom::query()->with('hotel', 'attributes', 'images')->where('id', $id)->firstOrFail();
         // dd($catalogueRoom->toArray());
-        return view(self::PATH_VIEW . __FUNCTION__, compact('catalogueRoom', 'attributes'));
+        $hotels = Hotel::all();
+        return view(self::PATH_VIEW . __FUNCTION__, compact('catalogueRoom', 'attributes', 'hotels'));
     }
 
 
     public function update(UpdateRequest $request, $id)
     {
         // dd($request->all());
-        $hotelID = Auth::user()->org_id;
+        // $hotelID = Auth::user()->org_id;
 
-        $catalogueRoom = CatalogueRoom::query()->where('id', $id)->where('hotel_id', $hotelID)->firstOrFail();
+        $catalogueRoom = CatalogueRoom::query()->where('id', $id)->firstOrFail();
 
         $oldThumbnail = $catalogueRoom->thumbnail;
 

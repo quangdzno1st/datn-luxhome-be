@@ -26,22 +26,31 @@ class HotelRepository extends BaseRepository implements HotelInterface
     }
 
     public function getAllForClient()
-    {
-        $currentMonthStart = now()->startOfMonth();
-        $currentMonthEnd = now()->endOfMonth();
+{
+    $currentMonthStart = now()->startOfMonth();
+    $currentMonthEnd = now()->endOfMonth();
 
-        return $this->model
-            ->select('hotels.id', 'hotels.name', 'hotels.location', 'hotels.quantity_of_room', 'hotels.star',
-                'hotels.city_id', 'hotels.phone', 'hotels.email', 'hotels.status', 'hotels.quantity_floor',
-                'hotels.thumbnail', 'hotels.description', 'hotels.province', 'hotels.district', 'hotels.commune',
-                'hotels.latitude', 'hotels.longitude', 'hotels.view')
-            ->withCount(['orders as monthly_orders' => function ($query) use ($currentMonthStart, $currentMonthEnd) {
-                $query->whereBetween('created_at', [$currentMonthStart, $currentMonthEnd]);
-            }])
-            ->whereNull('deleted_at')
-            ->orderByDesc('monthly_orders')
-            ->paginate(10);
-    }
+    return $this->model
+        ->select(
+            'hotels.id', 'hotels.name', 'hotels.location', 'hotels.quantity_of_room', 'hotels.star',
+            'hotels.city_id', 'hotels.phone', 'hotels.email', 'hotels.status', 'hotels.quantity_floor',
+            'hotels.thumbnail', 'hotels.description', 'hotels.province', 'hotels.district', 'hotels.commune',
+            'hotels.latitude', 'hotels.longitude', 'hotels.view'
+        )
+        // ->join('orders', 'orders.org_id', '=', 'hotels.id') // Thực hiện join với bảng orders
+        ->withCount([
+            'orders as monthly_orders' => function ($query) use ($currentMonthStart, $currentMonthEnd) {
+                $query->whereBetween('orders.created_at', [$currentMonthStart, $currentMonthEnd])->where('orders.status', 3);
+            }
+        ])
+        
+        ->whereNull('hotels.deleted_at')
+        ->where('status', 1)
+        ->groupBy('hotels.id')
+        ->orderByDesc('monthly_orders')
+        ->paginate(10);
+}
+
 
     public function getAllForHotelier()
     {

@@ -370,7 +370,7 @@
                             @foreach($servicesQty as $key => $qty)
                                 @php
                                     $serviceInfo = $servicesInfo[$key];
-                                    $total_amount += $serviceInfo['price'];
+                                    $total_amount += $serviceInfo['price']*$qty;
                                 @endphp
                                 <div class="trip-info">
                                     <div class="service-info">

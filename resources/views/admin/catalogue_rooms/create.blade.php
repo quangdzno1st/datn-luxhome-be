@@ -76,14 +76,14 @@
                                 <p class="text-danger">{{$message}}</p>
                             @enderror
                            </div>
-                           <div class="col">
-                            <label class="form-label" for="price_hour">Giá phạt checkout quá giờ<span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" id="price_hour" name="price_hour" value="{{ old('price_hour') }}"
+                           {{-- <div class="col"> --}}
+                            {{-- <label class="form-label" for="price_hour">Giá phạt checkout quá giờ<span class="text-danger">*</span></label> --}}
+                            <input type="hidden" class="form-control" id="price_hour" name="price_hour" value="0"
                                 placeholder="Giá phạt">
-                                @error('price_hour')
+                                {{-- @error('price_hour')
                                 <p class="text-danger">{{$message}}</p>
-                            @enderror
-                           </div>
+                            @enderror --}}
+                           {{-- </div> --}}
                         </div>
 
                         <div class="mb-2 d-flex justify-content-end">
@@ -114,7 +114,7 @@
             </div>
             <!-- end col -->
             <div class="col-lg-4">
-                {{-- @if (Auth::user()->type == 2)
+                @if (Auth::user()->type == 2)
                     <div class="card">
                         <div class="card-header">
                             <h5 class="card-title mb-0">Khách sạn</h5>
@@ -138,8 +138,8 @@
                     <!-- end card -->
                 @else
                     <input type="hidden" value="{{Auth::user()->org_id}}" name="hotel_id">
-                @endif --}}
-                <input type="hidden" value="{{Auth::user()->org_id}}" name="hotel_id">
+                @endif
+                {{-- <input type="hidden" value="{{Auth::user()->org_id}}" name="hotel_id"> --}}
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title mb-0">Hình ảnh<span class="text-danger">*</span></h5>

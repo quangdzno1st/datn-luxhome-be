@@ -49,11 +49,11 @@
                         <div class="row g-4 mb-3">
                             <div class="col-sm-auto">
                                 <div>
-                                    @can('create_service')
-                                    <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal"
-                                        id="create-btn" data-bs-target="#showModal"><i
-                                            class="ri-add-line align-bottom me-1"></i> Thêm Mới
-                                    </button>
+                                    @can('create_services')
+                                        <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal"
+                                            id="create-btn" data-bs-target="#showModal"><i
+                                                class="ri-add-line align-bottom me-1"></i> Thêm Mới
+                                        </button>
                                     @endcan
                                     {{-- <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i
                                                     class="ri-delete-bin-2-line"></i></button> --}}
@@ -122,9 +122,9 @@
                                         <th>Giá</th>
                                         <th>Loại dịch vụ</th>
                                         <th>Trạng thái</th>
-                                        @can('edit_service, delete_service')
-                                        <th>Hành động</th>
-                                        @endcan
+                                        @if (Gate::check('edit_services') || Gate::check('delete_services'))
+                                            <th>Hành động</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody class="list form-check-all">
@@ -165,26 +165,30 @@
                                                 </span>
                                             </td>
 
-                                            @can('edit_service, delete_service')
-                                            <td>
-                                                <div class="d-flex gap-2">
-                                                    <div class="edit">
-                                                        <button class="btn btn-sm btn-soft-warning edit-item-btn"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#showModal{{ $service->id }}"><i
-                                                                class="ri-edit-2-line"></i></button>
-                                                    </div>
+                                            @if (Gate::check('edit_services') || Gate::check('delete_services'))
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        @can('edit_services')
+                                                            <div class="edit">
+                                                                <button class="btn btn-sm btn-soft-warning edit-item-btn"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#showModal{{ $service->id }}"><i
+                                                                        class="ri-edit-2-line"></i></button>
+                                                            </div>
+                                                        @endcan
+                                                        @can('delete_services')
+                                                            <div class="remove">
+                                                                <button class="btn btn-sm btn-soft-danger remove-item-btn"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#deleteRecordModal{{ $service->id }}"><i
+                                                                        class="ri-delete-bin-2-line"></i></button>
+                                                            </div>
+                                                        @endcan
 
-                                                    <div class="remove">
-                                                        <button class="btn btn-sm btn-soft-danger remove-item-btn"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#deleteRecordModal{{ $service->id }}"><i
-                                                                class="ri-delete-bin-2-line"></i></button>
                                                     </div>
+                                                </td>
+                                            @endif
 
-                                                </div>
-                                            </td>
-                                        @endcan
                                         </tr>
 
                                         <div class="modal fade" id="showModal{{ $service->id }}" tabindex="-1"
@@ -244,6 +248,29 @@
                                                                         for="SwitchCheck3">Hoạt động</label>
                                                                 </div>
                                                             </div>
+
+                                                            @if (Auth::user()->type == 2)
+                                                                <div class="mb-3">
+                                                                    <label for="hotel" class="form-label">Khách
+                                                                        sạn</label>
+                                                                    <select name="hotel_id" id="hotel"
+                                                                        class="form-select">
+                                                                        <option value="">--Chọn khách sạn--</option>
+                                                                        @foreach ($hotels as $hotel)
+                                                                            <option value="{{ $hotel->id }}" @selected($service->hotel->id == $hotel->id)>
+                                                                                {{ $hotel->name }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                    @error('hotel_id')
+                                                                        <p class="text-danger">{{ $message }}</p>
+                                                                    @enderror
+                                                                </div>
+                                                                <!-- end card body -->
+                                                            @else
+                                                                <input type="hidden" value="{{ Auth::user()->org_id }}"
+                                                                    name="hotel_id">
+                                                            @endif
 
                                                             <div class="mb-3">
                                                                 <label for="type" class="form-label">Loại dịch
@@ -393,6 +420,26 @@
                                                     <label class="form-check-label" for="SwitchCheck3">Hoạt động</label>
                                                 </div>
                                             </div>
+
+                                            @if (Auth::user()->type == 2)
+                                                <div class="mb-3">
+                                                    <label for="hotel" class="form-label">Khách sạn</label>
+                                                    <select name="hotel_id" id="hotel" class="form-select">
+                                                        <option value="">--Chọn khách sạn--</option>
+                                                        @foreach ($hotels as $hotel)
+                                                            <option value="{{ $hotel->id }}">{{ $hotel->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('hotel_id')
+                                                        <p class="text-danger">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+                                                <!-- end card body -->
+                                            @else
+                                                <input type="hidden" value="{{ Auth::user()->org_id }}"
+                                                    name="hotel_id">
+                                            @endif
 
                                             <div class="mb-3">
                                                 <label for="type" class="form-label">Loại dịch vụ</label>

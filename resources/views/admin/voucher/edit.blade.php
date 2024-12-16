@@ -55,7 +55,7 @@
 
                                 <div class="row">
                                     <div class="mb-3 col">
-                                        <label class="form-label" for="thumbnail">Thumbnail</label>
+                                        <label class="form-label" for="thumbnail">Ảnh đại diện<span class="text-danger">*</span></label>
                                         <input class="form-control" id="thumbnail" type="file" name="thumbnail"
                                             accept="image/png, image/gif, image/jpeg">
                                         @error('thumbnail')
@@ -67,7 +67,7 @@
                                         </div>
                                     </div>
                                     <div class="mb-3 col">
-                                        <label for="status">Trạng thái</label>
+                                        <label for="status">Trạng thái<span class="text-danger">*</span></label>
                                         <select class="form-control" name="status" id="">
                                             <option value="1" {{ old('status') == '1' ? 'selected' : '' }}
                                                 {{ $voucher->status == 1 ? 'selected' : '' }}>
@@ -86,7 +86,7 @@
 
                                 <div class="row">
                                     <div class="mb-3 col">
-                                        <label for="discount_type" class="form-label">Loại giảm giá:</label>
+                                        <label for="discount_type" class="form-label">Loại giảm giá<span class="text-danger">*</span></label>
                                         <select id="discount_type" name="discount_type" class="form-select">
                                             <option value="0" @selected($voucher->discount_type == 0)>Tiền mặt</option>
                                             <option value="1" @selected($voucher->discount_type == 1)>%</option>
@@ -97,7 +97,7 @@
                                     </div>
 
                                     <div class="mb-3 col">
-                                        <label for="discount_value" class="form-label">Giá trị giảm giá:</label>
+                                        <label for="discount_value" class="form-label">Giá trị giảm giá<span class="text-danger">*</span></label>
                                         <input value="{{ $voucher->discount_value }}" type="number" id="discount_value"
                                             name="discount_value" step="0.01" placeholder="Nhập giá trị giảm giá"
                                             class="form-control" />
@@ -109,7 +109,7 @@
 
                                 <div class="row">
                                     <div class="mb-3 col">
-                                        <label for="quantity" class="form-label">Số lượng</label>
+                                        <label for="quantity" class="form-label">Số lượng<span class="text-danger">*</span></label>
                                         <input type="number" id="quantity" class="form-control"
                                             value="{{ $voucher->quantity }}" name="quantity" placeholder="Nhập số lượng" />
                                         @error('quantity')
@@ -118,7 +118,7 @@
                                     </div>
 
                                     <div class="mb-3 col">
-                                        <label for="max_price" class="form-label">Giá giảm tối đa</label>
+                                        <label for="max_price" class="form-label">Giá giảm tối đa<span class="text-danger">*</span></label>
                                         <input type="number" class="form-control" value="{{ $voucher->max_price }}"
                                             name="max_price" placeholder="Nhập giá tối đa">
                                         @error('max_price')
@@ -130,7 +130,7 @@
 
                                 <div class="row">
                                     <div class="mb-3 col">
-                                        <label for="start_date" class="form-label">Ngày bắt đầu</label>
+                                        <label for="start_date" class="form-label">Ngày bắt đầu<span class="text-danger">*</span></label>
                                         <input type="date" class="form-control" name="start_date"
                                             value="{{ $voucher->start_date }}">
                                         @error('start_date')
@@ -139,7 +139,7 @@
                                     </div>
 
                                     <div class="mb-3 col">
-                                        <label for="end_date" class="form-label">Ngày kết thúc</label>
+                                        <label for="end_date" class="form-label">Ngày kết thúc<span class="text-danger">*</span></label>
                                         <input type="date" class="form-control" name="end_date"
                                             value="{{ $voucher->end_date }}">
                                         @error('end_date')
@@ -150,7 +150,7 @@
 
                                 <div class="row">
                                     <div class="mb-3 col-12">
-                                        <label for="" class="form-label">Tổng tiền đơn đặt có thể sử dụng</label>
+                                        <label for="" class="form-label">Tổng tiền đơn đặt có thể sử dụng<span class="text-danger">*</span></label>
                                         <input type="number" class="form-control" name="conditional_total_amount"
                                             min="1" value="{{ $voucher->conditional_total_amount }}"
                                             placeholder="Nhập tổng tiền đơn đặt">
@@ -161,7 +161,7 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="description" class="form-label">Mô tả</label>
+                                    <label for="description" class="form-label">Mô tả<span class="text-danger">*</span></label>
                                     <textarea name="description" class="form-control" id="description" cols="30" rows="5"
                                         placeholder="Nhập mô tả">{{ $voucher->description }}
                                     </textarea>

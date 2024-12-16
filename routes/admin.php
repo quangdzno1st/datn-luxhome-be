@@ -204,24 +204,24 @@ Route::group(['middleware' => ['admin']], function () {
 
     Route::prefix('rates')->name('rates.')->controller(RateController::class)->group(function(){
         //route của superadmin
-        Route::get('/hotels', 'listRatesAllHotels')->name('hotels');
-        Route::get('/hotel/{hotelId}', 'listRatesOneHotel')->name('hotel')->middleware('check.hotel');
-        Route::get('/trash/hotel/{hotelId}', 'listRatesOneHotelTrash')->name('hotel.trash')->middleware('check.hotel');
+        Route::get('/hotels', 'listRatesAllHotels')->name('hotels')->middleware('can:view_reviews');
+        Route::get('/hotel/{hotelId}', 'listRatesOneHotel')->name('hotel')->middleware(['check.hotel', 'can:view_reviews']);
+        Route::get('/trash/hotel/{hotelId}', 'listRatesOneHotelTrash')->name('hotel.trash')->middleware(['check.hotel', 'can:view_reviews']);
 
         //route của hotelier
-        Route::get('/hotelier', 'getRatesByHotelIdOfHotelier')->name('hotel.hotelier');
-        Route::get('/trash/hotelier', 'getRatesByHotelIdOfHotelierTrash')->name('hotel.trash.hotelier');
+        Route::get('/hotelier', 'getRatesByHotelIdOfHotelier')->name('hotel.hotelier')->middleware('can:view_reviews');
+        Route::get('/trash/hotelier', 'getRatesByHotelIdOfHotelierTrash')->name('hotel.trash.hotelier')->middleware('can:view_reviews');
 
         //route 2 thằng đều dùng được
-        Route::post('/hidden/{rateId}', 'rateHidden')->name('hidden');
-        Route::post('/restore/{rateId}', 'rateRestore')->name('restore');
-        Route::delete('/destroy/{rateId}', 'rateDestroy')->name('destroy');
+        Route::post('/hidden/{rateId}', 'rateHidden')->name('hidden')->middleware('can:edit_reviews');
+        Route::post('/restore/{rateId}', 'rateRestore')->name('restore')->middleware('can:edit_reviews');
+        Route::delete('/destroy/{rateId}', 'rateDestroy')->name('destroy')->middleware('can:delete_reviews');
     });
 
     Route::prefix('comments')->name('comments.')->controller(CommentController::class)->group(function(){
-        Route::post('/store', 'store')->name('store');
-        Route::put('/update/{id}', 'update')->name('update');
-        Route::get('/delete/{id}', 'delete')->name('delete');
+        Route::post('/store', 'store')->name('store')->middleware('can:create_comments');
+        Route::put('/update/{id}', 'update')->name('update')->middleware('can:edit_comments');
+        Route::get('/delete/{id}', 'delete')->name('delete')->middleware('can:delete_comments');
     });
 
     Route::prefix('banners')->name('banners.')->controller(BannerController::class)->group(function() {
