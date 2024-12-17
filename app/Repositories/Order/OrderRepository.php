@@ -33,7 +33,7 @@ class OrderRepository extends BaseRepository implements OrderInterface
         $query = Order::query()
             ->select('orders.start_date', 'orders.end_date', 'orders.code', 'orders.total_amount', 'orders.status',
                 'h.district', 'h.name as hotel_name', 'orders.id', 'h.province', 'orders.is_requried_cancel',
-                'h.star', 'orders.code', 'orders.name', 'orders.email', 'orders.phone', 'orders.note')
+                'h.star', 'orders.code', 'orders.name', 'orders.email', 'orders.phone', 'orders.note', 'orders.org_id')
             ->join('hotels as h', 'h.id', '=', 'orders.org_id');
 
         if (isset($request['user_id'])) {

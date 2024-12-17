@@ -303,7 +303,6 @@ class OrderServiceImpl implements OrderService
 
 
         $rooms = $this->roomRepos->getRoomAvailableByIdInAndOrgId($orgId, $roomIds, $order['start_date'], $order['end_date']);
-
         if (empty($rooms->toArray())) {
             throw new RespException(__('messages.room_not_found'));
         }
@@ -584,7 +583,7 @@ class OrderServiceImpl implements OrderService
         return $dataResp;
     }
 
-    public function getRoomOrderQtyMapByCatalogueRoomId(array $roomsOrder)
+    public function getRoomOrderQtyMapByCatalogueRoomId($roomsOrder)
     {
         $groupedRooms = [];
 
@@ -705,15 +704,21 @@ class OrderServiceImpl implements OrderService
         return $this->handleBookingForConfirmData($hotelId, $data);
     }
 
+    public function getDataBookingForFinish($hotelId)
+    {
+        $data = session('service_booking');
+        return $this->handleBookingForConfirmData($hotelId, $data);
+    }
+
+
     public function handleBookingForConfirmData($hotelId, $data)
     {
         if (empty($data)) {
             return [];
         }
 
-        $serviceBookingsQty = $this->handleCountService($data);// sử lý thông tin đầu ra hiển thị giao diện;
+        $serviceBookingsQty = $this->handleCountService($data);// sử lý thông tin đầu ra hiển thị giao diện;'
         $serviceMapById = $this->getServiceMapById($hotelId);
-
         return [
             'serviceBookingsQty' => $serviceBookingsQty,
             'serviceMapById' => $serviceMapById
@@ -723,7 +728,6 @@ class OrderServiceImpl implements OrderService
     private function handleCountService($data)
     {
         $result = [];
-
         foreach ($data as $roomId => $services) {
             foreach ($services as $serviceId) {
                 if (isset($result[$serviceId])) {

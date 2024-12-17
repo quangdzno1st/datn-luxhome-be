@@ -24,19 +24,29 @@ class VoucherRequest extends FormRequest
     public function rules()
     {
         return [
-            'total_amount_ordered_from' => 'nullable|numeric|min:0',
-            'total_amount_ordered_to' => 'nullable|numeric|min:0|gte:total_amount_ordered_from',
+            'total_amount_ordered_from' => 'nullable|numeric|min:0', // Đảm bảo là số và >= 0
+            'total_amount_ordered_to' => 'nullable|numeric|min:0|gte:total_amount_ordered_from', // Đảm bảo 'to' >= 'from' khi có giá trị
         ];
     }
 
     public function messages()
     {
         return [
-            'total_amount_ordered_from.numeric' => 'Trường "số tiền từ" phải là một số.',
-            'total_amount_ordered_from.min' => 'Trường "số tiền từ" phải lớn hơn hoặc bằng 0.',
-            'total_amount_ordered_to.numeric' => 'Trường "số tiền đến" phải là một số.',
-            'total_amount_ordered_to.min' => 'Trường "số tiền đến" phải lớn hơn hoặc bằng 0.',
-            'total_amount_ordered_to.gte' => 'Trường "số tiền đến" phải lớn hơn hoặc bằng "số tiền từ".',
+            'total_amount_ordered_from.numeric' => 'Trường "Tổng chi tiêu từ" phải là một số.',
+            'total_amount_ordered_from.min' => 'Trường "Tổng chi tiêu từ" phải lớn hơn hoặc bằng 0.',
+            'total_amount_ordered_to.numeric' => 'Trường "Tổng chi tiêu đến" phải là một số.',
+            'total_amount_ordered_to.min' => 'Trường "Tổng chi tiêu đến" phải lớn hơn hoặc bằng 0.',
+            'total_amount_ordered_to.gte' => 'Trường "Tổng chi tiêu đến" phải lớn hơn hoặc bằng "Tổng chi tiêu từ".',
         ];
     }
+
+    public function prepareForValidation()
+    {
+        // Loại bỏ dấu phẩy và chuyển thành kiểu số
+        $this->merge([
+            'total_amount_ordered_from' => (int) str_replace(',', '', $this->total_amount_ordered_from),
+            'total_amount_ordered_to' => (int) str_replace(',', '', $this->total_amount_ordered_to),
+        ]);
+    }
+
 }

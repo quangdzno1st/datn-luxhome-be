@@ -53,19 +53,24 @@ class Handler extends ExceptionHandler
             return $e->render();
         }
 
-        // if ($e instanceof \Exception || $e instanceof \Error) {
-        //     $firstField = array_key_first($e->validator->errors()->messages());
-        //     $firstError = $e->validator->errors()->first($firstField);
 
-        //     if ($request->expectsJson()) {
-        //         return response()->json([
-        //             'message' => $firstError,
-        //         ], 422);
-        //     }
+        if ($e instanceof \Exception || $e instanceof \Error) {
 
-        //     return redirect()->back()->with('error', $firstError);
-        // }
-        
+
+            if ($request->expectsJson()) {
+                $firstField = array_key_first($e->validator->errors()->messages());
+                $firstError = $e->validator->errors()->first($firstField);
+                return response()->json([
+                    'message' => $firstError,
+                ], 422);
+            }
+
+            if ($e instanceof ValidationException) {
+                return redirect()->back()->with('error', $e->getMessage());
+            }
+
+            return parent::render($request, $e);
+        }
 
         return parent::render($request, $e);
     }
