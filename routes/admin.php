@@ -260,6 +260,7 @@ Route::prefix('orders')->group(function () {
     Route::post('/refunded-money/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'refundMoney'])->name('orders.refunded-money')->middleware('can:edit_orders');
 // hủy đơn ở orders admin
     Route::post('/cancel_order_admin/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'accepted_cancel'])->name('orders.cancel_order_admin')->middleware('can:edit_orders');
+    Route::get('show/{orderId}/available-services', [\App\Http\Controllers\Admin\OrderDetailController::class, 'availableServices']);
 });
 
 Route::get('/404', function () {

@@ -13,6 +13,7 @@ use App\Models\Voucher;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 define('CHECKIN_START', '14:00');
 define('CHECKIN_END', '00:00');
@@ -23,9 +24,18 @@ class OrderDetailController extends Controller
 {
     const PATH_VIEW = 'admin.orders.view';
 
+//    public $voucherValue;
+//    public function __construct()
+//    {
+//        $this->voucherValue=2;
+//        dd($this->voucherValue);
+//    }
+
     public function showOrderDetail(Order $order)
     {
-        if (Auth::user()->type==User::HOTELIER&&$order->org_id==Auth::user()->org_id||Auth::user()->type==User::ADMIN){
+        if (Auth::user()->type==User::HOTELIER&&$order->org_id==Auth::user()->org_id||
+            Auth::user()->type==User::STAFF&&$order->org_id==Auth::user()->org_id ||
+            Auth::user()->type==User::ADMIN){
         $sumService=0;
         $sumOrderItem=0;
 
@@ -42,6 +52,7 @@ class OrderDetailController extends Controller
         }
         $orderItemInfo=$this->orderItemInfo($order->id);
         $servicesInfo=$this->servicesInfo($order->id);
+//        dd($servicesInfo);
         foreach ($orderItemInfo as $item){
             $sumOrderItem+=$item->totalQuantity*$item->cataloguePrice;
         }
@@ -55,26 +66,30 @@ class OrderDetailController extends Controller
                 if ($item['discount_type']){
                     if ((($sumService+$sumOrderItem)*$item['discount_value'])/100>$item['max_price']){
                         $order['total_amount']=($sumService+$sumOrderItem)-$item['max_price'];
+                        session(['voucherValue'=>$item['max_price']]);
                     }else{
                         $order['total_amount']=($sumService+$sumOrderItem)-(($sumService+$sumOrderItem)*$item['discount_value'])/100;
+                        session(['voucherValue'=>(($sumService+$sumOrderItem)*$item['discount_value'])/100]);
                     }
                 }else{
                     $order['total_amount']=($sumService+$sumOrderItem)-$item['discount_value'];
+                    session(['voucherValue'=>$item['discount_value']]);
                 }
                 $order['voucher_id']=$item->code;
             }
         }else{
             $voucher=null;
+            session([
+                'voucherValue'=>0
+            ]);
             $order['total_amount']=($sumService+$sumOrderItem);
-//        dd($order['total_amount']);
         }
-//        Order::query()->where('id',$order->id)->update(['total_amount'=>$order['total_amount']]);
         $payable=$this->checkPayableOrTotal($order->id);
         $roomCode=$this->roomCode($order->id);
-        $services=$this->availableServices($order->id);
+//        $services=$this->availableServices($order->id);
         return view(self::PATH_VIEW, compact('order',
             'orderItemInfo','servicesInfo','sumService',
-            'sumOrderItem','payable','voucher','services',
+            'sumOrderItem','payable','voucher',
             'roomCode'
         ));
         }
@@ -178,10 +193,11 @@ class OrderDetailController extends Controller
             DB::table($table)->where('id', $idOrder)
                 ->update([
                     'status' => StatusOrderEnum::HOAN_THANH->value,
-                    'net_amount'=>$incidental_costs+$total_amount,
+                    'net_amount'=>$incidental_costs+$total_amount-session('voucherValue'),
                     'check_out' => Carbon::now()
                 ]);
         }
+        session()->forget('voucherValue');
     }
 
     public function servicesInfo($orderId)
@@ -189,14 +205,17 @@ class OrderDetailController extends Controller
         try {
             $result = Order::where('orders.id', $orderId)
                 ->join('booking_services', 'booking_services.order_id', '=', 'orders.id')
+                ->join('rooms', 'rooms.id', '=', 'booking_services.room_id')
                 ->join('services', 'services.id', '=', 'booking_services.service_id')
                 ->select(
+                    'rooms.code as roomCode',
                     'booking_services.id as bookingServiceId',
                     'services.name as serviceName',
                     'booking_services.quantity as serviceQuantity',
                     'services.price as servicePrice',
                     'booking_services.status as status',
                 )
+                ->latest('booking_services.created_at')
                 ->get();
             return $result;
         }catch (\Exception $exception){
@@ -204,26 +223,49 @@ class OrderDetailController extends Controller
         }
     }
 
-    public function availableServices($orderId)
+    public function availableServices(Request $request, $orderId)
     {
+//        dd(1);
         try {
-            $result = Service::leftJoin('booking_services', function ($join) use ($orderId) {
+            $roomId = $request->query('roomId');
+
+            // Truy vấn các dịch vụ trống liên quan đến phòng và đơn hàng
+            $services = Service::leftJoin('booking_services', function ($join) use ($orderId, $roomId) {
                 $join->on('services.id', '=', 'booking_services.service_id')
-                    ->where('booking_services.order_id', '=', $orderId);
+                    ->where('booking_services.order_id', '=', $orderId)
+                    ->where('booking_services.room_id', '=', $roomId);
             })
-                ->select(
-                    'services.id as id',
-                    'services.name as name',
-                    'services.price as price',
-                    'booking_services.status as status'
-                )
+                ->select('services.id', 'services.name', 'services.price')
                 ->whereNull('booking_services.service_id')
                 ->get();
-            return $result;
+
+            return response()->json(['services' => $services], 200);
         } catch (\Exception $exception) {
-            return $exception->getMessage();
+            return response()->json(['error' => $exception->getMessage()], 500);
         }
     }
+
+//check service cũ
+//    public function availableServices($orderId)
+//    {
+//        try {
+//            $result = Service::leftJoin('booking_services', function ($join) use ($orderId) {
+//                $join->on('services.id', '=', 'booking_services.service_id')
+//                    ->where('booking_services.order_id', '=', $orderId);
+//            })
+//                ->select(
+//                    'services.id as id',
+//                    'services.name as name',
+//                    'services.price as price',
+//                    'booking_services.status as status'
+//                )
+//                ->whereNull('booking_services.service_id')
+//                ->get();
+//            return $result;
+//        } catch (\Exception $exception) {
+//            return $exception->getMessage();
+//        }
+//    }
 
     public function orderItemInfo($orderId)
     {

@@ -55,7 +55,12 @@ class VoucherController extends Controller
 
     public function create()
     {
-        return view(self::PATH_DIRECT . __FUNCTION__);
+        if(Auth::user()->type == User::STAFF ){
+            return redirect()->back()->with('error', 'Không được thêm voucher!');
+        }else{
+            return view(self::PATH_DIRECT . __FUNCTION__);
+        }
+//        return view(self::PATH_DIRECT . __FUNCTION__);
     }
 
     public function store(CreateVoucherRequest $request)
@@ -74,11 +79,16 @@ class VoucherController extends Controller
     public function edit($id)
     {
         $voucher = $this->getNonNullById($id);
-        if (Auth::user()->type == User::HOTELIER && $voucher->hotel_id == Auth::user()->org_id || Auth::user()->type == User::ADMIN || $voucher->hotel_id == null) {
-            return view(self::PATH_DIRECT . __FUNCTION__, compact('voucher'));
-        } else {
+        if(Auth::user()->type == User::HOTELIER && $voucher->hotel_id != Auth::user()->org_id && $voucher->hotel_id!=null|| Auth::user()->type == User::STAFF ){
             return redirect()->back()->with('error', 'Không được vào voucher này!');
+        }else{
+            return view(self::PATH_DIRECT . __FUNCTION__, compact('voucher'));
         }
+//        if (Auth::user()->type == User::HOTELIER && $voucher->hotel_id == Auth::user()->org_id || Auth::user()->type == User::ADMIN || $voucher->hotel_id == null) {
+//            return view(self::PATH_DIRECT . __FUNCTION__, compact('voucher'));
+//        } else {
+//            return redirect()->back()->with('error', 'Không được vào voucher này!');
+//        }
     }
 
     public function update(UpdateVoucherRequest $request, $id)
@@ -138,7 +148,7 @@ class VoucherController extends Controller
 
             DB::commit();
 
-            return \redirect()->back();
+            return \redirect()->back()->with('success','Xóa thành công');
         } catch (\Exception $exception) {
             return Redirect::back()->with('error', 'Errors: ' . $exception->getMessage());
         }
@@ -183,9 +193,6 @@ class VoucherController extends Controller
         ], Response::HTTP_NOT_FOUND);
     }
 
-    /**
-     * @throws RespException
-     */
     public function issueVoucher(VoucherRequest $request)
     {
         $total_amount_ordered_from = $request->input('total_amount_ordered_from', null);

@@ -47,7 +47,7 @@ class OrderController extends Controller
                 ->where('org_id', $org_id)
                 ->paginate(10, ['*'], 'order');
         }
-//        dd($orders);
+//        dd($orders->toArray());
         if ($_GET) $orders= $this->search($request->all());
         $this->checkStatusNoti($orders);
         return view(self::PATH_VIEW . __FUNCTION__, compact('orders','hotels'));
