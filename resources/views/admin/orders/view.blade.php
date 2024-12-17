@@ -163,6 +163,7 @@
                                     <table class="table">
                                         <tr>
                                             <td>Tên dịch vụ</td>
+                                            <td>Phòng</td>
                                             <td>Trạng thái</td>
                                             <td>Giá dịch vụ</td>
                                         </tr>
@@ -170,6 +171,7 @@
                                         <tr>
 {{--                                            <td><span class="badge bg-danger">{{ $service->status }}</span></td>--}}
                                             <td>{{ $service->serviceName }}</td>
+                                            <td>{{ $service->roomCode }}</td>
                                             @if($service->status==1)
                                                 <td><span class="badge bg-danger">Chưa thanh toán</span></td>
                                             @else
@@ -180,6 +182,7 @@
                                         @endforeach
                                         <tr>
                                             <td>Tổng</td>
+                                            <td></td>
                                             <td></td>
                                             <td>{{number_format($sumService)}}VND</td>
                                         </tr>
@@ -291,50 +294,38 @@
                     </div>
                 </div>
 {{--                form add service--}}
-                <div class="modal fade" id="service{{$order->id}}" tabindex="-1"
-                     aria-hidden="true">
+                <div class="modal fade" id="service{{$order->id}}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header bg-light p-3">
                                 <h5 class="modal-title">Thêm dịch vụ</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close" id="close-modal"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <form class="tablelist-form" autocomplete="off"
-                                  action="{{ route('admin.orders.addBookingServices', $order->id) }}"
-                                  method="POST">
+                            <form class="tablelist-form" autocomplete="off" action="{{ route('admin.orders.addBookingServices', $order->id) }}" method="POST">
                                 @csrf
                                 <div class="modal-body">
-                                    <!-- Chọn dịch vụ -->
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Chọn dịch vụ</label>
-                                        <div class="border p-3 rounded bg-light">
-                                            @foreach($services as $service)
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input"
-                                                           id="service{{ $service->id }}"
-                                                           name="services[]"
-                                                           value="{{ $service->id }}"
-                                                            {{ in_array($service->id, old('services', [])) ? 'checked' : '' }}>
-                                                    <label class="form-check-label" for="service{{ $service->id }}">
-                                                        {{ $service->name }}
-                                                    </label>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
+                                    <!-- Chọn phòng -->
                                     <div class="mb-3">
                                         <label for="roomId" class="form-label fw-bold">Phòng</label>
-                                        <select class="form-select" id="roomId" name="roomId">
+                                        <select class="form-select" id="roomId" name="roomId" data-order-id="{{ $order->id }}">
+                                            <option value="" selected>Chọn phòng</option>
                                             @foreach($roomCode as $room)
                                                 <option value="{{ $room->roomId }}">{{ $room->roomCode }}</option>
                                             @endforeach
                                         </select>
                                     </div>
 
+                                    <!-- Chọn dịch vụ -->
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Chọn dịch vụ</label>
+                                        <div id="services-container" class="border p-3 rounded bg-light">
+                                            <!-- Dịch vụ sẽ được hiển thị ở đây -->
+                                        </div>
+                                    </div>
+
                                     <!-- Trạng thái -->
                                     <div class="mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Trạng thái</label>
+                                        <label for="exampleFormControlInput1" class="form-label fw-bold">Trạng thái</label>
                                         <select class="form-select" aria-label="Default select example" name="status">
                                             <option value="1">Chưa thanh toán</option>
                                             <option value="2">Đã thanh toán</option>
@@ -342,7 +333,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Footer -->
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
                                     <button type="submit" class="btn btn-success">Cập Nhật Dịch Vụ</button>
@@ -351,6 +341,7 @@
                         </div>
                     </div>
                 </div>
+
         </div>
     </div>
 @endsection
@@ -396,6 +387,46 @@
 
 {{--@endsection--}}
 @section('script-libs')
+    <script>
+        document.getElementById('roomId').addEventListener('change', function () {
+            const roomId = this.value;
+            const orderId = this.getAttribute('data-order-id');
+            const servicesContainer = document.getElementById('services-container');
+
+            servicesContainer.innerHTML = '<p>Loading...</p>';
+
+            if (roomId) {
+                fetch(`${orderId}/available-services?roomId=${roomId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        servicesContainer.innerHTML = '';
+
+                        if (data.services && data.services.length > 0) {
+                            data.services.forEach(service => {
+                                const checkbox = `
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="service${service.id}" name="services[]" value="${service.id}">
+                                <label class="form-check-label" for="service${service.id}">
+                                    ${service.name} - ${service.price} VND
+                                </label>
+                            </div>
+                        `;
+                                servicesContainer.innerHTML += checkbox;
+                            });
+                        } else {
+                            servicesContainer.innerHTML = '<p>Không có dịch vụ nào khả dụng.</p>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        servicesContainer.innerHTML = '<p>Đã xảy ra lỗi khi tải dịch vụ.</p>';
+                    });
+            } else {
+                servicesContainer.innerHTML = '<p>Vui lòng chọn phòng.</p>';
+            }
+        });
+    </script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <!--datatable js-->

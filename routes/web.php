@@ -114,3 +114,5 @@ Route::get('/test-redis', function () {
     // Hiển thị giá trị lấy từ Redis
     return $value; // Kết quả sẽ là "John Doe"
 });
+
+//Route::get('admin/orders/show/{orderId}/available-services', [\App\Http\Controllers\Admin\OrderDetailController::class, 'availableServices']);

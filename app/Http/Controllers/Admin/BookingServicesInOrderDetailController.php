@@ -24,13 +24,13 @@ class BookingServicesInOrderDetailController extends Controller
                 'room_id'=>$request->roomId,
                 'service_id'=>$request->services[$i],
                 'status'=>$request->status,
-                'price'=>$price
+                'price'=>$price,
+                'created_at'=>now(),
             ]);
-            $test=Order::where('id', $orderId)
+            Order::where('id', $orderId)
                 ->update([
                     'total_amount' => DB::raw('total_amount + ' . $price),
                 ]);
-            dd($test);
         }
         return redirect()->back()->with('success','Thêm service thành công!');
         }

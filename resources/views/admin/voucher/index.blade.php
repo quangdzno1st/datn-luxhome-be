@@ -36,13 +36,15 @@
                             <!-- Nút Thêm voucher -->
                             <div class="col-auto">
                                 <div class="">
-                                    <label for="code"></label>
+{{--                                    <label for="code"></label>--}}
                                 </div>
+                                @if(\Illuminate\Support\Facades\Auth::user()->type!=\App\Models\User::STAFF)
                                 <a href="{{ route('admin.vouchers.create') }}">
                                     <button type="button" class="btn btn-success add-btn" id="create-btn">
                                         <i class="ri-add-line align-bottom me-1"></i> Thêm phiếu giảm giá
                                     </button>
                                 </a>
+                                @endif
                             </div>
 
                             <!-- Form Tìm kiếm -->
@@ -50,9 +52,6 @@
                                 <form action="" method="GET" class="d-flex align-items-center gap-2">
                                     @if(\Illuminate\Support\Facades\Auth::user()->type==\App\Models\User::ADMIN)
                                         <div class="mb-0">
-                                            <div class="">
-                                                <label for="start_date">Khách sạn:</label>
-                                            </div>
                                             <select name="hotel" class="form-select">
                                                 <option value="">Chọn khách sạn</option>
                                                 @foreach($hotels as $hotel)
@@ -63,7 +62,7 @@
                                     @endif
                                     <div class="form-group mb-0">
                                         <div class="">
-                                        <label for="code">Nhập mã giảm giá:</label>
+{{--                                        <label for="code">Nhập mã giảm giá:</label>--}}
                                     </div>
                                     <input
                                             type="text"
@@ -74,7 +73,7 @@
                                     </div>
                                         <div class="form-group mb-0">
                                             <div class="">
-                                                <label for="code"></label>
+{{--                                                <label for="code"></label>--}}
                                             </div>
                                             <button class="btn btn-primary" type="submit">Tìm kiếm</button>
                                         </div>
@@ -84,7 +83,7 @@
                             <!-- Nút Phát voucher -->
                             <div class="col-auto">
                                 <div class="">
-                                    <label for="code"></label>
+{{--                                    <label for="code"></label>--}}
                                 </div>
                                 <button type="button" class="btn btn-success add-btn" id="issue-btn" data-bs-toggle="modal" data-bs-target="#showModal">
                                     <i class="ri-add-line align-bottom me-1"></i> Phát phiếu giảm giá
@@ -110,7 +109,9 @@
                                     <th class="" data-sort="status">Giá trị giảm giá</th>
                                     <th class="" data-sort="action">Ngày bắt đầu</th>
                                     <th class="" data-sort="action">Ngày kết thúc</th>
+                                    @if(\Illuminate\Support\Facades\Auth::user()->type != \App\Models\User::STAFF)
                                     <th class="" data-sort="action">Hành động</th>
+                                    @endif
                                 </tr>
                                 </thead>
                                 <tbody class="list form-check-all">
@@ -149,17 +150,22 @@
                                         <td>
                                             <div class="d-flex gap-2">
                                                 <div class="edit">
+                                                    @if(\Illuminate\Support\Facades\Auth::user()->type != \App\Models\User::STAFF)
                                                     <a href="{{route('admin.vouchers.edit',$voucher->id)}}">
                                                         <button class="btn btn-sm btn-success edit-item-btn"
                                                                 data-bs-toggle="modal" data-bs-target="">Sửa
                                                         </button>
                                                     </a>
+                                                    @endif
                                                 </div>
                                                 <div class="remove">
-                                                    <button class="btn btn-sm btn-soft-danger remove-item-btn"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#deleteRecordModal{{ $voucher->id }}"><i
-                                                                class="ri-delete-bin-2-line"></i></button>
+                                                    @if(\Illuminate\Support\Facades\Auth::user()->type != \App\Models\User::STAFF)
+                                                        <button class="btn btn-sm btn-soft-danger remove-item-btn"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#deleteRecordModal{{ $voucher->id }}"><i
+                                                                    class="ri-delete-bin-2-line"></i>
+                                                        </button>
+                                                    @endif
                                                 </div>
 
                                                 <!-- Modal -->
