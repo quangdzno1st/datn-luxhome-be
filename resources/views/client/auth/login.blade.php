@@ -15,14 +15,14 @@
 				@csrf
 				<h3 style="text-align:center">Đăng Nhập</h3>
 				<div class="f-item full-width" style="float: unset">
-					<label for="email">Địa Chỉ Email</label>
+					<label for="email">Địa Chỉ Email<span class="text-danger">*</span></label>
 					<input type="text" id="email" name="email" value="{{old('email')}}"/>
 					@error('email')
 					<span style="color: red">{{$message}}</span>
 					@enderror
 				</div>
 				<div class="f-item full-width" style="float: unset">
-					<label for="password">Mật Khẩu</label>
+					<label for="password">Mật Khẩu<span class="text-danger">*</span></label>
 					<input type="password" id="password" name="password" />
 					@error('password')
 					<span style="color: red">{{$message}}</span>

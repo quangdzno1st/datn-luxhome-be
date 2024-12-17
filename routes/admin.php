@@ -219,9 +219,9 @@ Route::group(['middleware' => ['admin']], function () {
     });
 
     Route::prefix('comments')->name('comments.')->controller(CommentController::class)->group(function(){
-        Route::post('/store', 'store')->name('store')->middleware('can:create_comments');
-        Route::put('/update/{id}', 'update')->name('update')->middleware('can:edit_comments');
-        Route::get('/delete/{id}', 'delete')->name('delete')->middleware('can:delete_comments');
+        Route::post('/store', 'store')->name('store')->middleware('can:create_reviews');
+        Route::put('/update/{id}', 'update')->name('update')->middleware('can:edit_reviews');
+        Route::get('/delete/{id}', 'delete')->name('delete')->middleware('can:delete_reviews');
     });
 
     Route::prefix('banners')->name('banners.')->controller(BannerController::class)->group(function() {
