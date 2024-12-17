@@ -79,7 +79,7 @@ class AccountSettingController extends Controller
 
         $roomsServiceOrder = [];
         if (!empty($order)) {
-            $roomsServiceOrder = $this->orderService->getDataBookingForConfirm($request, $order['org_id']);
+            $roomsServiceOrder = $this->orderService->getDataBookingForFinish($order['org_id']);
         }
 
         $roomBooking = session('booking_data') ?? null;

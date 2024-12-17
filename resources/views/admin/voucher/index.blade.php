@@ -396,8 +396,12 @@
                     },
                     success: function (response) {
                         alert(response.message);
+                        console.log(response.message)
+                        location.reload();
                     },
                     error: function (xhr, status, error) {
+                        console.log(JSON.parse(xhr.responseText).message)
+
                         alert(decodeURIComponent(JSON.parse(xhr.responseText).message));
                     }
                 });
