@@ -29,7 +29,8 @@ class CreateRequest extends FormRequest
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|gte:0',
             'type' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            'hotel_id' => 'required',
         ];
     }
 
@@ -39,9 +40,10 @@ class CreateRequest extends FormRequest
             'name.required' => 'Tên dịch vụ là bắt buộc',
             'price.required' => 'Giá dịch vụ là bắt buộc',
             'price.numeric' => 'Giá dịch vụ phải là 1 số',
-            'price.gte:0' => 'Giá dịch vụ phải lớn hơn bằng 0',
+            'price.gte' => 'Giá dịch vụ phải lớn hơn hoặc bằng 0',
             'type.required' => 'Loại dịch vụ là bắt buộc',
-            'description.required' => 'Loại dịch vụ là bắt buộc'
+            'description.required' => 'Loại dịch vụ là bắt buộc',
+            'hotel_id.required' => 'Bạn chưa chọn khách sạn'
         ];
     }
 

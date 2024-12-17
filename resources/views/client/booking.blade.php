@@ -213,7 +213,7 @@
 
                             <div class="row">
                                 <div class="f-item one-half">
-                                    <label for="email">Số Điện Thoại*</label>
+                                    <label for="email">Số Điện Thoại<span style="color: red">*</span></label>
                                     <input type="number" id="email" name="user_phone_number"
                                            value="{{ old('user_phone_number', $user?->phone) }}"/>
 

@@ -229,7 +229,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::get('/create', 'create')->name('create')->middleware('can:create_banners');
         Route::post('/store', 'store')->name('store')->middleware('can:create_banners');
         Route::get('/update{id}', 'update')->name('update')->middleware('can:edit_banners');
-        Route::delete('/destroy{id}', 'destroy')->name('destroy')->middleware('can:delete_vouchers');
+        Route::delete('/destroy{id}', 'destroy')->name('destroy')->middleware('can:delete_banners');
     });
 });
 

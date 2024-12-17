@@ -256,7 +256,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1 overflow-hidden">
-                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Người dùng</p>
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Khách hàng</p>
                         </div>
                     </div>
                     <div class="mt-3">
