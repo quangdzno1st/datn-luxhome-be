@@ -153,11 +153,18 @@
                                         <tr>
                                             <th>Trạng thái thanh toán</th>
                                             <td>
-                                                <span
+                                                <a href="{{ route('orders.detail', $order['id']) }}"
                                                         style="padding: 8px 40px; border-radius: 20px; color: #FFFFFF;
                                                 background-color: {{ \App\Constant\Enum\StatusOrderEnum::isDangCho($order['status']) ? '#575145' : '#d5b26b' }}; ">
                                                     {{ \App\Constant\Enum\StatusOrderEnum::parse($order['status'])->getName() }}
-                                                </span>
+                                                </a>
+                                                @if ($order['status'] == 3 && $order['status_payment'] == 2 && $order['is_rating'] == 2)
+                                                    <a href="{{ route('orders.detail', $order['id']) }}"
+                                                            style="margin: 5px;padding: 8px 40px; border-radius: 20px; color: #FFFFFF;
+                                                    background-color: rgb(86, 85, 85)">
+                                                        Chưa đánh giá
+                                                    </a>
+                                                @endif
                                             </td>
                                         </tr>
 
@@ -288,7 +295,10 @@
                     <!--MySettings-->
                     <section id="MySettings" class="tab-content">
                         <article class="mysettings">
-                            <h2>Thông tin cá nhân</h2>
+                            <h2 style="display: flex; justify-content:space-between; align-items:center">
+                                <span>Thông tin cá nhân</span>
+                                <span>Tiền đã chi: {{number_format($user->total_amount_ordered, 0, ',', '.')}} VND <br> Hạng: {{$rank}}</span>
+                            </h2>
                             <form action="{{route('client.update.user')}}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <table>
@@ -300,7 +310,7 @@
                                             @enderror
                                             <!--edit fields-->
                                             <div class="edit_field" id="field1">
-                                                <label for="new_name">Nhập tên mới:</label>
+                                                <label for="new_name">Nhập tên mới<span class="text-danger">*</span></label>
                                                 <input type="text" id="new_name" name="name"
                                                        value="{{ !empty($user->name) ? $user->name : '' }}"/>
                                                 <input type="submit" value="Lưu"
@@ -321,7 +331,7 @@
                                             @enderror
                                             <!--edit fields-->
                                             <div class="edit_field" id="field2">
-                                                <label for="email">Email mới:</label>
+                                                <label for="email">Email mới<span class="text-danger">*</span></label>
                                                 <input type="email" id="email" name="email"
                                                        value="{{ !empty($user->email) ? $user->email : '' }}"/>
                                                 <input type="submit" value="Lưu"
@@ -342,7 +352,7 @@
                                             @enderror
                                             <!--edit fields-->
                                             <div class="edit_field" id="field3">
-                                                <label for="phone">Số điện thoại mới:</label>
+                                                <label for="phone">Số điện thoại mới<span class="text-danger">*</span></label>
                                                 <input type="text" id="phone" name="phone"
                                                        value="{{ !empty($user->phone) ? $user->phone : '' }}"/>
                                                 <input type="submit" value="Lưu"
@@ -478,11 +488,11 @@
                                             @enderror
                                             <!--edit fields-->
                                             <div class="edit_field" id="field4">
-                                                <label for="old_password">Mật khẩu cũ:</label>
+                                                <label for="old_password">Mật khẩu cũ<span class="text-danger">*</span></label>
                                                 <input type="password" id="old_password" name="old_password"/>
-                                                <label for="new_password">Mật khẩu mới:</label>
+                                                <label for="new_password">Mật khẩu mới<span class="text-danger">*</span></label>
                                                 <input type="password" id="new_password" name="password"/>
-                                                <label for="new_password">Xác nhận mật khẩu:</label>
+                                                <label for="new_password">Xác nhận mật khẩu<span class="text-danger">*</span></label>
                                                 <input type="password" id="new_password" name="password_confirmation"/>
                                                 <input type="submit" value="Lưu"
                                                        onclick="return confirm('Bạn có chắc chắn muốn thay đổi mật khẩu không?')"

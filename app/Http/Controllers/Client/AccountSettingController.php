@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Constant\Enum\ServiceTypeEnum;
+use App\Constant\Enum\UserRankEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
 use App\Http\Requests\OrderSearchRequest;
@@ -62,7 +63,9 @@ class AccountSettingController extends Controller
 
         $user = Auth::user();
 
-        return view('client.myaccount', compact('orders', 'user', 'rates', 'vouchers'));
+        $rank = UserRankEnum::getRankByMoney($user->total_amount_ordered)->getRankName();
+
+        return view('client.myaccount', compact('orders', 'user', 'rates', 'vouchers', 'rank'));
     }
 
     public function paymentOrder($orderId)

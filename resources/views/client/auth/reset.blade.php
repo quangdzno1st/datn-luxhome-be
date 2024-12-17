@@ -21,14 +21,14 @@
 					@enderror
 				</div>
 				<div class="f-item full-width" style="float: unset">
-					<label for="password">Mật khẩu mới</label>
+					<label for="password">Mật khẩu mới<span class="text-danger">*</span></label>
 					<input type="password" id="password" name="password" />
                     @error('password')
 					<span style="color: red">{{$message}}</span>
 					@enderror
 				</div>
 				<div class="f-item full-width" style="float: unset">
-					<label for="password_confirmation">Xác nhận mật khẩu</label>
+					<label for="password_confirmation">Xác nhận mật khẩu<span class="text-danger">*</span></label>
 					<input type="password" id="password_confirmation" name="password_confirmation" />
 				</div>
 				<div class="f-item full-width" style="float: unset">

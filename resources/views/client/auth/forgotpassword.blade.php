@@ -14,7 +14,7 @@
 				@csrf
 				<h3 style="text-align:center">Quên Mật Khẩu</h3>
 				<div class="f-item full-width" style="float: unset">
-					<label for="email">Đia Chỉ Email</label>
+					<label for="email">Đia Chỉ Email<span class="text-danger">*</span></label>
 					<input type="email" id="email" name="email" placeholder="Nhập địa chỉ Email"/>
 				</div>
 				<div class="f-item full-width" style="float: unset">

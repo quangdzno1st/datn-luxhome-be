@@ -8,35 +8,35 @@
 				@csrf
 				<h3 style="text-align:center">Đăng Ký</h3>
 				<div class="f-item full-width" style="float: unset">
-					<label for="name">Tên Tài Khoản</label>
+					<label for="name">Tên Tài Khoản<span class="text-danger">*</span></label>
 					<input type="text" id="name" name="name" value="{{old('name')}}"/>
 					@error('name')
 					<span style="color: red">{{$message}}</span>
 					@enderror
 				</div>
 				<div class="f-item full-width" style="float: unset">
-					<label for="email">Đia Chỉ Email</label>
+					<label for="email">Đia Chỉ Email<span class="text-danger">*</span></label>
 					<input type="email" id="email" name="email" value="{{old('email')}}"/>
 					@error('email')
 					<span style="color: red">{{$message}}</span>
 					@enderror
 				</div>
 				<div class="f-item full-width" style="float: unset">
-					<label for="phone">Số Điện Thoại</label>
+					<label for="phone">Số Điện Thoại<span class="text-danger">*</span></label>
 					<input type="text" id="phone" name="phone" value="{{old('phone')}}"/>
 					@error('phone')
 					<span style="color: red">{{$message}}</span>
 					@enderror
 				</div>
 				<div class="f-item full-width" style="float: unset">
-					<label for="password">Mật Khẩu</label>
+					<label for="password">Mật Khẩu<span class="text-danger">*</span></label>
 					<input type="password" id="password" name="password" />
 					@error('password')
 					<span style="color: red">{{$message}}</span>
 					@enderror
 				</div>
 				<div class="f-item full-width" style="float: unset">
-					<label for="password_confirmation">Xác Nhận Mật Khẩu</label>
+					<label for="password_confirmation">Xác Nhận Mật Khẩu<span class="text-danger">*</span></label>
 					<input type="password" id="password_confirmation" name="password_confirmation" />
 				</div>
 				<div class="f-item full-width" style="float: unset">

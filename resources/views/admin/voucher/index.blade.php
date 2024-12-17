@@ -249,8 +249,7 @@
                                                     <option value="0">Vui lòng chọn</option>
                                                     @foreach (\App\Constant\Enum\UserRankEnum::cases() as $rank)
                                                         <option value="{{ $rank->value }}">
-                                                            {{ $rank->getRankName() }} (Số
-                                                            tiền: {{ number_format($rank->getRequiredMoney()) }} VND)
+                                                            {{ $rank->getRankName() }} (Tiền đã tiêu >= {{ number_format($rank->getRequiredMoney()) }} VND)
                                                         </option>
                                                     @endforeach
                                                 </select>
