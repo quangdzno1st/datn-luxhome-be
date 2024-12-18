@@ -261,8 +261,7 @@
                                         <p><strong>{{ $room['hotel_name'] }}</strong></p>
                                         <p>
                                             <i class="far fa-calendar-alt"></i>
-                                            {{ \Carbon\Carbon::parse($room['start_date'])->format('d/m/Y') }}
-                                            -&gt;
+                                            {{ \Carbon\Carbon::parse($room['start_date'])->format('d/m/Y') }} đến
                                             {{ \Carbon\Carbon::parse($room['end_date'])->format('d/m/Y') }}
                                         </p>
                                         <p>
