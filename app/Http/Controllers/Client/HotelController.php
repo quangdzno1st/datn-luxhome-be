@@ -27,7 +27,7 @@ class HotelController extends Controller
 
     public function show(Request $request, $id)
     {
-        $hotel = Hotel::query()->findOrFail($id);
+        $hotel = Hotel::query()->where('status',1)->findOrFail($id);
 
         $view = $hotel->view;
         $hotel->update(['view' => $view + 1]);

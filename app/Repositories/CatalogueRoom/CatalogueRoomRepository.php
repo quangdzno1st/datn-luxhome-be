@@ -54,7 +54,7 @@ class   CatalogueRoomRepository extends BaseRepository implements CatalogueRoomI
         //            ? DB::table('catalogue_room_attribute')->where('attribute_value_id', $request->attribute_value_id)->pluck('catalogue_room_id')
         //            : DB::table('catalogue_room_attribute')->pluck('catalogue_room_id');
 
-        $categoriesQuery = CatalogueRoom::query();
+        $categoriesQuery = CatalogueRoom::query()->where('status',1);
         //            ->where('org_id', $request->org_id)
         //            ->whereIn('id', $categoryIds);
 
