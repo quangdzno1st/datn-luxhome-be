@@ -297,7 +297,10 @@
                         <article class="mysettings">
                             <h2 style="display: flex; justify-content:space-between; align-items:center">
                                 <span>Thông tin cá nhân</span>
-                                <span>Tiền đã chi: {{number_format($user->total_amount_ordered, 0, ',', '.')}} VND <br> Hạng: {{$rank}}</span>
+                                <div>
+                                    <div>Tiền đã chi: {{number_format($user->total_amount_ordered, 0, ',', '.')}} VND</div>
+                                    <div>Hạng: {{$rank}}</div>
+                                </div>
                             </h2>
                             <form action="{{route('client.update.user')}}" method="post" enctype="multipart/form-data">
                                 @csrf

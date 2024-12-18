@@ -333,7 +333,7 @@ class StatisticalServiceImpl
 
     public function totalUser()
     {
-        $totalUser = User::count();
+        $totalUser = User::where('type', User::CUSTOMER)->count();
 
         return $totalUser;
     }
