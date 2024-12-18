@@ -65,17 +65,17 @@
     }
 
     .badge {
-            display: inline-block;
-            padding: 0.35em 0.65em;
-            font-size: 0.75rem;
-            font-weight: 700;
-            line-height: 1;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: baseline;
-            border-radius: 0.375rem;
-            color: #fff
-        }
+        display: inline-block;
+        padding: 0.35em 0.65em;
+        font-size: 0.75rem;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.375rem;
+        color: #fff
+    }
 </style>
 
 @section('content')
@@ -154,13 +154,13 @@
                                             <th>Trạng thái thanh toán</th>
                                             <td>
                                                 <a href="{{ route('orders.detail', $order['id']) }}"
-                                                        style="padding: 8px 40px; border-radius: 20px; color: #FFFFFF;
+                                                   style="padding: 8px 40px; border-radius: 20px; color: #FFFFFF;
                                                 background-color: {{ \App\Constant\Enum\StatusOrderEnum::isDangCho($order['status']) ? '#575145' : '#d5b26b' }}; ">
                                                     {{ \App\Constant\Enum\StatusOrderEnum::parse($order['status'])->getName() }}
                                                 </a>
                                                 @if ($order['status'] == 3 && $order['status_payment'] == 2 && $order['is_rating'] == 2)
                                                     <a href="{{ route('orders.detail', $order['id']) }}"
-                                                            style="margin: 5px;padding: 8px 40px; border-radius: 20px; color: #FFFFFF;
+                                                       style="margin: 5px;padding: 8px 40px; border-radius: 20px; color: #FFFFFF;
                                                     background-color: rgb(86, 85, 85)">
                                                         Chưa đánh giá
                                                     </a>
@@ -176,7 +176,8 @@
                                 </div>
 
                                 <div class="actions">
-                                    <a href="{{ route('orders.detail', $order['id']) }}" class="gradient-button">Chi tiết đặt phòng</a>
+                                    <a href="{{ route('orders.detail', $order['id']) }}" class="gradient-button">Chi
+                                        tiết đặt phòng</a>
                                     @if ( $order['start_date'] >= \Carbon\Carbon::now() && \App\Constant\Enum\StatusOrderEnum::isDangCho($order['status']))
                                         <a href="{{ route('orders.payment', $order['id']) }}" class="gradient-button">Thanh
                                             toán hóa đơn</a>
@@ -212,7 +213,8 @@
                                                                 Phí hủy phòng là 50% tổng số tiền đã thanh toán.
                                                             </li>
                                                             <li>
-                                                                Số tiền hoàn trả (nếu có) sẽ được chuyển khoản trong vòng 7 ngày
+                                                                Số tiền hoàn trả (nếu có) sẽ được chuyển khoản trong
+                                                                vòng 7 ngày
                                                                 làm việc.
                                                             </li>
                                                         </ul>
@@ -227,15 +229,18 @@
                                                         </p>
                                                         <ul>
                                                             <li>
-                                                                Nếu bạn cần thay đổi hoặc hủy đặt phòng do lý do bất khả kháng (thiên tai, dịch bệnh, v.v.),
-                                                                vui lòng liên hệ bộ phận hỗ trợ của khách sạn để được xem xét và xử lý.
+                                                                Nếu bạn cần thay đổi hoặc hủy đặt phòng do lý do bất khả
+                                                                kháng (thiên tai, dịch bệnh, v.v.),
+                                                                vui lòng liên hệ bộ phận hỗ trợ của khách sạn để được
+                                                                xem xét và xử lý.
                                                             </li>
                                                         </ul>
                                                     </div>
 
                                                     <!-- Modal footer -->
                                                     <div class="modal-footer">
-                                                        <a href="{{ route('orders.cancel', $order['id']) }}" type="button" class="btn btn-danger">Xác
+                                                        <a href="{{ route('orders.cancel', $order['id']) }}"
+                                                           type="button" class="btn btn-danger">Xác
                                                             nhận hủy
                                                         </a>
                                                     </div>
@@ -258,31 +263,34 @@
 
                     <!--MyReviews-->
                     <section id="MyReviews" class="tab-content">
-                        @forelse ($rates as $rate)     
+                        @forelse ($rates as $rate)
 
-                        <article class="myreviews">
-                            <h2>Đánh giá về khách sạn {{$rate->hotel->name}}</h2>
-                            <div class="reviews" style="padding-left: 2rem; margin-bottom: 10px">
-                                <div class="" style="width:100%">
-                                    <p><span style="font-weight:bold">Thời gian</span>: {{Carbon\Carbon::parse($rate->created_at)->format('H:i:s d-m-Y'); }}</p>
-                                </div>
-                                <div class="" style="width:100%; margin: 5px 0">
-                                    <span style="font-weight:bold">Đánh giá</span>: 
-                                    <span class="badge" style="background-color: {{App\Models\Rate::RATE[$rate->rate][1]}}">
+                            <article class="myreviews">
+                                <h2>Đánh giá về khách sạn {{$rate->hotel->name}}</h2>
+                                <div class="reviews" style="padding-left: 2rem; margin-bottom: 10px">
+                                    <div class="" style="width:100%">
+                                        <p>
+                                            <span style="font-weight:bold">Thời gian</span>: {{Carbon\Carbon::parse($rate->created_at)->format('H:i:s d-m-Y'); }}
+                                        </p>
+                                    </div>
+                                    <div class="" style="width:100%; margin: 5px 0">
+                                        <span style="font-weight:bold">Đánh giá</span>:
+                                        <span class="badge"
+                                              style="background-color: {{App\Models\Rate::RATE[$rate->rate][1]}}">
                                         {{App\Models\Rate::RATE[$rate->rate][0]}}
                                     </span>
+                                    </div>
+                                    <div class="" style="width:100%;">
+                                        <p><span style="font-weight:bold">Nội dung</span>: {{$rate->content}}</p>
+                                    </div>
                                 </div>
-                                <div class="" style="width:100%;">
-                                    <p><span style="font-weight:bold">Nội dung</span>: {{$rate->content}}</p>
-                                </div>
-                            </div>
-                            @if (!empty($rate->comment))
-                                <div style="margin-left: 2rem; border-radius:10px; background-color:#F0F0F0">
-                                    <div style="padding-left: 1rem; font-weight: bold">Phản hồi của khách sạn:</div>
-                                    <p style="padding-left: 1rem">{{$rate->comment->content}}</p>
-                                </div>
-                            @endif
-                        </article>
+                                @if (!empty($rate->comment))
+                                    <div style="margin-left: 2rem; border-radius:10px; background-color:#F0F0F0">
+                                        <div style="padding-left: 1rem; font-weight: bold">Phản hồi của khách sạn:</div>
+                                        <p style="padding-left: 1rem">{{$rate->comment->content}}</p>
+                                    </div>
+                                @endif
+                            </article>
 
                         @empty
                             <article class="myreviews">
@@ -298,7 +306,8 @@
                             <h2 style="display: flex; justify-content:space-between; align-items:center">
                                 <span>Thông tin cá nhân</span>
                                 <div>
-                                    <div>Tiền đã chi: {{number_format($user->total_amount_ordered, 0, ',', '.')}} VND</div>
+                                    <div>Tiền đã chi: {{number_format($user->total_amount_ordered, 0, ',', '.')}}VND
+                                    </div>
                                     <div>Hạng: {{$rank}}</div>
                                 </div>
                             </h2>
@@ -313,7 +322,8 @@
                                             @enderror
                                             <!--edit fields-->
                                             <div class="edit_field" id="field1">
-                                                <label for="new_name">Nhập tên mới<span class="text-danger">*</span></label>
+                                                <label for="new_name">Nhập tên mới<span
+                                                            class="text-danger">*</span></label>
                                                 <input type="text" id="new_name" name="name"
                                                        value="{{ !empty($user->name) ? $user->name : '' }}"/>
                                                 <input type="submit" value="Lưu"
@@ -355,7 +365,8 @@
                                             @enderror
                                             <!--edit fields-->
                                             <div class="edit_field" id="field3">
-                                                <label for="phone">Số điện thoại mới<span class="text-danger">*</span></label>
+                                                <label for="phone">Số điện thoại mới<span
+                                                            class="text-danger">*</span></label>
                                                 <input type="text" id="phone" name="phone"
                                                        value="{{ !empty($user->phone) ? $user->phone : '' }}"/>
                                                 <input type="submit" value="Lưu"
@@ -371,7 +382,9 @@
 
                                     <tr>
                                         <th>Ảnh đại diện:</th>
-                                        <td><img width="100px" src="{{!empty($user->avatar) ? \Storage::url($user->avatar) : asset('theme/client/images/uploads/avatar.jpg')}}" alt="helo">
+                                        <td><img width="100px"
+                                                 src="{{!empty($user->avatar) ? \Storage::url($user->avatar) : asset('theme/client/images/uploads/avatar.jpg')}}"
+                                                 alt="helo">
                                             <!--edit fields-->
                                             <div class="edit_field" id="field7">
                                                 <label for="avatar">Ảnh đại diện mới:</label> <br>
@@ -423,7 +436,7 @@
                                     <th>Mô tả</th>
                                     <th>Từ ngày</th>
                                     <th>Đến ngày</th>
-                                    <th >Trạng thái</th>
+                                    <th>Trạng thái</th>
                                     <th>Giảm giá</th>
 
                                 </tr>
@@ -495,7 +508,8 @@
                                                 <input type="password" id="old_password" name="old_password"/>
                                                 <label for="new_password">Mật khẩu mới<span class="text-danger">*</span></label>
                                                 <input type="password" id="new_password" name="password"/>
-                                                <label for="new_password">Xác nhận mật khẩu<span class="text-danger">*</span></label>
+                                                <label for="new_password">Xác nhận mật khẩu<span
+                                                            class="text-danger">*</span></label>
                                                 <input type="password" id="new_password" name="password_confirmation"/>
                                                 <input type="submit" value="Lưu"
                                                        onclick="return confirm('Bạn có chắc chắn muốn thay đổi mật khẩu không?')"

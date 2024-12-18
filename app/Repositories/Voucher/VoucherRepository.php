@@ -111,8 +111,8 @@ class VoucherRepository extends BaseRepository implements VoucherInterface
             ->whereIn('code', $codes)
             ->where('status', ActiveStatusEnum::Active->value)
             ->where(function ($query) use ($dateNow) {
-                $query->whereRaw('DATE(vouchers.start_date) >= ?', [$dateNow])
-                    ->orWhereNull('vouchers.start_date');
+                $query->whereRaw('DATE(vouchers.end_date) >= ?', [$dateNow])
+                    ->orWhereNull('vouchers.end_date');
             });
 
         return $query->get()->toArray();

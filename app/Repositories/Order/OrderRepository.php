@@ -32,7 +32,7 @@ class OrderRepository extends BaseRepository implements OrderInterface
     {
         $query = Order::query()
             ->select('orders.start_date', 'orders.end_date', 'orders.code', 'orders.total_amount', 'orders.status',
-                'h.district', 'h.name as hotel_name', 'orders.id', 'h.province', 'orders.is_requried_cancel',
+                'h.district', 'h.name as hotel_name', 'orders.id', 'h.province', 'orders.is_requried_cancel', 'orders.voucher_id',
                 'h.star', 'orders.code', 'orders.name', 'orders.email', 'orders.phone', 'orders.note', 'orders.org_id', 'orders.is_rating', 'orders.status_payment')
             ->join('hotels as h', 'h.id', '=', 'orders.org_id');
 
@@ -104,10 +104,11 @@ class OrderRepository extends BaseRepository implements OrderInterface
     public function getById($orderId, $userId = null)
     {
         $query = Order::query()
-            ->select('orders.org_id', 'orders.status', 'orders.status_payment', 'orders.is_rating', 'orders.start_date', 'orders.end_date', 'orders.code', 'orders.total_amount', 'orders.status',
+            ->select('orders.org_id', 'orders.status', 'orders.status_payment', 'orders.is_rating', 'orders.start_date',
+                'orders.end_date', 'orders.code', 'orders.total_amount', 'orders.status',
                 'h.district', 'h.name as hotel_name', 'orders.id', 'h.province', 'orders.is_requried_cancel',
                 'h.star', 'orders.code', 'orders.name', 'orders.email', 'orders.phone', 'orders.note',
-                'v.description as voucher_description', 'v.discount_value')
+                'v.description as voucher_description', 'v.discount_value', 'v.discount_type', 'v.max_price')
             ->join('hotels as h', 'h.id', '=', 'orders.org_id')
             ->leftJoin('vouchers as v', 'v.id', '=', 'orders.voucher_id')
             ->where('orders.id', $orderId);

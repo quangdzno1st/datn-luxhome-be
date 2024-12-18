@@ -206,10 +206,10 @@ class VoucherController extends Controller
         }
 
         $users = $this->userRepos->getByRankAndTotalAmountOrdered($request);
+
         $userIds = $users->pluck('id')->toArray(); // Lấy danh sách ID
 
         $voucherMapByCode = $this->voucher->getMapByCode($request->vouchers);
-
         if (empty($voucherMapByCode->toArray())) {
             return response()->json([
                 'message' => 'Không tìm thấy phiếu giảm giá',

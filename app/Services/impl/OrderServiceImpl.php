@@ -19,6 +19,7 @@ use App\Repositories\HotelService\HotelServiceRepository;
 use App\Repositories\Order\OrderRepository;
 use App\Repositories\Room\RoomRepository;
 use App\Repositories\Voucher\VoucherRepository;
+use App\Repositories\Wallet\WalletRepository;
 use App\Services\CommonKeyCodeService;
 use App\Services\OrderService;
 use Carbon\Carbon;
@@ -38,6 +39,7 @@ class OrderServiceImpl implements OrderService
     private HotelServiceRepository $hotelServiceRepos;
     private OrderRepository $orderRepos;
     private BookingServiceRepository $bookingServiceRepos;
+    private WalletRepository $walletRepos;
 
     /**
      * @param HotelRepository $hotelRepos
@@ -50,6 +52,7 @@ class OrderServiceImpl implements OrderService
         HotelServiceRepository   $hotelServiceRepos,
         OrderRepository          $orderRepos,
         BookingServiceRepository $bookingServiceRepos,
+        WalletRepository         $walletRepos,
     )
     {
         $this->hotelRepos = $hotelRepos;
@@ -59,6 +62,7 @@ class OrderServiceImpl implements OrderService
         $this->hotelServiceRepos = $hotelServiceRepos;
         $this->orderRepos = $orderRepos;
         $this->bookingServiceRepos = $bookingServiceRepos;
+        $this->walletRepos = $walletRepos;
     }
 
 
@@ -483,8 +487,22 @@ class OrderServiceImpl implements OrderService
             StatusPaymentOrderEnum::DA_THANH_TOAN,
             $order['id']
         );
+        $this->handleVoucherWhenOrderSuccess($order['voucher_id']);
         //        //Send mail hóa đơn
         OrderSuccess::dispatch($order);
+    }
+
+    private function handleVoucherWhenOrderSuccess($voucherId)
+    {
+        $this->voucherRepos->decrement(['id' => $voucherId], 'quantity');
+        $userId = Auth::user()?->id;
+
+        if (!is_null($userId)) {
+            $this->walletRepos->deleteWhere([
+                'user_id' => $userId,
+                'voucher_id' => $voucherId
+            ]);
+        }
     }
 
     public function getTotalOrderMapByCityId(array $cityIds)

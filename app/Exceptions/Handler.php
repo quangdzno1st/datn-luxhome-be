@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -53,9 +54,11 @@ class Handler extends ExceptionHandler
             return $e->render();
         }
 
+        if ($e instanceof ValidationException) {
+            return parent::render($request, $e);
+        }
 
         if ($e instanceof \Exception || $e instanceof \Error) {
-
 
             if ($request->expectsJson()) {
                 $firstField = array_key_first($e->validator->errors()->messages());
@@ -65,11 +68,7 @@ class Handler extends ExceptionHandler
                 ], 422);
             }
 
-            if ($e instanceof ValidationException) {
-                return redirect()->back()->with('error', $e->getMessage());
-            }
-
-            return parent::render($request, $e);
+            return redirect()->back()->with('error', $e->getMessage());
         }
 
         return parent::render($request, $e);
