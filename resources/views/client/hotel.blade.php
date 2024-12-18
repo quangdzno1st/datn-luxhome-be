@@ -753,11 +753,11 @@
                                             @endforeach
                                         </figure>
                                         <div class="meta">
-                                            <h3>{{ $data['name'] }}</h3>
                                             <div style="display: flex; justify-content: space-between">
                                                 <p class="first">Giá:</p>
                                                 <strong class="second">{{ number_format($data['price']) }}
-                                                    VND/ 1 ngày</strong>
+                                                    VND/ 1 ngày</strong>    <h3>{{ $data['name'] }}</h3>
+
                                             </div>
                                             <div style="margin-bottom: 10px">
                                                 Nhập số lượng phòng:
@@ -862,8 +862,8 @@
                     <h2>Dịch vụ</h2>
 
                     @php
-                        $freeServices = $hotel?->services()->where('type', 1)->get();
-                        $paidServices = $hotel?->services()->where('type', 2)->get();
+                        $freeServices = $hotel?->services()->where('status',1)->where('type', 1)->get();
+                        $paidServices = $hotel?->services()->where('status',1)->where('type', 2)->get();
 
                         //                                                $facilities =   $hotel->catalogues()
                         //                                                      ->with('attributes') // Lấy thông tin các attribute_value của các loại phòng

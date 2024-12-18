@@ -249,6 +249,7 @@
                                                                 </div>
                                                             </div>
 
+
                                                             @if (Auth::user()->type == 2)
                                                                 <div class="mb-3">
                                                                     <label for="hotel" class="form-label">Khách
