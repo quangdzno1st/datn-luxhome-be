@@ -141,23 +141,25 @@
                                         <td>Tổng tiền được giảm</td>
                                         @php
                                             $totalAmount = ($totalServiceAmount ?? 0) + $totalRoomAmount;
-                                            if ($order['discount_type'] == 0) {
-                $discountAmount = ($totalAmount * $order['discount_value']) / 100;
-                if ($order['max_price'] > 0 && $discountAmount > $order['max_price']) {
-                    $discountAmount = $order['max_price'];
-                }
-                         } else {
-                $discountAmount = $order['discount_value'];
-                        }
-           $discountAmount =  max($totalAmount - $discountAmount, 0); // Không cho phép tổng tiền âm
+                                            if ($order['discount_type'] == 1) {
+                                                $discountAmount = ($totalAmount * $order['discount_value']) / 100;
+                                                if ($order['max_price'] > 0 && $discountAmount > $order['max_price']) {
+                                                     $discountAmount = $order['max_price'];
+                                                 }
+                                            } else {
+                                              $discountAmount = $order['discount_value'];
+                                            }
+                                            $discountAmount = min($discountAmount, $totalAmount);
+                                        $total_amount =  max($totalAmount - $discountAmount, 0);
+
                                         @endphp
-                                        <td> {{ number_format(($totalAmount * ($order['discount_value'] ?? 0)) / 100) . ' đ' }}
+                                        <td> {{ number_format($discountAmount) . ' VND' }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="total">Tổng tiền thanh toán</td>
                                         <td class="total">
-                                            {{ number_format(($totalAmount * (100 - ($order['discount_value'] ?? 0))) / 100) . ' đ' }}
+                                            {{ number_format($total_amount) . ' VND' }}
                                         </td>
                                     </tr>
                                 </table>

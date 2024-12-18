@@ -180,7 +180,21 @@
 
                                         <tr>
                                             <th>Tổng tiền</th>
-                                            <td><strong>{{ number_format($order['total_amount']) . ' đ' }}</strong></td>
+
+                                            @php
+                                            $total_amount = $order['total_amount'];
+                                                if ($order['discount_type'] == 1) {
+                                                    $discountAmount = ($total_amount * $order['discount_value']) / 100;
+                                                    if ($order['max_price'] > 0 && $discountAmount > $order['max_price']) {
+                                                         $discountAmount = $order['max_price'];
+                                                     }
+                                                } else {
+                                                  $discountAmount = $order['discount_value'];
+                                                }
+                                            $total_amount =  max($total_amount - $discountAmount, 0);
+
+                                            @endphp
+                                            <td><strong>{{ number_format($total_amount) . ' VND' }}</strong></td>
                                         </tr>
                                     </table>
                                 </div>

@@ -4,10 +4,8 @@ namespace App\Services\impl;
 
 use App\Constant\Enum\StatusOrderEnum;
 use App\Constant\Enum\StatusPaymentOrderEnum;
-use App\Constant\Enum\TypeCodeEnum;
 use App\Events\OrderSuccess;
 use App\Exceptions\RespException;
-use App\Helpers\Constant;
 use App\Http\Requests\OrderRequest;
 use App\Http\Requests\OrderSearchRequest;
 use App\Models\BookingService;
