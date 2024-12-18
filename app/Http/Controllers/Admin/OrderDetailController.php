@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Constant\Enum\StatusOrderEnum;
 use App\Http\Controllers\Controller;
 use App\Models\BookingService;
+use App\Models\Hotel;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Service;
@@ -53,13 +54,17 @@ class OrderDetailController extends Controller
         $orderItemInfo=$this->orderItemInfo($order->id);
         $servicesInfo=$this->servicesInfo($order->id);
 //        dd($servicesInfo);
+            $sumServiceNotPayment=0;
         foreach ($orderItemInfo as $item){
             $sumOrderItem+=$item->totalQuantity*$item->cataloguePrice;
         }
         foreach ($servicesInfo as $item){
             $sumService+=$item->servicePrice;
+            if ($item->status==1){
+                $sumServiceNotPayment+=$item->servicePrice;
+            }
         }
-
+//dd($sumServiceNotPayment);
         if ($order->voucher_id!=null){
             $voucher=$this->VoucherOrder($order->voucher_id);
             foreach ($voucher as $item){
@@ -90,7 +95,7 @@ class OrderDetailController extends Controller
         return view(self::PATH_VIEW, compact('order',
             'orderItemInfo','servicesInfo','sumService',
             'sumOrderItem','payable','voucher',
-            'roomCode'
+            'roomCode','sumServiceNotPayment'
         ));
         }
         else{
@@ -139,8 +144,6 @@ class OrderDetailController extends Controller
             ->join('orders', function ($join) {
                 $join->on('orders.id', '=', 'booking_services.order_id');
             })
-            ->where('booking_services.status',
-                1)
             ->where('orders.id', $idOrder)
             ->get();
         if(!$bookingServices->isEmpty())
@@ -165,18 +168,36 @@ class OrderDetailController extends Controller
         $order = Order::query()->where('id', $idOrder)->first();
         $isCheckout=$this->isCheckout($order);
         if ($isCheckout['is_valid_checkout']){
-            User::where('id', $order->user_id)
-                ->update([
-                    'rank' => 1,
-                    'total_amount_ordered' => DB::raw('total_amount_ordered + ' . $order->total_amount),
+            $incidental_costs=$this->calculateLateCheckoutFee($order)['incidental_costs'];
+            $percent_incidental=$this->calculateLateCheckoutFee($order)['percent_incidental'];
+            $extraHours=$this->calculateLateCheckoutFee($order)['extraHours'];
+            $user = User::where('id', $order->user_id)->first();
+            if ($user) {
+
+                $newTotalAmountOrdered = $user->total_amount_ordered + $order->total_amount;
+
+                $newRank = 0;
+                if ($newTotalAmountOrdered > 8000000) {
+                    $newRank = 3;
+                } elseif ($newTotalAmountOrdered > 5000000) {
+                    $newRank = 2;
+                } elseif ($newTotalAmountOrdered > 2000000) {
+                    $newRank = 1;
+                }
+
+                $user->update([
+                    'rank' => $newRank,
+                    'total_amount_ordered' => $newTotalAmountOrdered,
                 ]);
-            $incidental_costs=$this->calculateLateCheckoutFee($order);
+            }
             $this->updateStatusGeneral('booking_services',$idOrder);
             $this->updateStatusGeneral('orders',$idOrder,$incidental_costs,$order->total_amount);
-            $order->update(['incidental_costs'=>$incidental_costs]);
             return redirect()->back()->with(
-                ['success'=>'Checkout thành công',
-                    'incidental_costs'=>$incidental_costs
+                ['success-checkout'=>'Checkout thành công',
+                    'success'=>'Checkout thành công',
+                    'incidental_costs'=>$incidental_costs,
+                    'percent_incidental'=>$percent_incidental,
+                    'extraHours'=>$extraHours
                 ]);
         }else{
             return redirect()->back()->with(
@@ -184,14 +205,14 @@ class OrderDetailController extends Controller
         }
     }
 
-    public function updateStatusGeneral($table,$idOrder,$incidental_costs=null,$total_amount=null){
+    public function updateStatusGeneral($table,$idOrder,$incidental_costs=0,$total_amount=0){
         if($table == 'booking_services'){
             DB::table($table)->where('order_id', $idOrder)
-//                đã thanh toán
                 ->update(['status' => 2]);
         }else{
             DB::table($table)->where('id', $idOrder)
                 ->update([
+                    'incidental_costs'=>$incidental_costs,
                     'status' => StatusOrderEnum::HOAN_THANH->value,
                     'net_amount'=>$incidental_costs+$total_amount-session('voucherValue'),
                     'check_out' => Carbon::now()
@@ -207,6 +228,7 @@ class OrderDetailController extends Controller
                 ->join('booking_services', 'booking_services.order_id', '=', 'orders.id')
                 ->join('rooms', 'rooms.id', '=', 'booking_services.room_id')
                 ->join('services', 'services.id', '=', 'booking_services.service_id')
+//                ->where('services.status',1)
                 ->select(
                     'rooms.code as roomCode',
                     'booking_services.id as bookingServiceId',
@@ -228,7 +250,8 @@ class OrderDetailController extends Controller
 //        dd(1);
         try {
             $roomId = $request->query('roomId');
-
+            $hotel_id=Order::query()->where('id', $orderId)->value('org_id');
+//            dd($hotel_id);
             // Truy vấn các dịch vụ trống liên quan đến phòng và đơn hàng
             $services = Service::leftJoin('booking_services', function ($join) use ($orderId, $roomId) {
                 $join->on('services.id', '=', 'booking_services.service_id')
@@ -236,6 +259,7 @@ class OrderDetailController extends Controller
                     ->where('booking_services.room_id', '=', $roomId);
             })
                 ->select('services.id', 'services.name', 'services.price')
+                ->where('services.hotel_id', $hotel_id)
                 ->whereNull('booking_services.service_id')
                 ->get();
 
@@ -302,6 +326,7 @@ class OrderDetailController extends Controller
     }
     public function VoucherOrder($voucherId){
         $voucher=Voucher::query()->where('vouchers.id', $voucherId)
+//            ->where('vouchers.status',1)
             ->select('vouchers.description','vouchers.discount_type',
                 'vouchers.discount_value','vouchers.code','vouchers.max_price')->get()
         ;
@@ -318,15 +343,22 @@ class OrderDetailController extends Controller
     public function calculateLateCheckoutFee($order) {
         $checkoutEnd = Carbon::parse($order->end_date);
         $actualCheckout = Carbon::now();
+        $percent_incidental=Hotel::query()->select('percent_incidental')->where('id', $order->org_id)->first();
 
         if ($actualCheckout->greaterThan($checkoutEnd)) {
             $extraHours = $checkoutEnd->diffInHours($actualCheckout);
 
-            $extraFeePerHour = $order->booking_fee*0.01;
+            $extraFeePerHour = $order->booking_fee*$percent_incidental->percent_incidental/100;
 
-            return $extraHours * $extraFeePerHour;
+            return [ 'incidental_costs'=> $extraHours * $extraFeePerHour,
+                'percent_incidental'=>$percent_incidental->percent_incidental,
+                'extraHours'=>$extraHours
+            ];
         }
-        return 0;
+        return [ 'incidental_costs'=> 0,
+            'percent_incidental'=>$percent_incidental->percent_incidental,
+            'extraHours'=>0
+        ];
     }
 
     public function isCheckin($order)

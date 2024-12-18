@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Constant\Enum\UserRankEnum;
 use App\Exceptions\RespException;
 use App\Http\Controllers\Api\Controller;
 use App\Http\Requests\Api\Voucher\CreateVoucherRequest;
@@ -45,6 +46,7 @@ class VoucherController extends Controller
 
     public function index(Request $request)
     {
+//        dd(UserRankEnum::NGUOI_DUNG_HANG_NHAT->value);
         $vouchers = $this->voucher->listVoucher();
         $hotels = Hotel::query()->select('id', 'name')->get();
         if ($_GET) $vouchers = $this->searchVoucher($request->all());
