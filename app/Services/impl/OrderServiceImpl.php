@@ -580,6 +580,7 @@ class OrderServiceImpl implements OrderService
             throw new RespException('Thông tin đặt phòng trống');
         }
 
+
         return $dataResp;
     }
 

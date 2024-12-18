@@ -197,11 +197,8 @@ class VoucherController extends Controller
 
     public function issueVoucher(VoucherRequest $request)
     {
-        $total_amount_ordered_from = $request->input('total_amount_ordered_from', null);
-        $total_amount_ordered_to = $request->input('total_amount_ordered_to', null);
-
-        if (!is_null($total_amount_ordered_from) && !is_null($total_amount_ordered_to)) {
-            if ($total_amount_ordered_from > $total_amount_ordered_to) {
+        if (!is_null($request->input("total_amount_ordered_from")) && !is_null($request->input("total_amount_ordered_to"))) {
+            if ($request->input("total_amount_ordered_from") > $request->input("total_amount_ordered_to")) {
                 return response()->json([
                     'message' => 'Trường "Tổng chi tiêu đến" phải lớn hơn hoặc bằng "Tổng chi tiêu từ".',
                 ], 404);

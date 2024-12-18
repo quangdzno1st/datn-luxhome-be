@@ -24,8 +24,18 @@ class VoucherRequest extends FormRequest
     public function rules()
     {
         return [
-            'total_amount_ordered_from' => 'nullable|numeric|min:0', // Đảm bảo là số và >= 0
-            'total_amount_ordered_to' => 'nullable|numeric|min:0|gte:total_amount_ordered_from', // Đảm bảo 'to' >= 'from' khi có giá trị
+            'total_amount_ordered_from' => 'nullable|numeric|min:0',
+            'total_amount_ordered_to' => [
+                'nullable',
+                'numeric',
+                'min:0',
+                function ($attribute, $value, $fail) {
+                    $from = $this->input('total_amount_ordered_from');
+                    if (!is_null($from) && !is_null($value) && $value < $from) {
+                        $fail('Trường "Tổng chi tiêu đến" phải lớn hơn hoặc bằng "Tổng chi tiêu từ".');
+                    }
+                },
+            ],
         ];
     }
 
