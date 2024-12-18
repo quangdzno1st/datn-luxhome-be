@@ -158,15 +158,15 @@
                                                     </a>
                                                     @endif
                                                 </div>
-                                                <div class="remove">
-                                                    @if(\Illuminate\Support\Facades\Auth::user()->type != \App\Models\User::STAFF)
-                                                        <button class="btn btn-sm btn-soft-danger remove-item-btn"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#deleteRecordModal{{ $voucher->id }}"><i
-                                                                    class="ri-delete-bin-2-line"></i>
-                                                        </button>
-                                                    @endif
-                                                </div>
+{{--                                                <div class="remove">--}}
+{{--                                                    @if(\Illuminate\Support\Facades\Auth::user()->type != \App\Models\User::STAFF)--}}
+{{--                                                        <button class="btn btn-sm btn-soft-danger remove-item-btn"--}}
+{{--                                                                data-bs-toggle="modal"--}}
+{{--                                                                data-bs-target="#deleteRecordModal{{ $voucher->id }}"><i--}}
+{{--                                                                    class="ri-delete-bin-2-line"></i>--}}
+{{--                                                        </button>--}}
+{{--                                                    @endif--}}
+{{--                                                </div>--}}
 
                                                 <!-- Modal -->
                                                 <div class="modal fade zoomIn" id="deleteRecordModal{{ $voucher->id }}"
@@ -192,22 +192,22 @@
                                                                             này ?</p>
                                                                     </div>
                                                                 </div>
-                                                                <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
-                                                                    <form
-                                                                            action="{{ route('admin.vouchers.delete', $voucher['id']) }}"
-                                                                            method="post">
-                                                                        @csrf
-                                                                        @method('DELETE')
-                                                                        <button type="button" type="button"
-                                                                                class="btn w-sm btn-light"
-                                                                                data-bs-dismiss="modal">Đóng
-                                                                        </button>
-                                                                        <button type="submit"
-                                                                                class="btn w-sm btn-danger "
-                                                                                id="delete-record">Chắc chắn!
-                                                                        </button>
-                                                                    </form>
-                                                                </div>
+{{--                                                                <div class="d-flex gap-2 justify-content-center mt-4 mb-2">--}}
+{{--                                                                    <form--}}
+{{--                                                                            action="{{ route('admin.vouchers.delete', $voucher['id']) }}"--}}
+{{--                                                                            method="post">--}}
+{{--                                                                        @csrf--}}
+{{--                                                                        @method('DELETE')--}}
+{{--                                                                        <button type="button" type="button"--}}
+{{--                                                                                class="btn w-sm btn-light"--}}
+{{--                                                                                data-bs-dismiss="modal">Đóng--}}
+{{--                                                                        </button>--}}
+{{--                                                                        <button type="submit"--}}
+{{--                                                                                class="btn w-sm btn-danger "--}}
+{{--                                                                                id="delete-record">Chắc chắn!--}}
+{{--                                                                        </button>--}}
+{{--                                                                    </form>--}}
+{{--                                                                </div>--}}
                                                             </div>
                                                         </div>
                                                     </div>

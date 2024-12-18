@@ -23,7 +23,7 @@ class BookingServicesInOrderDetailController extends Controller
                 'order_id' => $orderId,
                 'room_id'=>$request->roomId,
                 'service_id'=>$request->services[$i],
-                'status'=>$request->status,
+                'status'=>1,
                 'price'=>$price,
                 'created_at'=>now(),
             ]);

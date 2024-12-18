@@ -251,7 +251,7 @@ class OrderServiceImpl implements OrderService
         ]);
 
         Redis::rpush($key, $bookingData);
-        Redis::expire($key, 300);
+        Redis::expire($key, 20);
     }
 
     private function generateUniqueKey($username, $email, $phone)

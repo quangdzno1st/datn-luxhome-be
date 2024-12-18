@@ -28,9 +28,10 @@
             </a>
         </div>
 
-    @if (session('success'))
+    @if (session('success-checkout'))
             <div class="card-header  alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success')}} với chi phí phát sinh là {{number_format(session('incidental_costs'))}}VND
+                {{ session('success-checkout')}} với phí phạt là {{number_format(session('incidental_costs'))}}VND
+                checkout muộn {{session('incidental_costs')}}h (mỗi giờ checkout muộn tính {{session('percent_incidental')}}% tiền phòng)
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
@@ -181,6 +182,12 @@
                                         </tr>
                                         @endforeach
                                         <tr>
+                                            <td>Tổng tiền chưa thanh toán</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>{{number_format($sumServiceNotPayment)}}VND</td>
+                                        </tr>
+                                        <tr>
                                             <td>Tổng</td>
                                             <td></td>
                                             <td></td>
@@ -323,14 +330,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Trạng thái -->
-                                    <div class="mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label fw-bold">Trạng thái</label>
-                                        <select class="form-select" aria-label="Default select example" name="status">
-                                            <option value="1">Chưa thanh toán</option>
-                                            <option value="2">Đã thanh toán</option>
-                                        </select>
-                                    </div>
                                 </div>
 
                                 <div class="modal-footer">
