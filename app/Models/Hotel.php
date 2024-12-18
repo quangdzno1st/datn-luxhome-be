@@ -29,7 +29,8 @@ class Hotel extends Model
         'commune',
         'latitude',
         'longitude',
-        'view'
+        'view',
+        'percent_incidental'
     ];
 
     // auto render uuid

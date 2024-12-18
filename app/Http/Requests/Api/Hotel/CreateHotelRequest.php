@@ -32,6 +32,7 @@ class CreateHotelRequest extends FormRequest
             'commune' => 'required',
             'latitude' => 'required|max:255',
             'longitude' => 'required|max:255',
+            'percent_incidental' => 'required|numeric|integer|min:0|max:100'
         ];
     }
 
@@ -72,6 +73,11 @@ class CreateHotelRequest extends FormRequest
             'quantity_of_room.integer' => 'Số phòng phải là số nguyên',
             'star.integer' => 'Số sao phải là số nguyên',
             'quantity_floor.integer' => 'Số tầng phải là số nguyên',
+            'percent_incidental.required' => 'Phần trăm tiền phạt bắt buộc',
+            'percent_incidental.numeric' => 'Phần trăm tiền phạt phải là 1 số',
+            'percent_incidental.integer' => 'Phần trăm tiền phạt phải là số nguyên',
+            'percent_incidental.min' => 'Phần trăm tiền phạt lớn hơn hoặc bằng :min',
+            'percent_incidental.max' => 'Phần trăm tiền phạt nhỏ hơn hoặc bằng :max'
         ];
     }
     

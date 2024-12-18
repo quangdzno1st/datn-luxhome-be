@@ -39,11 +39,21 @@
             <div class="col-lg-8 col-md-6 mb-3">
                 <div class="card">
                     <div class="card-body">
-                        <div class="mb-3">
-                            <label class="form-label" for="name">Tên khách sạn<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="name" name="name"
-                                   value="{{ $data->name }}" placeholder="Tên khách sạn">
-                            <div class="invalid-feedback"></div>
+                        <div class="row">
+                            <div class="mb-3 col">
+                                <label class="form-label" for="name">Tên khách sạn<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="name" name="name"
+                                       value="{{ $data->name }}" placeholder="Tên khách sạn">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            <div class="mb-3 col">
+                                <label class="form-label" for="percent_incidental">Phần trăm tiền phạt<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control @error('percent_incidental') is-invalid @enderror" id="percent_incidental" name="percent_incidental"
+                                       value="{{ $data->percent_incidental }}" placeholder="Phần trăm tiền phạt">
+                                @error('percent_incidental')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
 
                         <div class="mb-3">
