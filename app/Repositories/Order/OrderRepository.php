@@ -33,8 +33,10 @@ class OrderRepository extends BaseRepository implements OrderInterface
         $query = Order::query()
             ->select('orders.start_date', 'orders.end_date', 'orders.code', 'orders.total_amount', 'orders.status',
                 'h.district', 'h.name as hotel_name', 'orders.id', 'h.province', 'orders.is_requried_cancel', 'orders.voucher_id',
-                'h.star', 'orders.code', 'orders.name', 'orders.email', 'orders.phone', 'orders.note', 'orders.org_id', 'orders.is_rating', 'orders.status_payment')
-            ->join('hotels as h', 'h.id', '=', 'orders.org_id');
+                'h.star', 'orders.code', 'orders.name', 'orders.email', 'orders.phone', 'orders.note', 'orders.org_id',
+                'orders.is_rating', 'orders.status_payment',  'v.discount_value', 'v.discount_type', 'v.max_price')
+            ->join('hotels as h', 'h.id', '=', 'orders.org_id')
+            ->leftJoin('vouchers as v', 'v.id', '=', 'orders.voucher_id');
 
         if (isset($request['user_id'])) {
             $query->where('user_id', $request['user_id']);
@@ -72,7 +74,7 @@ class OrderRepository extends BaseRepository implements OrderInterface
 
         if ($isPaginate) {
             return $query->orderByDesc('orders.created_at')
-                ->paginate(10);
+                ->paginate(999);
         }
         return $query->orderByDesc('orders.created_at')->first();
     }
