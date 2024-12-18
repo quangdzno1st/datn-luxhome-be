@@ -21,6 +21,17 @@ enum StatusOrderEnum: int
         };
     }
 
+    public function getStatusColor(): string
+    {
+        return match ($this) {
+            self::DANG_CHO => '#575145',        // Màu cho "Đang chờ"
+            self::DA_XAC_NHAN => '#2196F3',     // Màu cho "Đã xác nhận"
+            self::HOAN_THANH => 'green',      // Màu cho "Hoàn thành"
+            self::DA_HUY => '#F44336',          // Màu cho "Đã hủy"
+            self::YEU_CAU_HUY => '#FF9800',     // Màu cho "Yêu cầu hủy"
+        };
+    }
+
     public static function parse(int $value): ?self
     {
         return self::tryFrom($value);
@@ -51,3 +62,4 @@ enum StatusOrderEnum: int
         return self::tryFrom($value) === self::DA_HUY;
     }
 }
+

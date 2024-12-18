@@ -151,20 +151,30 @@
                                         </tr>
 
                                         <tr>
-                                            <th>Trạng thái thanh toán</th>
+                                            <th>Trạng thái đơn hàng</th>
                                             <td>
                                                 <a href="{{ route('orders.detail', $order['id']) }}"
-                                                   style="padding: 8px 40px; border-radius: 20px; color: #FFFFFF;
-                                                background-color: {{ \App\Constant\Enum\StatusOrderEnum::isDangCho($order['status']) ? '#575145' : '#d5b26b' }}; ">
-                                                    {{ \App\Constant\Enum\StatusOrderEnum::parse($order['status'])->getName() }}
-                                                </a>
+    style="padding: 5px 20px; border-radius: 20px; color: #FFFFFF; background-color: {{ \App\Constant\Enum\StatusOrderEnum::parse($order['status'])->getStatusColor() }};">
+    {{ \App\Constant\Enum\StatusOrderEnum::parse($order['status'])->getName() }}
+</a>
+
                                                 @if ($order['status'] == 3 && $order['status_payment'] == 2 && $order['is_rating'] == 2)
                                                     <a href="{{ route('orders.detail', $order['id']) }}"
-                                                       style="margin: 5px;padding: 8px 40px; border-radius: 20px; color: #FFFFFF;
-                                                    background-color: rgb(86, 85, 85)">
+                                                       style="margin: 5px;padding: 5px 20px; border-radius: 20px; color: #FFFFFF;
+                                                    background-color: rgb(239, 202, 15)">
                                                         Chưa đánh giá
                                                     </a>
                                                 @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Trạng thái thanh toán</th>
+                                            <td>
+                                                <a href="{{ route('orders.detail', $order['id']) }}"
+                                                   style="padding: 5px 20px; border-radius: 20px; color: #FFFFFF;
+                                                background-color: {{ \App\Constant\Enum\StatusPaymentOrderEnum::isChuaThanhToan($order['status_payment']) ? '#575145' : 'green' }}; ">
+                                                    {{ \App\Constant\Enum\StatusPaymentOrderEnum::parse($order['status_payment'])->getName() }}
+                                                </a>
                                             </td>
                                         </tr>
 
@@ -451,8 +461,8 @@
                                         <td>{{ $voucher->code }}</td>
                                         <td>{{ $voucher->description }}</td>
 
-                                        <td>{{ \Carbon\Carbon::parse($voucher->start_date)->format('d/m/Y') }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($voucher->end_date)->format('d/m/Y') }}</td>
+                                        <td>{{ !empty($voucher->start_date) ? \Carbon\Carbon::parse($voucher->start_date)->format('d/m/Y')  : null}}</td>
+                                        <td>{{ !empty($voucher->end_date) ?  \Carbon\Carbon::parse($voucher->end_date)->format('d/m/Y')  : null}}</td>
 
                                         <td>
                                             @php

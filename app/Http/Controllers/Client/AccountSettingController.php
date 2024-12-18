@@ -56,7 +56,10 @@ class AccountSettingController extends Controller
             ->find($userId)
             ->vouchers()
             ->where('status', 1)
-            ->where('end_date', '>=', Carbon::now()->format('Y-m-d'))
+            ->where(function ($query) {
+                $query->where('end_date', '>=', Carbon::now()->format('Y-m-d'))
+                      ->orWhereNull('end_date');
+            })
             ->get();
         $rates = Rate::withoutTrashed()->with('hotel', 'comment')->where('user_id', $userId)->get();
 
