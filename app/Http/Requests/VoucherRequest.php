@@ -42,11 +42,15 @@ class VoucherRequest extends FormRequest
 
     public function prepareForValidation()
     {
-        // Loại bỏ dấu phẩy và chuyển thành kiểu số
         $this->merge([
-            'total_amount_ordered_from' => (int) str_replace(',', '', $this->total_amount_ordered_from),
-            'total_amount_ordered_to' => (int) str_replace(',', '', $this->total_amount_ordered_to),
+            'total_amount_ordered_from' => $this->filled('total_amount_ordered_from')
+                ? (int) str_replace(',', '', $this->total_amount_ordered_from)
+                : null,
+            'total_amount_ordered_to' => $this->filled('total_amount_ordered_to')
+                ? (int) str_replace(',', '', $this->total_amount_ordered_to)
+                : null,
         ]);
     }
+
 
 }
