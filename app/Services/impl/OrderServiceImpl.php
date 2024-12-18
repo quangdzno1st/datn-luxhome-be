@@ -205,11 +205,8 @@ class OrderServiceImpl implements OrderService
         $order->email = $data['user_email'];
         $order->user_id = Auth::user()?->id ?? null;
         $order->name = $data['user_name'];
-        $order->code = $this->commonKeyCodeService->genNewKeyCode(
-            TypeCodeEnum::ORDER_TYPE->value,
-            Constant::STRING_6_CHAR,
-            $data['hotel_id']
-        );
+        $order->code = Str::upper(Str::random(10));
+
         $order->status = StatusOrderEnum::DANG_CHO->value;
         $order->status_payment = StatusPaymentOrderEnum::CHUA_THANH_TOAN->value;
         $order->start_date = Carbon::createFromFormat('Y-m-d', session('start_date'))->setTime(14, 00);

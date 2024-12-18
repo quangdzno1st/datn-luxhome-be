@@ -71,10 +71,10 @@ class OrderRepository extends BaseRepository implements OrderInterface
         }
 
         if ($isPaginate) {
-            return $query->orderByDesc('orders.code')
+            return $query->orderByDesc('orders.created_at')
                 ->paginate(10);
         }
-        return $query->orderByDesc('orders.code')->first();
+        return $query->orderByDesc('orders.created_at')->first();
     }
 
     public function updateStatusById($status, $statusPayment, $id)

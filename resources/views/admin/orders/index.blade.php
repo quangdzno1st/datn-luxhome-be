@@ -146,7 +146,7 @@
                                     <th>Trạng thái thanh toán</th>
                                     <th>Ngày đặt</th>
                                     <th>Ngày kết thúc</th>
-                                    <th>Tổng tiền</th>
+                                    <th>Tổng tiền thanh toán</th>
                                     <th>Chi tiết</th>
                                 </tr>
                                 </thead>

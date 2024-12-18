@@ -42,7 +42,8 @@
                     <tr>
                         <th>{{ __("Mã đơn đặt") }}</th>
                         <th>{{ __("Trạng thái") }}</th>
-                        <th>{{ __("Tổng tiền") }}</th>
+                        <th>{{ __("Tổng tiền") }}</th>\
+                        <th>{{ __("Tiền thực nhận") }}</th>
                         <th>{{ __("Ngày bắt đầu") }}</th>
                         <th>{{ __("Ngày kết thúc") }}</th>
                         <th>{{ __("Ngày checkin") }}</th>
@@ -56,6 +57,7 @@
                             {{$order->status}}
                         </td>
                         <td>{{number_format($order->total_amount)}}VND</td>
+                        <td>{{number_format($order->net_amount)}}VND</td>
                         <td>{{\Carbon\Carbon::parse($order->start_date)->format('H:i:s d-m-Y')}}</td>
                         <td>{{\Carbon\Carbon::parse($order->end_date)->format('H:i:s d-m-Y')}}</td>
                         <td>
@@ -406,9 +408,11 @@
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" id="service${service.id}" name="services[]" value="${service.id}">
                                 <label class="form-check-label" for="service${service.id}">
-                                    ${service.name} - ${service.price} VND
+                                    ${service.name} - ${new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(service.price)} VND
                                 </label>
                             </div>
+
+
                         `;
                                 servicesContainer.innerHTML += checkbox;
                             });

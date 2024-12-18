@@ -70,14 +70,14 @@ class OrderDetailController extends Controller
             foreach ($voucher as $item){
                 if ($item['discount_type']){
                     if ((($sumService+$sumOrderItem)*$item['discount_value'])/100>$item['max_price']){
-                        $order['total_amount']=($sumService+$sumOrderItem)-$item['max_price'];
+                        $order['net_amount']=($sumService+$sumOrderItem)-$item['max_price'];
                         session(['voucherValue'=>$item['max_price']]);
                     }else{
-                        $order['total_amount']=($sumService+$sumOrderItem)-(($sumService+$sumOrderItem)*$item['discount_value'])/100;
+                        $order['net_amount']=($sumService+$sumOrderItem)-(($sumService+$sumOrderItem)*$item['discount_value'])/100;
                         session(['voucherValue'=>(($sumService+$sumOrderItem)*$item['discount_value'])/100]);
                     }
                 }else{
-                    $order['total_amount']=($sumService+$sumOrderItem)-$item['discount_value'];
+                    $order['net_amount']=($sumService+$sumOrderItem)-$item['discount_value'];
                     session(['voucherValue'=>$item['discount_value']]);
                 }
                 $order['voucher_id']=$item->code;
@@ -87,7 +87,7 @@ class OrderDetailController extends Controller
             session([
                 'voucherValue'=>0
             ]);
-            $order['total_amount']=($sumService+$sumOrderItem);
+            $order['net_amount']=($sumService+$sumOrderItem);
         }
         $payable=$this->checkPayableOrTotal($order->id);
         $roomCode=$this->roomCode($order->id);
