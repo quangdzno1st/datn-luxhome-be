@@ -7,6 +7,7 @@ use App\Constant\Enum\UserRankEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
 use App\Http\Requests\OrderSearchRequest;
+use App\Models\Hotel;
 use App\Models\Order;
 use App\Models\Rate;
 use App\Models\User;
@@ -100,6 +101,7 @@ class AccountSettingController extends Controller
         }
 
         $roomsServiceOrder = $this->orderService->getDataBookingForConfirm($request, $hotelId);
+        $hotel = Hotel::query()->findOrFail($hotelId);
         $total_amount = $request?->total_amount;
         $user = Auth::user();
         $vouchers = $user ? $this->voucherRepos->getAllForOrder($total_amount, $hotelId, $user['id']) : [];
@@ -107,7 +109,7 @@ class AccountSettingController extends Controller
         $servicesQty = $roomsServiceOrder['serviceBookingsQty'] ?? null;
         $servicesInfo = $roomsServiceOrder['serviceMapById'] ?? null;
 
-        return view('client.booking', compact('vouchers', "total_amount", "servicesQty", "servicesInfo", "roomBooking"));
+        return view('client.booking', compact('vouchers', 'hotel', "total_amount", "servicesQty", "servicesInfo", "roomBooking"));
     }
 
     public function store(OrderRequest $request)
@@ -120,9 +122,10 @@ class AccountSettingController extends Controller
     {
         $roomsOrder = $this->orderService->getDataBookingOrder($request);
         $groupedRooms = $this->orderService->getRoomOrderQtyMapByCatalogueRoomId($roomsOrder);
+        $hotel = Hotel::query()->findOrFail($roomsOrder[0]['hotel_id']);
         $services = $this->hotelServiceService->searchByPage($roomsOrder[0]['hotel_id'],
             new Request(['type' => ServiceTypeEnum::DICH_VU_TRA_PHI->value]));
-        return view('client.bookingservice', compact('roomsOrder', 'services', 'groupedRooms'));
+        return view('client.bookingservice', compact('roomsOrder', 'services', 'groupedRooms','hotel'));
 
     }
 

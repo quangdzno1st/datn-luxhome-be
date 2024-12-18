@@ -122,7 +122,7 @@
                 <div class="deals">
                     <div class="row">
 
-                        @foreach($hotels as $key => $hotel)
+                                 @foreach($hotels as $key => $hotel)
                                                 @php
                                                     $rates = $hotel->rates()->pluck('rate');
                                                     $total = $rates->sum();

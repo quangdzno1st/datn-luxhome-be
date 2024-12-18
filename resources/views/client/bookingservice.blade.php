@@ -166,7 +166,7 @@
                 <!--crumbs-->
                 <ul>
                     <li><a href="{{route('home.index')}}" title="Home">Trang chủ</a></li>
-                    <li><a href="#" title="Hotels">Khách sạn</a></li>
+                    <li><a href="{{route('hotel.show', ['hotel_id' => $hotel->id, 'check' => 1, 'start_date' => session('start_date')?? \Carbon\Carbon::now()->format('Y-m-d'), 'end_date' =>session('end_date') ?? \Carbon\Carbon::tomorrow()->format('Y-m-d')])}}" title="Hotels">Khách sạn {{ $hotel->name }}</a></li>
                     <li>Đặt dịch vụ</li>
                 </ul>
                 <!--//crumbs-->
