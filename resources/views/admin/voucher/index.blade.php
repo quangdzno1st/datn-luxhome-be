@@ -353,7 +353,7 @@
 
             // Hàm kiểm tra xem các điều kiện có thỏa mãn không
             function checkFormValidity() {
-                const isRankSelected = discountTypeSelect.value !== "0"; // Kiểm tra xếp hạng có được chọn
+                const isRankSelected = discountTypeSelect.value >= "0"; // Kiểm tra xếp hạng có được chọn
                 const isTotalAmountFromFilled = totalAmountFrom.value.trim() !== ""; // Kiểm tra "Tổng chi tiêu từ"
                 const isTotalAmountToFilled = totalAmountTo.value.trim() !== ""; // Kiểm tra "Tổng chi tiêu đến"
                 const isVoucherSelected = Array.from(checkboxes).some(checkbox => checkbox.checked); // Kiểm tra nếu ít nhất 1 checkbox được chọn
