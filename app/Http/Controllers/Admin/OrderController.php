@@ -50,6 +50,10 @@ class OrderController extends Controller
                 ->paginate(10, ['*'], 'order');
         }
 
+
+        if ($_GET) $orders= $this->search($request->all());
+        $this->checkStatusNoti($orders);
+
         foreach ($orders as $order){
             $order['haventCheckin']=true;
             $currentTime = Carbon::now();
@@ -234,23 +238,6 @@ class OrderController extends Controller
             'success' => 'Hủy đơn đặt thành công',
             'color' => 'success'
         ]);
-    }
-
-    public
-    function delete($order)
-    {
-        if ($order->status == 'Chưa thanh toán') {
-            Order::query()->find($order)->delete();
-            return redirect()->back() - with([
-                    'result' => 'Xóa thành công',
-                    'color' => 'success'
-                ]);
-        } else {
-            return redirect()->back() - with([
-                    'result' => 'Xóa không thành công',
-                    'color' => 'danger'
-                ]);
-        }
     }
 
     public function refundMoney($orderId)
