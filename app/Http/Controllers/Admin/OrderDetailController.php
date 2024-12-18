@@ -190,8 +190,8 @@ class OrderDetailController extends Controller
                     'total_amount_ordered' => $newTotalAmountOrdered,
                 ]);
             }
-            $this->updateStatusGeneral('booking_services',$idOrder);
-            $this->updateStatusGeneral('orders',$idOrder,$incidental_costs,$order->total_amount);
+//            dd($incidental_costs,$order->total_amount);
+            $this->updateStatusGeneral($idOrder,$incidental_costs,$order->total_amount);
             return redirect()->back()->with(
                 ['success-checkout'=>'Checkout thành công',
                     'success'=>'Checkout thành công',
@@ -205,19 +205,17 @@ class OrderDetailController extends Controller
         }
     }
 
-    public function updateStatusGeneral($table,$idOrder,$incidental_costs=0,$total_amount=0){
-        if($table == 'booking_services'){
-            DB::table($table)->where('order_id', $idOrder)
+    public function updateStatusGeneral($idOrder,$incidental_costs=0,$total_amount=0){
+//        dd($incidental_costs+$total_amount-session('voucherValue'));
+            DB::table('booking_services')->where('order_id', $idOrder)
                 ->update(['status' => 2]);
-        }else{
-            DB::table($table)->where('id', $idOrder)
+            DB::table('orders')->where('id', $idOrder)
                 ->update([
                     'incidental_costs'=>$incidental_costs,
                     'status' => StatusOrderEnum::HOAN_THANH->value,
-                    'net_amount'=>$incidental_costs+$total_amount-session('voucherValue'),
+                    'net_amount'=>($incidental_costs+$total_amount)-session('voucherValue'),
                     'check_out' => Carbon::now()
                 ]);
-        }
         session()->forget('voucherValue');
     }
 

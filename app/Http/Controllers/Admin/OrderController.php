@@ -11,6 +11,7 @@ use App\Models\Hotel;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
+use App\Models\Voucher;
 use App\Repositories\Order\OrderRepository;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -47,12 +48,38 @@ class OrderController extends Controller
                 ->where('org_id', $org_id)
                 ->paginate(10, ['*'], 'order');
         }
-//        dd($orders->toArray());
+
+        foreach ($orders as $order){
+        if ($order->voucher_id!=null){
+            $voucher=$this->VoucherOrder($order->voucher_id);
+            foreach ($voucher as $item){
+                if ($item['discount_type']){
+                    if ((($order['total_amount'])*$item['discount_value'])/100>$item['max_price']){
+                        $order['total_amount']=$order['total_amount']-$item['max_price'];
+                    }else{
+                        $order['total_amount']=$order['total_amount']-($order['total_amount']*$item['discount_value'])/100;
+                    }
+                }else{
+                    $order['total_amount']=$order['total_amount']-$item['discount_value'];
+                }
+                $order['voucher_id']=$item->code;
+            }
+        }
+        }
+
         if ($_GET) $orders= $this->search($request->all());
         $this->checkStatusNoti($orders);
         return view(self::PATH_VIEW . __FUNCTION__, compact('orders','hotels'));
     }
 
+    public function VoucherOrder($voucherId){
+        $voucher=Voucher::query()->where('vouchers.id', $voucherId)
+//            ->where('vouchers.status',1)
+            ->select('vouchers.description','vouchers.discount_type',
+                'vouchers.discount_value','vouchers.code','vouchers.max_price')->get()
+        ;
+        return $voucher;
+    }
     public function checkStatusNoti($orders)
     {
 //        note place
