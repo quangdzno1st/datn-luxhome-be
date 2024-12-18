@@ -329,6 +329,70 @@
 
                 <aside class="one-third right-sidebar booking">
                     <article class="hotel-details booking-details">
+
+                        <h2>Thời gian quy định</h2>
+                        <p>
+                            <i class="far fa-calendar-alt"></i>
+                            Check-in: 14:00 - 24:00<br>
+                            <i class="far fa-calendar-alt"></i>
+                            Check-out: 5:00 - 11:30.
+                        </p>
+
+                        <h2>Chính sách hủy phòng</h2>
+                        <a href="#" class="gradient-button mb-3" data-bs-toggle="modal"
+                           data-bs-target="#myModal">
+                            Xem chính sách hủy phòng
+                        </a>
+                        <div class="modal fade" id="myModal">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Chính sách hủy phòng</h4>
+                                        <a type="button" class="btn-close" data-bs-dismiss="modal"></a>
+                                    </div>
+
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                        <p>
+                                            Yêu cầu hủy đặt phòng sẽ được gửi đến chủ khách
+                                            sạn {{ $hotel->name}}.
+                                        </p>
+                                        <p>Chính sách hủy phòng: </p>
+                                        <p>Hủy trong vòng từ 2-3 ngày trước ngày nhận phòng: </p>
+                                        <ul>
+                                            <li>
+                                                Phí hủy phòng là 50% tổng số tiền đã thanh toán.
+                                            </li>
+                                            <li>
+                                                Số tiền hoàn trả (nếu có) sẽ được chuyển khoản trong vòng 7 ngày
+                                                làm việc.
+                                            </li>
+                                        </ul>
+                                        <p>
+                                            Hủy trong vòng 1 ngày trước ngày nhận phòng hoặc không đến:
+                                        </p>
+                                        <ul>
+                                            <li>Không hoàn trả bất kỳ khoản thanh toán nào.</li>
+                                        </ul>
+                                        <p>
+                                            Trường hợp đặc biệt:
+                                        </p>
+                                        <ul>
+                                            <li>
+                                                Nếu bạn cần thay đổi hoặc hủy đặt phòng do lý do bất khả kháng (thiên tai, dịch bệnh, v.v.),
+                                                vui lòng liên hệ bộ phận hỗ trợ của khách sạn để được xem xét và xử lý.
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
                         <h2 class="">Chuyến đi</h2>
                         <div>
                             @php
@@ -338,7 +402,7 @@
                             <p>
                                 <i class="far fa-calendar-alt"></i>
                                 {{ \Carbon\Carbon::parse($room['start_date'])->format('d/m/Y') }}
-                                -&gt;
+                                đến
                                 {{ \Carbon\Carbon::parse($room['end_date'])->format('d/m/Y') }}
                             </p>
                             <p>
@@ -391,6 +455,8 @@
                         <div class="price">
                             <p class="total">Tổng tiền: {{ number_format($total_amount) . ' đ' }}</p>
                         </div>
+
+
                     </article>
                 </aside>
             </div>
