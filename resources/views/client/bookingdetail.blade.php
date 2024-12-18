@@ -141,6 +141,15 @@
                                         <td>Tổng tiền được giảm</td>
                                         @php
                                             $totalAmount = ($totalServiceAmount ?? 0) + $totalRoomAmount;
+                                            if ($order['discount_type'] == 1) {
+                $discountAmount = ($totalAmount * $order['discount_value']) / 100;
+                if ($order['max_price'] > 0 && $discountAmount > $order['max_price']) {
+                    $discountAmount = $order['max_price'];
+                }
+                         } else {
+                $discountAmount = $order['discount_value'];
+                        }
+           $discountAmount =  max($totalAmount - $discountAmount, 0); // Không cho phép tổng tiền âm
                                         @endphp
                                         <td> {{ number_format(($totalAmount * ($order['discount_value'] ?? 0)) / 100) . ' đ' }}
                                         </td>
@@ -183,7 +192,8 @@
                                     <option value="1">Rất Kém</option>
                                 </select>
                                 <input type="hidden" name="hotel_id" value="{{ $order['org_id'] }}">
-                                <textarea style="margin-top: 10px" name="content" cols="30" rows="10" placeholder="Nhận xét ý kiến của bạn"></textarea>
+                                <textarea style="margin-top: 10px" name="content" cols="30" rows="10"
+                                          placeholder="Nhận xét ý kiến của bạn"></textarea>
                                 <button style="margin-top: 10px; border:none" type="submit">Đánh giá</button>
                             </form>
                         </article>
