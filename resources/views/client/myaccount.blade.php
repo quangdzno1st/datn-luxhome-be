@@ -119,7 +119,7 @@
                     <nav class="inner-nav">
                         <ul>
                             <li><a href="#MyBookings" title="My Bookings">Lịch sử đặt phòng</a></li>
-                            <li><a href="#MyReviews" title="My Reviews">Lịch sử review</a></li>
+                            <li><a href="#MyReviews" title="My Reviews">Lịch sử đánh giá</a></li>
                             <li><a href="#MySettings" title="Settings">Cài đặt thông tin</a></li>
                             <li><a href="#MyVouchers" title="Voucher">Tất cả voucher của bạn</a></li>
                             <li><a href="#ChangePassword" title="Change Password">Đổi mật khẩu</a></li>

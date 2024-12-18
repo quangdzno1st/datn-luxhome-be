@@ -34,8 +34,11 @@ class BannerController extends Controller
     public function store(Request $request)
     {
         $validator = $request->validate([
-            'image' => 'required',
-        ], ['image.required' => 'Bạn chưa chọn ảnh.']);
+            'image' => 'required|mimes:jpeg,png,jpg,gif',
+        ], [
+            'image.required' => 'Bạn chưa chọn ảnh.',
+            'image.mimes' => 'Ảnh không đúng định dạng'
+        ]);
 
         $data = $request->all();
 

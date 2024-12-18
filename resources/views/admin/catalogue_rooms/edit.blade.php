@@ -133,7 +133,7 @@
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label for="hotel" class="form-label">Khách sạn</label>
+                                <label for="hotel" class="form-label">Khách sạn<span class="text-danger">*</span></label>
                                 <select name="hotel_id" id="hotel" class="form-select">
                                     <option value="">--Chọn khách sạn--</option>
                                     @foreach ($hotels as $hotel)
@@ -166,6 +166,11 @@
                                         name="images[]" id="images" multiple accept="image/*">
 
                                     @error('images')
+                                        <div class="invalid-feedback d-block">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    @error('images.*')
                                         <div class="invalid-feedback d-block">
                                             {{ $message }}
                                         </div>
@@ -210,7 +215,7 @@
                         <div class="mb-3">
                             <div class="mb-3">
                                 <label class="form-label" for="acreage">Diện tích<span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="acreage" name="acreage"
+                                <input type="number" step="0.01" class="form-control" id="acreage" name="acreage"
                                     value="{{ $catalogueRoom->acreage }}" placeholder="Diện tích">
                                 @error('acreage')
                                     <p class="text-danger">{{ $message }}</p>
