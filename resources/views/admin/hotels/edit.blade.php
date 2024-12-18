@@ -75,12 +75,15 @@
                                         <div class="row gy-4" id="gallery_list">
                                             <div class="col-md-4" id="gallery_default_item">
                                                 <div class="d-flex">
-                                                    <input type="file" class="form-control"
-                                                           name="images[]" id="gallery_default">
+                                                    <input type="file" class="form-control @error('images') is-invalid @enderror"
+                                                           name="images[]" id="gallery_default" multiple>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    @error('images.*')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>

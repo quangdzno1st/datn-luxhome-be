@@ -130,7 +130,7 @@
 
                                 <div class="row">
                                     <div class="mb-3 col">
-                                        <label for="start_date" class="form-label">Ngày bắt đầu<span class="text-danger">*</span></label>
+                                        <label for="start_date" class="form-label">Ngày bắt đầu</label>
                                         <input type="date" class="form-control" name="start_date"
                                             value="{{ $voucher->start_date }}">
                                         @error('start_date')
@@ -139,7 +139,7 @@
                                     </div>
 
                                     <div class="mb-3 col">
-                                        <label for="end_date" class="form-label">Ngày kết thúc<span class="text-danger">*</span></label>
+                                        <label for="end_date" class="form-label">Ngày kết thúc</label>
                                         <input type="date" class="form-control" name="end_date"
                                             value="{{ $voucher->end_date }}">
                                         @error('end_date')

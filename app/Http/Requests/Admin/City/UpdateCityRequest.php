@@ -27,7 +27,8 @@ class UpdateCityRequest extends FormRequest
         $id = $this->route('id');
         return [
             'name' => 'required|unique:cities,name,' . $id,
-            'region_id' => 'required|exists:regions,id'
+            'region_id' => 'required|exists:regions,id',
+            'thumbnail' => 'nullable|mimes:jpeg,png,jpg,gif'
         ];
     }
 
@@ -38,6 +39,7 @@ class UpdateCityRequest extends FormRequest
             'name.unique' => 'Tên thành phố đã tồn tại',
             'region_id.required' => 'Chọn 1 miền',
             'region_id.exists' => 'Miền không tồn tại',
+            'thumbnail.mimes' => 'Ảnh không đúng định dạng'
         ];
     }
 

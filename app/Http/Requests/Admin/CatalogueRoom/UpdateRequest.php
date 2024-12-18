@@ -35,7 +35,7 @@ class UpdateRequest extends FormRequest
             'description' => 'required|string',
             'hotel_id' => 'required|string',
             'images' => 'array',
-            // 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif',
             'thumbnail' => 'image|mimes:jpeg,png,jpg,gif',
         ];
     }
@@ -56,6 +56,14 @@ class UpdateRequest extends FormRequest
             'number_adult.min' => 'Sức chứa người lớn phải lớn hơn bằng 0',
             'number_child.min' => 'Sức chứa trẻ em phải lớn hơn bằng 0',
             'description.required' => 'Vui lòng nhập mô tả',
+            'images.*.mimes' => 'Hình ảnh phải có định dạng jpeg, jpg, png, jpg, gif',
+            'thumbnail.mimes' => 'Ảnh đại diện phải có định dạng jpeg, jpg, png, jpg, gif',
+            'images.*.image' => 'Hình ảnh phải có định dạng jpeg, jpg, png, jpg, gif',
+            'thumbnail.image' => 'Ảnh đại diện phải có định dạng jpeg, jpg, png, jpg, gif',
+            'price.numeric' => 'Giá phải là 1 số',
+            'number_adult.numeric' => 'Số lượng người lớn phải là 1 số',
+            'number_child.numeric' => 'Số lượng trẻ em phải là 1 số',
+            'acreage.numeric' => 'Diện tích phải là 1 số',
         ];
     }
 

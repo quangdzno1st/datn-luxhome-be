@@ -57,24 +57,21 @@
     <main class="main">
         <div class="wrap">
             <!--breadcrumbs-->
-            {{--            <nav class="breadcrumbs">--}}
-            {{--                <!--crumbs-->--}}
-            {{--                <ul>--}}
-            {{--                    <li><a href="#" title="Home">Home</a></li>--}}
-            {{--                    <li><a href="#" title="Hotels">Hotels</a></li>--}}
-            {{--                    <li><a href="#" title="United Kingdom">United Kingdom</a></li>--}}
-            {{--                    <li><a href="#" title="London">London</a></li>--}}
-            {{--                    <li>Search results</li>--}}
-            {{--                </ul>--}}
-            {{--                <!--//crumbs-->--}}
+                       <nav class="breadcrumbs">
+                           <!--crumbs-->
+                           <ul>
+                               <li><a href="{{route('home.index')}}" title="Home">Trang chủ</a></li>
+                               <li>Kết quả tìm kiếm</li>
+                           </ul>
+                           <!--//crumbs-->
 
-            {{--                <!--top right navigation-->--}}
-            {{--                <ul class="top-right-nav">--}}
-            {{--                    <li><a href="#" title="Back to results">Back to results</a></li>--}}
-            {{--                    <li><a href="#" title="Change search">Change search</a></li>--}}
-            {{--                </ul>--}}
-            {{--                <!--//top right navigation-->--}}
-            {{--            </nav>--}}
+                           <!--top right navigation-->
+                           {{-- <ul class="top-right-nav">
+                               <li><a href="#" title="Back to results">Back to results</a></li>
+                               <li><a href="#" title="Change search">Change search</a></li>
+                           </ul> --}}
+                           <!--//top right navigation-->
+                       </nav>
             <!--//breadcrumbs-->
 
             <div class="row">

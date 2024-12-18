@@ -147,7 +147,7 @@ class AccountSettingController extends Controller
 
         if ($validator->fails()) {
             // Xử lý lỗi validate
-            return redirect()->back()
+            return redirect()->to(route('orders.index') . '#MySettings')
                 ->withErrors($validator)
                 ->withInput()
                 ->with('error', 'Cập nhật thông tin không thành công!');
@@ -173,12 +173,12 @@ class AccountSettingController extends Controller
                 }
             }
 
-            return back()->with('success', 'Cập nhật thông tin thành công');
+            return redirect()->to(route('orders.index') . '#MySettings')->with('success', 'Cập nhật thông tin thành công');
         } catch (Exception $e) {
             if ($request->has('avatar')) {
                 Storage::delete($data['avatar']);
             }
-            return back()->with('error', $e->getMessage());
+            return redirect()->to(route('orders.index') . '#MySettings')->with('error', $e->getMessage());
         }
 
     }
@@ -199,14 +199,14 @@ class AccountSettingController extends Controller
         ], $message);
 
         if (!Hash::check($request->input('old_password'), $user->password)) {
-            return back()
+            return redirect()->to(route('orders.index') . '#ChangePassword')
                 ->withErrors(['password' => 'Mật khẩu không đúng.'])
                 ->with('error', 'Đổi mật khẩu không thành công!');
         }
 
         if ($validator->fails()) {
             // Xử lý lỗi validate
-            return redirect()->back()
+            return redirect()->to(route('orders.index') . '#ChangePassword')
                 ->withErrors($validator)
                 ->withInput()
                 ->with('error', 'Đổi mật khẩu không thành công!');
@@ -221,9 +221,9 @@ class AccountSettingController extends Controller
 
             $userUpdate->update($data);
 
-            return back()->with('success', 'Thay đổi mật khẩu thành công');
+            return redirect()->to(route('orders.index') . '#ChangePassword')->with('success', 'Thay đổi mật khẩu thành công');
         } catch (Exception $e) {
-            return back()->with('error', $e->getMessage());
+            return redirect()->to(route('orders.index') . '#ChangePassword')->with('error', $e->getMessage());
         }
     }
 

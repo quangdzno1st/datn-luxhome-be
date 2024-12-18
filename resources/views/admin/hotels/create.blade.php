@@ -48,7 +48,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label" for="thumbnail">Ảnh đại diện</label>
+                            <label class="form-label" for="thumbnail">Ảnh đại diện<span class="text-danger">*</span></label>
                             <input type="file" class="form-control @error('thumbnail') is-invalid @enderror" id="thumbnail" name="thumbnail"
                                    value="{{ old('thumbnail') }}">
                             @error('thumbnail')
@@ -59,7 +59,7 @@
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-header align-items-center d-flex">
-                                    <h5 class="card-title mb-0 flex-grow-1">Hình ảnh</h5>
+                                    <h5 class="card-title mb-0 flex-grow-1">Hình ảnh<span class="text-danger">*</span></h5>
                                     <button type="button" class="btn btn-primary"
                                             onclick="addImageGallery()">Thêm ảnh
                                     </button>
@@ -73,12 +73,15 @@
                                                 </label> --}}
                                                 <div class="d-flex">
                                                     <input type="file" class="form-control @error('images') is-invalid @enderror"
-                                                           name="images[]" id="gallery_default">
+                                                           name="images[]" id="gallery_default" multiple>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     @error('images')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
+                                    @error('images.*')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
                                 </div>

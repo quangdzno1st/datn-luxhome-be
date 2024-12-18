@@ -253,9 +253,9 @@
                                                             @if (Auth::user()->type == 2)
                                                                 <div class="mb-3">
                                                                     <label for="hotel" class="form-label">Khách
-                                                                        sạn</label>
+                                                                        sạn<span class="text-danger">*</span></label>
                                                                     <select name="hotel_id" id="hotel"
-                                                                        class="form-select">
+                                                                        class="form-select" required>
                                                                         <option value="">--Chọn khách sạn--</option>
                                                                         @foreach ($hotels as $hotel)
                                                                             <option value="{{ $hotel->id }}" @selected($service->hotel->id == $hotel->id)>
@@ -424,8 +424,8 @@
 
                                             @if (Auth::user()->type == 2)
                                                 <div class="mb-3">
-                                                    <label for="hotel" class="form-label">Khách sạn</label>
-                                                    <select name="hotel_id" id="hotel" class="form-select">
+                                                    <label for="hotel" class="form-label">Khách sạn<span class="text-danger">*</span></label>
+                                                    <select name="hotel_id" id="hotel" class="form-select" required>
                                                         <option value="">--Chọn khách sạn--</option>
                                                         @foreach ($hotels as $hotel)
                                                             <option value="{{ $hotel->id }}">{{ $hotel->name }}

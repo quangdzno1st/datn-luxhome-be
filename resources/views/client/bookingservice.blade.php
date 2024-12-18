@@ -165,7 +165,7 @@
             <nav class="breadcrumbs">
                 <!--crumbs-->
                 <ul>
-                    <li><a href="#" title="Home">Trang chủ</a></li>
+                    <li><a href="{{route('home.index')}}" title="Home">Trang chủ</a></li>
                     <li><a href="#" title="Hotels">Khách sạn</a></li>
                     <li>Đặt dịch vụ</li>
                 </ul>
