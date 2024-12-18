@@ -50,10 +50,11 @@ class UserRepository extends BaseRepository implements UserInterface
         if ($request->rank != 0) {
             $query->where('rank', $request->rank);
         }
-        if (isset($request->total_amount_ordered_from)) {
+
+        if (!is_null($request->total_amount_ordered_from)) {
             $query->where('total_amount_ordered', '>=', $request->total_amount_ordered_from);
         }
-        if (isset($request->total_amount_ordered_to)) {
+        if (!is_null($request->total_amount_ordered_to)) {
             $query->where('total_amount_ordered', '<=', $request->total_amount_ordered_to);
         }
 

@@ -118,8 +118,8 @@
                                 @foreach($vouchers as $voucher)
                                     <tr>
                                         <td scope="row">
-                                            @if((is_null($voucher['start_date']) ||
-                                                \Carbon\Carbon::parse($voucher['start_date'])->format('Y-m-d') >= \Carbon\Carbon::today()->format('Y-m-d')) &&
+                                            @if((is_null($voucher['start_date']) || is_null($voucher['end_date']) ||
+                                                \Carbon\Carbon::parse($voucher['end_date'])->format('Y-m-d') >= \Carbon\Carbon::today()->format('Y-m-d')) &&
                                                 \App\Constant\Enum\ActiveStatusEnum::isActive($voucher['status']))
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="chk_child"
@@ -246,7 +246,7 @@
                                             <div class="mb-3">
                                                 <label for="discount_type" class="form-label">Theo xếp hạng:</label>
                                                 <select id="discount_type" name="rank" class="form-control">
-                                                    <option value="0">Vui lòng chọn</option>
+                                                    <option value="-1">Vui lòng chọn</option>
                                                     @foreach (\App\Constant\Enum\UserRankEnum::cases() as $rank)
                                                         <option value="{{ $rank->value }}">
                                                             {{ $rank->getRankName() }} (Tiền đã tiêu >= {{ number_format($rank->getRequiredMoney()) }} VND)
@@ -353,11 +353,12 @@
 
             // Hàm kiểm tra xem các điều kiện có thỏa mãn không
             function checkFormValidity() {
-                const isRankSelected = discountTypeSelect.value !== "0"; // Kiểm tra xếp hạng có được chọn
+                const isRankSelected = discountTypeSelect.value >= "0"; // Kiểm tra xếp hạng có được chọn
                 const isTotalAmountFromFilled = totalAmountFrom.value.trim() !== ""; // Kiểm tra "Tổng chi tiêu từ"
                 const isTotalAmountToFilled = totalAmountTo.value.trim() !== ""; // Kiểm tra "Tổng chi tiêu đến"
                 const isVoucherSelected = Array.from(checkboxes).some(checkbox => checkbox.checked); // Kiểm tra nếu ít nhất 1 checkbox được chọn
 
+                console.log(discountTypeSelect.value, isRankSelected)
                 // Kiểm tra xem các điều kiện có thỏa mãn
                 if ((isRankSelected || isTotalAmountFromFilled || isTotalAmountToFilled) && isVoucherSelected) {
                     issueVoucherBtn.disabled = false; // Bật nút phát voucher
