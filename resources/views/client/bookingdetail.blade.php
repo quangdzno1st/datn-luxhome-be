@@ -141,7 +141,7 @@
                                         <td>Tổng tiền được giảm</td>
                                         @php
                                             $totalAmount = ($totalServiceAmount ?? 0) + $totalRoomAmount;
-                                            if ($order['discount_type'] == 1) {
+                                            if ($order['discount_type'] == 0) {
                 $discountAmount = ($totalAmount * $order['discount_value']) / 100;
                 if ($order['max_price'] > 0 && $discountAmount > $order['max_price']) {
                     $discountAmount = $order['max_price'];

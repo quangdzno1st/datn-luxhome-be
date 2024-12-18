@@ -151,6 +151,20 @@
                                 @endforeach
                             @endif
 
+                            @php
+
+                                if ($order['discount_type'] == 0) {
+                                    $discountAmount = ($total_amount * $order['discount_value']) / 100;
+                                    if ($order['max_price'] > 0 && $discountAmount > $order['max_price']) {
+                                         $discountAmount = $order['max_price'];
+                                     }
+                                } else {
+                                  $discountAmount = $order['discount_value'];
+                                }
+                            $discountAmount =  max($total_amount - $discountAmount, 0);
+                            $total_amount = $total_amount - $discountAmount;
+                            @endphp
+
                             <div class="price">
                                 <p class="total">Tổng tiền: {{ number_format($total_amount) .' đ' }}</p>
                             </div>
