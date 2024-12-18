@@ -63,7 +63,14 @@ class VoucherRepository extends BaseRepository implements VoucherInterface
             ->where('w.user_id', '=', $userId)
             ->where('status', ActiveStatusEnum::Active->value)
             ->where('start_date', '<=', $dateNow)
-            ->where('end_date', '>=', $dateNow)
+            ->where(function ($query) use ($dateNow) {
+                $query->where('start_date', '<=', $dateNow)
+                    ->orWhereNull('start_date');
+            })
+            ->where(function ($query) use ($dateNow) {
+                $query->where('end_date', '>=', $dateNow)
+                    ->orWhereNull('end_date');
+            })
             ->where('quantity', '>', 0)
             ->where('conditional_total_amount', '<=', $orderTotalAmount)
             ->where(function ($query) use ($hotelId) {
@@ -78,7 +85,10 @@ class VoucherRepository extends BaseRepository implements VoucherInterface
             })
             ->where('wallets.user_id', $userId)
             ->where('v.quantity', '>', 0)
-            ->where('v.end_date', '>=', $dateNow)
+            ->where(function ($query) use ($dateNow) {
+                $query->where('end_date', '>=', $dateNow)
+                    ->orWhereNull('end_date');
+            })
             ->select('v.*', 'v.id as voucher_id', DB::raw("if(vi.voucher_id is null, 2, 1) as isValid"))
             ->get()->toArray();
     }
@@ -110,6 +120,7 @@ class VoucherRepository extends BaseRepository implements VoucherInterface
         $query = Voucher::query()
             ->whereIn('code', $codes)
             ->where('status', ActiveStatusEnum::Active->value)
+            ->where('quantity', '>', 0)
             ->where(function ($query) use ($dateNow) {
                 $query->whereRaw('DATE(vouchers.end_date) >= ?', [$dateNow])
                     ->orWhereNull('vouchers.end_date');
