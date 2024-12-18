@@ -96,9 +96,9 @@ class User extends Authenticatable
 
     public function vouchers()
     {
-        return $this->belongsToMany(Voucher::class, 'wallets', 'user_id', 'voucher_id')
+        return $this->belongsToMany(Voucher::class, 'wallets', 'user_id', 'voucher_id');
 //            ->withPivot('created_at', 'updated_at')
-            ->where('end_date', '>', now());
+            // ->where('end_date', '>', now());
     }
 
 }
