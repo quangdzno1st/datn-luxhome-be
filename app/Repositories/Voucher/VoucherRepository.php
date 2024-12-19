@@ -102,8 +102,10 @@ class VoucherRepository extends BaseRepository implements VoucherInterface
             ->join('wallets as w', 'w.voucher_id', "vouchers.id")
             ->where('w.user_id', '=', $userId)
             ->where('status', ActiveStatusEnum::Active->value)
-            ->where('start_date', '<=', $dateNow)
-            ->where('end_date', '>=', $dateNow)
+            ->where(function ($query) use ($dateNow) {
+                $query->whereRaw('DATE(vouchers.end_date) >= ?', [$dateNow])
+                    ->orWhereNull('vouchers.end_date');
+            })
             ->where('quantity', '>', 0)
             ->where('conditional_total_amount', '<=', $orderTotalAmount)
             ->where('vouchers.id', $voucherId)

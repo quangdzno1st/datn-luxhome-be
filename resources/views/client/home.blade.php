@@ -132,7 +132,7 @@
                                                 @endphp
                                                 <!--deal-->
                                                 <article class="one-fourth">
-                                                    <figure><a href="{{  route('home.hotel.detail', $hotel['id'])  }}" title="">
+                                                    <figure><a href="{{route('hotel.show', ['hotel_id' => $hotel['id'], 'check' => 1, 'start_date' => \Carbon\Carbon::now()->format('Y-m-d'), 'end_date' => \Carbon\Carbon::tomorrow()->format('Y-m-d')])}}" title="">
                                                             <img src="{{ Storage::url($hotel['thumbnail']) }}" alt="Image">
                                                         </a>
                                                     </figure>

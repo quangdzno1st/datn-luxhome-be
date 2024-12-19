@@ -42,7 +42,7 @@
                     <tr>
                         <th>{{ __("Mã đơn đặt") }}</th>
                         <th>{{ __("Trạng thái") }}</th>
-                        <th>{{ __("Tổng tiền") }}</th>\
+                        <th>{{ __("Tổng tiền") }}</th>
                         <th>{{ __("Tiền thực nhận") }}</th>
                         <th>{{ __("Ngày bắt đầu") }}</th>
                         <th>{{ __("Ngày kết thúc") }}</th>
