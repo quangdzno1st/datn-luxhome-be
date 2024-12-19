@@ -240,7 +240,7 @@
                                 @foreach($hotels as $hotel)
                                     <article class="one-third">
 
-                                        <figure><a href="" title=""><img
+                                        <figure><a href="{{route('hotel.show',$hotel->id)}}" title=""><img
                                                         src="{{ Storage::url($hotel?->thumbnail) }}"
                                                         alt=""/></a></figure>
                                         <div class="details">
