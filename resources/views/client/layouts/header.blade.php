@@ -11,7 +11,7 @@
               @if(\Illuminate\Support\Facades\Auth::check())
                     <ul class="">
                         <li class="active"><a href="{{ route('orders.index') }}" title="Settings">Cài Đặt</a></li>
-                        @if (Auth::user()->type === App\Models\User::ADMIN || Auth::user()->type === App\Models\User::HOTELIER)
+                        @if (Auth::user()->type !== App\Models\User::CUSTOMER)
                             <li class="active"><a href="{{ route('admin.statistical.index') }}" title="Settings">Quản Trị</a></li>
                         @endif
                         <li class="active"><a href="{{route('client.logout')}}" title="Logout" onclick="return confirm('Bạn có muốn đăng xuất không?')">Đăng Xuất</a></li>

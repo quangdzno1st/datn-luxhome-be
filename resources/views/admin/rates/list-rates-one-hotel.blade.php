@@ -162,9 +162,7 @@
                                                                     {{ $rate->user->name }}:</label>
                                                                 <div>{{ $rate->content }}</div>
                                                                 <div class="text-warning">
-                                                                    @for ($i = 0; $i < $rate->rate; $i++)
-                                                                        <i class="ri-star-fill"></i>
-                                                                    @endfor
+                                                                    <span style="background-color: {{App\Models\Rate::RATE[$rate->rate][1]}}" class="badge ">{{App\Models\Rate::RATE[$rate->rate][0]}}</span>
                                                                 </div>
                                                             </div>
 

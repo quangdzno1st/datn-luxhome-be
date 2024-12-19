@@ -17,7 +17,7 @@ class IsLogin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!Auth::check()) {
+        if (!Auth::check() || Auth::user()->is_active == 0) {
             return redirect()->route('client.login')->with('error', 'Vui lòng đăng nhập tài khoản của bạn.');
         }
         return $next($request);
