@@ -28,13 +28,13 @@ class UpdateVoucherRequest extends FormRequest
         return [
             'description' => 'required|string|max:1000', // có thể bỏ trống, là chuỗi, không quá 1000 ký tự
             'status' => 'required|in:1,0', // bắt buộc, phải là một trong hai giá trị: 'active' hoặc 'inactive'
-            'quantity' => 'required|integer|min:1', // bắt buộc, là số nguyên, tối thiểu là 1
-            'discount_value' => 'required|numeric|min:1', // bắt buộc, là số, tối thiểu là 0
-            'start_date' => 'nullable|date|after_or_equal:today', // bắt buộc, phải là ngày hợp lệ
+            'quantity' => 'required|integer|min:0', // bắt buộc, là số nguyên, tối thiểu là 1
+            'discount_value' => 'required|numeric|min:0', // bắt buộc, là số, tối thiểu là 0
+            'start_date' => 'nullable|date', // bắt buộc, phải là ngày hợp lệ
             'end_date' => 'nullable|date|after_or_equal:start_date', // có thể bỏ trống, là ngày hợp lệ, phải lớn hơn hoặc bằng ngày bắt đầu
             'thumbnail' => 'nullable|image',
             'discount_type' => 'required|in:1,0',
-            'max_price' => 'numeric|min:1',
+            'max_price' => 'numeric|min:0',
             'conditional_total_amount' => 'numeric|min:1'
         ];
     }
@@ -51,7 +51,7 @@ class UpdateVoucherRequest extends FormRequest
 
             'quantity.required' => 'Số lượng là bắt buộc',
             'quantity.integer' => 'Số lượng phải là một số nguyên',
-            'quantity.min' => 'Số lượng phải lớn hơn hoặc bằng 1',
+            'quantity.min' => 'Số lượng phải lớn hơn hoặc bằng 0',
 
             'discount_type.required' => 'Loại giảm giá là bắt buộc',
             'discount_type.in' => 'Loại giảm giá không hợp lệ, chỉ chấp nhận percent hoặc fixed',
@@ -61,7 +61,6 @@ class UpdateVoucherRequest extends FormRequest
             'discount_value.min' => 'Giá trị giảm giá phải lớn hơn hoặc bằng 0',
 
             'start_date.date' => 'Ngày bắt đầu phải là ngày hợp lệ',
-            'start_date.after_or_equal' => 'Ngày bắt đầu phải lớn hơn hoặc bằng ngày hiện tại.',
 
             'end_date.date' => 'Ngày kết thúc phải là ngày hợp lệ',
             'end_date.after_or_equal' => 'Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu',
@@ -79,7 +78,7 @@ class UpdateVoucherRequest extends FormRequest
             'conditional_rank.boolean' => 'Điều kiện rank phải là giá trị boolean',
 
             'conditional_total_amount.numeric' => 'Tổng số tiền điều kiện phải là một số',
-            'conditional_total_amount.min' => 'Tổng số tiền điều kiện phải lớn hơn hoặc bằng 0',
+            'conditional_total_amount.min' => 'Tổng số tiền điều kiện phải lớn hơn hoặc bằng 1',
         ];
     }
 
