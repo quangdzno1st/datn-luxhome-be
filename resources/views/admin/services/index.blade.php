@@ -176,14 +176,14 @@
                                                                         class="ri-edit-2-line"></i></button>
                                                             </div>
                                                         @endcan
-                                                        @can('delete_services')
+                                                        {{-- @can('delete_services')
                                                             <div class="remove">
                                                                 <button class="btn btn-sm btn-soft-danger remove-item-btn"
                                                                     data-bs-toggle="modal"
                                                                     data-bs-target="#deleteRecordModal{{ $service->id }}"><i
                                                                         class="ri-delete-bin-2-line"></i></button>
                                                             </div>
-                                                        @endcan
+                                                        @endcan --}}
 
                                                     </div>
                                                 </td>

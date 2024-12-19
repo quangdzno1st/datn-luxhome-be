@@ -120,11 +120,26 @@ class UserController extends Controller
         $modules = Module::all();
         return view('admin.permissions.edit', compact("group",'modules'));
     }
-    public function permissionsUpdate(Request $request,$id)
+    public function permissionsUpdate(Request $request, $id)
     {
         $group = Group::query()->findOrFail($id);
-        $group->permissions = json_encode($request->permissions) ?? [];
+
+        // Các quyền mặc định
+        $defaultPermissions = [
+            "view_overview",
+            "create_overview",
+            "edit_overview",
+            "delete_overview",
+        ];
+
+        // Hợp nhất các quyền mặc định và quyền từ request, loại bỏ key
+        $permissions = array_unique(array_merge($defaultPermissions, $request->permissions ?? []));
+        $permissions = array_values($permissions); // Loại bỏ key
+
+        // Lưu permissions dưới dạng mảng tuần tự
+        $group->permissions = json_encode($permissions);
         $group->save();
-        return redirect()->route('admin.permissions.edit',$id)->with('success', 'Thao tác  thành công!');;
+
+        return redirect()->route('admin.permissions.edit', $id)->with('success', 'Thao tác thành công!');
     }
 }

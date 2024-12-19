@@ -129,14 +129,14 @@
                                                     @endcan
                                                 </div>
 
-                                                <div class="remove">
+                                                {{-- <div class="remove">
                                                     @can('delete_rooms')
                                                         <button class="btn btn-sm btn-soft-danger remove-item-btn"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#deleteRecordModal{{ $room->id }}"><i
                                                                 class="ri-delete-bin-2-line"></i></button>
                                                     @endcan
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
                                             </div><!-- end card body -->
 

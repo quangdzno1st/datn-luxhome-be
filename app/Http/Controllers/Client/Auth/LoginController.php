@@ -31,9 +31,21 @@ class LoginController extends Controller
         $remember = $request->has('remember');
 
         if (Auth::attempt($credentials, $remember)) {
-
+            // Lấy user hiện tại
+            $user = Auth::user();
+    
+            // Kiểm tra xem trường is_active có bằng 1 hay không
+            if ($user->is_active != 1) {
+                // Nếu không kích hoạt, trả về thông báo lỗi
+                Auth::logout(); // Đăng xuất người dùng nếu họ không được kích hoạt
+                return back()->withErrors([
+                    'email' => 'Tài khoản của bạn chưa được kích hoạt.',
+                ])->onlyInput('email');
+            }
+    
+            // Nếu tất cả đều hợp lệ, tiến hành tạo lại session và chuyển hướng
             $request->session()->regenerate();
-
+    
             return redirect()->route('home.index')->with('success', 'Đăng nhập thành công!');
         }
 
