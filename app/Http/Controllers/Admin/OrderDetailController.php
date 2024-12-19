@@ -158,14 +158,12 @@ class OrderDetailController extends Controller
     }
 
     public function updateStatus($idOrder){
-//        dd(1);
         $order = Order::query()->where('id', $idOrder)->first();
         $isCheckout=$this->isCheckout($order);
         if ($isCheckout['is_valid_checkout']){
             $incidental_costs=$this->calculateLateCheckoutFee($order)['incidental_costs'];
             $percent_incidental=$this->calculateLateCheckoutFee($order)['percent_incidental'];
             $extraHours=$this->calculateLateCheckoutFee($order)['extraHours'];
-//            dd($incidental_costs,$percent_incidental,$extraHours);
             $user = User::where('id', $order->user_id)->first();
             if ($user) {
                 $newTotalAmountOrdered = $user->total_amount_ordered + $order->total_amount;
@@ -183,7 +181,6 @@ class OrderDetailController extends Controller
                     'total_amount_ordered' => $newTotalAmountOrdered,
                 ]);
             }
-//            dd($incidental_costs,$order->total_amount);
             $this->updateStatusGeneral($idOrder,$incidental_costs,$order->total_amount);
             return redirect()->back()->with(
                 ['success-checkout'=>'Checkout thành công',
@@ -237,7 +234,6 @@ class OrderDetailController extends Controller
 
     public function availableServices(Request $request, $orderId)
     {
-//        dd(1);
         try {
             $roomId = $request->query('roomId');
             $hotel_id=Order::query()->where('id', $orderId)->value('org_id');
@@ -246,10 +242,12 @@ class OrderDetailController extends Controller
             $services = Service::leftJoin('booking_services', function ($join) use ($orderId, $roomId) {
                 $join->on('services.id', '=', 'booking_services.service_id')
                     ->where('booking_services.order_id', '=', $orderId)
-                    ->where('booking_services.room_id', '=', $roomId);
+                    ->where('booking_services.room_id', '=', $roomId)
+                ;
             })
                 ->select('services.id', 'services.name', 'services.price')
                 ->where('services.hotel_id', $hotel_id)
+                ->where('services.type', 1)
                 ->whereNull('booking_services.service_id')
                 ->get();
 
@@ -317,7 +315,7 @@ class OrderDetailController extends Controller
     public function VoucherOrder($voucherId){
         $voucher=Voucher::query()->where('vouchers.id', $voucherId)
 //            ->where('vouchers.status',1)
-            ->select('vouchers.description','vouchers.discount_type',
+            ->select('vouchers.description','vouchers.discount_type','vouchers.max_price',
                 'vouchers.discount_value','vouchers.code','vouchers.max_price')->get()
         ;
         return $voucher;

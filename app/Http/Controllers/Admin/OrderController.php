@@ -57,7 +57,6 @@ class OrderController extends Controller
             if ($currentTime->gt($endDate)&&$order->check_in==null) {
                 $order['haventCheckin']=false;
             }
-//            dd($order['haventCheckin']);
         if ($order->voucher_id!=null){
             $voucher=$this->VoucherOrder($order->voucher_id);
             foreach ($voucher as $item){

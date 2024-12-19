@@ -201,6 +201,7 @@
                                             <tr>
                                                 <td>Loại giảm giá</td>
                                                 <td>Giảm</td>
+                                                <td>Giảm tối đa</td>
                                                 <td>Mô tả</td>
                                             </tr>
                                             @foreach($voucher as $voucherItem)
@@ -212,6 +213,7 @@
                                                         <td>Phần trăm</td>
                                                         <td>{{ $voucherItem->discount_value }}%</td>
                                                     @endif
+                                                        <td>{{number_format($voucherItem->max_price)}} VND</td>
                                                     <td>{{$voucherItem->description}}</td>
                                                 </tr>
                                             @endforeach
