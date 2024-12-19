@@ -152,7 +152,7 @@
                             <div class="col-lg-6 col-lx-4"  style="background-color: rgba(0, 0, 0, .05);flex: 0 0 49%;">
                                 <div class="shipping-info">
                                     <h4 class="text-center pb-4 pt-3">{{ __("Thông tin dịch vụ") }}</h4>
-                                    @if($order->status=='Đang chờ'||$order->status=='Đã xác nhận'||$order->status=='Yêu cầu hủy')
+                                    @if(!is_null($order->check_in) && $order->status!='Hoàn thành')
                                     <button class="btn btn-info btn-sm"
                                             data-bs-toggle="modal"
                                             id="create-btn" data-bs-target="#service{{$order->id}}"
