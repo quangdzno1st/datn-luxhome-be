@@ -15,6 +15,7 @@ use App\Models\Voucher;
 use App\Repositories\Order\OrderRepository;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -31,7 +32,7 @@ class OrderController extends Controller
         $this->orderRepos = $orderRepos;
     }
 
-    public function index(BaseSearchRequest $request)
+    public function index1(BaseSearchRequest $request)
     {
         $org_id = Auth::user()?->org_id;
         $hotels=null;
@@ -50,6 +51,13 @@ class OrderController extends Controller
         }
 
         foreach ($orders as $order){
+            $order['haventCheckin']=true;
+            $currentTime = Carbon::now();
+            $endDate = Carbon::parse($order->end_date)->endOfDay();
+            if ($currentTime->gt($endDate)&&$order->check_in==null) {
+                $order['haventCheckin']=false;
+            }
+//            dd($order['haventCheckin']);
         if ($order->voucher_id!=null){
             $voucher=$this->VoucherOrder($order->voucher_id);
             foreach ($voucher as $item){
@@ -69,7 +77,39 @@ class OrderController extends Controller
 
         if ($_GET) $orders= $this->search($request->all());
         $this->checkStatusNoti($orders);
-        return view(self::PATH_VIEW . __FUNCTION__, compact('orders','hotels'));
+        return view('admin.orders.index1', compact('orders','hotels'));
+    }
+
+    public function finishOrder($idOrder){
+        $order = Order::query()->where('id', $idOrder)->first();
+            $user = User::where('id', $order->user_id)->first();
+            if ($user) {
+
+                $newTotalAmountOrdered = $user->total_amount_ordered + $order->total_amount;
+
+                $newRank = 0;
+                if ($newTotalAmountOrdered > 8000000) {
+                    $newRank = 3;
+                } elseif ($newTotalAmountOrdered > 5000000) {
+                    $newRank = 2;
+                } elseif ($newTotalAmountOrdered > 2000000) {
+                    $newRank = 1;
+                }
+
+                $user->update([
+                    'rank' => $newRank,
+                    'total_amount_ordered' => $newTotalAmountOrdered,
+                ]);
+            }
+                DB::table('orders')->where('id', $idOrder)
+                    ->update([
+                        'status' => StatusOrderEnum::HOAN_THANH->value,
+                        'net_amount'=>$order->total_amount,
+                    ]);
+            return redirect()->back()->with(
+                [
+                    'success'=>'Hoàn thành đơn thành công',
+                ]);
     }
 
     public function VoucherOrder($voucherId){
@@ -93,7 +133,11 @@ class OrderController extends Controller
             $startDateTime = Carbon::parse($order->start_date);
             $endDateTime = Carbon::parse($order->end_date);
 //dd($endDateTime->toDateString());
-            // Trạng thái 1: Checkin muộn
+            if ($order->status==StatusOrderEnum::HOAN_THANH->value){
+                $order['statusNoti']=0;
+            }
+            else{
+                // Trạng thái 1: Checkin muộn
             if ($currentTime->greaterThan($startDateTime) && $order->check_in==null) {
                 $order['statusNoti']=1; // Checkin muộnnnn
             }
@@ -124,6 +168,8 @@ class OrderController extends Controller
             }else{
                 // chưa đến ngày
                 $order['statusNoti']=0;
+            }
+
             }
         }
     }
@@ -163,9 +209,6 @@ class OrderController extends Controller
         }
     }
 
-    /**
-     * @throws RespException
-     */
     private
     function getNonNullById($orderId)
     {
@@ -211,9 +254,6 @@ class OrderController extends Controller
         }
     }
 
-    /**
-     * @throws RespException
-     */
     public function refundMoney($orderId)
     {
         $order = $this->getNonNullById($orderId);
@@ -292,4 +332,5 @@ class OrderController extends Controller
     {
         $this->accepted_cancel($id,'admin');
     }
+
 }

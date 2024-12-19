@@ -25,13 +25,6 @@ class OrderDetailController extends Controller
 {
     const PATH_VIEW = 'admin.orders.view';
 
-//    public $voucherValue;
-//    public function __construct()
-//    {
-//        $this->voucherValue=2;
-//        dd($this->voucherValue);
-//    }
-
     public function showOrderDetail(Order $order)
     {
         if (Auth::user()->type==User::HOTELIER&&$order->org_id==Auth::user()->org_id||
@@ -165,17 +158,17 @@ class OrderDetailController extends Controller
     }
 
     public function updateStatus($idOrder){
+//        dd(1);
         $order = Order::query()->where('id', $idOrder)->first();
         $isCheckout=$this->isCheckout($order);
         if ($isCheckout['is_valid_checkout']){
             $incidental_costs=$this->calculateLateCheckoutFee($order)['incidental_costs'];
             $percent_incidental=$this->calculateLateCheckoutFee($order)['percent_incidental'];
             $extraHours=$this->calculateLateCheckoutFee($order)['extraHours'];
+//            dd($incidental_costs,$percent_incidental,$extraHours);
             $user = User::where('id', $order->user_id)->first();
             if ($user) {
-
                 $newTotalAmountOrdered = $user->total_amount_ordered + $order->total_amount;
-
                 $newRank = 0;
                 if ($newTotalAmountOrdered > 8000000) {
                     $newRank = 3;
@@ -201,12 +194,11 @@ class OrderDetailController extends Controller
                 ]);
         }else{
             return redirect()->back()->with(
-                ['error'=>'Không trong thời gian checkout (5:00 đến 11:30)',]);
+                ['error'=>$isCheckout['message']]);
         }
     }
 
     public function updateStatusGeneral($idOrder,$incidental_costs=0,$total_amount=0){
-//        dd($incidental_costs+$total_amount-session('voucherValue'));
             DB::table('booking_services')->where('order_id', $idOrder)
                 ->update(['status' => 2]);
             DB::table('orders')->where('id', $idOrder)
@@ -361,17 +353,26 @@ class OrderDetailController extends Controller
 
     public function isCheckin($order)
     {
-        $currentTime = Carbon::now(); // Thời gian hiện tại
-        $startDate = Carbon::parse($order->start_date); // Ngày bắt đầu từ order
+        $currentTime = Carbon::now();
+        $startDate = Carbon::parse($order->start_date);
+        $endDate = Carbon::parse($order->end_date)->endOfDay();
 
-        $checkinStartTime = Carbon::createFromTimeString(CHECKIN_START); // 14:00
-        $checkinEndTime = Carbon::createFromTimeString(CHECKIN_END); // 00:00
+        $checkinStartTime = Carbon::createFromTimeString(CHECKIN_START);
+        $checkinEndTime = Carbon::createFromTimeString(CHECKIN_END);
 
         if ($currentTime->lt($startDate)) {
             return [
                 'order_id' => $order->id,
                 'is_valid_checkin' => false,
-                'message' => 'Chưa đến ngày check-in',
+                'message' => 'Chưa đến ngày check-in.',
+            ];
+        }
+
+        if ($currentTime->gt($endDate)) {
+            return [
+                'order_id' => $order->id,
+                'is_valid_checkin' => false,
+                'message' => 'Đã quá hạn ngày check-in.',
             ];
         }
 
@@ -387,26 +388,40 @@ class OrderDetailController extends Controller
         return [
             'order_id' => $order->id,
             'is_valid_checkin' => $isValidCheckinTime,
-            'message' => $isValidCheckinTime ? 'Thời gian hợp lệ để check-in' : 'Checkin thất bại(không trong thời gian 14:00 đến 00:00)',
+            'message' => $isValidCheckinTime
+                ? 'Thời gian hợp lệ để check-in.'
+                : 'Check-in thất bại (không trong khoảng thời gian 14:00 đến 00:00).',
         ];
     }
-
 
     public function isCheckout($order)
     {
-        $currentTime = Carbon::now(); // Thời gian hiện tại
+        $currentTime = Carbon::now();
 
-        // Lấy thời gian checkout dự kiến
+        $checkinTime = $order->check_in;
+
+        if (!$checkinTime) {
+            return [
+                'order_id' => $order->id,
+                'is_valid_checkout' => false,
+                'message' => 'Người dùng chưa thực hiện check-in.',
+            ];
+        }
+
         $checkoutStartTime = Carbon::createFromTimeString(CHECKOUT_START); // 05:00
         $checkoutEndTime = Carbon::createFromTimeString(CHECKOUT_END); // 11:30
 
-        // Kiểm tra nếu thời gian hiện tại nằm trong khoảng checkout
         $isValidCheckoutTime = $currentTime->between($checkoutStartTime, $checkoutEndTime);
 
-        // Lưu kết quả kiểm tra cho order
+        $isCheckoutAfterCheckin = $currentTime->greaterThan($checkinTime);
+
         return [
             'order_id' => $order->id,
-            'is_valid_checkout' => $isValidCheckoutTime,
+            'is_valid_checkout' => $isValidCheckoutTime && $isCheckoutAfterCheckin,
+            'message' => !$isCheckoutAfterCheckin
+                ? 'Thời gian checkout phải lớn hơn thời gian check-in.'
+                : (!$isValidCheckoutTime ? 'Không trong thời gian cho phép checkout (05:00 đến 11:30).' : 'Thời gian hợp lệ.'),
         ];
     }
+
 }

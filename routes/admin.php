@@ -249,7 +249,7 @@ Route::prefix('vouchers')->group(function () {
 
 //order
 Route::prefix('orders')->group(function () {
-    Route::get('/search-by-page', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index')->middleware('can:view_orders');
+    Route::get('/search-by-page', [\App\Http\Controllers\Admin\OrderController::class, 'index1'])->name('orders.index')->middleware('can:view_orders');
     Route::post('/checkout/{id}', [\App\Http\Controllers\Admin\OrderDetailController::class, 'updateStatus'])->name('orders.checkout')->middleware('can:edit_orders');;
     Route::get('/show/{order}', [\App\Http\Controllers\Admin\OrderDetailController::class, 'showOrderDetail'])->name('orders.show')->middleware('can:edit_orders');;
     Route::post('/checkin/{orderId}', [\App\Http\Controllers\Admin\OrderDetailController::class, 'checkinOrder'])->name('orders.checkin')->middleware('can:edit_orders');;
@@ -261,6 +261,9 @@ Route::prefix('orders')->group(function () {
 // hủy đơn ở orders admin
     Route::post('/cancel_order_admin/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'accepted_cancel'])->name('orders.cancel_order_admin')->middleware('can:edit_orders');
     Route::get('show/{orderId}/available-services', [\App\Http\Controllers\Admin\OrderDetailController::class, 'availableServices']);
+
+//    hoàn thành đơn
+    Route::post('/updateFinishOrder/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'finishOrder'])->name('orders.updateFinishOrder')->middleware('can:edit_orders');
 });
 
 Route::get('/404', function () {

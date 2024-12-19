@@ -31,7 +31,7 @@
     @if (session('success-checkout'))
             <div class="card-header  alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success-checkout')}} với phí phạt là {{number_format(session('incidental_costs'))}}VND
-                checkout muộn {{session('incidental_costs')}}h (mỗi giờ checkout muộn tính {{session('percent_incidental')}}% tiền phòng)
+                checkout muộn {{session('extraHours')}}h (mỗi giờ checkout muộn tính {{session('percent_incidental')}}% tiền phòng)
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
@@ -82,11 +82,6 @@
                             @elseif($order->check_out==null&&$order->check_in==null)
                                 <div class="d-flex gap-2">
                                     <span class="badge bg-warning">Phải checkin trước</span>
-{{--                                    <div class="edit" id="check_out">--}}
-{{--                                        <a class="btn btn-sm btn-success edit-item-btn" data-bs-toggle="modal" href="#checkoutOrderHaventCheckin">--}}
-{{--                                            Check-out--}}
-{{--                                        </a>--}}
-{{--                                    </div>--}}
                                 </div>
                             @elseif($order->check_out==null)
                                 <div class="d-flex gap-2">
@@ -227,7 +222,6 @@
                         </div>
                     </div>
                 </section>
-{{--                @include('admin.orders.order_items.order_items')--}}
             @endif
                 <!-- Modal -->
 {{--                notificate--}}
@@ -302,7 +296,6 @@
                         </div>
                     </div>
                 </div>
-{{--                form add service--}}
                 <div class="modal fade" id="service{{$order->id}}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
@@ -346,47 +339,47 @@
         </div>
     </div>
 @endsection
-{{--@section('scripts')--}}
+@section('scripts')
 
-{{--    <script>--}}
-{{--        function checkoutOrder(orderId) {--}}
-{{--            // URL đến route `checkPayable`--}}
-{{--            const url = `/admin/orders/check-payable/${orderId}`;--}}
+    <script>
+        function checkoutOrder(orderId) {
+            // URL đến route `checkPayable`
+            const url = `/admin/orders/check-payable/${orderId}`;
 
-{{--                        console.log(1)--}}
-{{--            fetch(url)--}}
-{{--                .then(response => response.json())--}}
-{{--                .then(data => {--}}
-{{--                    if (data.success) {--}}
-{{--                        // Lấy phần tử checkout_button và check_out để cập nhật--}}
-{{--                        const checkoutButton = document.getElementById(`checkout_button_${orderId}`);--}}
-{{--                        // const checkOutTime = document.getElementById(`check_out_${orderId}`);--}}
-{{--                        const payableAmount = document.getElementById(`payable_amount_${orderId}`);--}}
-{{--                        const check_out=document.getElementById('check_out');--}}
-{{--                        // Ẩn nút checkout--}}
-{{--                        if (checkoutButton) checkoutButton.style.display = 'none';--}}
+                        console.log(1)
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Lấy phần tử checkout_button và check_out để cập nhật
+                        const checkoutButton = document.getElementById(`checkout_button_${orderId}`);
+                        // const checkOutTime = document.getElementById(`check_out_${orderId}`);
+                        const payableAmount = document.getElementById(`payable_amount_${orderId}`);
+                        const check_out=document.getElementById('check_out');
+                        // Ẩn nút checkout
+                        if (checkoutButton) checkoutButton.style.display = 'none';
 
-{{--                        // Cập nhật thời gian hiện tại vào cột checkout--}}
-{{--                        const now = new Date();--}}
-{{--                        check_out.innerText = now.toLocaleString();--}}
+                        // Cập nhật thời gian hiện tại vào cột checkout
+                        const now = new Date();
+                        check_out.innerText = now.toLocaleString();
 
-{{--                        // Cập nhật số tiền còn lại--}}
-{{--                        payableAmount.innerText = `${data.payable} VND`;--}}
-{{--                    }--}}
-{{--                })--}}
-{{--                .catch(error => console.error('Error:', error));--}}
-{{--        }--}}
-{{--        new DataTable("#example", {--}}
-{{--            paging: false,--}}
-{{--            info: false,--}}
-{{--            searching: false,--}}
-{{--            order: [--}}
-{{--                [0, 'desc']--}}
-{{--            ]--}}
-{{--        });--}}
-{{--    </script>--}}
+                        // Cập nhật số tiền còn lại
+                        payableAmount.innerText = `${data.payable} VND`;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        new DataTable("#example", {
+            paging: false,
+            info: false,
+            searching: false,
+            order: [
+                [0, 'desc']
+            ]
+        });
+    </script>
 
-{{--@endsection--}}
+@endsection
 @section('script-libs')
     <script>
         document.getElementById('roomId').addEventListener('change', function () {

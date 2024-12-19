@@ -244,18 +244,61 @@
                                                             <i class="ri-eye-fill align-bottom me-2 text-muted"></i> Chi
                                                             tiết</a>
                                                     </li>
-                                                    @if($order['status']==\App\Constant\Enum\StatusOrderEnum::DA_XAC_NHAN->value)
+                                                    @if($order['status'] == \App\Constant\Enum\StatusOrderEnum::DA_XAC_NHAN->value)
                                                     <li>
                                                         <a href="#{{ $order['id'] }}" class="dropdown-item" data-bs-toggle="modal" >
                                                             <i class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                             Hủy đơn
                                                         </a>
                                                     </li>
+                                                    @if(!$order['haventCheckin'])
+                                                    <li>
+                                                        <a href="#hoanthanh{{ $order['id'] }}" class="dropdown-item" data-bs-toggle="modal" >
+                                                            <i class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                            Hoàn thành đơn
+                                                        </a>
+                                                    </li>
+                                                        @endif
                                                     @endif
                                                 </ul>
                                             </div>
                                         </td>
                                     </tr>
+                                    <div class="modal fade flip" id="hoanthanh{{ $order['id'] }}" tabindex="-1"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-body p-5 text-center">
+                                                    <i class="fa-solid fa-money-bill-wave"></i>
+                                                    <div class="mt-4 text-center">
+                                                        <h4>Hoàn thành đơn!</h4>
+                                                        <p class="text-muted fs-15 mb-4">Bạn có muốn hoàn thành
+                                                            order {{ $order['code'] }} này
+                                                            không?</p>
+                                                        <div class="hstack gap-2 justify-content-center remove">
+                                                                <button class="btn btn-link link-success fw-medium text-decoration-none"
+                                                                        type="submit"
+                                                                        id="deleteRecord-close"
+                                                                        data-bs-dismiss="modal">
+                                                                    <i class="ri-close-line me-1 align-middle"></i>Đóng
+                                                                </button>
+                                                            <form method="POST"
+                                                                  action="{{route('admin.orders.updateFinishOrder',$order['id'])}}">
+                                                                @csrf
+                                                                <button
+                                                                        class="btn btn-sm btn-success edit-item-btn"
+                                                                        type="submit"
+                                                                >
+                                                                    Xác nhận
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="modal fade flip" id="{{ $order['id'] }}" tabindex="-1"
                                          aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
