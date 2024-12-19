@@ -26,11 +26,18 @@ class OrderSuccessNotification implements ShouldQueue
      */
     public function handle(OrderSuccess $event)
     {
-        $data = $event->bookingDetails->toArray();
 
-        Mail::send('emails.booking.invoice', $data, function ($message) use ($data) {
+        $order = $event->bookingDetails;
+        $services = $event->services;
+        $catalogueRooms = $event->catalogueRooms;
+
+        Mail::send('emails.booking.invoice', [
+            'order' => $order,
+            'services' => $services,
+            'catalogueRooms' => $catalogueRooms
+        ], function ($message) use ($order) {
             $message->from('quangdzno1st@gmail.com');
-            $message->to($data['email']) //chỗ $message->to thay bằng mail khách hàng nhé, nhận được trong $data
+            $message->to($order['email']) // Email khách hàng
             ->subject('Hóa Đơn Đặt Phòng Khách Sạn');
         });
     }

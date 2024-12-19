@@ -14,14 +14,20 @@ class OrderSuccess
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+
+    public $bookingDetails;
+    public $services;
+    public $catalogueRooms;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(public $bookingDetails)
+    public function __construct($bookingDetails, $services, $catalogueRooms)
     {
-        //
+        $this->bookingDetails = $bookingDetails;
+        $this->services = $services;
+        $this->catalogueRooms = $catalogueRooms;
     }
 
     /**

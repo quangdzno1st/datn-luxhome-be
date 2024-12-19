@@ -13,6 +13,7 @@ use App\Models\BookingService;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Repositories\BookingService\BookingServiceRepository;
+use App\Repositories\CatalogueRoom\CatalogueRoomRepository;
 use App\Repositories\Hotel\HotelRepository;
 use App\Repositories\HotelService\HotelServiceRepository;
 use App\Repositories\Order\OrderRepository;
@@ -39,6 +40,7 @@ class OrderServiceImpl implements OrderService
     private OrderRepository $orderRepos;
     private BookingServiceRepository $bookingServiceRepos;
     private WalletRepository $walletRepos;
+    private CatalogueRoomRepository $catalogueRoomRepos;
 
     /**
      * @param HotelRepository $hotelRepos
@@ -52,6 +54,7 @@ class OrderServiceImpl implements OrderService
         OrderRepository          $orderRepos,
         BookingServiceRepository $bookingServiceRepos,
         WalletRepository         $walletRepos,
+        CatalogueRoomRepository $catalogueRoomRepos,
     )
     {
         $this->hotelRepos = $hotelRepos;
@@ -62,6 +65,7 @@ class OrderServiceImpl implements OrderService
         $this->orderRepos = $orderRepos;
         $this->bookingServiceRepos = $bookingServiceRepos;
         $this->walletRepos = $walletRepos;
+        $this->catalogueRoomRepos = $catalogueRoomRepos;
     }
 
 
@@ -490,7 +494,9 @@ class OrderServiceImpl implements OrderService
         );
         $this->handleVoucherWhenOrderSuccess($order['voucher_id']);
         //        //Send mail hóa đơn
-        OrderSuccess::dispatch($order);
+        $services = $this->bookingServiceRepos->getByOrderId($order['id'])->toArray();
+        $catalogueRooms = $this->catalogueRoomRepos->getByOrderId($order['id'])->toArray();
+        OrderSuccess::dispatch($order->toArray(), $services, $catalogueRooms);
     }
 
     private function handleVoucherWhenOrderSuccess($voucherId)

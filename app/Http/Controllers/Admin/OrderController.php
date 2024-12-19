@@ -35,14 +35,14 @@ class OrderController extends Controller
     public function index1(BaseSearchRequest $request)
     {
         $org_id = Auth::user()?->org_id;
-        $hotels=null;
-        if (Auth::user()->type==User::ADMIN){
+        $hotels = null;
+        if (Auth::user()->type == User::ADMIN) {
             $orders = Order::query()
 //                ->orderByDesc('created_at')
-                    ->latest('created_at')
+                ->latest('created_at')
                 ->paginate(10, ['*'], 'order');
-            $hotels=Hotel::query()->select('id','name')->get();
-        }else{
+            $hotels = Hotel::query()->select('id', 'name')->get();
+        } else {
             $orders = Order::query()
 //                ->orderByDesc('created_at')
                 ->latest('created_at')
@@ -51,78 +51,96 @@ class OrderController extends Controller
         }
 
 
-        if ($_GET) $orders= $this->search($request->all());
+        if ($_GET) $orders = $this->search($request->all());
         $this->checkStatusNoti($orders);
 
-        foreach ($orders as $order){
-            $order['haventCheckin']=true;
+        foreach ($orders as $order) {
+            $order['haventCheckin'] = true;
             $currentTime = Carbon::now();
             $endDate = Carbon::parse($order->end_date)->endOfDay();
-            if ($currentTime->gt($endDate)&&$order->check_in==null) {
-                $order['haventCheckin']=false;
+            if ($currentTime->gt($endDate) && $order->check_in == null) {
+                $order['haventCheckin'] = false;
             }
-        if ($order->voucher_id!=null){
-            $voucher=$this->VoucherOrder($order->voucher_id);
-            foreach ($voucher as $item){
-                if ($item['discount_type']){
-                    if ((($order['total_amount'])*$item['discount_value'])/100>$item['max_price']){
-                        $order['total_amount']=$order['total_amount']-$item['max_price'];
-                    }else{
-                        $order['total_amount']=$order['total_amount']-($order['total_amount']*$item['discount_value'])/100;
+            if ($order->voucher_id != null) {
+                $voucher = $this->VoucherOrder($order->voucher_id);
+                foreach ($voucher as $item) {
+                    if ($item['discount_type']) {
+                        if ((($order['total_amount']) * $item['discount_value']) / 100 > $item['max_price']) {
+                            $order['total_amount'] = $order['total_amount'] - $item['max_price'];
+                        } else {
+                            $order['total_amount'] = $order['total_amount'] - ($order['total_amount'] * $item['discount_value']) / 100;
+                        }
+                    } else {
+                        $order['total_amount'] = $order['total_amount'] - $item['discount_value'];
                     }
-                }else{
-                    $order['total_amount']=$order['total_amount']-$item['discount_value'];
+                    $order['voucher_id'] = $item->code;
                 }
-                $order['voucher_id']=$item->code;
             }
         }
-        }
 
-        if ($_GET) $orders= $this->search($request->all());
+        if ($_GET) $orders = $this->search($request->all());
         $this->checkStatusNoti($orders);
-        return view('admin.orders.index1', compact('orders','hotels'));
+        return view('admin.orders.index1', compact('orders', 'hotels'));
     }
 
-    public function finishOrder($idOrder){
+    public function finishOrder($idOrder)
+    {
         $order = Order::query()->where('id', $idOrder)->first();
-            $user = User::where('id', $order->user_id)->first();
-            if ($user) {
+        $user = User::where('id', $order->user_id)->first();
 
-                $newTotalAmountOrdered = $user->total_amount_ordered + $order->total_amount;
-
-                $newRank = 0;
-                if ($newTotalAmountOrdered > 8000000) {
-                    $newRank = 3;
-                } elseif ($newTotalAmountOrdered > 5000000) {
-                    $newRank = 2;
-                } elseif ($newTotalAmountOrdered > 2000000) {
-                    $newRank = 1;
+        if ($order->voucher_id != null) {
+            $voucher = $this->VoucherOrder($order->voucher_id);
+            foreach ($voucher as $item) {
+                if ($item['discount_type']) {
+                    if (($order->total_amount * $item['discount_value']) / 100 > $item['max_price']) {
+                        $order->total_amount = $order->total_amount - $item['max_price'];
+                    } else {
+                        $order->total_amount = $order->total_amount - ($order->total_amount * $item['discount_value']) / 100;
+                    }
+                } else {
+                    $order->total_amount = $order->total_amount - $item['discount_value'];
                 }
-
-                $user->update([
-                    'rank' => $newRank,
-                    'total_amount_ordered' => $newTotalAmountOrdered,
-                ]);
             }
-                DB::table('orders')->where('id', $idOrder)
-                    ->update([
-                        'status' => StatusOrderEnum::HOAN_THANH->value,
-                        'net_amount'=>$order->total_amount,
-                    ]);
-            return redirect()->back()->with(
-                [
-                    'success'=>'Hoàn thành đơn thành công',
-                ]);
+        }
+
+        if ($user) {
+
+            $newTotalAmountOrdered = $user->total_amount_ordered + $order->total_amount;
+
+            $newRank = 0;
+            if ($newTotalAmountOrdered > 8000000) {
+                $newRank = 3;
+            } elseif ($newTotalAmountOrdered > 5000000) {
+                $newRank = 2;
+            } elseif ($newTotalAmountOrdered > 2000000) {
+                $newRank = 1;
+            }
+
+            $user->update([
+                'rank' => $newRank,
+                'total_amount_ordered' => $newTotalAmountOrdered,
+            ]);
+        }
+        DB::table('orders')->where('id', $idOrder)
+            ->update([
+                'status' => StatusOrderEnum::HOAN_THANH->value,
+                'net_amount' => $order->total_amount,
+            ]);
+        return redirect()->back()->with(
+            [
+                'success' => 'Hoàn thành đơn thành công',
+            ]);
     }
 
-    public function VoucherOrder($voucherId){
-        $voucher=Voucher::query()->where('vouchers.id', $voucherId)
+    public function VoucherOrder($voucherId)
+    {
+        $voucher = Voucher::query()->where('vouchers.id', $voucherId)
 //            ->where('vouchers.status',1)
-            ->select('vouchers.description','vouchers.discount_type',
-                'vouchers.discount_value','vouchers.code','vouchers.max_price')->get()
-        ;
+            ->select('vouchers.description', 'vouchers.discount_type',
+                'vouchers.discount_value', 'vouchers.code', 'vouchers.max_price')->get();
         return $voucher;
     }
+
     public function checkStatusNoti($orders)
     {
 //        note place
@@ -136,42 +154,39 @@ class OrderController extends Controller
             $startDateTime = Carbon::parse($order->start_date);
             $endDateTime = Carbon::parse($order->end_date);
 //dd($endDateTime->toDateString());
-            if ($order->status==StatusOrderEnum::HOAN_THANH->value){
-                $order['statusNoti']=0;
-            }
-            else{
+            if ($order->status == StatusOrderEnum::HOAN_THANH->value) {
+                $order['statusNoti'] = 0;
+            } else {
                 // Trạng thái 1: Checkin muộn
-            if ($currentTime->greaterThan($startDateTime) && $order->check_in==null) {
-                $order['statusNoti']=1; // Checkin muộnnnn
-            }
-            elseif (!is_null($order->check_in) && is_null($order->check_out) && $currentTime->greaterThan($endDateTime)) {
+                if ($currentTime->greaterThan($startDateTime) && $order->check_in == null) {
+                    $order['statusNoti'] = 1; // Checkin muộnnnn
+                } elseif (!is_null($order->check_in) && is_null($order->check_out) && $currentTime->greaterThan($endDateTime)) {
 
-                $currentOrderRoomIds = OrderItem::where('order_id', $order->id)
-                    ->pluck('room_id')
-                    ->toArray();
+                    $currentOrderRoomIds = OrderItem::where('order_id', $order->id)
+                        ->pluck('room_id')
+                        ->toArray();
 
-                $hasNextBookingWithSameRoom = Order::where('id', '!=', $order->id)
-                    ->whereDate('start_date', $endDateTime->toDateString())
-                    ->whereHas('orderItem', function ($query) use ($currentOrderRoomIds) {
-                        $query->whereIn('room_id', $currentOrderRoomIds);
-                    })
-                    ->exists();
+                    $hasNextBookingWithSameRoom = Order::where('id', '!=', $order->id)
+                        ->whereDate('start_date', $endDateTime->toDateString())
+                        ->whereHas('orderItem', function ($query) use ($currentOrderRoomIds) {
+                            $query->whereIn('room_id', $currentOrderRoomIds);
+                        })
+                        ->exists();
 
-                if ($hasNextBookingWithSameRoom) {
-                    // Checkout muộn, có khách đặt khác cùng ngày và trùng phòng
-                    $order['statusNoti'] = 2;
+                    if ($hasNextBookingWithSameRoom) {
+                        // Checkout muộn, có khách đặt khác cùng ngày và trùng phòng
+                        $order['statusNoti'] = 2;
+                    } else {
+                        // Checkout muộn, không có khách đặt trùng phòng
+                        $order['statusNoti'] = 4;
+                    }
+                } elseif (!is_null($order->check_in) && $currentTime->between($startDateTime, $endDateTime)) {
+                    // Đang dùng phòng
+                    $order['statusNoti'] = 3;
                 } else {
-                    // Checkout muộn, không có khách đặt trùng phòng
-                    $order['statusNoti'] = 4;
+                    // chưa đến ngày
+                    $order['statusNoti'] = 0;
                 }
-            }
-            elseif (!is_null($order->check_in) && $currentTime->between($startDateTime, $endDateTime)) {
-                // Đang dùng phòng
-                $order['statusNoti']=3;
-            }else{
-                // chưa đến ngày
-                $order['statusNoti']=0;
-            }
 
             }
         }
@@ -250,7 +265,7 @@ class OrderController extends Controller
         $net_amount = 0;
 
         if ($now->diffInDays($startDate, false) >= 3) {
-            $net_amount = $order->total_amount * 0.25 ;
+            $net_amount = $order->total_amount * 0.25;
         } else if ($now->diffInDays($startDate, false) >= 1) {
             $net_amount = $order->total_amount * 0.75;
         }
@@ -277,46 +292,45 @@ class OrderController extends Controller
     public function search($request)
     {
 //        dd($request);
-        if (Auth::user()->type==User::ADMIN){
-        $query = Order::query()
+        if (Auth::user()->type == User::ADMIN) {
+            $query = Order::query()
 //            ->orderByDesc('created_at')
-            ->latest('created_at')
-            ;
-        }else{
+                ->latest('created_at');
+        } else {
             $query = Order::query()
 //                ->orderByDesc('created_at')
                 ->latest('created_at')
-                ->where('org_id', Auth::user()->org_id)
-            ;
+                ->where('org_id', Auth::user()->org_id);
         }
-        if (isset($request['hotel'])&&$request['hotel']!='') {
-            $query->where('org_id',  $request['hotel']);
-        }
-
-        if (isset($request['code'])&&$request['code']!='') {
-            $query->where('code', 'LIKE', '%' . $request['code']. '%');
+        if (isset($request['hotel']) && $request['hotel'] != '') {
+            $query->where('org_id', $request['hotel']);
         }
 
-        if (isset($request['status'])&&$request['status']!='') {
+        if (isset($request['code']) && $request['code'] != '') {
+            $query->where('code', 'LIKE', '%' . $request['code'] . '%');
+        }
+
+        if (isset($request['status']) && $request['status'] != '') {
             $query->where('status', $request['status']);
         }
 
-        if (isset($request['total_amount'])&&$request['total_amount']!='') {
+        if (isset($request['total_amount']) && $request['total_amount'] != '') {
             $query->where('total_amount', '>=', $request['total_amount']);
         }
 
-        if (isset($request['start_date'])&&$request['start_date']!='') {
+        if (isset($request['start_date']) && $request['start_date'] != '') {
             $query->whereDate('start_date', '>=', $request['start_date']);
         }
 
-        if (isset($request['end_date'])&&$request['end_date']!='') {
+        if (isset($request['end_date']) && $request['end_date'] != '') {
             $query->whereDate('end_date', '<=', $request['end_date']);
         }
         return $query->paginate(10, ['*'], 'order');
     }
+
     public function cancel_order_admin($id)
     {
-        $this->accepted_cancel($id,'admin');
+        $this->accepted_cancel($id, 'admin');
     }
 
 }
