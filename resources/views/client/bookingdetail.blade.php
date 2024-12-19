@@ -68,7 +68,7 @@
                                     </tr>
                                     <tr>
                                         <td>Ngày trả phòng</td>
-                                        <td> {{ \Carbon\Carbon::parse($order['start_date'])->locale('vi')->isoFormat('[Ngày] D [tháng] M [năm] YYYY') }}
+                                        <td> {{ \Carbon\Carbon::parse($order['end_date'])->locale('vi')->isoFormat('[Ngày] D [tháng] M [năm] YYYY') }}
                                         </td>
                                     </tr>
                                     <tr>
