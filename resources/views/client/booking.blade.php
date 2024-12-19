@@ -335,7 +335,8 @@
                             <i class="far fa-calendar-alt"></i>
                             Check-in: 14:00 - 24:00<br>
                             <i class="far fa-calendar-alt"></i>
-                            Check-out: 5:00 - 11:30.
+                            Check-out: 5:00 - 11:30<br>
+                            Tiền tính thêm khi trả phòng quá thời gian: {{ $hotel['percent_incidental'] }}
                         </p>
 
                         <h2>Chính sách hủy phòng</h2>
