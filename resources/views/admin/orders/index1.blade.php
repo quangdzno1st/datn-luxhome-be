@@ -181,7 +181,7 @@
                                                         <!-- Description -->
                                                         <div class="description">Checkin muộn</div>
                                                     @elseif($order->statusNoti==4)
-                                                        <div type="button" class="btn btn-warning btn-sm" style="padding: 2px 2px; font-size: 0.4rem;">
+                                                        <div type="button" class="btn btn-secondary btn-sm" style="padding: 2px 2px; font-size: 0.4rem;">
                                                                 <span class="d-flex align-items-center">
                                                                     <span class="spinner-grow flex-shrink-0" role="status" style="width: 12px; height: 12px;">
                                                                         <span class="visually-hidden">Loading...</span>
