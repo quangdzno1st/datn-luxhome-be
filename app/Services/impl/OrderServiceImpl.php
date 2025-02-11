@@ -8,10 +8,12 @@ use App\Events\OrderSuccess;
 use App\Exceptions\RespException;
 use App\Http\Requests\OrderRequest;
 use App\Http\Requests\OrderSearchRequest;
+use App\Jobs\RemoveRoomBookingJob;
 use App\Models\BookingService;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Repositories\BookingService\BookingServiceRepository;
+use App\Repositories\CatalogueRoom\CatalogueRoomRepository;
 use App\Repositories\Hotel\HotelRepository;
 use App\Repositories\HotelService\HotelServiceRepository;
 use App\Repositories\Order\OrderRepository;
@@ -38,6 +40,7 @@ class OrderServiceImpl implements OrderService
     private OrderRepository $orderRepos;
     private BookingServiceRepository $bookingServiceRepos;
     private WalletRepository $walletRepos;
+    private CatalogueRoomRepository $catalogueRoomRepos;
 
     /**
      * @param HotelRepository $hotelRepos
@@ -51,6 +54,7 @@ class OrderServiceImpl implements OrderService
         OrderRepository          $orderRepos,
         BookingServiceRepository $bookingServiceRepos,
         WalletRepository         $walletRepos,
+        CatalogueRoomRepository $catalogueRoomRepos,
     )
     {
         $this->hotelRepos = $hotelRepos;
@@ -61,6 +65,7 @@ class OrderServiceImpl implements OrderService
         $this->orderRepos = $orderRepos;
         $this->bookingServiceRepos = $bookingServiceRepos;
         $this->walletRepos = $walletRepos;
+        $this->catalogueRoomRepos = $catalogueRoomRepos;
     }
 
 
@@ -244,13 +249,18 @@ class OrderServiceImpl implements OrderService
             }
         }
 
+        $this->handleDataWithQueueRedis($key, 15, $startTime, $endTime);
+    }
+
+    private function handleDataWithQueueRedis($key, $duration, $startTime, $endTime)
+    {
         $bookingData = json_encode([
-            'start_time' => $startTime->toDateTimeString(),
-            'end_time' => $endTime->toDateTimeString()
+            'start_time' => $startTime,
+            'end_time' => $endTime
         ]);
 
         Redis::rpush($key, $bookingData);
-        Redis::expire($key, 20);
+        RemoveRoomBookingJob::dispatch($key, $startTime, $endTime)->delay(now()->addMinutes($duration));
     }
 
     private function generateUniqueKey($username, $email, $phone)
@@ -484,7 +494,9 @@ class OrderServiceImpl implements OrderService
         );
         $this->handleVoucherWhenOrderSuccess($order['voucher_id']);
         //        //Send mail hóa đơn
-        OrderSuccess::dispatch($order);
+        $services = $this->bookingServiceRepos->getByOrderId($order['id'])->toArray();
+        $catalogueRooms = $this->catalogueRoomRepos->getByOrderId($order['id'])->toArray();
+        OrderSuccess::dispatch($order->toArray(), $services, $catalogueRooms);
     }
 
     private function handleVoucherWhenOrderSuccess($voucherId)
@@ -655,6 +667,9 @@ class OrderServiceImpl implements OrderService
     private function handleBookingData(&$searchData, array $bookingsData)
     {
         $dataResp = [];
+        $startDate = $searchData[0]['start_date'];
+        $endDate = $searchData[0]['end_date'];
+
         foreach ($searchData as $item) {
 
             $roomQty = $bookingsData[$item['id']] ?? null;
@@ -666,7 +681,22 @@ class OrderServiceImpl implements OrderService
                 throw new RespException(__('Số lượng phòng còn trống không đủ ' . $roomQty . ' phòng'));
             }
 
-            $roomBooking = array_slice($item['available_rooms'], 0, $roomQty);
+            $roomIdBooking = $this->getRoomWithStatusIsBooking($item['available_rooms'], $startDate, $endDate);
+            if (sizeof($roomIdBooking) + $roomQty > sizeof($item['available_rooms'])) {
+                $roomBooking = array_slice($item['available_rooms'], 0, $roomQty);
+            } else {
+                $roomBooking = array_filter($item['available_rooms'], function ($room) use ($roomIdBooking) {
+                    return !in_array($room['room_id'], $roomIdBooking);
+                });
+
+                $roomBooking = array_slice($roomBooking, 0, $roomQty);
+
+                foreach ($roomBooking as $room) {
+                    $key = "room_{$room['room_id']}_bookings";
+                    $this->handleDataWithQueueRedis($key, 5, $startDate, $endDate);
+                }
+            }
+
             $this->buildRoomBookingResp($dataResp, $roomBooking, $item);
         }
 
@@ -675,6 +705,31 @@ class OrderServiceImpl implements OrderService
         }
 
         return $dataResp;
+    }
+
+    private function getRoomWithStatusIsBooking($availableRooms, $startTime, $endTime)
+    {
+        $roomIdBooked = [];
+        foreach ($availableRooms as $room) {
+            $key = "room_{$room['room_id']}_bookings";
+
+            if (!Redis::exists($key)) {
+                continue;
+            }
+
+            $existingBookings = Redis::lrange($key, 0, -1);
+
+            foreach ($existingBookings as $booking) {
+                $bookingData = json_decode($booking, true);
+                $existingStartTime = Carbon::parse($bookingData['start_time']);
+                $existingEndTime = Carbon::parse($bookingData['end_time']);
+
+                if ($startTime < $existingEndTime && $endTime > $existingStartTime) {
+                    $roomIdBooked[] = $room['room_id'];
+                }
+            }
+        }
+        return $roomIdBooked;
     }
 
     private function clearSessionByKey($key)

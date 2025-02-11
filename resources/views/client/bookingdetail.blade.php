@@ -106,18 +106,20 @@
                                     @endphp
                                     <table>
                                         <tr>
-                                            <th>Dịch Vụ</th>
-                                            <th>Số lượng</th>
-                                            <th>Giá (VND)</th>
+                                            <th style="width: 25%">Dịch Vụ</th>
+                                            <th style="width: 25%">Số lượng</th>
+                                            <th style="width: 25%">Phòng</th>
+                                            <th style="width: 25%">Giá (VND)</th>
                                         </tr>
                                         @foreach ($services as $service)
                                             @php
-                                                $totalServiceAmount += $service['total_price'];
+                                                $totalServiceAmount += $service['price'] * $service['room_count'];
                                             @endphp
                                             <tr>
                                                 <td>{{ $service['name'] }}</td>
-                                                <td>{{ $service['service_quantity'] }}</td>
-                                                <td>{{ number_format($service['total_price']) . ' đ' }}</td>
+                                                <td>{{ $service['room_count'] }}</td>
+                                                <td>{{ $service['room_codes'] }}</td>
+                                                <td>{{ number_format($totalServiceAmount) . ' VND' }}</td>
                                             </tr>
                                         @endforeach
                                     </table>

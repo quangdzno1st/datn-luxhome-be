@@ -89,87 +89,148 @@
 
     <section class="hotel-info">
         <h2>Thông tin khách sạn</h2>
-        <p>Tên khách sạn: Khách Sạn ABC</p>
-        <p>Địa chỉ: 123 Đường XYZ, Quận 1, TP.HCM</p>
-        <p>Số điện thoại: 0123 456 789</p>
+        <p>Tên khách sạn: {{ $order['hotel_name'] }}</p>
+        <p> {{ $order['location'] }}</p>
+        <p>Số điện thoại: {{ $order["hotel_phone"] }}</p>
     </section>
 
     <section class="guest-info">
         <h2>Thông tin khách hàng</h2>
-        <p>Tên khách hàng: Nguyễn Văn A</p>
-        <p>Email: nguyenvana@gmail.com</p>
-        <p>Số điện thoại: 0987 654 321</p>
+        <p>Tên khách hàng: {{ $order["name"] }}</p>
+        <p>Email: {{ $order["email"] }}</p>
+        <p>Số điện thoại: {{ $order['phone'] }}</p>
     </section>
 
-    <section class="booking-info">
-        <h2>Thông tin đặt phòng</h2>
-        <table>
-            <tr>
-                <th>Ngày nhận phòng:</th>
-                <td>20/10/2024</td>
-            </tr>
-            <tr>
-                <th>Ngày trả phòng:</th>
-                <td>22/10/2024</td>
-            </tr>
-            <tr>
-                <th>Số lượng phòng:</th>
-                <td>1</td>
-            </tr>
-            <tr>
-                <th>Loại phòng:</th>
-                <td>Phòng Deluxe</td>
-            </tr>
-            <tr>
-                <th>Tổng số đêm:</th>
-                <td>2</td>
-            </tr>
-        </table>
-    </section>
+    <section id="MyBookings" class="tab-content" style="width:100%">
+        <!--booking-->
+        <article class="bookings">
+            <h2>Chi Tiết Đặt Phòng</h2>
+            <div class="b-info">
 
-    <section class="extra-fee-info">
-        <h2>Chi phí phát sinh</h2>
-        <table>
-            <tr>
-                <th>Dịch vụ đồ ăn nhẹ:</th>
-                <td>200,000 VND</td>
-            </tr>
-            <tr>
-                <th>Bồi thường mất đồ:</th>
-                <td>500,000 VND</td>
-            </tr>
-            <tr>
-                <th>Chi phí giặt ủi:</th>
-                <td>100,000 VND</td>
-            </tr>
-        </table>
-    </section>
 
-    <section class="price-info">
-        <h2>Chi tiết thanh toán</h2>
-        <table>
-            <tr>
-                <th>Giá mỗi đêm:</th>
-                <td>2,000,000 VND</td>
-            </tr>
-            <tr>
-                <th>Tổng số đêm:</th>
-                <td>2</td>
-            </tr>
-            <tr>
-                <th>Tổng tiền phòng:</th>
-                <td>4,000,000 VND</td>
-            </tr>
-            <tr class="total">
-                <th>Tổng chi phí phát sinh:</th>
-                <td>800,000 VND</td>
-            </tr>
-            <tr class="total">
-                <th>Tổng cộng:</th>
-                <td>4,800,000 VND</td>
-            </tr>
-        </table>
+                <table>
+                    <tr>
+                        <th>Mục</th>
+                        <th>Thông Tin</th>
+                    </tr>
+                    <tr>
+                        <td>Mã đơn</td>
+                        <td>{{ $order['code'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Ngày đặt phòng</td>
+                        <td>{{ \Carbon\Carbon::parse($order['start_date'])->locale('vi')->isoFormat('[Ngày] D [tháng] M [năm] YYYY') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Ngày trả phòng</td>
+                        <td> {{ \Carbon\Carbon::parse($order['end_date'])->locale('vi')->isoFormat('[Ngày] D [tháng] M [năm] YYYY') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Voucher</td>
+                        <td>{{ $order['description'] }}</td>
+                    </tr>
+                </table>
+
+                <h3>Thông Tin Loại Phòng</h3>
+                @php
+                    $totalRoomAmount = 0;
+                @endphp
+                <table>
+                    <tr>
+                        <th>Loại Phòng</th>
+                        <th>Số Phòng</th>
+                        <th>Giá (VND)</th>
+                    </tr>
+                    @foreach ($catalogueRooms as $catalogueRoom)
+                        @php
+                            $totalRoomAmount += $catalogueRoom['total_price'];
+                        @endphp
+                        <tr>
+                            <td>{{ $catalogueRoom['name'] }}</td>
+                            <td> {{ $catalogueRoom['room_names'] }}</td>
+                            <td>{{ number_format($catalogueRoom['total_price']) . ' đ' }}</td>
+                        </tr>
+                    @endforeach
+                </table>
+
+                @if (!empty($services))
+                    <h3>Thông Tin Dịch Vụ</h3>
+                    @php
+                        $totalServiceAmount = 0;
+                    @endphp
+                    <table>
+                        <tr>
+                            <th>Dịch Vụ</th>
+                            <th>Số lượng</th>
+                            <th>Phòng</th>
+                            <th>Giá (VND)</th>
+                        </tr>
+                        @foreach ($services as $service)
+                            @php
+                                $totalServiceAmount += $service['price'] * $service['room_count'];
+                            @endphp
+                            <tr>
+                                <td>{{ $service['name'] }}</td>
+                                <td>{{ $service['room_count'] }}</td>
+                                <td>{{ $service['room_codes'] }}</td>
+                                <td>{{ number_format($totalServiceAmount) . ' VND' }}</td>
+                            </tr>
+                        @endforeach
+                    </table>
+                @endif
+
+                <h3>Tổng Tiền</h3>
+                <table>
+                    @if (!empty($service))
+                        <tr>
+                            <td>Tổng tiền dịch vụ</td>
+                            <td>
+                                {{ number_format($totalServiceAmount) . ' đ' }}
+                            </td>
+                        </tr>
+                    @endif
+                    <tr>
+                        <td>Tổng tiền đặt phòng</td>
+                        <td> {{ number_format($totalRoomAmount) . ' đ' }} </td>
+                    </tr>
+                    <tr>
+                        <td>Tổng tiền được giảm</td>
+                        @php
+                            $totalAmount = ($totalServiceAmount ?? 0) + $totalRoomAmount;
+                            if ($order['discount_type'] == 1) {
+                                $discountAmount = ($totalAmount * $order['discount_value']) / 100;
+                                if ($order['max_price'] > 0 && $discountAmount > $order['max_price']) {
+                                     $discountAmount = $order['max_price'];
+                                 }
+                            } else {
+                              $discountAmount = $order['discount_value'];
+                            }
+                            $discountAmount = min($discountAmount, $totalAmount);
+                        $total_amount =  max($totalAmount - $discountAmount, 0);
+
+                        @endphp
+                        <td> {{ number_format($discountAmount) . ' VND' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="total">Tổng tiền thanh toán</td>
+                        <td class="total">
+                            {{ number_format($total_amount) . ' VND' }}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="actions">
+                <a href="{{ route('orders.index') }}" class="gradient-button">Quay lại</a>
+            </div>
+        </article>
+        <!--//booking-->
+
     </section>
+    <!--//My Bookings-->
 
     <footer>
         <p>Khách sạn ABC rất mong được đón tiếp quý khách. Chúc bạn có kỳ nghỉ tuyệt vời!</p>

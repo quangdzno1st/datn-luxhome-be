@@ -34,7 +34,8 @@ class OrderRepository extends BaseRepository implements OrderInterface
             ->select('orders.start_date', 'orders.end_date', 'orders.code', 'orders.total_amount', 'orders.status',
                 'h.district', 'h.name as hotel_name', 'orders.id', 'h.province', 'orders.is_requried_cancel', 'orders.voucher_id',
                 'h.star', 'orders.code', 'orders.name', 'orders.email', 'orders.phone', 'orders.note', 'orders.org_id',
-                'orders.is_rating', 'orders.status_payment',  'v.discount_value', 'v.discount_type', 'v.max_price')
+                'orders.is_rating', 'orders.status_payment',  'v.discount_value', 'v.discount_type', 'v.max_price',
+                'h.phone as hotel_phone', 'h.location', 'v.description')
             ->join('hotels as h', 'h.id', '=', 'orders.org_id')
             ->leftJoin('vouchers as v', 'v.id', '=', 'orders.voucher_id');
 

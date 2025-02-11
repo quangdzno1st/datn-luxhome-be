@@ -11,6 +11,7 @@ use App\Models\Hotel;
 use App\Models\Order;
 use App\Models\Rate;
 use App\Models\User;
+use App\Repositories\BookingService\BookingServiceRepository;
 use App\Repositories\CatalogueRoom\CatalogueRoomRepository;
 use App\Repositories\Service\ServiceRepository;
 use App\Repositories\Voucher\VoucherRepository;
@@ -32,20 +33,24 @@ class AccountSettingController extends Controller
     private HotelServiceService $hotelServiceService;
     private ServiceRepository $serviceRepos;
 
+    private BookingServiceRepository $bookingServiceRepos;
+
     /**
      * @param OrderService $orderService
      */
-    public function __construct(OrderService            $orderService,
-                                VoucherRepository       $voucherRepos,
-                                HotelServiceService     $hotelServiceService,
-                                CatalogueRoomRepository $catalogueRoomRepos,
-                                ServiceRepository       $serviceRepos)
+    public function __construct(OrderService             $orderService,
+                                VoucherRepository        $voucherRepos,
+                                HotelServiceService      $hotelServiceService,
+                                CatalogueRoomRepository  $catalogueRoomRepos,
+                                ServiceRepository        $serviceRepos,
+                                BookingServiceRepository $bookingServiceRepos)
     {
         $this->orderService = $orderService;
         $this->voucherRepos = $voucherRepos;
         $this->hotelServiceService = $hotelServiceService;
         $this->catalogueRooms = $catalogueRoomRepos;
         $this->serviceRepos = $serviceRepos;
+        $this->bookingServiceRepos = $bookingServiceRepos;
     }
 
 
@@ -58,7 +63,7 @@ class AccountSettingController extends Controller
             ->where('status', 1)
             ->where(function ($query) {
                 $query->where('end_date', '>=', Carbon::now()->format('Y-m-d'))
-                      ->orWhereNull('end_date');
+                    ->orWhereNull('end_date');
             })
             ->get();
         $rates = Rate::withoutTrashed()->with('hotel', 'comment')->where('user_id', $userId)->get();
@@ -128,7 +133,7 @@ class AccountSettingController extends Controller
         $hotel = Hotel::query()->findOrFail($roomsOrder[0]['hotel_id']);
         $services = $this->hotelServiceService->searchByPage($roomsOrder[0]['hotel_id'],
             new Request(['type' => ServiceTypeEnum::DICH_VU_TRA_PHI->value]));
-        return view('client.bookingservice', compact('roomsOrder', 'services', 'groupedRooms','hotel'));
+        return view('client.bookingservice', compact('roomsOrder', 'services', 'groupedRooms', 'hotel'));
 
     }
 
@@ -243,7 +248,7 @@ class AccountSettingController extends Controller
     {
         $order = $this->orderService->getOrderById($orderId);
         $catalogueRooms = $this->catalogueRooms->getByOrderId($orderId);
-        $services = $this->serviceRepos->getByOrderId($orderId);
+        $services = $this->bookingServiceRepos->getByOrderId($orderId);
         return view('client.bookingdetail', compact('catalogueRooms', 'order', 'services'));
     }
 
